@@ -19,6 +19,7 @@ INSTRUCTIONS:
 - Double-click on the 'Gaussian-Blender-Bridge.exe' file.
 - Default values are already placed in both 'input path' and 'output path'
 - There are two alternatives to replace the default values:
+        either
     a) Set the folder paths by clicking on the 'set' button and selecting the adequate paths.
 	or
     b) Copy and paste the folder paths to the text box next to the label
