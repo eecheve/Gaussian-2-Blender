@@ -1,0 +1,110 @@
+import bpy
+import sys
+
+def RefineCoordList(list):
+    """
+    input: each entry on list is a list of four strings: the symbol and eac coordinate in x y z
+    summary: tries to convert string into float for each entry
+    output: each entry corresponds to an atom symbol and its coordinates
+    """
+    l = []
+    for item in list:
+        m = []
+        for value in item:
+            try:
+                m.append(float(value))
+            except:
+                m.append(value)
+        l.append(m)
+    return l
+
+def RefineConnectivity(list):
+    """
+    input: connectivity list where each line has all connect info for that one atom
+    summary: items in initial list must have at least 3 elements for them to be 
+    output: list of lists, each item in list has the numbers of the two atoms involved and the bond type.
+    """ 
+    l = []
+    m = []
+    for item in list: 
+        if len(item) == 3:
+            l.append(item)
+        elif len(item) > 3:
+            l.append([item[0], item[1], item[2]])
+            n = len(item)
+            while n - 2 > 2:
+                n = n - 2
+                value = [item[0], item[n], item[n+1]]
+                l.append(value)
+    for item in l: #replaces numerical label for bond type with own text-type label
+        if item[2] == '0.5':
+            item[2] = '_' #transition bond
+        elif item[2] == '1.0':
+            item[2] = '-' #single bond
+        elif item[2] == '1.5':
+            item[2] = 'res1' #resonance bond 1: between double & single
+        elif item[2] == '2.0':
+            item[2] = '=' #double bond
+        elif item[2] == '2.5':
+            item[2] = 'res2' #resonance bond 2: between double & triple
+        elif item[2] == '3.0':
+            item[2] = '#' #triple bond
+    m = ConvertStringToIndexInList(l)
+    return m
+
+def ConvertStringToIndexInList(list):
+    """
+    if an enty inside the list is a string of an int, it becomes an int.
+    """
+    l = []
+    for item in list:
+        m = []
+        for value in item:
+            try:
+                m.append(int(value))
+            except:
+                m.append(value)
+        l.append(m)
+    return l
+
+def AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements):
+    l = []
+    if number_of_elements < 100:
+        for entry in connect:
+            index1 = entry[0] - 1
+            if index1 < 9:
+                label1 = '0' + str(index1 + 1)
+            else:
+                label1 = str(index1 + 1)
+            atom1 = str(coords[index1][0]) + label1
+            index2 = entry[1] - 1
+            if index2 < 9:
+                label2 = '0' + str(index2 + 1)
+            else:
+                label2 = str(index2 + 1)
+            atom2 = str(coords[index2][0]) + label2
+            l.append([atom1, atom2, entry[2]])
+        return l
+    elif number_of_elements < 1000:
+        for entry in connect:
+            index1 = entry[0] - 1
+            if index1 < 9:
+                label1 = '00' + str(index1 + 1)
+            elif index1 < 99:
+                label1 = '0' + str(index1 + 1)
+            else:
+                label1 = str(index1 + 1)
+            atom1 = str(coords[index1][0]) + label1
+            index2 = entry[1] - 1
+            if index2 < 9:
+                label2 = '00' + str(index2 + 1)
+            elif index2 < 99:
+                label2 = '0' + str(index2 + 1)
+            else:
+                label2 = str(index2 + 1)
+            atom2 = str(coords[index2][0]) + label2
+            l.append([atom1, atom2, entry[2]])
+        return l
+    else:
+        print("@Refine_Data: More than 1000 elements, cannot process")
+        return l
