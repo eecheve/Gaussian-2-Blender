@@ -50,7 +50,7 @@ print("0: output type is", o_file_type)
 #-------------------------------import data section-----------------------------------------------#
 #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
 print("1: Reading .com file ...")
-file_path = i_folder_path + "\\" + i_file_name + ".com"
+file_path = i_folder_path + "\\" + i_file_name
 
 raw_data = Import_Data.ExtractDataFromFile(file_path)
 raw_data = Import_Data.FilterOutExtraInformation('above', 2, 1, raw_data) #removes everything above the second line break +1 line, from the raw_data
