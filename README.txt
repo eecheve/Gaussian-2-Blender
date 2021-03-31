@@ -19,9 +19,10 @@ INSTRUCTIONS:
 - Double-click on the 'Gaussian-Blender-Bridge.exe' file.
 - Default values are already placed in both 'input path' and 'output path'
 - There are two alternatives to replace the default values:
+        either
     a) Set the folder paths by clicking on the 'set' button and selecting the adequate paths.
 	or
-	b) Copy and paste the folder paths to the text box next to the label
+    b) Copy and paste the folder paths to the text box next to the label
 - Either write or set the input file name. Don't forget the '.com' extension
 - Either write or set the output file name. Setting it will replace the file.
 - Click on 'Convert!' to convert the .com input into de desired output type.
