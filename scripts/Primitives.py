@@ -17,7 +17,7 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             if van_der_waals == False:
                  r = element_data.get(e_symbol).get_radius() / 2
             else:
-                 r = element_data.get(e_symbol).get_vanDerWaals() / 2
+                 r = element_data.get(e_symbol).get_vanDerWaals()
             x = pos_dict[key].x
             y = pos_dict[key].y
             z = pos_dict[key].z
