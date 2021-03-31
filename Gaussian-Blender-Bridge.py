@@ -4,13 +4,21 @@ import subprocess
 import tkinter as tk
 from tkinter import filedialog
 
+#Preprocess
+# This allows using resources from global paths
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+#endPreprocess
+
 #Root parameters
 #region
 root = tk.Tk()
 root.title("Gaussian-Blender-Bridge")
 
 script_dir = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
-root.iconbitmap(script_dir + "\\misc\\icon.ico")
+root.iconbitmap(resource_path("icon.ico"))
 root.resizable(width=0, height=0)
 #endregion
 
