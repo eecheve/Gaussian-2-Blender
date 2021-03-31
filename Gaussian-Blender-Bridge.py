@@ -3,10 +3,16 @@ import sys
 import subprocess
 import tkinter as tk
 from tkinter import filedialog
-#from tkinter import *
 
-window = tk.Tk()
-window.title("Gaussian-Blender-Bridge")
+#Root parameters
+#region
+root = tk.Tk()
+root.title("Gaussian-Blender-Bridge")
+
+script_dir = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
+root.iconbitmap(script_dir + "\\misc\\icon.ico")
+root.resizable(width=0, height=0)
+#endregion
 
 #Utility
 #region 
@@ -110,27 +116,27 @@ def export():
             print("Please write a name for the output file")
         else:
             print("Will export the object to the path: ", o_path)
-            exec_loc = script_dir + '\ReadMolecules.bat'
+            exec_loc = def_scriptsPath + '\ReadMolecules.bat'
             subprocess.call([exec_loc, ent_blenderPath.get(), ent_inputPath.get(), ent_inputName.get(), ent_outputPath.get(), ent_outputName.get(), var_modelTypes.get(), var_outputTypes.get()])
             print("Export completed, please close the window now")
 #endregion
 
 #Default path values
 #region
-script_dir = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
 def_blenderPath = "C:\Program Files\Blender Foundation\Blender 2.82"
 def_inputPath = script_dir + "\\input_examples\\inorganic\\"
 def_outputPath = script_dir + "\\output\\"
+def_scriptsPath = script_dir + "\\scripts\\"
 #endregion
 
 #Defining frames
 #region
-frm_definitions = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
-frm_instructions = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
-frm_blender = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
-frm_input = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
-frm_output = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
-frm_interact = tk.Frame(master=window, relief=tk.GROOVE, borderwidth=2)
+frm_definitions = tk.LabelFrame(master=root, padx=116, text="Definitions", relief=tk.GROOVE, borderwidth=2, labelanchor="n")
+frm_instructions = tk.LabelFrame(master=root, padx=172, text="Instructions", relief=tk.GROOVE, borderwidth=2, labelanchor="n")
+frm_blender = tk.Frame(master=root, padx=106, relief=tk.GROOVE, borderwidth=2)
+frm_input = tk.Frame(master=root, padx=5, relief=tk.GROOVE, borderwidth=2)
+frm_output = tk.Frame(master=root, padx=5, relief=tk.GROOVE, borderwidth=2)
+frm_interact = tk.Frame(master=root, relief=tk.GROOVE, borderwidth=2)
 #endregion
 
 #Frame order
@@ -145,18 +151,13 @@ frm_interact.grid(row=4, columnspan=3, pady=3)
 
 #Attributes in definition frame
 #region
-lbl_defsTitle = tk.Label(
-    text="Definitions",
-    font='bold',
-    master=frm_definitions)
-
 lbl_bPath = tk.Label(
     text="blender path",
     master=frm_definitions)
 
 lbl_blenderHelp = tk.Label(
-    text="folder path for Blender your machine.",
-    foreground="gray",
+    text="folder path where Blender is installed in your machine.",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_iPath = tk.Label(
@@ -164,8 +165,8 @@ lbl_iPath = tk.Label(
     master=frm_definitions)
 
 lbl_iPathHelp = tk.Label(
-    text="folder path for the input file",
-    foreground="gray",
+    text="folder path where the input file is stored.",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_iName = tk.Label(
@@ -173,8 +174,8 @@ lbl_iName = tk.Label(
     master=frm_definitions)
 
 lbl_iNameHelp = tk.Label(
-    text="Gaussian '.com' input file",
-    foreground="gray",
+    text="Gaussian '.com' input file name. (Including '.com')",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_oPath = tk.Label(
@@ -182,8 +183,8 @@ lbl_oPath = tk.Label(
     master=frm_definitions)
 
 lbl_oPathHelp = tk.Label(
-    text="folder path for output file",
-    foreground="gray",
+    text="folder path where the output file will be saved.",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_oName = tk.Label(
@@ -191,29 +192,30 @@ lbl_oName = tk.Label(
     master=frm_definitions)
 
 lbl_oNameHelp = tk.Label(
-    text="object output name",
-    foreground="gray",
+    text="object output name, do not specify file type in the name.",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_bConvert = tk.Label(
-    text="Convert! Button",
+    text="Convert!",
     master=frm_definitions)
 
 lbl_bConvertHelp = tk.Label(
     text="To convert from .com to specified file type",
-    foreground="gray",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_bReset = tk.Label(
-    text="Reset Button",
+    text="Reset",
     master=frm_definitions)
 
 lbl_bResetHelp = tk.Label(
     text="To reset the folder paths to the default values",
-    foreground="gray",
+    foreground="#4d4d4d",
     master=frm_definitions)
 
-lbl_defsTitle.grid(row=0, column=1)
+lbl_bPath.grid(row=0, column=0, sticky="w")
+lbl_blenderHelp.grid(row=0, column=1, sticky="w")
 lbl_iPath.grid(row=1, column=0, sticky="w")
 lbl_iPathHelp.grid(row=1, column=1, sticky="w")
 lbl_iName.grid(row=2, column=0, sticky="w")
@@ -230,47 +232,66 @@ lbl_bResetHelp.grid(row=6, column=1, sticky="w")
 
 #Attributes in instructions frame
 #region
-lbl_title = tk.Label(
-    text="Instructions",
-    font='bold',
+lbl_index0 = tk.Label(
+    text="0:",
     master=frm_instructions)
+
+lbl_index1 = tk.Label(
+    text="1:",
+    master=frm_instructions)
+
+lbl_index2 = tk.Label(
+    text="2:",
+    master=frm_instructions)
+
+lbl_index3 = tk.Label(
+    text="3:",
+    master=frm_instructions)
+
+lbl_index4 = tk.Label(
+    text="4:",
+    master=frm_instructions)
+
+lbl_step0 = tk.Label(
+    text="Default values for folder paths are already set.",
+    master=frm_instructions,
+    fg="#4d4d4d")
 
 lbl_step1 = tk.Label(
-    text="0: Default values for folder paths are already set.",
-    master=frm_instructions)
+    text="If needed, set folder paths to their new location",
+    master=frm_instructions,
+    fg="#4d4d4d")
 
 lbl_step2 = tk.Label(
-    text="0: Set other paths for other files",
-    master=frm_instructions)
+    text="Set the input file or write the file name",
+    master=frm_instructions,
+    fg="#4d4d4d")
 
 lbl_step3 = tk.Label(
-    text="1: Set the folder location of the desired Gaussian '.com' file",
-    master=frm_instructions)
+    text="Write the output file name",
+    master=frm_instructions,
+    fg="#4d4d4d")
 
 lbl_step4 = tk.Label(
-    text="4: Set the folder location for the output",
-    master=frm_instructions)
+    text="Click on 'Convert!'",
+    master=frm_instructions,
+    fg="#4d4d4d")
 
-lbl_step5 = tk.Label(
-    text="5: Set the input file or write the file name",
-    master=frm_instructions)
+lbl_index0.grid(row=0, column=0)
+lbl_step0.grid(row=0, column=1, sticky="w")
 
-lbl_step6 = tk.Label(
-    text="6: Write the output file name",
-    master=frm_instructions)
+lbl_index1.grid(row=1, column=0)
+lbl_step1.grid(row=1, column=1, sticky="w")
 
-lbl_step7 = tk.Label(
-    text="8: Click on 'Convert!'",
-    master=frm_instructions)
+lbl_index2.grid(row=2, column=0)
+lbl_step2.grid(row=2, column=1, sticky="w")
 
-lbl_title.pack()
-lbl_step1.pack()
-lbl_step2.pack()
-lbl_step3.pack()
-lbl_step4.pack()
-lbl_step5.pack()
-lbl_step6.pack()
-lbl_step7.pack()
+lbl_index3.grid(row=3, column=0)
+lbl_step3.grid(row=3, column=1, sticky="w")
+
+lbl_index4.grid(row=4, column=0)
+lbl_step4.grid(row=4, column=1, sticky="w")
+
 #endregion
 
 #Attributes in blender frame
@@ -440,4 +461,4 @@ btn_reset.bind("<Button-1>", resetToDefaults)
 btn_convert.bind("<Button-1>", handleConvertButton)
 #endregion
 
-window.mainloop()
+root.mainloop()
