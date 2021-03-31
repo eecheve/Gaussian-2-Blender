@@ -1,6 +1,6 @@
-# Gaussian-Blender-Bridge
+# Gaussian-2-Blender
 
-Gaussian-Blender-Bridge is a tool that allows users to convert a Gaussian input file into a 3D object for modeling, 3D printing, animations and other 3D applications.
+Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file into a 3D object for modeling, 3D printing, animations and other 3D applications.
 
 ## PREREQUISITES:
 - Install Blender in your machine. Link: https://www.blender.org/download/
