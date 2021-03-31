@@ -1,11 +1,13 @@
+# Gaussian-Blender-Bridge
+
 Gaussian-Blender-Bridge is a tool that allows users to convert a Gaussian input file into a 3D object for modeling, 3D printing, animations and other 3D applications.
 
-PREREQUISITES:
+## PREREQUISITES:
 - Install Blender in your machine. Link: https://www.blender.org/download/
 - Install the latest version of Python. Link: https://www.python.org/downloads/
 - No programming-knowledge required to use this tool.
 
-FILES IN FOLDER:
+## FILES IN FOLDER:
 - The '.exe' file is the tool executable. Double click this for the program to run.
 - This folder contains examples of organic, inorganic, bio and nanomolecules for users to test.
 - The example .com files are inside the 'input_examples' folder, separated by categories.
@@ -15,7 +17,7 @@ FILES IN FOLDER:
 - The '.blend' is the blender file doing the operations in the background. Do not move nor delete.
 - The '.bat' file is also necessary for the program. Please do not moce nor delete.
 
-INSTRUCTIONS:
+## INSTRUCTIONS:
 - Double-click on the 'Gaussian-Blender-Bridge.exe' file.
 - Default values are already placed in both 'input path' and 'output path'
 - There are two alternatives to replace the default values:
@@ -27,3 +29,16 @@ INSTRUCTIONS:
 - Either write or set the output file name. Setting it will replace the file.
 - Click on 'Convert!' to convert the .com input into de desired output type.
 - Click on 'Reset' to reset everything to their default values.
+
+## Single executable
+To convert Gaussian-Blender-Bridge into a single executable for windows you will require pyinstaller. First, install pyinstaller from your command prompt by using:
+```bash
+pip install pyinstaller
+```
+Then, open a terminal in the `Blender-Gaussian-Bridge/` folder and type the next command
+
+```bash
+pyinstaller.exe --onefile -w --add-data 'misc/icon.ico:.' Gaussian-Blender-Bridge.py
+```
+
+Use the executable created in the `dist/` folder.
