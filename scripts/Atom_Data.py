@@ -1,7 +1,7 @@
 class Atom_Data:
     """Atom data class. Stores Radius: covalent; Color: tuple, RGBA values"""
 
-    def __init__(self, radius: float, vanDerWaals=0.00, color=(0.5,0.5,0.5)): # Gray is the default color if none is specified
+    def __init__(self, radius: float, vanDerWaals=0.00, color=(0.5,0.5,0.5, 1)): # Gray is the default color if none is specified
         self.radius = radius #covalent radius
         self.vanDerWaals = vanDerWaals #default is set temprarilly as 0.00 is radius is not reported
         self.color = color #RGBA values: default is gray
