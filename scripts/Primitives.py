@@ -24,6 +24,7 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, location=(x, y, z), radius=r)
             ModifyNamesAndMaterials(key, e_symbol, materials_dict)
             bpy.ops.object.shade_smooth()
+            print("5: Instantiating element: ", key)
         else:
             print("AddElement(): invalid element name")
             
@@ -47,6 +48,7 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list):
         atom1 = item[0]
         atom2 = item[1]
         bond_type = item[2]
+        print("5: Instantiating bond: ", atom1+bond_type+atom2)
         if bond_type == '_':
             CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2)
         elif bond_type == '-':
