@@ -34,6 +34,7 @@ def findFile(name, path):
         else:
             return False
     return False
+
 #endregion
 
 #Events
@@ -81,37 +82,47 @@ def setInputPath(event):
 
 def setInputName(event):
     global var_inputName
-    str_path = tk.filedialog.askopenfilename()
-    str_name = os.path.basename(str_path)
-    var_inputName.set(str_name)
+    global lst_inputNames
+    str_paths = tk.filedialog.askopenfilenames()
+    updateInputNameList(str_paths)
+    var_inputName.set(lst_inputNames[0])
 
 def setOutputPath(event):
     global var_outputPath
     str_path = tk.filedialog.askdirectory()
     var_outputPath.set(str_path)
 
-def setOutputName(event):
-    global var_outputName
-    str_path = tk.filedialog.askopenfilename()
-    str_name = os.path.basename(str_path)
-    var_outputName.set(str_name)
+def updateInputNameList(string_list):
+    global var_inputNameList
+    global lst_inputNames
+    lst_inputNames.clear()
+    var_inputNameList.set("")
+    s = ""
+    for entry in string_list:
+        n = os.path.basename(entry)
+        e = n + "\n"
+        s += e
+        lst_inputNames.append(n)
+    var_inputNameList.set(s)
 
 def resetToDefaults(event):
     global var_blenderPath
     global var_inputPath
     global var_outputPath
     global var_inputName
-    global var_outputName
+    global var_inputNameList
+    global lst_inputNames
     var_blenderPath.set(def_blenderPath)
     var_inputPath.set(def_inputPath)
     var_outputPath.set(def_outputPath)
     var_inputName.set("")
-    var_outputName.set("")
+    lst_inputNames.clear()
+    var_inputNameList.set("")
            
 def export():
     global script_dir
-    o_name = ent_outputName.get()
     o_path = ent_outputPath.get()
+    b_path = ent_blenderPath.get()
 
     if not o_path:
         print("Please paste a path for the output file")
@@ -120,13 +131,26 @@ def export():
     elif os.path.isdir(o_path) == False:
         print("Please paste a folder path instead of a file path")
     else:
-        if not o_name:
-            print("Please write a name for the output file")
+        print("Will export the object to the path: ", o_path)
+        exec_loc = def_scriptsPath + '\ReadMolecules.bat'
+        i_path = ent_inputPath.get()
+        m_type = var_modelTypes.get()
+        o_type = var_outputTypes.get()
+        if not lst_inputNames:
+            i_name = var_inputName.get()
+            o_name=i_name.split(".")[0]
+            print("Building molecule ", o_name)
+            subprocess.call([exec_loc, b_path, i_path, i_name, 
+                             o_path, o_name, m_type, o_type])
+            print("-----------------------------------------")
         else:
-            print("Will export the object to the path: ", o_path)
-            exec_loc = def_scriptsPath + '\ReadMolecules.bat'
-            subprocess.call([exec_loc, ent_blenderPath.get(), ent_inputPath.get(), ent_inputName.get(), ent_outputPath.get(), ent_outputName.get(), var_modelTypes.get(), var_outputTypes.get()])
-            print("Export completed, please close the window now")
+            for i_name in lst_inputNames:
+                o_name=i_name.split(".")[0]
+                print("Building molecule ", o_name)
+                subprocess.call([exec_loc, b_path, i_path, i_name, 
+                                 o_path, o_name, m_type, o_type])
+                print("-----------------------------------------")
+        print("Export completed, please close the window now")
 #endregion
 
 #Default path values
@@ -139,46 +163,48 @@ def_scriptsPath = script_dir + "\\scripts\\"
 
 #Defining frames
 #region
-frm_definitions = tk.LabelFrame(master=root, padx=116, text="Definitions", relief=tk.GROOVE, borderwidth=2, labelanchor="n")
-frm_instructions = tk.LabelFrame(master=root, padx=172, text="Instructions", relief=tk.GROOVE, borderwidth=2, labelanchor="n")
-frm_blender = tk.Frame(master=root, padx=106, relief=tk.GROOVE, borderwidth=2)
-frm_input = tk.Frame(master=root, padx=5, relief=tk.GROOVE, borderwidth=2)
-frm_output = tk.Frame(master=root, padx=5, relief=tk.GROOVE, borderwidth=2)
-frm_interact = tk.Frame(master=root, relief=tk.GROOVE, borderwidth=2)
+frm_definitions = tk.LabelFrame(master=root, text="Definitions", fg="blue", relief=tk.GROOVE, width=650, height=170, borderwidth=2)
+frm_blender = tk.LabelFrame(master=root, text="Blender path", fg="blue", relief=tk.GROOVE, borderwidth=2)
+frm_input = tk.LabelFrame(master=root, padx=5, text="Input", fg="blue", relief=tk.GROOVE, borderwidth=2)
+frm_output = tk.LabelFrame(master=root, padx=5, text="Output", fg="blue", relief=tk.GROOVE, width=325, height=102, borderwidth=2)
+frm_interpreted = tk.LabelFrame(master=root, text="Molecule(s)", fg="blue", padx=5, relief=tk.GROOVE, borderwidth=2)
+frm_interact = tk.LabelFrame(master=root, text="Actions", fg="blue", relief=tk.GROOVE,  borderwidth=2)
 #endregion
 
 #Frame order
 #region
 frm_definitions.grid(row=0, columnspan=3)
-frm_instructions.grid(row=1, columnspan=3, pady=3)
-frm_blender.grid(row=2, columnspan=3, pady=3)
-frm_input.grid(row=3, column=0, padx=3, pady=3)
-frm_output.grid(row=3, column=1, pady=3)
-frm_interact.grid(row=4, columnspan=3, pady=3)
+frm_definitions.grid_propagate(0)
+frm_blender.grid(row=1, columnspan=3, pady=3)
+frm_input.grid(row=2, column=0, padx=3, pady=3)
+frm_output.grid(row=2, column=1, pady=3)
+frm_output.grid_propagate(0)
+frm_interpreted.grid(row=3, column=0, pady=3)
+frm_interact.grid(row=3, column=1, pady=3)
 #endregion
 
 #Attributes in definition frame
 #region
 lbl_bPath = tk.Label(
-    text="blender path",
+    text="Blender path",
     master=frm_definitions)
 
 lbl_blenderHelp = tk.Label(
-    text="folder path where Blender is installed in your machine.",
+    text="Folder path where Blender is installed in your machine.",
     foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_iPath = tk.Label(
-    text="input path",
+    text="Input path",
     master=frm_definitions)
 
 lbl_iPathHelp = tk.Label(
-    text="folder path where the input file is stored.",
+    text="Folder path where the input file is stored.",
     foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_iName = tk.Label(
-    text="input name",
+    text="Input name",
     master=frm_definitions)
 
 lbl_iNameHelp = tk.Label(
@@ -187,20 +213,20 @@ lbl_iNameHelp = tk.Label(
     master=frm_definitions)
 
 lbl_oPath = tk.Label(
-    text="output path",
+    text="Output path",
     master=frm_definitions)
 
 lbl_oPathHelp = tk.Label(
-    text="folder path where the output file will be saved.",
+    text="Folder path where the output file will be saved.",
     foreground="#4d4d4d",
     master=frm_definitions)
 
 lbl_oName = tk.Label(
-    text="output name",
+    text="Output name",
     master=frm_definitions)
 
 lbl_oNameHelp = tk.Label(
-    text="object output name, do not specify file type in the name.",
+    text="Object output name, do not specify file type in the name.",
     foreground="#4d4d4d",
     master=frm_definitions)
 
@@ -222,90 +248,26 @@ lbl_bResetHelp = tk.Label(
     foreground="#4d4d4d",
     master=frm_definitions)
 
-lbl_bPath.grid(row=0, column=0, sticky="w")
+lbl_bPath.grid(row=0, column=0, sticky="e")
 lbl_blenderHelp.grid(row=0, column=1, sticky="w")
-lbl_iPath.grid(row=1, column=0, sticky="w")
+lbl_iPath.grid(row=1, column=0, sticky="e")
 lbl_iPathHelp.grid(row=1, column=1, sticky="w")
-lbl_iName.grid(row=2, column=0, sticky="w")
+lbl_iName.grid(row=2, column=0, sticky="e")
 lbl_iNameHelp.grid(row=2, column=1, sticky="w")
-lbl_oPath.grid(row=3, column=0, sticky="w")
+lbl_oPath.grid(row=3, column=0, sticky="e")
 lbl_oPathHelp.grid(row=3, column=1, sticky="w")
-lbl_oName.grid(row=4, column=0, sticky="w")
+lbl_oName.grid(row=4, column=0, sticky="e")
 lbl_oNameHelp.grid(row=4, column=1, sticky="w")
-lbl_bConvert.grid(row=5, column=0, sticky="w")
+lbl_bConvert.grid(row=5, column=0, sticky="e")
 lbl_bConvertHelp.grid(row=5, column=1, sticky="w")
-lbl_bReset.grid(row=6, column=0, sticky="w")
+lbl_bReset.grid(row=6, column=0, sticky="e")
 lbl_bResetHelp.grid(row=6, column=1, sticky="w")
-#endregion
-
-#Attributes in instructions frame
-#region
-lbl_index0 = tk.Label(
-    text="0:",
-    master=frm_instructions)
-
-lbl_index1 = tk.Label(
-    text="1:",
-    master=frm_instructions)
-
-lbl_index2 = tk.Label(
-    text="2:",
-    master=frm_instructions)
-
-lbl_index3 = tk.Label(
-    text="3:",
-    master=frm_instructions)
-
-lbl_index4 = tk.Label(
-    text="4:",
-    master=frm_instructions)
-
-lbl_step0 = tk.Label(
-    text="Default values for folder paths are already set.",
-    master=frm_instructions,
-    fg="#4d4d4d")
-
-lbl_step1 = tk.Label(
-    text="If needed, set folder paths to their new location",
-    master=frm_instructions,
-    fg="#4d4d4d")
-
-lbl_step2 = tk.Label(
-    text="Set the input file or write the file name",
-    master=frm_instructions,
-    fg="#4d4d4d")
-
-lbl_step3 = tk.Label(
-    text="Write the output file name",
-    master=frm_instructions,
-    fg="#4d4d4d")
-
-lbl_step4 = tk.Label(
-    text="Click on 'Convert!'",
-    master=frm_instructions,
-    fg="#4d4d4d")
-
-lbl_index0.grid(row=0, column=0)
-lbl_step0.grid(row=0, column=1, sticky="w")
-
-lbl_index1.grid(row=1, column=0)
-lbl_step1.grid(row=1, column=1, sticky="w")
-
-lbl_index2.grid(row=2, column=0)
-lbl_step2.grid(row=2, column=1, sticky="w")
-
-lbl_index3.grid(row=3, column=0)
-lbl_step3.grid(row=3, column=1, sticky="w")
-
-lbl_index4.grid(row=4, column=0)
-lbl_step4.grid(row=4, column=1, sticky="w")
-
 #endregion
 
 #Attributes in blender frame
 #region
 lbl_blenderPath = tk.Label(
-    text="blender path",
+    text="Blender path",
     master=frm_blender)
 
 var_blenderPath = tk.StringVar()
@@ -329,7 +291,7 @@ btn_setBlenderPath.bind("<Button-1>", setBlenderPath)
 #Attributes in input_frame
 #region
 lbl_inputPath = tk.Label(
-    text="input path",
+    text="Input path",
     master=frm_input)
 
 var_inputPath = tk.StringVar()
@@ -344,7 +306,7 @@ btn_setInputPath = tk.Button(
     master=frm_input)
 
 lbl_inputName = tk.Label(
-    text="input name",
+    text="Input name(s)",
     master=frm_input)
 
 var_inputName = tk.StringVar()
@@ -359,7 +321,7 @@ btn_setInputName = tk.Button(
     master=frm_input)
 
 lbl_inputType = tk.Label(
-    text="model type",
+    text="Model type",
     master=frm_input)
 
 lst_modelTypes = [
@@ -388,10 +350,24 @@ lbl_inputType.grid(row=2, column=0, sticky="e")
 drp_modelTypes.grid(row=2, column=1, sticky="w")
 #endregion
 
+#Attributes in interpreted frame
+#region
+lst_inputNames = []
+var_inputNameList = tk.StringVar()
+var_inputNameList.set("")
+lbl_inputNameList = tk.Label(
+    textvariable=var_inputNameList,
+    master=frm_interpreted,
+    width=35,
+    foreground="#4d4d4d")
+
+lbl_inputNameList.grid(row=0, column=0, sticky="w")
+#endregion
+
 #Attributes in output frame
 #region
 lbl_outputPath = tk.Label(
-    text="output path",
+    text="Output path",
     master=frm_output)
 
 var_outputPath = tk.StringVar()
@@ -405,23 +381,8 @@ btn_setOutputPath = tk.Button(
     text="set",
     master=frm_output)
 
-lbl_outputName = tk.Label(
-    text="output name",
-    master=frm_output)
-
-var_outputName = tk.StringVar()
-var_outputName.set("")
-ent_outputName = tk.Entry(
-    width=35,
-    master=frm_output,
-    textvariable=var_outputName)
-
-btn_setOutputName = tk.Button(
-    text="set",
-    master=frm_output)
-
 lbl_outputType = tk.Label(
-    text="output type",
+    text="Output type",
     master=frm_output)
 
 lst_outputTypes = [
@@ -436,15 +397,10 @@ drp_outputTypes = tk.OptionMenu(
     *lst_outputTypes)
 
 btn_setOutputPath.bind("<Button-1>", setOutputPath)
-btn_setOutputName.bind("<Button-1>", setOutputName)
 
 lbl_outputPath.grid(row=0, column=0)
 ent_outputPath.grid(row=0, column=1)
 btn_setOutputPath.grid(row=0, column=2)
-
-lbl_outputName.grid(row=1, column=0)
-ent_outputName.grid(row=1, column=1, sticky="w")
-btn_setOutputName.grid(row=1, column=2)
 
 lbl_outputType.grid(row=2, column=0, sticky="e")
 drp_outputTypes.grid(row=2, column=1, sticky="w")
