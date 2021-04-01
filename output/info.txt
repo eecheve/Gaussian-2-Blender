@@ -1,0 +1,1 @@
+By default, the rendered 3D molecules will appear in this folder.
