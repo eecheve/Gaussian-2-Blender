@@ -12,5 +12,9 @@ def ExportSceneAs(folder_path, file_name, file_type): #https://docs.blender.org/
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.export_scene.obj(filepath=file_path, use_selection=True, use_materials=True)
         bpy.ops.object.select_all(action='DESELECT')
+    elif file_type == ".x3d":
+        bpy.ops.object.select_all(action='SELECT')
+        bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True)
+        bpy.ops.object.select_all(action='DESELECT')
     else:
         print("invalid file type")

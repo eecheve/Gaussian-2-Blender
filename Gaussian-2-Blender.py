@@ -388,7 +388,8 @@ lbl_outputType = tk.Label(
 lst_outputTypes = [
     ".fbx",
     ".obj",
-    ".dae"]
+    ".dae",
+    ".x3d"]
 var_outputTypes = tk.StringVar()
 var_outputTypes.set(".fbx")
 drp_outputTypes = tk.OptionMenu(
