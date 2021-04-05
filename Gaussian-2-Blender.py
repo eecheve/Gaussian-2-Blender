@@ -389,7 +389,8 @@ lst_outputTypes = [
     ".fbx",
     ".obj",
     ".dae",
-    ".x3d"]
+    ".x3d",
+    ".stl"]
 var_outputTypes = tk.StringVar()
 var_outputTypes.set(".fbx")
 drp_outputTypes = tk.OptionMenu(
