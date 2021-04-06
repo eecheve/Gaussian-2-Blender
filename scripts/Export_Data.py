@@ -6,8 +6,10 @@ def ExportSceneAs(folder_path, file_name, file_type): #https://docs.blender.org/
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True)
         bpy.ops.object.select_all(action='DESELECT')
-    elif file_type == ".dae":
-        bpy.ops.wm.collada_export(filepath=file_path)
+    elif file_type == ".dae": #currently, materials not saved using this settings.
+        bpy.ops.object.select_all(action='SELECT')
+        bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, apply_modifiers=True, selected=True, use_blender_profile=True)
+        bpy.ops.object.select_all(action='DESELECT')
     elif file_type == ".obj":
         bpy.ops.object.select_all(action='SELECT')
         bpy.ops.export_scene.obj(filepath=file_path, use_selection=True, use_materials=True)
