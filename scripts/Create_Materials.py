@@ -1,4 +1,15 @@
 import bpy
+import sys
+import os
+
+dir = os.path.dirname(bpy.data.filepath)
+if not dir in sys.path:
+    sys.path.append(dir)
+    
+import Atom_Data
+
+import importlib #<-- for end user in case they want to add functionality. 
+importlib.reload(Atom_Data)
 
 def CreateAndAssignMaterials(ref_dict):
     """
@@ -7,7 +18,8 @@ def CreateAndAssignMaterials(ref_dict):
     """
     d = {}
     for key in ref_dict:
-        d[key] = AssignMaterial(key, ref_dict.get(key).get_color()) 
+        d[key] = AssignMaterial(key, ref_dict.get(key).get_color())
+    d["Xx"] = AssignMaterial("Xx", Atom_Data.Elements.get("Xx").get_color())
     return d
     
 

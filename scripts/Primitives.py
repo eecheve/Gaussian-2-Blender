@@ -24,10 +24,25 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, location=(x, y, z), radius=r)
             ModifyNamesAndMaterials(key, e_symbol, materials_dict)
             bpy.ops.object.shade_smooth()
-            print("5: Instantiating element: ", key)
+            print("6: Instantiating element: ", key)
         else:
             print("AddElement(): invalid element name")
             
+def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
+    for key in pos_dict:
+        i_symbol = ''.join(i for i in key if not i.isdigit()) #remove numbers from name
+        if i_symbol in ion_data:
+            r = ion_data[i_symbol].radius /2
+            x = pos_dict[key].x
+            y = pos_dict[key].y
+            z = pos_dict[key].z
+            bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, location=(x, y, z), radius=r)
+            ModifyNamesAndMaterials(key, i_symbol, materials_dict)
+            bpy.ops.object.shade_smooth()
+            print("6: Instantiating ion: ", key)
+        else:
+            print("AddElement(): invalid element name")
+                    
 def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     """
     obj_name: <string> the name of the sphere to be instantiated
@@ -41,42 +56,47 @@ def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     try:
         bpy.context.active_object.data.materials.append(mat)
     except:
-        print("Material not found @Primitives.ModifyNamesAndMaterials")
+        print("6: Material not found @Primitives.ModifyNamesAndMaterials")
     
 def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list):
     for item in connect_list:
         atom1 = item[0]
         atom2 = item[1]
         bond_type = item[2]
-        print("5: Instantiating bond: ", atom1+bond_type+atom2)
+        print("6: Instantiating bond: ", atom1+bond_type+atom2)
         if bond_type == '_':
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2)
+            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2, 0.06, h_bonding=True)
         elif bond_type == '-':
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
         elif bond_type == '=':
             bond_label = atom1 + '=' + atom2
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            bond_label2 = atom2 + '=' + atom1
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
+            MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label+".001",(0.0,-0.1,0.0))
+            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,-0.1,0.0))
+            SelectTwoMeshesAndJoin(bond_label, bond_label2)
+            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
         elif bond_type == 'res1':
             bond_label = atom1 + '-=' + atom2
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '-=', 0.2)
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
+            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '-=', 0.2, 0.08)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label+".001",(0.0,-0.1,0.0))
         elif bond_type == '#':
             bond_label = atom1 + '#' + atom2
             #print("@Primitives.InstantiateBonds: instantiating triple bond")
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             MoveObjectOnLocalAxis(bond_label+".001",(0.0,0.12,0.0))
             MoveObjectOnLocalAxis(bond_label+".002",(0.0,-0.12,0.0))
         else:
             print("Error on bond type! @Primitives.InstantiateBondsFromConnectivity")
             
-def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_len): 
+def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_len, bond_radius, h_bonding=False): 
     scene = bpy.context.scene
     #temporary names for the bonds instantiated
     name1 = key1 + bond_type + key2
@@ -96,20 +116,23 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
     for i in range(dash_nmbr):
         if i != 0 and i % 2 == 0: #will instantiate dashes only in half of the spaces 
             mid_point = (normal_vector * dash_len * i) + origin
-            bpy.ops.mesh.primitive_cylinder_add(radius=0.08, depth=dash_len, enter_editmode=False, location=mid_point)
+            bpy.ops.mesh.primitive_cylinder_add(radius=bond_radius, depth=dash_len, enter_editmode=False, location=mid_point)
             phi = math.atan2(vector.y, vector.x)
             theta = math.acos(vector.z/distance)
             bpy.context.object.rotation_euler[1] = theta #dash orientation management
             bpy.context.object.rotation_euler[2] = phi
-            if i <= ref_nmbr: #dashes closest to atom 1
-                ModifyNamesAndMaterials(name1, type1, mat_dict)
-            else: #dashes closest to atom 2
-                ModifyNamesAndMaterials(name1, type2,  mat_dict)
+            if h_bonding == False:
+                if i <= ref_nmbr: #dashes closest to atom 1
+                    ModifyNamesAndMaterials(name1, type1, mat_dict)
+                else: #dashes closest to atom 2
+                    ModifyNamesAndMaterials(name1, type2,  mat_dict)
+            else:
+                ModifyNamesAndMaterials(name1, "Xx", mat_dict) #For trantient or hydrogen bonding
     #getting all the objects with name that starts with name1
     name1_objs = [o for o in scene.objects if o.name.startswith(name1)]
     JoinMeshesFromObjectList(name1_objs)
 
-def CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type):
+def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type):
     """
     pos_dict: Dictionary<string, Vector3>: atomic symbols and their positions
     mat_dict: Dictionary<string, bpy.Material>: atomic symbols and their materials
@@ -134,9 +157,10 @@ def CreateAndJoinFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type):
     InstantiateBondBetweenTwoPoints(v2, v3)
     ModifyNamesAndMaterials(name2, element2, mat_dict)  
     #joining meshes with the temporary names
-    SelectTwoMeshesAndJoin(name1, name2)
+    #SelectTwoMeshesAndJoin(name1, name2) #<-------------------------HERE'S THE DAMN PROBLEM!!!!!
         
 def MoveObjectOnLocalAxis(obj_name, value):
+    print("MoveObjects: moving object", obj_name)
     obj = bpy.data.objects[obj_name]
     distz = mathutils.Vector(value)
     rotationMAT = obj.rotation_euler.to_matrix()
@@ -154,19 +178,21 @@ def InstantiateBondBetweenTwoPoints(p1, p2): #p1 and p2 are the origin and end p
     except ValueError:
         phi = math.pi/2 #to handle the 90 degrees exception
     try:
-        theta = math.acos(v.z/d) #returns a bug if theta is 0 degrees, I don't get the math but oh well
+        theta = math.acos(v.z/d) #returns a bug if theta is 0 degrees
     except ValueError:
         theta = 0
     bpy.context.object.rotation_euler[1] = theta
     bpy.context.object.rotation_euler[2] = phi 
     
 def SelectTwoMeshesAndJoin(name1, name2):
+    #print("@Primitives_SelectTwoMeshes: selecting",name1,name2)
     obs = []
     scene = bpy.context.scene
     for ob in scene.objects:
         if ob.name == name1 or ob.name == name2:
             if ob.type == 'MESH':
                 obs.append(ob)
+                #print("@Primitives_selectTwoMeshes: appending",ob.name)
     ctx = bpy.context.copy()
     ctx['active_object'] = obs[0]
     ctx['selected_editable_objects'] = obs

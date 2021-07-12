@@ -75,3 +75,37 @@ def GetDataForExistingElements(list, ref_dict):
         if ref_dict.get(element):
             d[element] = ref_dict.get(element)
     return d
+
+def RemoveNonSpecifiedIons(ion_dict, ionInputList):
+    """
+    input: ion_dict <dictionary>: contains the symbols and possible ion radii for all present elements,
+    input: ionInputList <list>(string, string, string, string): list of ions with custom properties
+    summary: removes from the ion dictionary the elements that were not specified in input list
+    output: smaller dictionary
+    error output: prints out an error if input list contains an ion non present in dictionary
+    """
+    d = {}
+    for ion in ion_dict:
+        for entry in ionInputList:
+            if entry[0] in ion_dict:
+                if entry[0] == ion:
+                    d[ion] = ion_dict.get(ion)
+            else:
+                print("Error: specified ion for",entry[0],"is not present in molecule, specification will be ignored")
+    return d
+
+def RemoveSpecifiedIonsFromElementDict(ion_dict, element_dict):
+    """
+    input: ion_dict <dictionary>: contains the symbols and the possible radii for specified elements,
+    input: element_dict <dictionary>: dictionary off all elements present
+    summary: removes specified ions from dict of all elements present
+    output: smaller dictionary
+    """
+    d = {}
+    for element in element_dict:
+        for ion in ion_dict:
+            if ion == element:
+                continue
+            else:
+                d[element] = element_dict.get(element)
+    return d
