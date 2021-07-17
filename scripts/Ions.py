@@ -27,8 +27,7 @@ def CreateIonDataFromInput(ionInputList):
         symbol = ionInput[0]
         charge = int(ionInput[1])
         coordination = ionInput[2]
-        spin = ionInput[3]
-        d[symbol] = Atom_Data.Ionic(charge, coordination, spin, 0.0)
+        d[symbol] = Atom_Data.Ionic(charge, coordination, 0.0)
     return d
 
 def GetIonPositions(names_and_pos, ion_input):
@@ -95,11 +94,10 @@ def GetIonDataFromInput(ion_data_dict, ion_input):
         symbol = ion
         charge = ion_input[ion].charge
         coordination = ion_input[ion].coordination
-        spin = ion_input[ion].spin
         for key in ion_data_dict:
             ion_data_list = ion_data_dict[key]
             for ion_data in ion_data_list:
-                if ion_data.charge == charge and ion_data.coordination == coordination and ion_data.spin == spin:
+                if ion_data.charge == charge and ion_data.coordination == coordination:
                     ion_input[ion].set_radius(ion_data.radius)
 
     

@@ -32,35 +32,39 @@ importlib.reload(Export_Data)
 importlib.reload(Ions)
 
 #--------------------------confirming parameters section------------------------------------------#
-#argv = sys.argv
-#argv = argv[argv.index("--") + 1:]
+argv = sys.argv
+argv = argv[argv.index("--") + 1:]
 
-#i_folder_path = argv[0]
-#i_file_name = argv[1]
-#o_folder_path = argv[2]
-#o_file_name = argv[3]
-#represent_type = argv[4]
-#o_file_type = argv[5]
+i_folder_path = argv[0]
+i_file_name = argv[1]
+o_folder_path = argv[2]
+o_file_name = argv[3]
+represent_type = argv[4]
+o_file_type = argv[5]
+is_ionic=argv[6]
+str_ion_input_list=argv[7]
 
-file_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\inorganic\\samarium_lexidronam.com"
-o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
-o_file_name="samarium_lexidronam"
-represent_type="Ball-and-Stick"
-o_file_type=".fbx"
-is_ionic=False
-ion_input_list=[("Na","+1","VI",""),("Cl","-1","VI","")]
+#file_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\inorganic\\sodium_chloride.com"
+#o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
+#o_file_name="phosphate"
+#represent_type="Ball-and-Stick"
+#o_file_type=".fbx"
+#is_ionic=True
+#str_ion_input_list="(Na,+1,VI),(Cl,-1,VI)"
 
-#print("0: input folder path is", i_folder_path)
-#print("0: input file name is", i_file_name)
+print("0: input folder path is", i_folder_path)
+print("0: input file name is", i_file_name)
 print("0: output folder path is", o_folder_path)
 print("0: output file name is", o_file_name)
 print("0: representational model is", represent_type)
 print("0: output type is", o_file_type)
+print("0: has ions is", is_ionic)
+print("0: ion list is", str_ion_input_list)
 
 #-------------------------------import data section-----------------------------------------------#
 #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
 print("1: Reading .com file ...")
-#file_path = i_folder_path + "\\" + i_file_name
+file_path = i_folder_path + "\\" + i_file_name
 
 raw_data = Import_Data.ExtractDataFromFile(file_path)
 raw_data = Import_Data.FilterOutExtraInformation('above', 2, 1, raw_data) #removes everything above the second line break +1 line, from the raw_data
@@ -70,12 +74,14 @@ print("2: Extracting information from .com file ...")
 raw_coords = Import_Data.FilterOutExtraInformation('below', 1, 1, raw_data)
 raw_connect = Import_Data.FilterOutExtraInformation('above', 1, 0, raw_data)
 
-
-
 #-----------------------------refine data section-------------------------------------------------#
 print("3: Refining extracted data ...")
 coords = Refine_Data.RefineCoordList(raw_coords)
 number_of_elements = len(coords)
+ion_input_list = Refine_Data.rebuild_list(str_ion_input_list)
+ion_input_list = Refine_Data.make_tuple_in_list(ion_input_list)
+print("3: ion_input_list is", ion_input_list)
+
 print("3: number of elements in molecule is: ", number_of_elements)
 connect = Refine_Data.RefineConnectivity(raw_connect)
 connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements)
@@ -91,6 +97,7 @@ ion_data = Refine_Elements.GetDataForExistingElements(elements_present, Atom_Dat
 #----------------------------get ion specifications section---------------------------------------_
 print("5: Checking for present ion specifications ...")
 if ion_input_list: #checking if list is not empty
+    print("5: ion_input_list is not empty")
     ion_input = Ions.CreateIonDataFromInput(ion_input_list)
 
 else:
@@ -101,7 +108,7 @@ print("6: Creating and assigning materials ...")
 materials_dict = Create_Materials.CreateAndAssignMaterials(element_data)
 
 print("6: Instantiating geometries")
-if is_ionic == False:
+if is_ionic == "0":
     if represent_type == "Ball-and-Stick":
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict)
@@ -156,5 +163,5 @@ else:
     
 
 #------------------------export as something section----------------------------------------------#
-#print("6: Exporting the results ...")
-#Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)
+print("6: Exporting the results ...")
+Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)

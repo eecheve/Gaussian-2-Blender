@@ -108,3 +108,37 @@ def AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements):
     else:
         print("@Refine_Data: More than 1000 elements, cannot process")
         return l
+
+def rebuild_list(str_list):
+    """
+    takes a string of the list, and returns a list of strings
+    """
+    k = str_list.split("_")
+    print(k)
+    str_in = ""
+    l = []
+    for i in range(len(k)):
+        print(l)
+        str_in += k[i]
+        str_in += ","
+        if ')' in k[i]:
+            str_in = str_in[:-1]
+            l.append(str_in)
+            str_in = ""
+    return l
+
+def make_tuple(str_in):
+    """
+    makes a tuple out of a string of the form "(a,b,c)"
+    """
+    print("receiving string", str_in)
+    str_in = str_in.strip("()")
+    l = str_in.split(",")
+    return tuple(l)
+
+def make_tuple_in_list(a_list):
+    l = []
+    for entry in a_list:
+        tup = make_tuple(entry)
+        l.append(tup)
+    return l
