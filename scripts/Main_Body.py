@@ -44,13 +44,14 @@ o_file_type = argv[5]
 is_ionic=argv[6]
 str_ion_input_list=argv[7]
 
-#file_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\inorganic\\sodium_chloride.com"
+#i_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\inorganic"
+#i_file_name="decacarbonyl-dichromium-ii.com"
 #o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
-#o_file_name="phosphate"
+#o_file_name="decacarbonyl-dichromium-ii"
 #represent_type="Ball-and-Stick"
 #o_file_type=".fbx"
-#is_ionic=True
-#str_ion_input_list="(Na,+1,VI),(Cl,-1,VI)"
+#is_ionic="1"
+#str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
 
 print("0: input folder path is", i_folder_path)
 print("0: input file name is", i_file_name)

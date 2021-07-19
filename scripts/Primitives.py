@@ -86,23 +86,24 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list):
         elif bond_type == 'res1':
             bond_label = atom1 + '-=' + atom2
             bond_label2 = atom2 + '-=' + atom1
-            bond_label3 = atom1 + '=-' + atom2 
-            bond_label4 = atom2 + '=-' + atom1 
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
             SelectTwoMeshesAndJoin(bond_label, bond_label2)
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '=-', 0.2, 0.08)
-            MoveObjectOnLocalAxis(bond_label3,(0.0,-0.1,0.0))
-            SelectTwoMeshesAndJoin(bond_label, bond_label3)
+            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '=-', 0.18, 0.08)
         elif bond_type == '#':
             bond_label = atom1 + '#' + atom2
-            #print("@Primitives.InstantiateBonds: instantiating triple bond")
+            bond_label2 = atom2 + "#" + atom1
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             MoveObjectOnLocalAxis(bond_label+".001",(0.0,0.12,0.0))
             MoveObjectOnLocalAxis(bond_label+".002",(0.0,-0.12,0.0))
+            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,0.12,0.0))
+            MoveObjectOnLocalAxis(bond_label2+".002",(0.0,-0.12,0.0))
+            SelectTwoMeshesAndJoin(bond_label, bond_label2)
+            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
+            SelectTwoMeshesAndJoin(bond_label+".002", bond_label2+".002")
         else:
             print("Error on bond type! @Primitives.InstantiateBondsFromConnectivity")
             
@@ -127,8 +128,14 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
         if i != 0 and i % 2 == 0: #will instantiate dashes only in half of the spaces 
             mid_point = (normal_vector * dash_len * i) + origin
             bpy.ops.mesh.primitive_cylinder_add(radius=bond_radius, depth=dash_len, enter_editmode=False, location=mid_point)
-            phi = math.atan2(vector.y, vector.x)
-            theta = math.acos(vector.z/distance)
+            try:
+                phi = math.atan2(vector.y, vector.x)
+            except ValueError:
+                phi = math.pi / 2
+            try:
+                theta = math.acos(vector.z/distance)
+            except ValueError:
+                theta = 0
             bpy.context.object.rotation_euler[1] = theta #dash orientation management
             bpy.context.object.rotation_euler[2] = phi
             if h_bonding == False:
