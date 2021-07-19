@@ -32,26 +32,26 @@ importlib.reload(Export_Data)
 importlib.reload(Ions)
 
 #--------------------------confirming parameters section------------------------------------------#
-#argv = sys.argv
-#argv = argv[argv.index("--") + 1:]
+argv = sys.argv
+argv = argv[argv.index("--") + 1:]
 
-#i_folder_path = argv[0]
-#i_file_name = argv[1]
-#o_folder_path = argv[2]
-#o_file_name = argv[3]
-#represent_type = argv[4]
-#o_file_type = argv[5]
-#is_ionic=argv[6] #<-------------------------------
-#str_ion_input_list=argv[7]
+i_folder_path = argv[0]
+i_file_name = argv[1]
+o_folder_path = argv[2]
+o_file_name = argv[3]
+represent_type = argv[4]
+o_file_type = argv[5]
+str_ionic_cell=argv[6]
+str_ion_input_list=argv[7]
 
-i_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\minerals"
-i_file_name="fluorite.com"
-o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
-o_file_name="fluorite"
-represent_type="Ball-and-Stick"
-o_file_type=".fbx"
-str_ionic_cell="(1_0)"
-str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
+#i_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\minerals"
+#i_file_name="fluorite.com"
+#o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
+#o_file_name="fluorite"
+#represent_type="Ball-and-Stick"
+#o_file_type=".fbx"
+#str_ionic_cell="(1_0)"
+#str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
 
 print("0: input folder path is", i_folder_path)
 print("0: input file name is", i_file_name)
@@ -59,7 +59,7 @@ print("0: output folder path is", o_folder_path)
 print("0: output file name is", o_file_name)
 print("0: representational model is", represent_type)
 print("0: output type is", o_file_type)
-#print("0: has ions is", is_ionic)
+print("0: ion and unit cell is", str_ionic_cell)
 print("0: ion list is", str_ion_input_list)
 
 #-------------------------------import data section-----------------------------------------------#
@@ -160,5 +160,5 @@ else:
     
 
 #------------------------export as something section----------------------------------------------#
-#print("6: Exporting the results ...")
-#Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)
+print("6: Exporting the results ...")
+Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)

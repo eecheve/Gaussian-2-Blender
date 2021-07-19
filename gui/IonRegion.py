@@ -61,8 +61,8 @@ class IonRegion(object):
                                           text="unit cell boundaries",
                                           variable=self.int_unitCell,
                                           state=tk.DISABLED)
-        self.ttp_hasIons = tooltip(self.chk_hasIons,
-                                   "Check to make unit cell boundaries solid (if present)")
+        self.ttp_hasIons = tooltip(self.chk_unitCell,
+                                   "Check to replace dashed bonds with solid lines")
 
         self.chk_hasIons.grid(row=0, column=0)
         self.chk_unitCell.grid(row=0, column=1)

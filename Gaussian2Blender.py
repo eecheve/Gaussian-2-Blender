@@ -122,14 +122,15 @@ def export(b_path, i_names):
             else:
                 print("No ions specified...")
         else:
+            has_ions = 0
             print("Ion information skipped")
-        
+        str_ion_and_cell = "(" + str(has_ions) + "_" + str(unit_cell) + ")"
         for i_name in i_names:
             o_name=i_name.split(".")[0]
             print("Building molecule ", o_name)
             subprocess.call([exec_loc, b_path, i_path, i_name, 
                              o_path, o_name, m_type, o_type, 
-                             str(has_ions), str_ionList, str(unit_cell)])
+                             str_ion_and_cell, str_ionList])
             print("-----------------------------------------")
         print("Export of batch molecules completed, please click on 'Reset' to add new molecules")
 #endregion
