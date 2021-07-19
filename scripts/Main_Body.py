@@ -50,7 +50,7 @@ o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Ble
 o_file_name="fluorite"
 represent_type="Ball-and-Stick"
 o_file_type=".fbx"
-str_ionic_cell="(1_1)"
+str_ionic_cell="(1_0)"
 str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
 
 print("0: input folder path is", i_folder_path)
@@ -147,12 +147,12 @@ else:
         
     elif represent_type == "Ball-and-Stick":
         if refined_element_positions: #check if dictionary is not empty
-            Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
+            Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols, unit_cell)
             Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict)
             if refined_ion_data:
                 Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
         else: #dictionary is empty
-            Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
+            Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols, unit_cell)
             if refined_ion_data:
                 Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
     else:

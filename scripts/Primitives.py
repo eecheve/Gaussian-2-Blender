@@ -59,14 +59,17 @@ def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     except:
         print("6: Material not found @Primitives.ModifyNamesAndMaterials")
     
-def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list):
+def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell="0"):
     for item in connect_list:
         atom1 = item[0]
         atom2 = item[1]
         bond_type = item[2]
         print("6: Instantiating bond: ", atom1+bond_type+atom2)
         if bond_type == '_':
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2, 0.06, h_bonding=True)
+            if unit_cell == "0":
+                CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2, 0.06, h_bonding=True)
+            else:
+                CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell)
         elif bond_type == '-':
             bond_label = atom1 + '-' + atom2
             bond_label2 = atom2 + '-' + atom1
@@ -150,7 +153,7 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
     name1_objs = [o for o in scene.objects if o.name.startswith(name1)]
     JoinMeshesFromObjectList(name1_objs)
 
-def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type):
+def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell="0"):
     """
     pos_dict: Dictionary<string, Vector3>: atomic symbols and their positions
     mat_dict: Dictionary<string, bpy.Material>: atomic symbols and their materials
@@ -170,12 +173,16 @@ def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type):
     element1 = ''.join(i for i in atom1 if not i.isdigit())
     element2 = ''.join(i for i in atom2 if not i.isdigit())
     #instantiating bonds and assigning materials and names
-    InstantiateBondBetweenTwoPoints(v1, v2)
-    ModifyNamesAndMaterials(name1, element1, mat_dict)
-    InstantiateBondBetweenTwoPoints(v2, v3)
-    ModifyNamesAndMaterials(name2, element2, mat_dict)  
-    #joining meshes with the temporary names
-    #SelectTwoMeshesAndJoin(name1, name2) #<-------------------------HERE'S THE DAMN PROBLEM!!!!!
+    if unit_cell == "0":
+        InstantiateBondBetweenTwoPoints(v1, v2)
+        ModifyNamesAndMaterials(name1, element1, mat_dict)
+        InstantiateBondBetweenTwoPoints(v2, v3)
+        ModifyNamesAndMaterials(name2, element2, mat_dict)  
+    else:
+        InstantiateBondBetweenTwoPoints(v1, v2, 0.03)
+        ModifyNamesAndMaterials(name1, "Xx", mat_dict)
+        InstantiateBondBetweenTwoPoints(v2, v3, 0.03)
+        ModifyNamesAndMaterials(name2, "Xx", mat_dict)
         
 def MoveObjectOnLocalAxis(obj_name, value):
     print("MoveObjects: moving object", obj_name)
@@ -186,11 +193,11 @@ def MoveObjectOnLocalAxis(obj_name, value):
     zVector = distz @ rotationMAT # project the vector to the world using the rotation matrix
     obj.location += zVector
     
-def InstantiateBondBetweenTwoPoints(p1, p2): #p1 and p2 are the origin and end points
+def InstantiateBondBetweenTwoPoints(p1, p2, r=0.06): #p1 and p2 are the origin and end points
     v = p2 - p1 #vector between the two points
     d = v.magnitude
     m_p = (p1+p2)/2 #midpoint between p1 and p2
-    bpy.ops.mesh.primitive_cylinder_add(radius=0.06, depth=d, enter_editmode=False, location=m_p)
+    bpy.ops.mesh.primitive_cylinder_add(radius=r, depth=d, enter_editmode=False, location=m_p)
     try:
         phi = math.atan2(v.y, v.x) #returns a bug if phi is 90 degrees, as tan(90) is not defined
     except ValueError:
