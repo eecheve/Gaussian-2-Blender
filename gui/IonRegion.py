@@ -13,6 +13,7 @@ class IonRegion(object):
         
         self.var_ionNames = tk.StringVar()
         self.int_hasIons = tk.IntVar()
+        self.int_unitCell = tk.IntVar()
 
         self.frm_ions = tk.LabelFrame(master=parent,
                                       padx=5, 
@@ -56,12 +57,20 @@ class IonRegion(object):
         self.ttp_removeIon = tooltip(self.btn_removeIon,
                                      "Click here to remove the last added ion")
 
+        self.chk_unitCell = tk.Checkbutton(master=self.frm_inside,
+                                          text="unit cell boundaries",
+                                          variable=self.int_unitCell,
+                                          state=tk.DISABLED)
+        self.ttp_hasIons = tooltip(self.chk_hasIons,
+                                   "Check to make unit cell boundaries solid (if present)")
+
         self.chk_hasIons.grid(row=0, column=0)
-        self.btn_addIon.grid(row=0, column=1)
-        self.btn_removeIon.grid(row=0, column=2)
+        self.chk_unitCell.grid(row=0, column=1)
+        self.btn_addIon.grid(row=1, column=0)
+        self.btn_removeIon.grid(row=1, column=1)
 
     def addIon(self):
-        ion = SelectedIon.SelectedIon(self.frm_inside, self.ionCount + 1, 0)
+        ion = SelectedIon.SelectedIon(self.frm_inside, self.ionCount + 2, 0)
         self.lst_ions.append(ion)
         self.ionCount += 1
 
@@ -81,10 +90,12 @@ class IonRegion(object):
         if self.btn_addIon['state'] == tk.DISABLED:
             self.btn_addIon['state'] = tk.NORMAL
             self.btn_removeIon['state'] = tk.NORMAL
+            self.chk_unitCell['state'] = tk.NORMAL
             print("##### ACTIVATING IONS INFORMATION INPUT ####")
         else:
             self.btn_addIon['state'] = tk.DISABLED
             self.btn_removeIon['state'] = tk.DISABLED
+            self.chk_unitCell['state'] = tk.DISABLED
             self.removeAllIons()
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
 

@@ -24,8 +24,8 @@ import IonConventions
 root = tk.Tk()
 root.title("Gaussian-2-Blender")
 script_dir = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
-root.iconbitmap(script_dir+"\\icon.ico")
 #root.iconbitmap(utility.resource_path("icon.ico")) 
+root.iconbitmap(script_dir+"\\icon.ico")
 root.geometry('%dx%d+0+0' % (800, 600))
 root.resizable(0,0)
 
@@ -65,6 +65,9 @@ def reset_to_defaults():
     inputReg.var_inputNames.set("")
     inputReg.lst_inputNames.clear()
     inputReg.var_inputPath.set("")
+    #ionReg.int_hasIons.set(0)
+    ionReg.int_unitCell.set(0)
+    ionReg.activator()
     ionReg.int_hasIons.set(0)
     ionReg.removeAllIons()
     printReg.clear_content()
@@ -94,6 +97,9 @@ def export(b_path, i_names):
         o_type = outputReg.var_outputTypes.get()
         print("Rendering as a: ", o_type)
         has_ions = ionReg.int_hasIons.get()
+        unit_cell = ionReg.int_unitCell.get()
+        if not unit_cell:
+            unit_cell=0
         ion_list = ionReg.lst_ions
         str_ionList = ""
         if has_ions == 1:
@@ -123,7 +129,7 @@ def export(b_path, i_names):
             print("Building molecule ", o_name)
             subprocess.call([exec_loc, b_path, i_path, i_name, 
                              o_path, o_name, m_type, o_type, 
-                             str(has_ions), str_ionList])
+                             str(has_ions), str_ionList, str(unit_cell)])
             print("-----------------------------------------")
         print("Export of batch molecules completed, please click on 'Reset' to add new molecules")
 #endregion

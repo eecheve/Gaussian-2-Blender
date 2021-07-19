@@ -16,7 +16,7 @@ class SelectedIon(object):
         self.var_spin = tk.StringVar()
 
         self.frm_ion = tk.Frame(master=parent)
-        self.frm_ion.grid(row=row_number, column=column_number, columnspan=3)
+        self.frm_ion.grid(row=row_number, column=column_number, columnspan=4) #<---columnspan=3
         
         self.lbl_element = tk.Label(master=self.frm_ion,
                                     text="Element")

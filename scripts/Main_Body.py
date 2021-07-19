@@ -32,26 +32,26 @@ importlib.reload(Export_Data)
 importlib.reload(Ions)
 
 #--------------------------confirming parameters section------------------------------------------#
-argv = sys.argv
-argv = argv[argv.index("--") + 1:]
+#argv = sys.argv
+#argv = argv[argv.index("--") + 1:]
 
-i_folder_path = argv[0]
-i_file_name = argv[1]
-o_folder_path = argv[2]
-o_file_name = argv[3]
-represent_type = argv[4]
-o_file_type = argv[5]
-is_ionic=argv[6]
-str_ion_input_list=argv[7]
+#i_folder_path = argv[0]
+#i_file_name = argv[1]
+#o_folder_path = argv[2]
+#o_file_name = argv[3]
+#represent_type = argv[4]
+#o_file_type = argv[5]
+#is_ionic=argv[6] #<-------------------------------
+#str_ion_input_list=argv[7]
 
-#i_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\inorganic"
-#i_file_name="decacarbonyl-dichromium-ii.com"
-#o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
-#o_file_name="decacarbonyl-dichromium-ii"
-#represent_type="Ball-and-Stick"
-#o_file_type=".fbx"
-#is_ionic="1"
-#str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
+i_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\input_examples\\minerals"
+i_file_name="fluorite.com"
+o_folder_path="C:\\Users\\eecheve\\Documents\\BlenderScripts\\ReadMolecules\\Blender-Gaussian-Bridge\\output"
+o_file_name="fluorite"
+represent_type="Ball-and-Stick"
+o_file_type=".fbx"
+str_ionic_cell="(1_1)"
+str_ion_input_list="(F_-1_IV)_(Ca_2_VIII)"
 
 print("0: input folder path is", i_folder_path)
 print("0: input file name is", i_file_name)
@@ -59,7 +59,7 @@ print("0: output folder path is", o_folder_path)
 print("0: output file name is", o_file_name)
 print("0: representational model is", represent_type)
 print("0: output type is", o_file_type)
-print("0: has ions is", is_ionic)
+#print("0: has ions is", is_ionic)
 print("0: ion list is", str_ion_input_list)
 
 #-------------------------------import data section-----------------------------------------------#
@@ -79,6 +79,12 @@ raw_connect = Import_Data.FilterOutExtraInformation('above', 1, 0, raw_data)
 print("3: Refining extracted data ...")
 coords = Refine_Data.RefineCoordList(raw_coords)
 number_of_elements = len(coords)
+
+ionic_cell=Refine_Data.rebuild_list(str_ionic_cell)
+ionic_cell = Refine_Data.make_tuple_in_list(ionic_cell)
+is_ionic = ionic_cell[0][0]
+unit_cell = ionic_cell[0][1]
+
 ion_input_list = Refine_Data.rebuild_list(str_ion_input_list)
 ion_input_list = Refine_Data.make_tuple_in_list(ion_input_list)
 print("3: ion_input_list is", ion_input_list)
@@ -132,37 +138,27 @@ else:
     refined_element_positions = Ions.RemoveSpecifiedIonsFromElementDict(refined_ion_data, names_and_pos)
     ion_positions = Ions.GetIonPositions(names_and_pos, refined_ion_data)
     
-    if refined_element_positions: #check if dictionary is not empty
-        if represent_type == "Ball-and-Stick":
+    if represent_type == "Stick-only":
+        Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
+        
+    elif represent_type == "Van-der-Waals":
+        Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
+        print("6: Ionic radii replaced with van der Waals radii")
+        
+    elif represent_type == "Ball-and-Stick":
+        if refined_element_positions: #check if dictionary is not empty
             Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
             Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict)
             if refined_ion_data:
                 Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
-            
-        elif represent_type == "Stick-only":
-            Primitives.InstantiateBondsFromConnectivity(refined_element_positions, materials_dict, connect_with_symbols)
-            
-        elif represent_type == "Van-der-Waals":
-            Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict, van_der_waals=True)
-        else:
-            print("6: Error Instantiating geometries: unrecognized output type")
-        
-    else: #dictionary is empty
-        if represent_type == "Ball-and-Stick":
+        else: #dictionary is empty
             Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
             if refined_ion_data:
                 Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
-            
-        elif represent_type == "Stick-only":
-            Primitives.InstantiateBondsFromConnectivity(refined_element_positions, materials_dict, connect_with_symbols)
-            
-        elif represent_type == "Van-der-Waals":
-            Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict, van_der_waals=True)
-            print("6: Ionic radii replaced with van der Waals radii")
-        else:
-            print("6: Error Instantiating geometries: unrecognized output type") 
+    else:
+        print("6: Error Instantiating geometries: unrecognized output type") 
     
 
 #------------------------export as something section----------------------------------------------#
-print("6: Exporting the results ...")
-Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)
+#print("6: Exporting the results ...")
+#Export_Data.ExportSceneAs(o_folder_path, o_file_name, o_file_type)
