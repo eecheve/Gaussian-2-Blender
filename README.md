@@ -20,11 +20,9 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 
 ## INSTRUCTIONS:
 - Double-click on the `Gaussian-Blender-Bridge.exe` file.
-- Default values are already placed in both 'input path' and 'output path'
-- There are two alternatives to replace the default values: either (a) Set the folder paths by clicking on the 'set' button and selecting the adequate paths, or (b) Copy and paste the folder paths to the text box next to the label.
-- Either write or set the input file name. Don't forget the '.com' extension
-- Either write or set the output file name. Setting it will replace the file.
-- More than one '.com' file can be opened at the same time. This allows batch conversions.
+- Select one or more '.com' files from the same folder.
+- The default rendering radii are covalent. For rendering ionic radii select the `Check for Ionic Radii` option.
+- Add each ion and select their charge, coordination and spin multiplicity (when available).
 - Click on 'Convert!' to convert the .com input into de desired output type.
 - Click on 'Reset' to reset everything to their default values.
 
