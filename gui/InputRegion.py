@@ -95,9 +95,9 @@ class InputRegion(object):
             if ".com" in entry:
                 f_name = os.path.basename(entry)
                 print(f_name, "has correct file extension")
-                self.lst_inputNames.append(f_name)
             else:
                 print(f_name, "is not a '.com' file and is not accepted as input")
+                self.lst_inputNames.pop()
 
     def updateInputNameList(self, string_list):
         self.lst_inputNames.clear()
