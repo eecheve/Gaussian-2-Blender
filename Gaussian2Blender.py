@@ -26,7 +26,7 @@ root.title("Gaussian-2-Blender")
 script_dir = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
 #root.iconbitmap(utility.resource_path("icon.ico")) 
 root.iconbitmap(script_dir+"\\icon.ico")
-root.geometry('%dx%d+0+0' % (800, 600))
+root.geometry('%dx%d+0+0' % (700, 600))
 root.resizable(0,0)
 
 bPathReg = BlenderPath.BlenderPath(root)

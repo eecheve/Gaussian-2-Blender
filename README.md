@@ -11,7 +11,7 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 - If you install Blender on a path which is not the Windows default, take note of the path as it will be needed.
 - Download the whole 'Gaussian-2-Blender' package and unzip to its desired location.
 - The executable `Gaussian-2-Blender.exe` will be ready to use. Do not move, rename nor delete any files or folders that come with the package.
-- Click on this [YouTube link](https://youtu.be/fBnapOXRAYw) for a tutorial on how to use the tool.
+- Click on this [YouTube link](https://youtu.be/w_bsJ7daaas) for a tutorial on how to use the tool.
 
 ## EXAMPLE FILES:
 - The example .com files are inside the `input_examples` folder, separated by categories.
@@ -28,7 +28,8 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 
 ## RUNNING FROM THE CONSOLE
 If desired, you can run the `Gaussian-2-Blender.py` python script from the console.
-Open a terminal in the `Blender-Gaussian-Bridge/` folder and type the next command:
+- Copy the Gaussian-2-Blender.py file in the gui folder
+- Open a terminal in the `Blender-Gaussian-Bridge/gui/` folder and type the next command:
 ```bash
 python Gaussian-2-Blender.py
 ```
