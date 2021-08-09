@@ -90,24 +90,29 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
         elif bond_type == 'res1':
             bond_label = atom1 + '-=' + atom2
             bond_label2 = atom2 + '-=' + atom1
+            bond_label3 = atom1 + '=-' + atom2 + ".001"
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
             SelectTwoMeshesAndJoin(bond_label, bond_label2)
             CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '=-', 0.18, 0.08)
+            MoveObjectOnLocalAxis(bond_label3,(0.0,-0.1,0.0))
+            SelectTwoMeshesAndJoin(bond_label, bond_label3)
         elif bond_type == '#':
             bond_label = atom1 + '#' + atom2
             bond_label2 = atom2 + "#" + atom1
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            MoveObjectOnLocalAxis(bond_label+".001",(0.0,0.12,0.0))
-            MoveObjectOnLocalAxis(bond_label+".002",(0.0,-0.12,0.0))
-            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,0.12,0.0))
-            MoveObjectOnLocalAxis(bond_label2+".002",(0.0,-0.12,0.0))
+            MoveObjectOnLocalAxis(bond_label+".001",(0.0,0.15,0.0))
+            MoveObjectOnLocalAxis(bond_label+".002",(0.0,-0.15,0.0))
+            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,0.15,0.0))
+            MoveObjectOnLocalAxis(bond_label2+".002",(0.0,-0.15,0.0))
             SelectTwoMeshesAndJoin(bond_label, bond_label2)
             SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
             SelectTwoMeshesAndJoin(bond_label+".002", bond_label2+".002")
+            SelectTwoMeshesAndJoin(bond_label+".001", bond_label+".002")
+            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2)
         else:
             print("Error on bond type! @Primitives.InstantiateBondsFromConnectivity")
             
@@ -185,7 +190,6 @@ def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell
         ModifyNamesAndMaterials(name2, "Xx", mat_dict)
         
 def MoveObjectOnLocalAxis(obj_name, value):
-    print("MoveObjects: moving object", obj_name)
     obj = bpy.data.objects[obj_name]
     distz = mathutils.Vector(value)
     rotationMAT = obj.rotation_euler.to_matrix()

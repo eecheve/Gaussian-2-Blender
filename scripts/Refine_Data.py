@@ -1,6 +1,11 @@
 import bpy
 import sys
 
+from bpy import context
+import math
+from math import *
+import mathutils
+
 def RefineCoordList(list):
     """
     input: each entry on list is a list of four strings: the symbol and eac coordinate in x y z
@@ -114,11 +119,9 @@ def rebuild_list(str_list):
     takes a string of the list, and returns a list of strings
     """
     k = str_list.split("_")
-    print(k)
     str_in = ""
     l = []
     for i in range(len(k)):
-        print(l)
         str_in += k[i]
         str_in += ","
         if ')' in k[i]:
@@ -131,7 +134,6 @@ def make_tuple(str_in):
     """
     makes a tuple out of a string of the form "(a,b,c)"
     """
-    print("receiving string", str_in)
     str_in = str_in.strip("()")
     l = str_in.split(",")
     return tuple(l)
@@ -142,3 +144,50 @@ def make_tuple_in_list(a_list):
         tup = make_tuple(entry)
         l.append(tup)
     return l
+
+def refine_key_frames(raw_key_frames):
+    raw = RefineCoordList(raw_key_frames)
+    m = []
+    count = len(raw[0])
+    for entry in raw:
+        l = []
+        l.append(entry[0])
+        for i in range(1, count, 3):
+            x = entry[i]
+            y = entry[i+1]
+            z = entry[i+2]
+            vector = mathutils.Vector((x,y,z))
+            l.append(vector)
+        m.append(l)
+    return m
+
+def create_frames_dict(key_frames):
+    dict = {}
+    number_of_elements = len(key_frames)
+    if number_of_elements < 100:
+        for i in range(len(key_frames)):
+            if i < 9:
+                name = key_frames[i][0] + '0' + str(i+1)
+            else:
+                name = key_frames[i][0] + str(i+1)
+            vector_list = []
+            for j in range(1, len(key_frames[i])):
+                vector_list.append(key_frames[i][j])
+            dict[name] = vector_list
+        return dict
+    elif number_of_elements < 1000:
+        for i in range(len(key_frames)):
+            if i < 9:
+                name = list[i][0] + '00' + str(i+1)
+            elif i < 99:
+                name = list[i][0] + '0' + str(i+1)
+            else:
+                name = list[i][0] + str(i+1)
+            vector_list = []
+            for j in range(1, len(key_frames[i])):
+                vector_list.append(key_frames[i][j])
+            dict[name] = vector_list
+        return dict
+    else:
+        print("@Refine_Elements: Too many atoms, cannot process")
+        return dict

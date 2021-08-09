@@ -33,7 +33,7 @@ bPathReg = BlenderPath.BlenderPath(root)
 str_blenderPath = bPathReg.searchBlenderPath()
 bPathReg.setBlenderPath(str_blenderPath)
 aboutReg = AboutRegion.AboutRegion(root)
-inputReg = InputRegion.InputRegion(root)
+inputReg = InputRegion.InputRegion(root, script_dir)
 outputReg = OutputRegion.OutputRegion(root, script_dir)
 printReg = PrintRegion.PrintRegion(root)
 ionReg = IonRegion.IonRegion(root)
@@ -47,92 +47,116 @@ codeReg = IonConventions.IonConventions(root)
 
 #Events
 #region
-def handle_convert_button(event):
-    b_path = bPathReg.var_blenderPath.get()
-    i_names = inputReg.lst_inputNames
-    
-    if utility.findFile("blender.exe", b_path) == False:
-        print("The assigned blender path does not contain the blender.exe file")
-    else:
-        if not i_names:
-            print("Please select at least one gaussian input file to convert")
-        else:
-            export(b_path, i_names)
-
 def reset_to_defaults():
     bPathReg.var_blenderPath.set(str_blenderPath)
     outputReg.var_outputPath.set(outputReg.def_outputPath)
     inputReg.var_inputNames.set("")
     inputReg.lst_inputNames.clear()
     inputReg.var_inputPath.set("")
-    #ionReg.int_hasIons.set(0)
     ionReg.int_unitCell.set(0)
     ionReg.activator()
     ionReg.int_hasIons.set(0)
     ionReg.removeAllIons()
     printReg.clear_content()
-    #if not printReg.text.get(0): #<----------------------------------BUG!
-    #    printReg.text.delete("0", tk.END) #<------------------------BUG!!!!
-           
-def export(b_path, i_names):
-    global script_dir
+               
+def convert_manager():
+    exec_loc = def_scriptsPath + '\ReadMolecules.bat'
+    anim_frames_path = def_scriptsPath + '\\animation_frames.txt'
+    b_path = bPathReg.var_blenderPath.get()
+    i_path = inputReg.var_inputPath.get()
+    i_names = inputReg.lst_inputNames
+    model_type = inputReg.var_modelTypes.get()
     o_path = outputReg.ent_outputPath.get()
+    o_type = outputReg.var_outputTypes.get()
+    if exceptions_test_passed(b_path, i_names, o_path):
+        params = assign_ionic_params()
+        is_ionic = params[0]
+        unit_cell = params[1]
+        ion_list = params[2]
+        str_ion_list = params[3]
+        for i in range(len(i_names)):
+            print("Converting", i+1, "of", len(i_names))
+            individual_convert(exec_loc, b_path, i_path, i_names[i], model_type,
+                               o_path, i_names[i].split(".")[0], o_type, is_ionic,
+                               unit_cell, str_ion_list)     
+    else:
+        print("Cannot convert input to fbx animation, check console for errors")
 
-    if not o_path:
+
+def individual_convert(exec_loc, b_path, i_path, i_name, model_type, o_path, 
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list):
+    overwrite_parameters_script(i_path, i_name, model_type, o_path, o_name, o_type, 
+                                is_ionic, unit_cell, str_ion_list)
+    subprocess.call([exec_loc, b_path])
+ 
+def exceptions_test_passed(b_path, i_names, o_path):
+    if utility.findFile("blender.exe", b_path) == False:
+        print("The assigned blender path does not contain the blender.exe file")
+        return False
+    elif not i_names:
+        print("Please select at least one gaussian input file to convert")
+        return False
+    elif not o_path:
         print("Please paste a path for the output file")
+        return False
     elif os.path.exists(o_path) == False:
         print("Please paste a path that exists")
+        return False
     elif os.path.isdir(o_path) == False:
         print("Please paste a folder path instead of a file path")
+        return False
     else:
-        exec_loc = def_scriptsPath + '\ReadMolecules.bat' #<------------------
-        i_path = inputReg.var_inputPath.get()
-        print("Input path is: ", i_path)
-        print()
-        print("Output path is: ", o_path)
-        print()
-        m_type = inputReg.var_modelTypes.get()
-        print("Representational model is: ", m_type)
-        print()
-        o_type = outputReg.var_outputTypes.get()
-        print("Rendering as a: ", o_type)
-        has_ions = ionReg.int_hasIons.get()
-        unit_cell = ionReg.int_unitCell.get()
-        if not unit_cell:
-            unit_cell=0
-        ion_list = ionReg.lst_ions
-        str_ionList = ""
-        if has_ions == 1:
-            print("User chose to add ion information...")
-            if ion_list:
-                for ion in ion_list:
-                    charge_coord = ion.var_chargeCoord.get().strip("()")
-                    lst_pair = charge_coord.split(',')
-                    str_charge = lst_pair[0]
-                    str_coord = lst_pair[1]
-                    str_ionList += "("
-                    str_ionList += ion.var_element.get()
-                    str_ionList += "_"
-                    str_ionList += str_charge
-                    str_ionList += "_"
-                    str_ionList += str_coord
-                    str_ionList += ")_"
-                str_ionList = str_ionList[:-1]
-                print(str_ionList)
-            else:
-                print("No ions specified...")
+        return True
+
+def assign_ionic_params():
+    is_ionic = ionReg.int_hasIons.get()
+    if not is_ionic:
+        is_ionic = "0"
+        str_ionList = "---"
+    unit_cell = ionReg.int_unitCell.get()
+    if not unit_cell:
+        unit_cell = "0"
+    ion_list = ionReg.lst_ions
+    str_ionList = ""
+    if is_ionic == 1:
+        is_ionic = "1"
+        if ion_list:
+            for ion in ion_list:
+                charge_coord = ion.var_chargeCoord.get().strip("()")
+                lst_pair = charge_coord.split(',')
+                str_charge = lst_pair[0]
+                str_coord = lst_pair[1]
+                str_ionList += "("
+                str_ionList += ion.var_element.get()
+                str_ionList += "_"
+                str_ionList += str_charge
+                str_ionList += "_"
+                str_ionList += str_coord
+                str_ionList += ")_"
+            str_ionList = str_ionList[:-1]
+            print(str_ionList)
         else:
-            has_ions = 0
-            print("Ion information skipped")
-        str_ion_and_cell = "(" + str(has_ions) + "_" + str(unit_cell) + ")"
-        for i_name in i_names:
-            o_name=i_name.split(".")[0]
-            print("Building molecule ", o_name)
-            subprocess.call([exec_loc, b_path, i_path, i_name, 
-                             o_path, o_name, m_type, o_type, 
-                             str_ion_and_cell, str_ionList])
-            print("-----------------------------------------")
-        print("Export of batch molecules completed, please click on 'Reset' to add new molecules")
+            str_ionList = "---"
+    else:
+        str_ionList = "---"
+    return is_ionic, unit_cell, ion_list, str_ionList
+
+def overwrite_parameters_script(i_path, i_name, model_type, o_path, o_name, o_type, 
+                              is_ionic, unit_cell, str_ion_list):
+    """overwrites bat script to handle the export or animation of molecules"""
+    lines = []
+    params_script = def_scriptsPath + '\parameters.txt' #<------------------
+    utility.clear_file_contents(params_script)
+    lines.append(i_path)
+    lines.append(i_name)
+    lines.append(o_path)
+    lines.append(o_name)
+    lines.append(model_type)
+    lines.append(o_type)
+    lines.append(str(is_ionic))
+    lines.append(str(unit_cell))
+    lines.append(str_ion_list)
+    utility.append_lines_to_file(params_script, lines)
 #endregion
 
 #Default path values
@@ -149,19 +173,25 @@ frm_interact.grid(row=3, column=1, pady=2, sticky="se")
 btn_convert = tk.Button(
     text="Convert!",
     width=20,
-    master=frm_interact)
+    master=frm_interact,
+    command=convert_manager)
+    
+ttp_convert = tooltip(
+    btn_convert,
+    "Click here to convert the molecule(s) to the specified format")
 
 btn_reset = tk.Button(
     text="Reset",
     width=20,
     master=frm_interact,
     command=reset_to_defaults)
+    
+ttp_reset = tooltip(
+    btn_reset,
+    "Click here to reset input values to default")
 
 btn_reset.grid(row=0, column=1)
 btn_convert.grid(row=0, column=2)
-
-#btn_reset.bind("<Button-1>", reset_to_defaults)
-btn_convert.bind("<Button-1>", handle_convert_button)
 #endregion
 
 root.mainloop()

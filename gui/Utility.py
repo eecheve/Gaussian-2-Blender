@@ -22,3 +22,12 @@ class Utility(object):
         if hasattr(sys, '_MEIPASS'):
             return os.path.join(sys._MEIPASS, relative_path)
         return os.path.join(os.path.abspath("."), relative_path)
+
+    def clear_file_contents(file_name):
+        with open(file_name, 'w') as f:
+            f.close()
+
+    def append_lines_to_file(file_name, lines):
+        with open(file_name, 'w') as f:
+            for line in lines:
+                f.writelines(line + '\n')

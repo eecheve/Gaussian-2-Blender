@@ -49,7 +49,6 @@ class SelectedIon(object):
         self.opt_charge.grid(column=3, row=0)
 
     def change_charge(self, *args):
-        print("element selected is:", self.var_element.get())
         self.var_chargeCoord.set("")
         self.opt_charge['menu'].delete(0, 'end')
         for element in IonData.IonicRadii:
@@ -63,15 +62,12 @@ class SelectedIon(object):
                     answer = "(" + str_charge + "," + coordination + ")"
                     l.append(answer)
                 for item in l:
-                    #self.opt_charge['menu'].add_command(label=item,
-                    #                                   command=lambda:[print("can do two things"),
-                    #                                                   tk._setit(self.var_chargeCoord, item)])
                     self.opt_charge['menu'].add_command(label=item,
                                                        command=tk._setit(self.var_chargeCoord, item))
                 break
         
     def select_pair(self, *args):
-        print("Pair selected is:", self.var_chargeCoord.get())
+        return
             
     def delete(self):
         self.frm_ion.destroy()

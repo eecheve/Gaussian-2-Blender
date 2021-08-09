@@ -6,6 +6,6 @@ class TextRedirector(object):
 
     def write(self, str):
         self.widget.configure(state="normal")
-        self.widget.insert("end", str, (self.tag,))
+        self.widget.insert("0.0", str, (self.tag,))
         self.widget.configure(state="disabled")
 

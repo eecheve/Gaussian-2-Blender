@@ -5,8 +5,9 @@ tooltip = CreateTooltip.CreateTooltip
 
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
-    def __init__(self, parent, script_dir):
-        self.def_outputPath = script_dir + "\\output\\"
+    def __init__(self, parent, initial_dir):
+        self.def_outputPath = initial_dir + "\\output\\"
+        self.initial_dir = initial_dir
         
         self.frm_output = tk.LabelFrame(master=parent, 
                                         padx=5, 
@@ -66,7 +67,7 @@ class OutputRegion(object):
         self.drp_outputTypes.grid(row=2, column=1, sticky="w")
 
     def setOutputPath(self):
-        str_path = tk.filedialog.askdirectory()
+        str_path = tk.filedialog.askdirectory(initialdir = self.initial_dir)
         self.var_outputPath.set(str_path)
         print("#### OUTPUT PATH CHANGED ####")
 

@@ -1,0 +1,9 @@
+C:/Users/eecheve/Documents/BlenderScripts/ReadMolecules/Blender-Gaussian-Bridge/input_examples/minerals
+halite.com
+C:\Users\eecheve\Documents\BlenderScripts\ReadMolecules\Blender-Gaussian-Bridge\output\
+halite
+Ball-and-Stick
+.dae
+1
+0
+(Na_1_VI)_(Cl_-1_VI)

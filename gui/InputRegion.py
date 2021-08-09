@@ -8,12 +8,13 @@ tooltip = CreateTooltip.CreateTooltip
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
-    def __init__(self, parent):
+    def __init__(self, parent, initial_dir):
         self.var_inputPaths = tk.StringVar()
         self.var_inputNames = tk.StringVar()
         self.var_modelTypes = tk.StringVar()
         self.var_inputPath = tk.StringVar()
         self.lst_inputNames = []
+        self.initial_dir = initial_dir
         
         self.frm_input = tk.LabelFrame(master=parent,
                                       padx=5, 
@@ -86,7 +87,7 @@ class InputRegion(object):
         opens a file dialog and allows to select one or more elements
         updates the input names list and depicts all the elements to convert in the GUI
         """
-        str_paths = tk.filedialog.askopenfilenames()
+        str_paths = tk.filedialog.askopenfilenames(initialdir = self.initial_dir)
         self.updateInputNameList(str_paths)
         path = os.path.dirname(str_paths[0])
         print("##### SETTING INPUT FILES TO CONVERT ####")

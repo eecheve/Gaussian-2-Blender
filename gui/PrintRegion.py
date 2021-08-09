@@ -23,7 +23,7 @@ class PrintRegion(object):
                             width=80,
                             wrap="word")
         self.text.tag_configure("stderr", foreground="#b22222")
-        self.text.config(state=tk.NORMAL)
+        self.text.config(state="disabled")
 
         self.scrl_text = ttk.Scrollbar(self.frm_print,
                                        command=self.text.yview)
@@ -35,16 +35,9 @@ class PrintRegion(object):
         sys.stdout = redirector(self.text, "stdout")
         sys.stderr = redirector(self.text, "stderr")
 
-    def print_stdout(self):
-        '''Illustrate that using 'print' writes to stdout'''
-        print ("this is stdout")
-
-    def print_stderr(self):
-        '''Illustrate that we can write directly to stderr'''
-        sys.stderr.write("this is stderr\n")
-
     def clear_content(self):
-        print("---------CONTENT DELETED BEFORE THIS LINE------------")
-        self.text.delete("0", tk.END) #bug: it is not deleting text.
+        self.text.configure(state="normal")
+        self.text.delete("1.0", "end")
+        self.text.configure(state="disabled")
 
 
