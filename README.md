@@ -34,7 +34,7 @@ If desired, you can run the `Gaussian-2-Blender.py` python script from the conso
 python Gaussian-2-Blender.py
 ```
 
-###Copyright 2021 Emmanuel Echeverri
+### Copyright 2021 Emmanuel Echeverri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
