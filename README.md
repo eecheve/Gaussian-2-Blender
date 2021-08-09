@@ -23,8 +23,8 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 - Select one or more '.com' files from the same folder.
 - The default rendering radii are covalent. For rendering ionic radii select the `Check for Ionic Radii` option.
 - Add each ion and select their charge, coordination and spin multiplicity (when available).
-- Click on 'Convert!' to convert the .com input into de desired output type.
-- Click on 'Reset' to reset everything to their default values.
+- Click on `Convert!` to convert the .com input into de desired output type.
+- Click on `Reset` to reset everything to their default values.
 
 ## RUNNING FROM THE CONSOLE
 If desired, you can run the `Gaussian-2-Blender.py` python script from the console.
@@ -33,3 +33,17 @@ If desired, you can run the `Gaussian-2-Blender.py` python script from the conso
 ```bash
 python Gaussian-2-Blender.py
 ```
+
+### Copyright 2021 Emmanuel Echeverri
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
