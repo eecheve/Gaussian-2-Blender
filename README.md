@@ -23,14 +23,8 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 - Select one or more '.com' files from the same folder.
 - The default rendering radii are covalent. For rendering ionic radii select the `Check for Ionic Radii` option.
 - Add each ion and select their charge, coordination and spin multiplicity (when available).
-- Select the `Animate` checkbox if the input files correspond to animation frames of a frequency calculation.
 - Click on `Convert!` to convert the .com input into de desired output type.
 - Click on `Reset` to reset everything to their default values.
-
-### Known issues (Version 2020.1.0):
-- **Animations:** currently working only for molecules with one central atom and the rest bonded to it.
-- **Animations:** Bending and stretching of peripheral atoms behave as expected from gaussian input files.
-- **Animations:** Animations where the central atom moves from the center might be unreliable.
 
 ## RUNNING FROM THE CONSOLE
 If desired, you can run the `Gaussian-2-Blender.py` python script from the console.
