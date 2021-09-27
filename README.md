@@ -34,6 +34,12 @@ If desired, you can run the `Gaussian-2-Blender.py` python script from the conso
 python Gaussian-2-Blender.py
 ```
 
+## TECHNICAL REPORT PUBLICATION
+Follow this link to access the technical report for this progect
+    
+    https://doi.org/10.1021/acs.jchemed.1c00515
+    
+
 ### Copyright 2021 Emmanuel Echeverri
 
 Licensed under the Apache License, Version 2.0 (the "License");
