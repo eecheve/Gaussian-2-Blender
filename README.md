@@ -35,9 +35,7 @@ python Gaussian-2-Blender.py
 ```
 
 ## TECHNICAL REPORT PUBLICATION
-Follow this link to access the technical report for this progect
-    
-    https://doi.org/10.1021/acs.jchemed.1c00515
+Follow this [link](https://doi.org/10.1021/acs.jchemed.1c00515) from the `Journal of Chemical Education` to access the technical report for this project. 
     
 
 ### Copyright 2021 Emmanuel Echeverri
