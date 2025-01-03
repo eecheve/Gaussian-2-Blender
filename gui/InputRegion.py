@@ -16,17 +16,16 @@ class InputRegion(object):
         self.lst_inputNames = []
         self.initial_dir = initial_dir
         
-        self.frm_input = tk.LabelFrame(master=parent,
+        self.frame = tk.LabelFrame(master=parent,
                                       padx=5, 
                                       text="Input", 
                                       fg="blue", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
-        self.frm_input.grid(row=1, column=0, padx=2, pady=2, sticky="W")
 
-        self.canvas = tk.Canvas(self.frm_input)
+        self.canvas = tk.Canvas(self.frame)
         self.frm_inside = tk.Frame(self.canvas)
-        self.scrl_frame = tk.Scrollbar(master=self.frm_input,
+        self.scrl_frame = tk.Scrollbar(master=self.frame,
                                        orient="vertical",
                                        command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrl_frame.set)

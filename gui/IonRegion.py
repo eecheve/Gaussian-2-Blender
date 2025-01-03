@@ -13,17 +13,16 @@ class IonRegion(object):
         self.int_hasIons = tk.IntVar()
         self.int_unitCell = tk.IntVar()
 
-        self.frm_ions = tk.LabelFrame(master=parent,
+        self.frame = tk.LabelFrame(master=parent,
                                       padx=5, 
                                       text="Ion information", 
                                       fg="blue", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
-        self.frm_ions.grid(row=2, column=0, padx=2, pady=2, sticky="W", rowspan=2)
 
-        self.canvas = tk.Canvas(self.frm_ions)
+        self.canvas = tk.Canvas(self.frame)
         self.frm_inside = tk.Frame(self.canvas)
-        self.scrl_frame = tk.Scrollbar(master=self.frm_ions,
+        self.scrl_frame = tk.Scrollbar(master=self.frame,
                                        orient="vertical",
                                        command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrl_frame.set)

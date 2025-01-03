@@ -10,22 +10,21 @@ from gui.TextRedirector import TextRedirector
 class PrintRegion(object):
     """GUI region that allows user to observe the print statements and the errors"""
     def __init__(self, parent):
-        self.frm_print = tk.LabelFrame(master=parent,
+        self.frame = tk.LabelFrame(master=parent,
                                       padx=5, 
                                       text="Console", 
                                       fg="blue", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
-        self.frm_print.grid(row=4, column=0, columnspan=3, pady=2, padx=2)
 
-        self.text = tk.Text(master=self.frm_print, 
+        self.text = tk.Text(master=self.frame, 
                             height=8,
                             width=80,
                             wrap="word")
         self.text.tag_configure("stderr", foreground="#b22222")
         self.text.config(state="disabled")
 
-        self.scrl_text = ttk.Scrollbar(self.frm_print,
+        self.scrl_text = ttk.Scrollbar(self.frame,
                                        command=self.text.yview)
       
         self.text.grid(row=0, column=0, padx=2, pady=2, sticky="nsew")

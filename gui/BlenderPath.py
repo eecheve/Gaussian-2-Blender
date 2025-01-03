@@ -13,19 +13,17 @@ class BlenderPath(object):
     def __init__(self, parent):
         self.var_blenderPath = tk.StringVar()
         
-        self.frm_blender = tk.LabelFrame(master=parent,
+        self.frame = tk.LabelFrame(master=parent,
                                            text="Blender executable location", 
                                            fg="blue", 
                                            relief=tk.GROOVE, 
                                            width=800, 
                                            height=170, 
                                            borderwidth=2)
-        self.frm_blender.grid(row=0, column=0, columnspan=2, pady=2, padx=2, sticky="w")
-        #self.frm_blender.grid_propagate(0)
 
         self.lbl_blenderLabel = tk.Label(
             text="Blender path",
-            master=self.frm_blender)
+            master=self.frame)
 
         self.ttp_blenderLabel = CreateTooltip(
             self.lbl_blenderLabel,
@@ -34,12 +32,12 @@ class BlenderPath(object):
         self.var_blenderPath.set("")
         self.lbl_blenderPath = tk.Label(
             textvariable = self.var_blenderPath,
-            master=self.frm_blender,
+            master=self.frame,
             fg="gray")
     
         self.btn_setBlenderPath = tk.Button(
             text="search",
-            master=self.frm_blender,
+            master=self.frame,
             command=self.lookForBlenderPath)
         self.ttp_setBlenderPath = CreateTooltip(
             self.btn_setBlenderPath,

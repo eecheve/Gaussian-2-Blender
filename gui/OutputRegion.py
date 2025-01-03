@@ -9,7 +9,7 @@ class OutputRegion(object):
         self.def_outputPath = initial_dir + "\\output\\"
         self.initial_dir = initial_dir
         
-        self.frm_output = tk.LabelFrame(master=parent, 
+        self.frame = tk.LabelFrame(master=parent, 
                                         padx=5, 
                                         text="Output", 
                                         fg="blue", 
@@ -17,10 +17,9 @@ class OutputRegion(object):
                                         width=325, 
                                         height=102, 
                                         borderwidth=2)
-        self.frm_output.grid(row=1, column=1, sticky="SW")
 
         self.lbl_outputPath = tk.Label(text="Output path",
-                                      master=self.frm_output)
+                                      master=self.frame)
 
         self.ttp_outputLabel = CreateTooltip(self.lbl_outputPath,
                                       "Folder path where the output will be saved")
@@ -28,7 +27,7 @@ class OutputRegion(object):
         self.var_outputPath = tk.StringVar()
         self.var_outputPath.set(self.def_outputPath)
         self.ent_outputPath = tk.Entry(width=35, 
-                                       master=self.frm_output, 
+                                       master=self.frame, 
                                        textvariable=self.var_outputPath)
 
         self.ttp_outputPath = CreateTooltip(self.ent_outputPath,
@@ -36,14 +35,14 @@ class OutputRegion(object):
                                       or click on the 'set' button to do the same")
 
         self.btn_setOutputPath = tk.Button(text="set", 
-                                           master=self.frm_output, 
+                                           master=self.frame, 
                                            command=self.setOutputPath)
 
         self.ttp_setOutputPath = CreateTooltip(self.btn_setOutputPath,
                                          "Select the folder path where you want your output to be")
 
         self.lbl_outputType = tk.Label(text="Output type", 
-                                       master=self.frm_output)
+                                       master=self.frame)
 
         self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")
@@ -51,7 +50,7 @@ class OutputRegion(object):
         self.lst_outputTypes = [".fbx", ".obj", ".dae", ".x3d", ".stl"]
         self.var_outputTypes = tk.StringVar()
         self.var_outputTypes.set(".fbx")
-        self.drp_outputTypes = tk.OptionMenu(self.frm_output, 
+        self.drp_outputTypes = tk.OptionMenu(self.frame, 
                                         self.var_outputTypes, 
                                         *self.lst_outputTypes,
                                         command=self.dropdown_callout)

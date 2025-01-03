@@ -27,10 +27,10 @@ class ActionsRegion:
         CreateTooltip(btn_convert, "Click here to convert the molecule(s) to the specified format")
         btn_convert.grid(row=0, column=2)
 
-    def place(self, **kwargs):
-        """
-        Places the frame in the parent widget.
+    # def place(self, **kwargs):
+    #     """
+    #     Places the frame in the parent widget.
 
-        :param kwargs: Placement options such as grid(row=.., column=..).
-        """
-        self.frame.grid(**kwargs)
+    #     :param kwargs: Placement options such as grid(row=.., column=..).
+    #     """
+    #     self.frame.grid(**kwargs)
