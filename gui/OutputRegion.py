@@ -1,7 +1,7 @@
 import tkinter as tk
 
-import CreateTooltip
-tooltip = CreateTooltip.CreateTooltip
+from gui.CreateTooltip import CreateTooltip
+#tooltip = CreateTooltip.CreateTooltip
 
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
@@ -22,7 +22,7 @@ class OutputRegion(object):
         self.lbl_outputPath = tk.Label(text="Output path",
                                       master=self.frm_output)
 
-        self.ttp_outputLabel = tooltip(self.lbl_outputPath,
+        self.ttp_outputLabel = CreateTooltip(self.lbl_outputPath,
                                       "Folder path where the output will be saved")
 
         self.var_outputPath = tk.StringVar()
@@ -31,7 +31,7 @@ class OutputRegion(object):
                                        master=self.frm_output, 
                                        textvariable=self.var_outputPath)
 
-        self.ttp_outputPath = tooltip(self.ent_outputPath,
+        self.ttp_outputPath = CreateTooltip(self.ent_outputPath,
                                       "Paste here the folder path where you want your output to be\
                                       or click on the 'set' button to do the same")
 
@@ -39,13 +39,13 @@ class OutputRegion(object):
                                            master=self.frm_output, 
                                            command=self.setOutputPath)
 
-        self.ttp_setOutputPath = tooltip(self.btn_setOutputPath,
+        self.ttp_setOutputPath = CreateTooltip(self.btn_setOutputPath,
                                          "Select the folder path where you want your output to be")
 
         self.lbl_outputType = tk.Label(text="Output type", 
                                        master=self.frm_output)
 
-        self.ttp_outputTypeLabel = tooltip(self.lbl_outputType,
+        self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")
 
         self.lst_outputTypes = [".fbx", ".obj", ".dae", ".x3d", ".stl"]
@@ -56,7 +56,7 @@ class OutputRegion(object):
                                         *self.lst_outputTypes,
                                         command=self.dropdown_callout)
 
-        self.ttp_outputTypes = tooltip(self.drp_outputTypes,
+        self.ttp_outputTypes = CreateTooltip(self.drp_outputTypes,
                                        "Choose one of the output types from this list")
 
         self.lbl_outputPath.grid(row=0, column=0)

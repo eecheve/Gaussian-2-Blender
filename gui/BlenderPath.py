@@ -1,11 +1,11 @@
 import os
 import tkinter as tk
 
-import CreateTooltip
-tooltip = CreateTooltip.CreateTooltip
+from gui.CreateTooltip import CreateTooltip
+#tooltip = CreateTooltip.CreateTooltip
 
-import Utility
-utility = Utility.Utility
+from gui.Utility import Utility
+#utility = Utility.Utility
 
 class BlenderPath(object):
     """Section of the window used to search and set the path
@@ -27,7 +27,7 @@ class BlenderPath(object):
             text="Blender path",
             master=self.frm_blender)
 
-        self.ttp_blenderLabel = tooltip(
+        self.ttp_blenderLabel = CreateTooltip(
             self.lbl_blenderLabel,
             "Folder path where Blender is installed in your machine")
     
@@ -41,7 +41,7 @@ class BlenderPath(object):
             text="search",
             master=self.frm_blender,
             command=self.lookForBlenderPath)
-        self.ttp_setBlenderPath = tooltip(
+        self.ttp_setBlenderPath = CreateTooltip(
             self.btn_setBlenderPath,
             "Click here to select blender.exe path if default is not found")
     
@@ -66,7 +66,7 @@ class BlenderPath(object):
                     
     def lookForBlenderPath(self):
         str_path = tk.filedialog.askdirectory()
-        if utility.findFile("blender.exe", str_path):
+        if Utility.findFile("blender.exe", str_path):
             self.var_blenderPath.set(str_path)
         else:
             #print(f"{bcolors.WARNING}Error: blender.exe not found in specified path. Please select the path in which is installed{bcolors.ENDC}")

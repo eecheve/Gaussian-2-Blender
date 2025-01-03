@@ -3,8 +3,8 @@ import os
 
 import tkinter as tk
 
-import CreateTooltip
-tooltip = CreateTooltip.CreateTooltip
+from gui.CreateTooltip import CreateTooltip
+#tooltip = CreateTooltip.CreateTooltip
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
@@ -43,27 +43,27 @@ class InputRegion(object):
         self.lbl_inputLabel = tk.Label(text="Input name(s)",
                                       master=self.frm_inside)
 
-        self.ttp_inputLabel = tooltip(self.lbl_inputLabel,
+        self.ttp_inputLabel = CreateTooltip(self.lbl_inputLabel,
                                      "Name(s) of the file(s) to be converted")
         
         self.lbl_inputNames = tk.Label(textvariable=self.var_inputNames,
                                       master=self.frm_inside,
                                       fg="gray")
 
-        self.ttp_inputNames = tooltip(self.lbl_inputNames,
+        self.ttp_inputNames = CreateTooltip(self.lbl_inputNames,
                                       "List of input files with the correct extension")
         
         self.btn_setInputName = tk.Button(text="set",
                                          master=self.frm_inside, 
                                          command=self.setInputName)
 
-        self.ttp_setInputName = tooltip(self.btn_setInputName, 
+        self.ttp_setInputName = CreateTooltip(self.btn_setInputName, 
                                         "Select one or more '.com' gaussian input files")
         
         self.lbl_inputType = tk.Label(text="Model type",
                                      master=self.frm_inside)
 
-        self.ttp_inputType = tooltip(self.lbl_inputType, 
+        self.ttp_inputType = CreateTooltip(self.lbl_inputType, 
                                      "Different representational models supported by Gaussian2Blender")
         
         self.lst_modelTypes = ["Ball-and-Stick", "Stick-only", "Van-der-Waals"]
@@ -73,7 +73,7 @@ class InputRegion(object):
                                             *self.lst_modelTypes,
                                             command=self.dropdouwn_callout)
 
-        self.ttp_modelTypes = tooltip(self.drp_modelTypes, 
+        self.ttp_modelTypes = CreateTooltip(self.drp_modelTypes, 
                                       "Choose one of the model representation options from this list")
         
         self.lbl_inputLabel.grid(row=1, column=0)

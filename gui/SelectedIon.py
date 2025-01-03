@@ -1,10 +1,8 @@
 import tkinter as tk
 
-import CreateTooltip
-tooltip = CreateTooltip.CreateTooltip
-
-import Ionic
-from Ionic import IonData
+from gui.CreateTooltip import CreateTooltip
+#from gui.Ionic import Ionic
+from gui.Ionic import IonData
 
 class SelectedIon(object):
     """Ion data widget that contains the information for one ion"""
@@ -27,17 +25,17 @@ class SelectedIon(object):
         self.opt_element = tk.OptionMenu(self.frm_ion,
                                          self.var_element,
                                          *IonData.IonicRadii)
-        self.ttp_element = tooltip(self.opt_element,
+        self.ttp_element = CreateTooltip(self.opt_element,
                                    "Select The element to specify charge and coordination")
 
         self.lbl_coordination = tk.Label(master=self.frm_ion,
                                          text="(charge, coordination)")
-        self.ttm_coordination = tooltip(self.lbl_coordination,
+        self.ttm_coordination = CreateTooltip(self.lbl_coordination,
                                         "value couple: ion charge and its coordination")
         
         self.opt_charge = tk.OptionMenu(self.frm_ion,
                                         self.var_chargeCoord, [])
-        self.ttp_charge = tooltip(self.opt_charge,
+        self.ttp_charge = CreateTooltip(self.opt_charge,
                                   "Ionic charge for the selected element")
         
         self.var_element.trace('w', self.change_charge)

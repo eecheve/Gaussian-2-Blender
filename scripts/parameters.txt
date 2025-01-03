@@ -1,9 +1,9 @@
-C:/Users/eecheve/Documents/BlenderScripts/ReadMolecules/Blender-Gaussian-Bridge/input_examples/minerals
-halite.com
-C:\Users\eecheve\Documents\BlenderScripts\ReadMolecules\Blender-Gaussian-Bridge\output\
-halite
+C:/Documents/Gaussian-2-Blender/input_examples/organic
+acrylonitrile.com
+C:\Documents\Gaussian-2-Blender\output\
+acrylonitrile
 Ball-and-Stick
-.dae
-1
+.fbx
 0
-(Na_1_VI)_(Cl_-1_VI)
+0
+---

@@ -16,11 +16,11 @@ class AboutRegion(object):
                                     text="version: ",
                                     fg="black")
         self.lbl_version = tk.Label(master=self.frm_about,
-                                    text="2021.1.0 ",
+                                    text="2025.1.0 ",
                                     fg="gray")
         
         self.lbl_auth = tk.Label(master=self.frm_about,
-                                 text="Oliver-Hoyo CER Group",
+                                 text="Echeverri-Jimenez CER3D Group",
                                  fg="gray")
 
         self.lbl_ver.grid(row=0, column=0)

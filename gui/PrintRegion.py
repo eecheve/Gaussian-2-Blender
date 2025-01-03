@@ -4,8 +4,8 @@ import os
 import tkinter as tk
 import tkinter.ttk as ttk
 
-import TextRedirector
-redirector = TextRedirector.TextRedirector
+from gui.TextRedirector import TextRedirector
+#redirector = TextRedirector.TextRedirector
 
 class PrintRegion(object):
     """GUI region that allows user to observe the print statements and the errors"""
@@ -32,8 +32,8 @@ class PrintRegion(object):
         self.scrl_text.grid(row=0, column=1, sticky="nsew")
         self.text['yscrollcommand'] = self.scrl_text.set
 
-        sys.stdout = redirector(self.text, "stdout")
-        sys.stderr = redirector(self.text, "stderr")
+        sys.stdout = TextRedirector(self.text, "stdout")
+        sys.stderr = TextRedirector(self.text, "stderr")
 
     def clear_content(self):
         self.text.configure(state="normal")
