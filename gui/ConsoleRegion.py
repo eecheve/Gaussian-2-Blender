@@ -5,9 +5,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 
 from gui.TextRedirector import TextRedirector
-#redirector = TextRedirector.TextRedirector
 
-class PrintRegion(object):
+class ConsoleRegion(object):
     """GUI region that allows user to observe the print statements and the errors"""
     def __init__(self, parent):
         self.frame = tk.LabelFrame(master=parent,
@@ -16,7 +15,6 @@ class PrintRegion(object):
                                       fg="blue", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
-
         self.text = tk.Text(master=self.frame, 
                             height=8,
                             width=80,

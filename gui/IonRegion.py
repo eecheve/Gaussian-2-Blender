@@ -6,19 +6,33 @@ from gui.SelectedIon import SelectedIon
 class IonRegion(object):
     """Section of the app that receives information about possible ions present"""
     def __init__(self, parent):
+        self.initialize_variables()
+        self.create_widgets(parent)
+        self.setup_layout()
+
+    def initialize_variables(self):
+        """Initialize all variables used in the ion information section."""
         self.ionCount = 0
         self.lst_ions = []
-        
         self.var_ionNames = tk.StringVar()
         self.int_hasIons = tk.IntVar()
         self.int_unitCell = tk.IntVar()
 
+    def clear_variables(self):
+        self.removeAllIons()
+        self.activator()
+        self.var_ionNames.set("")
+        self.int_hasIons.set(0)
+        self.int_unitCell.set(0)
+
+    def create_widgets(self, parent):
+        """Create all widgets and frames for the ion information section."""
         self.frame = tk.LabelFrame(master=parent,
-                                      padx=5, 
-                                      text="Ion information", 
-                                      fg="blue", 
-                                      relief=tk.GROOVE, 
-                                      borderwidth=2)
+                                   padx=5,
+                                   text="Ion information",
+                                   fg="blue",
+                                   relief=tk.GROOVE,
+                                   borderwidth=2)
 
         self.canvas = tk.Canvas(self.frame)
         self.frm_inside = tk.Frame(self.canvas)
@@ -26,41 +40,30 @@ class IonRegion(object):
                                        orient="vertical",
                                        command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrl_frame.set)
-        self.scrl_frame.pack(side="right",fill="y")
-        self.canvas.pack(side="left")
-        self.canvas.create_window((0,0), 
+        self.canvas.create_window((0, 0),
                                   window=self.frm_inside,
                                   anchor='nw')
         self.frm_inside.bind("<Configure>", self.canvasConfig)
 
-        self.chk_hasIons = tk.Checkbutton(master=self.frm_inside,
-                                          text="check for ionic radii",
-                                          variable=self.int_hasIons,
-                                          command=self.activator)
-        self.ttp_hasIons = CreateTooltip(self.chk_hasIons,
-                                   "Check if some elements radii are ionic radii instead of covalent radii")
-        
-        self.btn_addIon = tk.Button(text="add",
-                                    master=self.frm_inside,
-                                    command=self.addIon,
-                                    state=tk.DISABLED)
-        self.ttp_addIon = CreateTooltip(self.btn_addIon,
-                                  "Click here to add another ion to specify")
+        self.chk_hasIons = tk.Checkbutton(master=self.frm_inside, text="check for ionic radii",
+                                          variable=self.int_hasIons, command=self.activator)
+        CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 
-        self.btn_removeIon = tk.Button(master=self.frm_inside,
-                                       text="remove",
-                                       command=self.removeIon,
-                                       state=tk.DISABLED)
-        self.ttp_removeIon = CreateTooltip(self.btn_removeIon,
-                                     "Click here to remove the last added ion")
+        self.chk_unitCell = tk.Checkbutton(master=self.frm_inside, text="unit cell boundaries",
+                                           variable=self.int_unitCell, state=tk.DISABLED)
+        CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
 
-        self.chk_unitCell = tk.Checkbutton(master=self.frm_inside,
-                                          text="unit cell boundaries",
-                                          variable=self.int_unitCell,
-                                          state=tk.DISABLED)
-        self.ttp_hasIons = CreateTooltip(self.chk_unitCell,
-                                   "Check to replace dashed bonds with solid lines")
+        self.btn_addIon = tk.Button(text="add", master=self.frm_inside,
+                                    command=self.addIon, state=tk.DISABLED)
+        CreateTooltip(self.btn_addIon, "Click here to add another ion to specify")
+        self.btn_removeIon = tk.Button(master=self.frm_inside, text="remove",
+                                       command=self.removeIon, state=tk.DISABLED)
+        CreateTooltip(self.btn_removeIon, "Click here to remove the last added ion")
 
+    def setup_layout(self):
+        """Arrange the widgets and frames in the grid layout."""
+        self.scrl_frame.pack(side="right", fill="y")
+        self.canvas.pack(side="left")
         self.chk_hasIons.grid(row=0, column=0)
         self.chk_unitCell.grid(row=0, column=1)
         self.btn_addIon.grid(row=1, column=0)
@@ -72,10 +75,13 @@ class IonRegion(object):
         self.ionCount += 1
 
     def removeIon(self):
-        last_element = self.lst_ions.pop()
-        last_element.delete()
-        if self.ionCount > 0:
-            self.ionCount -= 1
+        if self.lst_ions:  # Check if the ion list is not empty
+            last_ion = self.lst_ions.pop()
+            last_ion.delete()  # Assuming 'delete' is a method for the ion object
+            if self.ionCount > 0:
+                self.ionCount -= 1
+            else:
+                print("No more ions to remove.")
 
     def removeAllIons(self):
         for ion in self.lst_ions:

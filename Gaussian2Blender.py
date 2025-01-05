@@ -9,12 +9,11 @@ from tkinter import filedialog
 from gui.Utility import Utility
 
 #gui modules
-from gui.Instructions import Instructions
+from gui.Information import Information
 from gui.BlenderPath import BlenderPath
-from gui.AboutRegion import AboutRegion
 from gui.InputRegion import InputRegion
 from gui.OutputRegion import OutputRegion
-from gui.PrintRegion import PrintRegion
+from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
@@ -23,7 +22,6 @@ class GaussianToBlenderApp:
     def __init__(self):
         self.root = tk.Tk()
         self.g2b_path = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
-        #self.def_scriptsPath = script_dir + "\\scripts\\"
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
         self._initialize_regions()
@@ -46,16 +44,13 @@ class GaussianToBlenderApp:
         
     def _initialize_regions(self):
         # Instructions Region
-        self.instructions = Instructions(self.root)
+        self.instructions = Information(self.root)
         self.place(self.instructions, row=0, column=0, columnspan=2, pady=2, padx=2, sticky="ew")
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
         self.place(self.bPathReg, row=1, column=0, columnspan=2, pady=2, padx=2, sticky="w")
         self.str_blenderPath = self.bPathReg.searchBlenderPath()
         self.bPathReg.setBlenderPath(self.str_blenderPath)
-        # About Region
-        self.aboutReg = AboutRegion(self.root)
-        self.place(self.aboutReg, row=2, column=1, sticky="nw")
         # Input Region
         self.inputReg = InputRegion(self.root, self.g2b_path)
         self.place(self.inputReg, row=2, column=0, padx=2, pady=2, sticky="W")
@@ -63,8 +58,8 @@ class GaussianToBlenderApp:
         self.outputReg = OutputRegion(self.root, self.g2b_path)
         self.place(self.outputReg, row=2, column=1, sticky="SW")
         # Console Region
-        self.printReg = PrintRegion(self.root)
-        self.place(self.printReg, row=5, column=0, columnspan=3, pady=2, padx=2)
+        self.consoleReg = ConsoleRegion(self.root)
+        self.place(self.consoleReg, row=5, column=0, columnspan=3, pady=2, padx=2)
         # Ion Region
         self.ionReg = IonRegion(self.root)
         self.place(self.ionReg, row=3, column=0, padx=2, pady=2, sticky="W", rowspan=2)
@@ -79,14 +74,9 @@ class GaussianToBlenderApp:
     def reset_to_defaults(self):
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
-        self.inputReg.var_inputNames.set("")
-        self.inputReg.lst_inputNames.clear()
-        self.inputReg.var_inputPath.set("")
-        self.ionReg.int_unitCell.set(0)
-        self.ionReg.activator()
-        self.ionReg.int_hasIons.set(0)
-        self.ionReg.removeAllIons()
-        self.printReg.clear_content()
+        self.inputReg.clear_variables()
+        self.ionReg.clear_variables()
+        self.consoleReg.clear_content()
 
     def exceptions_test_passed(self, b_path, i_names, o_path):
         """
@@ -122,7 +112,7 @@ class GaussianToBlenderApp:
         return True
         
     def overwrite_parameters_script(self, i_path, i_name, model_type, o_path, o_name, o_type, 
-                              is_ionic, unit_cell, str_ion_list):
+                              is_ionic, unit_cell, str_ion_list, is_anim):
         """
         overwrites bat script to handle the export or animation of molecules
     
@@ -135,6 +125,7 @@ class GaussianToBlenderApp:
         :param is_ionic: Whether the input is ionic
         :param unit_cell: Whether the input contains a unit cell
         :param str_ion_list: List of ions in string format
+        :param is_anim: boolean determining if input list is to be treated as animation
         """
         params_script = os.path.join(self.g2b_path, "scripts", "parameters.txt")
 
@@ -152,11 +143,12 @@ class GaussianToBlenderApp:
             str(is_ionic),
             str(unit_cell),
             str_ion_list,
+            is_anim
         ]
         Utility.append_lines_to_file(params_script, lines)
     
     def individual_convert(self, exec_loc, b_path, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list):
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim):
         """ 
         Function to execute bat file that communicates with blender's python API 
     
@@ -171,9 +163,10 @@ class GaussianToBlenderApp:
         :param is_ionic: boolean specifyig wether the input is ionic
         :param unit_cell: boolean specifying whether the input contains a unit cell
         :param str_ion_list: list of strings containing all the ions within the input
+        :param is_anim: boolean determining if input list is to be treated as animation
         """
         self.overwrite_parameters_script(i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list)
+                                    is_ionic, unit_cell, str_ion_list, is_anim)
         subprocess.call([exec_loc, b_path])
     
     def assign_ionic_params(self):
@@ -229,6 +222,7 @@ class GaussianToBlenderApp:
         model_type = self.inputReg.var_modelTypes.get() #model specifications
         o_path = self.outputReg.ent_outputPath.get() #output path
         o_type = self.outputReg.var_outputTypes.get() #output type
+        is_anim = self.inputReg.var_isAnimation.get() #is animation
         if self.exceptions_test_passed(b_path, i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -239,7 +233,7 @@ class GaussianToBlenderApp:
                 print("Converting", i+1, "of", len(i_names))
                 self.individual_convert(exec_loc, b_path, i_path, i_names[i], model_type,
                                     o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list)     
+                                    unit_cell, str_ion_list, is_anim)     
         else:
             print("Cannot convert input to fbx animation, check console for errors")
 

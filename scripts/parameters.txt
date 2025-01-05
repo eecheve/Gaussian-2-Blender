@@ -1,4 +1,4 @@
-C:/Documents/Gaussian-2-Blender/input_examples/organic
+C:/Documents/Gaussian-2-Blender/input_examples
 acrylonitrile.com
 C:\Documents\Gaussian-2-Blender\output\
 acrylonitrile
@@ -7,3 +7,4 @@ Ball-and-Stick
 0
 0
 ---
+False

@@ -31,3 +31,11 @@ class Utility(object):
         with open(file_name, 'w') as f:
             for line in lines:
                 f.writelines(line + '\n')
+
+    def append_lines_to_file(file_name, lines):
+        with open(file_name, 'w') as f:
+            for line in lines:
+                # Convert boolean to string if line is boolean
+                if isinstance(line, bool):
+                    line = "1" if line else "0" #makes the line 1 if line is True, 0 otherwise
+                f.writelines(line + '\n')
