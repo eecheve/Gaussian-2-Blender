@@ -90,14 +90,11 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
         elif bond_type == 'res1':
             bond_label = atom1 + '-=' + atom2
             bond_label2 = atom2 + '-=' + atom1
-            bond_label3 = atom1 + '=-' + atom2 + ".001"
             CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
             SelectTwoMeshesAndJoin(bond_label, bond_label2)
             CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '=-', 0.18, 0.08)
-            MoveObjectOnLocalAxis(bond_label3,(0.0,-0.1,0.0))
-            SelectTwoMeshesAndJoin(bond_label, bond_label3)
         elif bond_type == '#':
             bond_label = atom1 + '#' + atom2
             bond_label2 = atom2 + "#" + atom1
@@ -132,6 +129,7 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
     #elements taken from names by removing numerical part
     type1 = ''.join(i for i in key1 if not i.isdigit())
     type2 = ''.join(i for i in key2 if not i.isdigit())
+    bpy.ops.object.mode_set(mode="OBJECT")     #ensure program is in object mode
     #instantiating dashes between spawn points and mid point
     for i in range(dash_nmbr):
         if i != 0 and i % 2 == 0: #will instantiate dashes only in half of the spaces 
@@ -156,7 +154,9 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
                 ModifyNamesAndMaterials(name1, "Xx", mat_dict) #For trantient or hydrogen bonding
     #getting all the objects with name that starts with name1
     name1_objs = [o for o in scene.objects if o.name.startswith(name1)]
+    print(f"Objects to join: {[o.name for o in name1_objs]}")
     JoinMeshesFromObjectList(name1_objs)
+    print(f"Joined meshes for: {name1}")
 
 def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell="0"):
     """
@@ -214,24 +214,41 @@ def InstantiateBondBetweenTwoPoints(p1, p2, r=0.06): #p1 and p2 are the origin a
     bpy.context.object.rotation_euler[2] = phi 
     
 def SelectTwoMeshesAndJoin(name1, name2):
-    #print("@Primitives_SelectTwoMeshes: selecting",name1,name2)
-    obs = []
     scene = bpy.context.scene
-    for ob in scene.objects:
-        if ob.name == name1 or ob.name == name2:
-            if ob.type == 'MESH':
-                obs.append(ob)
-                #print("@Primitives_selectTwoMeshes: appending",ob.name)
-    ctx = bpy.context.copy()
-    ctx['active_object'] = obs[0]
-    ctx['selected_editable_objects'] = obs
-    bpy.ops.object.join(ctx)
+    obs = [obj for obj in scene.objects if obj.type == 'MESH' and obj.name in {name1, name2}]
+    if len(obs) != 2:
+        print(f"Error: Could not find two mesh objects named {name1} and {name2}.")
+        return
+    bpy.ops.object.mode_set(mode='OBJECT')  # Ensure we are in Object Mode
+    for obj in obs:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = obs[0]
+    try:
+        bpy.ops.object.join()
+    except RuntimeError as e:
+        print(f"Error joining objects {name1} and {name2}: {e}")
+    #finally:
+    #    for obj in obs:
+    #        obj.select_set(False)  # Deselect all objects after joining
     
+#def JoinMeshesFromObjectList(obj_list):
+#    ctx = bpy.context.copy()
+#    ctx['active_object'] = obj_list[0]
+#    ctx['selected_editable_objects'] = obj_list
+#    bpy.ops.object.join(ctx)
+
 def JoinMeshesFromObjectList(obj_list):
-    ctx = bpy.context.copy()
-    ctx['active_object'] = obj_list[0]
-    ctx['selected_editable_objects'] = obj_list
-    bpy.ops.object.join(ctx)
+    bpy.ops.object.mode_set(mode='OBJECT') # Ensure we're in Object Mode before joining
+    bpy.ops.object.select_all(action='DESELECT') # Deselect all objects first
+    for obj in obj_list: # Select and activate the objects in the list
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = obj_list[0]
+    original_name = obj_list[0].name
+    bpy.ops.object.join() # Join the selected objects
+    joined_object = bpy.context.active_object
+    joined_object.name = original_name
+    #print(f"Joined {len(obj_list)} objects: {[obj.name for obj in obj_list]}")
+
     
 #def EraseDummyAtoms():
 #    obs = []

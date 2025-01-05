@@ -1,51 +1,27 @@
 import bpy
 import sys
 import os
-
-from bpy import context
-import math
-from math import *
+from bpy import context, data
+from math import radians, degrees
 import mathutils
+from Receive_Parameters import extract_parameters_data, get_parameters_data
+import importlib
 
-dir = os.path.dirname(bpy.data.filepath)
-if not dir in sys.path:
-    sys.path.append(dir)
-    
-import Atom_Data
-import Import_Data
-import Refine_Data
-import Refine_Elements
-import Create_Materials
-import Primitives
-import Export_Data
-import Ions
-import Instantiate_Molecules
-import Raw_Parameters
-import Rig_Molecule
-import Animate
-import Clear_Transforms
-import Parent_Relations
+# Import necessary modules for reload
+importlib_modules = [
+    "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
+    "Create_Materials", "Primitives", "Export_Data", "Ions", 
+    "Instantiate_Molecules", "Raw_Parameters", "Rig_Molecule", 
+    "Animate", "Clear_Transforms", "Parent_Relations"
+]
 
-#Please contact eecheve@ncsu.edu if you plan to extend this program's functionality 
-import importlib #<-- for end user in case they want to add functionality. 
-importlib.reload(Atom_Data)
-importlib.reload(Import_Data)
-importlib.reload(Refine_Data)
-importlib.reload(Refine_Elements)
-importlib.reload(Create_Materials)
-importlib.reload(Primitives)
-importlib.reload(Export_Data)
-importlib.reload(Ions)
-importlib.reload(Instantiate_Molecules)
-importlib.reload(Raw_Parameters)
-importlib.reload(Rig_Molecule)
-importlib.reload(Animate)
-importlib.reload(Clear_Transforms)
-importlib.reload(Parent_Relations)
+for module in importlib_modules:
+    globals()[module] = importlib.import_module(module)
+    importlib.reload(globals()[module])
 
 class Main_Body(object):
     def __init__(self, i_folder_path, i_file_name, o_folder_path, o_file_name,
-                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list):#,str_is_animation):
+                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation):
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
         self.o_folder_path = o_folder_path
@@ -54,7 +30,7 @@ class Main_Body(object):
         self.o_file_type = o_file_type
         self.str_ionic_cell = str_ionic_cell
         self.str_ion_input_list = str_ion_input_list
-        #self.str_is_animation = str_is_animation
+        self.str_is_animation = str_is_animation
         
         self.coords = []
         self.number_of_elements = 0
@@ -79,7 +55,7 @@ class Main_Body(object):
         print("0: output type is", self.o_file_type)
         print("0: ion and unit cell is", self.str_ionic_cell)
         print("0: ion list is", self.str_ion_input_list)
-        #print("0: is animation is", self.str_is_animation)    
+        print("0: is animation is", self.str_is_animation)    
         #-------------------------------import data section-----------------------------------------------#
         #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
         print("1: Reading .com file ...")
@@ -88,10 +64,10 @@ class Main_Body(object):
         self.raw_coords = raw_coords_connect[0]
         self.raw_connect = raw_coords_connect[1]
         
-        #if self.str_is_animation == "0":
-        #    raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, #self.i_file_name)
-        #    self.raw_coords = raw_coords_connect[0]
-        #    self.raw_connect = raw_coords_connect[1]
+        if self.str_is_animation == "0":
+            raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, self.i_file_name)
+            self.raw_coords = raw_coords_connect[0]
+            self.raw_connect = raw_coords_connect[1]
         #else:
         #    raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Animate()
         #    self.raw_coords = raw_coords_connect[0]
@@ -165,3 +141,19 @@ class Main_Body(object):
     def ExportForAnimation(self):
         print("9: Exporting the results ...")
         Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
+    
+if __name__ == "__main__":
+    params_data = get_parameters_data("C:\\Documents\\Gaussian-2-Blender\\scripts\\parameters.txt")
+    main_body_instance = Main_Body(params_data["i_folder_path"],
+                                   params_data["i_file_name"],
+                                   params_data["o_folder_path"],
+                                   params_data["o_file_name"],
+                                   params_data["represent_type"],
+                                   params_data["o_file_type"],
+                                   params_data["str_ionic_cell"],
+                                   params_data["str_ion_input_list"],
+                                   params_data["str_is_animation"])
+    main_body_instance.Set_Raw_Parameters()
+    main_body_instance.Extract_Data()
+    main_body_instance.Build_Molecule()
+    main_body_instance.Export()
