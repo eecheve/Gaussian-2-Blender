@@ -4,20 +4,36 @@ import os
 from bpy import context, data
 from math import radians, degrees
 import mathutils
-from Receive_Parameters import extract_parameters_data, get_parameters_data
+
 import importlib
+
+blend_file_dir = os.path.dirname(bpy.data.filepath) #folder location for ReadMolecules00.blend
+os.chdir(blend_file_dir) #ensuring the environment is in the correct file path
+if blend_file_dir not in sys.path:
+    sys.path.append(blend_file_dir)
+
 
 # Import necessary modules for reload
 importlib_modules = [
     "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
     "Create_Materials", "Primitives", "Export_Data", "Ions", 
     "Instantiate_Molecules", "Raw_Parameters", "Rig_Molecule", 
-    "Animate", "Clear_Transforms", "Parent_Relations"
+    "Animate", "Clear_Transforms", "Parent_Relations", "Receive_Parameters"
 ]
 
 for module in importlib_modules:
-    globals()[module] = importlib.import_module(module)
-    importlib.reload(globals()[module])
+    try:
+        # Dynamically import the module
+        mod = importlib.import_module(module)
+        # Reload the module
+        importlib.reload(mod)
+        # Optionally, assign the module to globals() if you need to use it
+        globals()[module] = mod
+        print(f"Successfully imported and reloaded {module}")
+    except ModuleNotFoundError as e:
+        print(f"Module {module} not found: {e}")
+    except Exception as e:
+        print(f"Error while importing/reloading {module}: {e}")
 
 class Main_Body(object):
     def __init__(self, i_folder_path, i_file_name, o_folder_path, o_file_name,
@@ -143,7 +159,12 @@ class Main_Body(object):
         Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
     
 if __name__ == "__main__":
-    params_data = get_parameters_data("C:\\Documents\\Gaussian-2-Blender\\scripts\\parameters.txt")
+    params_file_path = os.path.join(blend_file_dir, "parameters.txt")
+    
+    if not os.path.isfile(params_file_path):
+        raise FileNotFoundError(f"Error: The file 'parameters.txt' was not found at {params_file_path}")
+    
+    params_data = Receive_Parameters.get_parameters_data(params_file_path)
     main_body_instance = Main_Body(params_data["i_folder_path"],
                                    params_data["i_file_name"],
                                    params_data["o_folder_path"],
