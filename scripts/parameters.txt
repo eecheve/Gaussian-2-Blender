@@ -1,10 +1,10 @@
-C:/Documents/Gaussian-2-Blender/input_examples
-acrylonitrile.com
+C:/Documents/Gaussian-2-Blender/input_examples/animations/water
+water_frame1.com
 C:\Documents\Gaussian-2-Blender\output\
-acrylonitrile
+water_frame1
 Ball-and-Stick
 .fbx
 0
 0
 ---
-0
+1

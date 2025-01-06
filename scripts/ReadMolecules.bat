@@ -9,4 +9,4 @@ cd
 cd %BLENDER_PATH%
 
 echo executing Receive_Parameters script from path
-blender %WORK_DIR%\ReadMolecules00.blend --background --python %WORK_DIR%\Receive_Parameters.py
+blender %WORK_DIR%\ReadMolecules00.blend --background --python %WORK_DIR%\Main_Body.py

@@ -7,6 +7,7 @@ from tkinter import filedialog
 
 #utility modules
 from gui.Utility import Utility
+from gui.Coordinates import Coordinates
 
 #gui modules
 from gui.Information import Information
@@ -43,6 +44,8 @@ class GaussianToBlenderApp:
         region.frame.grid(**kwargs)
         
     def _initialize_regions(self):
+        # To use the coordinates module
+        self.coordinates = Coordinates() #creating an instance of the Coordinates class
         # Instructions Region
         self.instructions = Information(self.root)
         self.place(self.instructions, row=0, column=0, columnspan=2, pady=2, padx=2, sticky="ew")
@@ -147,6 +150,17 @@ class GaussianToBlenderApp:
         ]
         Utility.append_lines_to_file(params_script, lines)
     
+    def overwrite_animation_frames(self, is_anim):
+        if is_anim:
+            anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
+            if not os.path.exists(anim_frames):
+                raise FileNotFoundError(f"Cannot find 'parameters.txt' at {anim_frames}")
+            if len(self.inputReg.lst_InputPaths) > 1: #at least two input files to be read
+                print(self.inputReg.lst_InputPaths, "Input paths list is: ")
+                frames_list = self.coordinates.combine_animation_frames(self.inputReg.lst_InputPaths)
+            frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
+            Utility.append_lines_to_file(anim_frames, frames_list_strings)
+        
     def individual_convert(self, exec_loc, b_path, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim):
         """ 
@@ -165,6 +179,7 @@ class GaussianToBlenderApp:
         :param str_ion_list: list of strings containing all the ions within the input
         :param is_anim: boolean determining if input list is to be treated as animation
         """
+        self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
         self.overwrite_parameters_script(i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim)
         subprocess.call([exec_loc, b_path])
@@ -229,11 +244,17 @@ class GaussianToBlenderApp:
             unit_cell = params[1]
             ion_list = params[2]
             str_ion_list = params[3]
-            for i in range(len(i_names)):
-                print("Converting", i+1, "of", len(i_names))
-                self.individual_convert(exec_loc, b_path, i_path, i_names[i], model_type,
-                                    o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list, is_anim)     
+            if is_anim:
+                print("Converting main molecule for animation")
+                self.individual_convert(exec_loc, b_path, i_path, i_names[0], model_type,
+                                    o_path, i_names[0].split(".")[0], o_type, is_ionic,
+                                    unit_cell, str_ion_list, is_anim) 
+            else:
+                for i in range(len(i_names)):
+                    print("Batch converting", i+1, "of", len(i_names))
+                    self.individual_convert(exec_loc, b_path, i_path, i_names[i], model_type,
+                                        o_path, i_names[i].split(".")[0], o_type, is_ionic,
+                                        unit_cell, str_ion_list, is_anim)   
         else:
             print("Cannot convert input to fbx animation, check console for errors")
 

@@ -41,5 +41,3 @@ def get_parameters_data(params_path):
         "str_ionic_cell": f"({parameters[6].strip()}_{parameters[7].strip()})" #still not sure why i need this
     }
     return parameters_dict
-    
-#params_path = "C:\\Documents\\Gaussian-2-Blender\\scripts\\parameters.txt"

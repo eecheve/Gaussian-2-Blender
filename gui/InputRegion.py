@@ -23,6 +23,7 @@ class InputRegion(object):
         self.var_inputPath = tk.StringVar()
         self.var_isAnimation = tk.BooleanVar(value=False)
         self.lst_inputNames = []
+        self.lst_InputPaths = []
         self.initial_dir = initial_dir
 
     def clear_variables(self):
@@ -33,6 +34,7 @@ class InputRegion(object):
         self.var_inputPath.set("")
         self.var_isAnimation.set(False)
         self.lst_inputNames.clear()
+        self.lst_InputPaths.clear()
 
     def setup_frame(self, parent):
         """Set up the main frame."""
@@ -124,7 +126,7 @@ class InputRegion(object):
             self.var_inputPath.set(path)
             for entry in str_paths:
                 f_name = os.path.basename(entry)
-                print(f_name, "has correct file extension")
+                print("has correct file extension", f_name)
         else:
             print("Not all selected files have the same valid extension. Please select files with either '.com' or '.xyz' extension.")
 
@@ -146,6 +148,7 @@ class InputRegion(object):
                 
     def updateInputNameList(self, string_list):
         self.lst_inputNames.clear()
+        self.lst_InputPaths.clear()
         self.var_inputNames.set("")
         s = ""
         for entry in string_list:
@@ -153,7 +156,9 @@ class InputRegion(object):
             e = n + "\n"
             s += e
             self.lst_inputNames.append(n)
+            self.lst_InputPaths.append(entry)
         self.var_inputNames.set(s)
+        #print(self.lst_InputPaths, "The list of paths to convert is: ")
 
     def canvasConfig(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
