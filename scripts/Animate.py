@@ -21,11 +21,27 @@ def clear_all_animations():
     all_actions = bpy.data.actions
     for action in all_actions:
         bpy.data.actions.remove(action)
+        
+def calculate_number_of_frames(anim_frames_path):
+    """
+    Calculates the number of frames from the animation data file.
+
+    :param anim_frames_path (str): The file path to the animation frames data file.
+    Returns: (int) The number of frames in the animation.
+    """
+    with open(anim_frames_path, 'r') as file:
+        first_line = file.readline().strip()  # Read the first line
+        parts = first_line.split() # Split the line into parts
+        coordinates = parts[1:] # Remove the element identifier
+        # The number of frames is the total number of coordinates divided by 3 (since each frame has 3 coordinates per element)
+        num_frames = len(coordinates) / 3        
+    return num_frames
 
 def separate_elements_from_bonds():
     """
-    Goes over all objects in the scene and separates them into elements or bonds
-    return: a tuple (element_list, bond_list)
+    Separates objects in the scene into elements and bonds based on their names.
+    Returns:
+        tuple: A tuple containing a list of elements and a list of bonds.
     """
     context = bpy.context
     elements = []
@@ -38,6 +54,13 @@ def separate_elements_from_bonds():
     return (elements, bonds)
 
 def filter_bond_list_by_type(bond_list):
+    """
+    Filters bonds into categories based on their names.
+    Args:
+        bond_list (list): List of bond objects.
+    Returns:
+        tuple: A tuple containing lists of different types of bonds.
+    """
     dashed_bonds = []
     single_bonds = []
     arom_bonds = []
@@ -58,20 +81,26 @@ def filter_bond_list_by_type(bond_list):
             print("ERROR: filtering bonds has a non-resolved case")
     return dashed_bonds, single_bonds, arom_bonds, double_bonds, triple_bonds
 
-def insert_keyframes_to_all(number_of_frames):
+def insert_keyframes_to_all(number_of_frames, step_size=10):
     """
-    Inserts a number_of_frames, separated by 10 frames to all objects in the scene
+    Inserts keyframes for all objects in the scene at intervals of 10 frames.
+    Args:
+        number_of_frames (int): The total number of keyframes to insert.
+        step_size (int): the spacing between each frame
     """
     context = bpy.context
     for i in range(0,number_of_frames):
         for ob in context.scene.objects: #looping through all objects in the scene
-            ob.keyframe_insert(data_path="location", frame=i*10)
+            ob.keyframe_insert(data_path="location", frame=i*step_size)
             
 def update_keyframe_locations(target, extra_frames_nmbr, step_size, locations):
     """
-    target: the object to change its location
-    extra_frames_nmbr: <int> number of frames additional from the initial geometry
-    locations: list of locations for the target object for each frame to modify 
+    Updates keyframe locations for a target object.
+    Args:
+        target (bpy.types.Object): The object to update.
+        extra_frames_nmbr (int): The number of additional frames.
+        step_size (int): The interval between frames.
+        locations (list): The locations for each frame.
     """
     target.keyframe_insert(data_path="location", frame=0) #first keyframe is the first location
     for i in range(extra_frames_nmbr - 1):
@@ -79,6 +108,14 @@ def update_keyframe_locations(target, extra_frames_nmbr, step_size, locations):
         target.keyframe_insert(data_path="location", frame=(i+1)*step_size)
         
 def update_keyframe_rotations(target, extra_frames_nmbr, step_size, normals):
+    """
+    Updates keyframe rotations for a target object based on normals.
+    Args:
+        target (bpy.types.Object): The object to update.
+        extra_frames_nmbr (int): The number of additional frames.
+        step_size (int): The interval between frames.
+        normals (list): The normal vectors for each frame.
+    """
     target.keyframe_insert(data_path="rotation_euler", frame=0)
     for i in range(extra_frames_nmbr - 1):
         try:
@@ -107,6 +144,12 @@ def ExtractDataFromFile(path):
     return l
 
 def refine_anim_data(raw_anim_data):
+    """
+    Refines raw animation data into vectors.
+    : param raw_anim_data (list): The raw animation data.
+    Returns:
+        list: A refined list of data points with vectors.
+    """
     l = []
     #total_coordinates = extra_frames_nmbr * 3
     for data_point in raw_anim_data:
@@ -125,6 +168,15 @@ def refine_anim_data(raw_anim_data):
     return l
 
 def get_bond_locations(bond_name, anim_data, type):
+    """
+    Calculates the center of mass for each bond location.
+    Args:
+        bond_name (str): The name of the bond.
+        anim_data (list): The animation data.
+        type (str): The bond type.
+    Returns:
+        list: The list of center locations for each bond.
+    """
     l = []
     components = bond_name.split(type) #getting the elements involved in the bond
     for data_point in anim_data:
@@ -142,6 +194,15 @@ def get_bond_locations(bond_name, anim_data, type):
     return l
 
 def get_bond_normals(bond_name, anim_data, type):
+    """
+    Calculates the normal vector for each bond location.
+    Args:
+        bond_name (str): The name of the bond.
+        anim_data (list): The animation data.
+        type (str): The bond type.
+    Returns:
+        list: The list of normal vectors for the bond.
+    """
     n = []
     components = bond_name.split(type) #getting the elements involved in the bond
     for data_point in anim_data:
@@ -159,11 +220,27 @@ def get_bond_normals(bond_name, anim_data, type):
     return n    
             
 def animate_elements_from_anim_data(anim_data, step_size=10, extra_frames=3):
+    """
+    Animates elements based on provided animation data.
+    Args:
+        anim_data (list): The animation data.
+        step_size (int): The interval between frames.
+        extra_frames (int): The number of additional frames.
+    """
     for data_point in anim_data:
         current_obj = bpy.data.objects[data_point[0]] #getting the current element in animation data
         update_keyframe_locations(target=current_obj, extra_frames_nmbr=extra_frames, step_size=step_size, locations=data_point[1])
 
 def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=10, extra_frames=3):
+    """
+    Animates bonds based on their type and provided animation data.
+    Args:
+        bond_type_list (list): The list of bonds to animate.
+        anim_data (list): The animation data.
+        bond_type (str): The bond type.
+        step_size (int): The interval between frames.
+        extra_frames (int): The number of additional frames.
+    """
     if len(bond_type_list) != 0:
         for bond in bond_type_list:
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
@@ -174,41 +251,128 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
         print("there are no bonds of type", bond_type)    
         return
     
-def animate(anim_data, bond_list):
-    #filtering bond types from bond_list
-    dashed_bonds = filter_bond_list_by_type(bond_list)[0]
-    single_bonds = filter_bond_list_by_type(bond_list)[1]
-    arom_bonds = filter_bond_list_by_type(bond_list)[2]
-    double_bonds = filter_bond_list_by_type(bond_list)[3]
-    triple_bonds = filter_bond_list_by_type(bond_list)[4]
-    #animating elements
-    animate_elements_from_anim_data(anim_data=anim_data, step_size=20, extra_frames=3) 
-    #animating bonds
-    animate_bonds_by_type_list(bond_type_list=dashed_bonds, anim_data=anim_data, bond_type='_', step_size=20, extra_frames=3)
-    animate_bonds_by_type_list(bond_type_list=single_bonds, anim_data=anim_data, bond_type='-', step_size=20, extra_frames=3)
-    animate_bonds_by_type_list(bond_type_list=arom_bonds, anim_data=anim_data, bond_type='-=', step_size=20, extra_frames=3)
-    animate_bonds_by_type_list(bond_type_list=double_bonds, anim_data=anim_data, bond_type='=', step_size=20, extra_frames=3)
-    animate_bonds_by_type_list(bond_type_list=triple_bonds, anim_data=anim_data, bond_type='#', step_size=20, extra_frames=3)
-    
-def assign_parent_to_objects(element_list, bond_list):
-    bpy.ops.object.empty_add(type='PLAIN_AXES', align='WORLD', location=(0, 0, 0), scale=(1, 1, 1))
-    parent = bpy.data.objects['Empty'] #assigning parent
-    parent.name = "TS" #renaming parent
-    for element in element_list:
-        element.parent = parent
+def detect_bond_types(bond_list):
+    """
+    Extract the unique bond types from the bond list.
+    :param bond_list (list): List of bpy.data.objects corresponding to the bonds in the molecule
+    Returns a set of unique bonds in bond_list 
+    """
+    spacer_mapping = {'_': 0, '-': 1, '-=': 2, '=': 3, '#': 4}
+    detected_spacers = {}
     for bond in bond_list:
-        bond.parent = parent    
+        bond_name = bond.name
+        for spacer in spacer_mapping.keys():
+            if spacer in bond_name:
+                detected_spacers[spacer] = spacer_mapping[spacer]
+                break  # Found the spacer, move to the next bond    
+    return detected_spacers
 
-raw_anim_data = ExtractDataFromFile(dir+"\\animation_frames.txt")
-anim_data = refine_anim_data(raw_anim_data)
-element_list = separate_elements_from_bonds()[0]
-bond_list = separate_elements_from_bonds()[1]
+def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames):
+    """
+    Animates elements and bonds based on the provided data.
+    Args:
+        anim_data (list): The animation data for elements.
+        bond_list (list): The list of bonds to animate.
+        bond_types (dict): A dictionary with all the unique bond types in the molecule
+    """
+    #specifying end frame
+    bpy.context.scene.frame_start = 0
+    bpy.context.scene.frame_end = (extra_frames-1)*step_size
+    #animating elements
+    animate_elements_from_anim_data(anim_data=anim_data, step_size=step_size, extra_frames=extra_frames) 
+    #animating bonds
+    for type, index in bond_types.items(): #iterating through the dictionary of bonds present in the molecule
+        bond_type_list = filter_bond_list_by_type(bond_list)[index] #filtering bond types from bond list
+        animate_bonds_by_type_list(bond_type_list=bond_type_list,
+                                   anim_data=anim_data,
+                                   bond_type=type,
+                                   step_size=20,
+                                   extra_frames=3)
+    
+def bake_all_animations(end_frame=40):
+    """
+    Bakes all animations for every object in the scene.
+    """
+    bpy.ops.nla.bake(frame_start=0, frame_end=end_frame, #it should depend on the number of keyframes. Currently works with 3 
+                     step=1, only_selected=False, visual_keying=True, 
+                     clear_constraints=False, clear_parents=False, 
+                     bake_types={'OBJECT'})
+                     
+def animate(anim_frames_path, step_size=20):
+    """
+    Animates elements and bonds in the scene based on the provided animation data.
+    
+    :param anim_frames_path (str): The file path to the animation frames data. 
+    :param step_size (int): The number of frames between keyframes. Determines how frequently keyframes are inserted.
+    :param number_of_frames (int): The total number of frames for the animation. 
+    The function will:
+        1. Extract animation data from the specified file.
+        2. Refine the extracted data into a format suitable for animation.
+        3. Separate elements and bonds in the scene and detect bond types.
+        4. Set the end frame of the animation.
+        5. Animate the elements and bonds using the extracted data.
+        6. Bake the animation, which stores the keyframe data for all objects.
+    """
+    raw_anim_data = ExtractDataFromFile(anim_frames_path)
+    anim_data = refine_anim_data(raw_anim_data)
+    number_of_frames = calculate_number_of_frames(anim_frames_path)
+    element_list = separate_elements_from_bonds()[0]
+    bond_list = separate_elements_from_bonds()[1]
+    bond_types = detect_bond_types(bond_list)
+    end_frame = (number_of_frames - 1)*step_size
+    build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames)
+    bake_all_animations(end_frame)
+
+def export_animation(filepath):
+    """
+    Exports the animation to the given filepath.
+    :param filepath: Path to save the exported file.
+    """
+    try:
+        bpy.ops.export_scene.fbx(filepath=filepath, 
+                                 check_existing=True, 
+                                 filter_glob="*.fbx", 
+                                 use_selection=False, 
+                                 global_scale=1.0, 
+                                 apply_unit_scale=True, 
+                                 bake_anim=True, 
+                                 bake_anim_use_all_bones=False, 
+                                 bake_anim_use_nla_strips=False, 
+                                 bake_anim_use_all_actions=False, 
+                                 bake_anim_force_startend_keying=True, 
+                                 bake_anim_step=1.0, 
+                                 bake_anim_simplify_factor=0.0, 
+                                 use_mesh_modifiers=True)
+        print(f"Animation exported to {filepath}")
+    except PermissionError as e:
+        print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
+    except Exception as e:
+        print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
+
+
+    
+
+#raw_anim_data = ExtractDataFromFile(dir+"\\animation_frames.txt")
+#number_of_frames = calculate_number_of_frames(dir+"\\animation_frames.txt")
+#print(number_of_frames)
+#export_path = ("C:\\Documents\\Gaussian-2-Blender\\output\\water.fbx")
+#anim_data = refine_anim_data(raw_anim_data)
+#element_list = separate_elements_from_bonds()[0]
+#bond_list = separate_elements_from_bonds()[1]
+#bond_types = detect_bond_types(Abond_list)
+#build_animations(anim_data, bond_list, bond_types, 20, 3)
+#bake_all_animations(40)
+#export_animation(export_path)
+
+
+#print(bond_types)
 
 #clear_all_animations()
-animate(anim_data, bond_list)
+#animate(anim_data, bond_list, bond_types)
 #assign_parent_to_objects(element_list, bond_list)
 
-
+#print("***")
+#print(element_list)
 
 
 #bpy.ops.nla.tracks_add(above_selected=True) #adds master nla track
