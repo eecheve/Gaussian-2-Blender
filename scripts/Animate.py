@@ -93,21 +93,21 @@ def insert_keyframes_to_all(number_of_frames, step_size=10):
         for ob in context.scene.objects: #looping through all objects in the scene
             ob.keyframe_insert(data_path="location", frame=i*step_size)
             
-def update_keyframe_locations(target, extra_frames_nmbr, step_size, locations):
+def update_keyframe_locations(target, step_size, locations):
     """
     Updates keyframe locations for a target object.
     Args:
         target (bpy.types.Object): The object to update.
-        extra_frames_nmbr (int): The number of additional frames.
         step_size (int): The interval between frames.
-        locations (list): The locations for each frame.
+        locations (list): The locations for each frame (list of vectors).
     """
+    target.location = locations[0]
     target.keyframe_insert(data_path="location", frame=0) #first keyframe is the first location
-    for i in range(extra_frames_nmbr - 1):
-        target.location = locations[i]
-        target.keyframe_insert(data_path="location", frame=(i+1)*step_size)
+    for i in range(1, len(locations)):  # start from 1 since the 0th frame is already inserted
+            target.location = locations[i]  # Set the location to the ith vector
+            target.keyframe_insert(data_path="location", frame=(i) * step_size)
         
-def update_keyframe_rotations(target, extra_frames_nmbr, step_size, normals):
+def update_keyframe_rotations(target, step_size, normals):
     """
     Updates keyframe rotations for a target object based on normals.
     Args:
@@ -117,18 +117,19 @@ def update_keyframe_rotations(target, extra_frames_nmbr, step_size, normals):
         normals (list): The normal vectors for each frame.
     """
     target.keyframe_insert(data_path="rotation_euler", frame=0)
-    for i in range(extra_frames_nmbr - 1):
+    for i, normal in enumerate(normals):
         try:
-            phi = math.atan2(normals[i].y, normals[i].x)
+            phi = math.atan2(normal.y, normal.x)
         except ValueError:
             phi = math.pi / 2
         try:
-            theta = math.acos(normals[i].z/normals[i].magnitude)
+            theta = math.acos(normal.z / normal.magnitude)
         except ValueError:
             theta = 0
+
         target.rotation_euler[1] = theta
         target.rotation_euler[2] = phi
-        target.keyframe_insert(data_path="rotation_euler", frame=(i+1)*step_size)
+        target.keyframe_insert(data_path="rotation_euler", frame=i * step_size)
         
 def ExtractDataFromFile(path):
     """
@@ -151,23 +152,20 @@ def refine_anim_data(raw_anim_data):
     Returns:
         list: A refined list of data points with vectors.
     """
-    l = []
-    #total_coordinates = extra_frames_nmbr * 3
+    refined_data = []
     for data_point in raw_anim_data:
-        m = []
-        m.append(data_point[0])
-        x1 = float(data_point[1])
-        y1 = float(data_point[2])
-        z1 = float(data_point[3])
-        x2 = float(data_point[4])
-        y2 = float(data_point[5])
-        z2 = float(data_point[6])
-        v1 = mathutils.Vector((x1,y1,z1))
-        v2 = mathutils.Vector((x2,y2,z2))
-        m.append([v1,v2])
-        l.append(m)
+        element_identifier = data_point[0]
+        vectors = []
+        # Loop through the coordinate sets
+        for i in range(1, len(data_point), 3):
+            x = float(data_point[i])
+            y = float(data_point[i + 1])
+            z = float(data_point[i + 2])
+            vector = mathutils.Vector((x, y, z))
+            vectors.append(vector)
+        refined_data.append([element_identifier] + vectors)
     print("8.2: The animation data was refined into numerical vectors")
-    return l
+    return refined_data
 
 def get_bond_locations(bond_name, anim_data, type):
     """
@@ -179,23 +177,40 @@ def get_bond_locations(bond_name, anim_data, type):
     Returns:
         list: The list of center locations for each bond.
     """
-    l = []
-    components = bond_name.split(type) #getting the elements involved in the bond
+    """
+    Calculates the center of mass for each bond location.
+    Args:
+        bond_name (str): The name of the bond.
+        anim_data (list): The animation data.
+        type (str): The bond type.
+    Returns:
+        list: The list of center locations for each bond.
+    """
+    print("Get bond locations is being called")
+    l = []  # List to store center locations
+    components = bond_name.split(type)  # Splitting bond_name to get the two atoms involved
+    r1 = None
+    r2 = None
+    # Loop through anim_data to find vectors for the two components
     for data_point in anim_data:
-        #comparing the elements in the bond with the keyframe locations
         if data_point[0] == components[0]:
-            r1 = data_point[1] #vector located at one end of the bond
+            r1 = [v for v in data_point[1:]]  # Extract all vectors for the first component
         elif data_point[0] == components[1]:
-            r2 = data_point[1] #vector located at the other end of the bond
-        else:
-            continue
-    #finding center of mass for each bond location
-    for i in range(len(anim_data[0][1])):
-        v_i = (r1[i] + r2[i])/2 #average position between the two elements
-        l.append(v_i) #adding average position to the list
+            r2 = [v for v in data_point[1:]]  # Extract all vectors for the second component
+
+        if r1 is not None and r2 is not None:
+            break  # Stop the loop when both r1 and r2 are found
+    # Ensure both r1 and r2 are populated
+    if r1 is None or r2 is None:
+        raise ValueError("Bond components not found in the animation data.")
+    # Calculate the center of mass for each corresponding pair of vectors in r1 and r2
+    for i in range(len(r1)):  # Assuming r1 and r2 have the same number of vectors
+        v_i = (r1[i] + r2[i]) / 2  # Calculate the center of mass
+        l.append(v_i)  # Append the center of mass to the list
+    print("bond locations are:", l)
     return l
 
-def get_bond_normals(bond_name, anim_data, type):
+def get_bond_normals(bond_name, anim_data, type): #<---------------------------------------------------------
     """
     Calculates the normal vector for each bond location.
     Args:
@@ -205,23 +220,28 @@ def get_bond_normals(bond_name, anim_data, type):
     Returns:
         list: The list of normal vectors for the bond.
     """
+    print("get bond normals is being called")
     n = []
+    r1 = None
+    r2 = None
     components = bond_name.split(type) #getting the elements involved in the bond
     for data_point in anim_data:
         #comparing the elements in the bond with the keyframe locations
         if data_point[0] == components[0]:
-            r1 = data_point[1] #vector located at one end of the bond
+            r1 = [v for v in data_point[1:]]  # Extract all vectors for the first component
         elif data_point[0] == components[1]:
-            r2 = data_point[1] #vector located at the other end of the bond
-        else:
-            continue
+            r2 = [v for v in data_point[1:]]  # Extract all vectors for the second component
+        if r1 is not None and r2 is not None:
+            break  # Stop the loop when both r1 and r2 are found
+    if r1 is None or r2 is None:
+        raise ValueError("Bond components not found in the animation data.")
     #finding normal vector for each bond
-    for i in range(len(anim_data[0][1])):
-        n_i = r2[i] - r1[i] #!!! possible bug source, the bond might rotate 180 degrees!!!!!!
-        n.append(n_i)
-    return n    
+    for i in range(len(r1)):  # Assuming r1 and r2 have the same number of vectors
+        n_i = r2[i] - r1[i]  # Calculate the normal vector
+        n.append(n_i)  # Append the normal vector to the list
+    return n
             
-def animate_elements_from_anim_data(anim_data, step_size=10, extra_frames=3):
+def animate_elements_from_anim_data(anim_data, step_size=10):
     """
     Animates elements based on provided animation data.
     Args:
@@ -231,8 +251,9 @@ def animate_elements_from_anim_data(anim_data, step_size=10, extra_frames=3):
     """
     print("11: elements are being animated")
     for data_point in anim_data:
-        current_obj = bpy.data.objects[data_point[0]] #getting the current element in animation data
-        update_keyframe_locations(target=current_obj, extra_frames_nmbr=extra_frames, step_size=step_size, locations=data_point[1])
+        current_obj = bpy.data.objects[data_point[0]]  # Getting the current element in animation data
+        locations = [v for v in data_point[1:]]  # Extract the vector list from the data_point
+        update_keyframe_locations(target=current_obj, step_size=step_size, locations=locations)
 
 def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=10, extra_frames=3):
     """
@@ -249,8 +270,8 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
         for bond in bond_type_list:
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
             bond_normals = get_bond_normals(bond.name, anim_data, bond_type)
-            update_keyframe_locations(target=bond, extra_frames_nmbr=extra_frames, step_size=step_size, locations=bond_locations)
-            update_keyframe_rotations(target=bond, extra_frames_nmbr=extra_frames, step_size=step_size, normals=bond_normals)
+            update_keyframe_locations(target=bond, step_size=step_size, locations=bond_locations)
+            update_keyframe_rotations(target=bond, step_size=step_size, normals=bond_normals)
     else:
         print("there are no bonds of type", bond_type)    
         return
@@ -285,15 +306,15 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, 
     bpy.context.scene.frame_start = 0
     bpy.context.scene.frame_end = end_frame
     #animating elements
-    animate_elements_from_anim_data(anim_data=anim_data, step_size=step_size, extra_frames=extra_frames) 
+    animate_elements_from_anim_data(anim_data=anim_data, step_size=step_size) 
     #animating bonds
     for type, index in bond_types.items(): #iterating through the dictionary of bonds present in the molecule
         bond_type_list = filter_bond_list_by_type(bond_list)[index] #filtering bond types from bond list
         animate_bonds_by_type_list(bond_type_list=bond_type_list,
                                    anim_data=anim_data,
                                    bond_type=type,
-                                   step_size=20,
-                                   extra_frames=3)
+                                   step_size=step_size,
+                                   extra_frames=extra_frames)
     
 def bake_all_animations(end_frame=40):
     """
@@ -363,32 +384,17 @@ def export_animation(filepath):
 
 
     
-
+# TO DEBUG
 #raw_anim_data = ExtractDataFromFile(dir+"\\animation_frames.txt")
 #number_of_frames = calculate_number_of_frames(dir+"\\animation_frames.txt")
-#print(number_of_frames)
 #export_path = ("C:\\Documents\\Gaussian-2-Blender\\output\\water.fbx")
 #anim_data = refine_anim_data(raw_anim_data)
 #element_list = separate_elements_from_bonds()[0]
 #bond_list = separate_elements_from_bonds()[1]
-#bond_types = detect_bond_types(Abond_list)
-#build_animations(anim_data, bond_list, bond_types, 20, 3)
-#bake_all_animations(40)
+#bond_types = detect_bond_types(bond_list)
+#end_frame = (number_of_frames - 1)*20
+#build_animations(anim_data, bond_list, bond_types, 20, number_of_frames, end_frame)
+#bake_all_animations(anim_length)
 #export_animation(export_path)
 
-
-#print(bond_types)
-
 #clear_all_animations()
-#animate(anim_data, bond_list, bond_types)
-#assign_parent_to_objects(element_list, bond_list)
-
-#print("***")
-#print(element_list)
-
-
-#bpy.ops.nla.tracks_add(above_selected=True) #adds master nla track
-#all_actions = bpy.data.actions
-#for action in all_actions:
-#    bpy.ops.nla.actionclip_add(action)
-

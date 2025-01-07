@@ -183,6 +183,5 @@ if __name__ == "__main__":
         anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
         export_path = os.path.join(main_body_instance.o_folder_path,
                                    main_body_instance.o_file_name+main_body_instance.o_file_type)
-        #export_path = main_body_instance.o_folder_path + main_body_instance.o_file_name + main_body_instance.o_file_type
         Animate.animate(anim_frames_file)
         Animate.export_animation(export_path)
