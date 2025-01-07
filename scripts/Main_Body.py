@@ -3,7 +3,6 @@ import sys
 import os
 from bpy import context, data
 from math import radians, degrees
-import mathutils
 
 import importlib
 
@@ -180,7 +179,10 @@ if __name__ == "__main__":
     if main_body_instance.str_is_animation == "0":
         main_body_instance.Export()
     else:
+        print("7: The input list is interpreted as animation frames")
         anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
-        export_path = main_body_instance.o_folder_path + main_body_instance.o_file_name + main_body_instance.o_file_type
+        export_path = os.path.join(main_body_instance.o_folder_path,
+                                   main_body_instance.o_file_name+main_body_instance.o_file_type)
+        #export_path = main_body_instance.o_folder_path + main_body_instance.o_file_name + main_body_instance.o_file_type
         Animate.animate(anim_frames_file)
         Animate.export_animation(export_path)

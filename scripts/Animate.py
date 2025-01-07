@@ -35,7 +35,7 @@ def calculate_number_of_frames(anim_frames_path):
         coordinates = parts[1:] # Remove the element identifier
         # The number of frames is the total number of coordinates divided by 3 (since each frame has 3 coordinates per element)
         num_frames = len(coordinates) / 3        
-    return num_frames
+    return int(num_frames)
 
 def separate_elements_from_bonds():
     """
@@ -141,6 +141,7 @@ def ExtractDataFromFile(path):
         for line in content:
             # store the line as list in file_data
             l.append(line.split())
+    print("8.1: The data in animation_frames.txt was properly read")
     return l
 
 def refine_anim_data(raw_anim_data):
@@ -165,6 +166,7 @@ def refine_anim_data(raw_anim_data):
         v2 = mathutils.Vector((x2,y2,z2))
         m.append([v1,v2])
         l.append(m)
+    print("8.2: The animation data was refined into numerical vectors")
     return l
 
 def get_bond_locations(bond_name, anim_data, type):
@@ -227,6 +229,7 @@ def animate_elements_from_anim_data(anim_data, step_size=10, extra_frames=3):
         step_size (int): The interval between frames.
         extra_frames (int): The number of additional frames.
     """
+    print("11: elements are being animated")
     for data_point in anim_data:
         current_obj = bpy.data.objects[data_point[0]] #getting the current element in animation data
         update_keyframe_locations(target=current_obj, extra_frames_nmbr=extra_frames, step_size=step_size, locations=data_point[1])
@@ -241,6 +244,7 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
         step_size (int): The interval between frames.
         extra_frames (int): The number of additional frames.
     """
+    print("11: bonds are being animated")
     if len(bond_type_list) != 0:
         for bond in bond_type_list:
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
@@ -267,7 +271,7 @@ def detect_bond_types(bond_list):
                 break  # Found the spacer, move to the next bond    
     return detected_spacers
 
-def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames):
+def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, end_frame):
     """
     Animates elements and bonds based on the provided data.
     Args:
@@ -275,9 +279,11 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames):
         bond_list (list): The list of bonds to animate.
         bond_types (dict): A dictionary with all the unique bond types in the molecule
     """
+    print("10: Animations are being built")
+    print("10: build_animation() frame end should be:", end_frame)
     #specifying end frame
     bpy.context.scene.frame_start = 0
-    bpy.context.scene.frame_end = (extra_frames-1)*step_size
+    bpy.context.scene.frame_end = end_frame
     #animating elements
     animate_elements_from_anim_data(anim_data=anim_data, step_size=step_size, extra_frames=extra_frames) 
     #animating bonds
@@ -293,7 +299,8 @@ def bake_all_animations(end_frame=40):
     """
     Bakes all animations for every object in the scene.
     """
-    bpy.ops.nla.bake(frame_start=0, frame_end=end_frame, #it should depend on the number of keyframes. Currently works with 3 
+    print("12: all animations were baked")
+    bpy.ops.nla.bake(frame_start=0, frame_end=end_frame,
                      step=1, only_selected=False, visual_keying=True, 
                      clear_constraints=False, clear_parents=False, 
                      bake_types={'OBJECT'})
@@ -313,14 +320,18 @@ def animate(anim_frames_path, step_size=20):
         5. Animate the elements and bonds using the extracted data.
         6. Bake the animation, which stores the keyframe data for all objects.
     """
+    print("8: animation function is called")
     raw_anim_data = ExtractDataFromFile(anim_frames_path)
     anim_data = refine_anim_data(raw_anim_data)
     number_of_frames = calculate_number_of_frames(anim_frames_path)
-    element_list = separate_elements_from_bonds()[0]
+    print("9: the number of frames is: ", number_of_frames)
+    #element_list = separate_elements_from_bonds()[0]
     bond_list = separate_elements_from_bonds()[1]
     bond_types = detect_bond_types(bond_list)
-    end_frame = (number_of_frames - 1)*step_size
-    build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames)
+    print("9: present bonds are: ", bond_types)
+    end_frame = int((number_of_frames - 1)*step_size)
+    print("9: the end frame is assigned to: ", end_frame)
+    build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
     bake_all_animations(end_frame)
 
 def export_animation(filepath):
@@ -328,6 +339,7 @@ def export_animation(filepath):
     Exports the animation to the given filepath.
     :param filepath: Path to save the exported file.
     """
+    print("13: the export path is", filepath)
     try:
         bpy.ops.export_scene.fbx(filepath=filepath, 
                                  check_existing=True, 
