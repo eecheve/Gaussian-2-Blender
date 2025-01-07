@@ -1,7 +1,7 @@
-C:/Documents/Gaussian-2-Blender/input_examples/animations/water
-water_frame1.com
+C:/Documents/Gaussian-2-Blender/input_examples/animations/DA_ciclopentadiene
+cyclopentadiene-ethene-(05).com
 C:\Documents\Gaussian-2-Blender\output\
-water_frame1
+cyclopentadiene-ethene-(05)
 Ball-and-Stick
 .fbx
 0
