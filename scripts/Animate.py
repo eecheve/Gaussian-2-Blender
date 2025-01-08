@@ -47,7 +47,7 @@ def separate_elements_from_bonds():
     elements = []
     bonds = []
     for ob in context.scene.objects:
-        if '-' in ob.name or '=' in ob.name or '_' in ob.name:
+        if '-' in ob.name or '=' in ob.name or '_' in ob.name or '#' in ob.name or '%' in ob.name:
             bonds.append(ob)
         else:
             elements.append(ob)
@@ -69,11 +69,11 @@ def filter_bond_list_by_type(bond_list):
     for bond in bond_list:
         if '_' in bond.name:
             dashed_bonds.append(bond)
-        elif '-' in bond.name and '=' not in bond.name:
+        elif '-' in bond.name:
             single_bonds.append(bond)
-        elif '-' in bond.name and '=' in bond.name:
+        elif '%' in bond.name:
             arom_bonds.append(bond)
-        elif '=' in bond.name and '-' not in bond.name:
+        elif '=' in bond.name:
             double_bonds.append(bond)
         elif '#' in bond.name:
             triple_bonds.append(bond)
@@ -255,7 +255,7 @@ def animate_elements_from_anim_data(anim_data, step_size=10):
         locations = [v for v in data_point[1:]]  # Extract the vector list from the data_point
         update_keyframe_locations(target=current_obj, step_size=step_size, locations=locations)
 
-def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=10, extra_frames=3):
+def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=10):
     """
     Animates bonds based on their type and provided animation data.
     Args:
@@ -268,6 +268,7 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
     print("11: bonds are being animated")
     if len(bond_type_list) != 0:
         for bond in bond_type_list:
+            print("animate_bonds_by_type: currently in bond: ", bond)
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
             bond_normals = get_bond_normals(bond.name, anim_data, bond_type)
             update_keyframe_locations(target=bond, step_size=step_size, locations=bond_locations)
@@ -282,7 +283,7 @@ def detect_bond_types(bond_list):
     :param bond_list (list): List of bpy.data.objects corresponding to the bonds in the molecule
     Returns a set of unique bonds in bond_list 
     """
-    spacer_mapping = {'_': 0, '-': 1, '-=': 2, '=': 3, '#': 4}
+    spacer_mapping = {'_': 0, '-': 1, '%': 2, '=': 3, '#': 4}
     detected_spacers = {}
     for bond in bond_list:
         bond_name = bond.name
@@ -313,8 +314,7 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, 
         animate_bonds_by_type_list(bond_type_list=bond_type_list,
                                    anim_data=anim_data,
                                    bond_type=type,
-                                   step_size=step_size,
-                                   extra_frames=extra_frames)
+                                   step_size=step_size)
     
 def bake_all_animations(end_frame=40):
     """

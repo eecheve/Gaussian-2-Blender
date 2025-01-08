@@ -88,13 +88,13 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
             SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
             SelectTwoMeshesAndJoin(bond_label, bond_label+".001")
         elif bond_type == 'res1':
-            bond_label = atom1 + '-=' + atom2
-            bond_label2 = atom2 + '-=' + atom1
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-=')
+            bond_label = atom1 + '%' + atom2
+            bond_label2 = atom2 + '%' + atom1
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '%')
             MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
             MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
             SelectTwoMeshesAndJoin(bond_label, bond_label2)
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '=-', 0.18, 0.08)
+            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '%', 0.18, 0.08)
         elif bond_type == '#':
             bond_label = atom1 + '#' + atom2
             bond_label2 = atom2 + "#" + atom1
