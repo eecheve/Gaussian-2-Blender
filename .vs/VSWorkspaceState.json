@@ -1,7 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\scripts"
+    "\\external_data"
   ],
+  "SelectedNode": "\\external_data\\covalent_radii.json",
   "PreviewInSolutionExplorer": false
 }
