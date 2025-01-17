@@ -26,11 +26,3 @@ class ActionsRegion:
         btn_convert = tk.Button(text="Convert!", width=20, master=self.frame, command=self.on_convert)
         CreateTooltip(btn_convert, "Click here to convert the molecule(s) to the specified format")
         btn_convert.grid(row=0, column=2)
-
-    # def place(self, **kwargs):
-    #     """
-    #     Places the frame in the parent widget.
-
-    #     :param kwargs: Placement options such as grid(row=.., column=..).
-    #     """
-    #     self.frame.grid(**kwargs)

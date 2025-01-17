@@ -1,10 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\external_data",
-    "\\gui",
     "\\scripts"
   ],
-  "SelectedNode": "\\gui\\Information.py",
+  "SelectedNode": "\\scripts\\Main_Body.py",
   "PreviewInSolutionExplorer": false
 }

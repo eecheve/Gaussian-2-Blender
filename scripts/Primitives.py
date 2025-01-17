@@ -231,12 +231,6 @@ def SelectTwoMeshesAndJoin(name1, name2):
     #    for obj in obs:
     #        obj.select_set(False)  # Deselect all objects after joining
     
-#def JoinMeshesFromObjectList(obj_list):
-#    ctx = bpy.context.copy()
-#    ctx['active_object'] = obj_list[0]
-#    ctx['selected_editable_objects'] = obj_list
-#    bpy.ops.object.join(ctx)
-
 def JoinMeshesFromObjectList(obj_list):
     bpy.ops.object.mode_set(mode='OBJECT') # Ensure we're in Object Mode before joining
     bpy.ops.object.select_all(action='DESELECT') # Deselect all objects first
@@ -248,10 +242,3 @@ def JoinMeshesFromObjectList(obj_list):
     joined_object = bpy.context.active_object
     joined_object.name = original_name
     #print(f"Joined {len(obj_list)} objects: {[obj.name for obj in obj_list]}")
-
-    
-#def EraseDummyAtoms():
-#    obs = []
-#    scene = bpy.context.scene
-#    for ob in scene.objects:
-#        if 
