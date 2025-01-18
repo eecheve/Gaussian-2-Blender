@@ -57,6 +57,17 @@ class InputRegion(object):
         self.lbl_inputLabel = tk.Label(text="Input name(s)", master=self.frm_inside)
         CreateTooltip(self.lbl_inputLabel, "Name(s) of the file(s) to be converted")
         
+        self.lbl_fileType = tk.Label(text="Input type", master=self.frm_inside)
+        CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
+        self.lst_inputTypes = [".com", ".xyz"] #planning on reading .mol files in the future as well.
+        self.var_inputTypes = tk.StringVar()
+        self.var_inputTypes.set(".com")
+        self.drp_inputTypes = tk.OptionMenu(self.frm_inside, 
+                                        self.var_inputTypes, 
+                                        *self.lst_inputTypes,
+                                        command=self.dropdown_callout)
+        CreateTooltip(self.drp_inputTypes, "Choose one of the input types from this list")
+
         self.lbl_inputNames = tk.Label(textvariable=self.var_inputNames, master=self.frm_inside, fg="gray")
         CreateTooltip(self.lbl_inputNames, "List of input files with the correct extension")
         
@@ -69,7 +80,7 @@ class InputRegion(object):
         self.lst_modelTypes = ["Ball-and-Stick", "Stick-only", "Van-der-Waals"]
         self.var_modelTypes.set("Ball-and-Stick")
         self.drp_modelTypes = tk.OptionMenu(self.frm_inside, self.var_modelTypes, 
-                                            *self.lst_modelTypes, command=self.dropdouwn_callout)
+                                            *self.lst_modelTypes, command=self.dropdown_callout)
         CreateTooltip(self.drp_modelTypes, "Choose one of the model representation options from this list")
 
         self.chk_isAnimation = tk.Checkbutton(master=self.frm_inside, text="is animation",
@@ -78,12 +89,14 @@ class InputRegion(object):
 
     def position_widgets(self):
         """Position widgets in the frame."""
-        self.lbl_inputLabel.grid(row=1, column=0)
-        self.lbl_inputNames.grid(row=1, column=1, sticky="w")
-        self.btn_setInputName.grid(row=1, column=2)
-        self.lbl_inputType.grid(row=2, column=0, sticky="e")
-        self.drp_modelTypes.grid(row=2, column=1, sticky="w")
-        self.chk_isAnimation.grid(row=3, column=0)
+        self.lbl_fileType.grid(row=1, column=0)
+        self.drp_inputTypes.grid(row=1, column=1)
+        self.lbl_inputLabel.grid(row=2, column=0)
+        self.lbl_inputNames.grid(row=2, column=1, sticky="w")
+        self.btn_setInputName.grid(row=2, column=2)
+        self.lbl_inputType.grid(row=3, column=0, sticky="e")
+        self.drp_modelTypes.grid(row=3, column=1, sticky="w")
+        self.chk_isAnimation.grid(row=4, column=0)
 
 
     def updateAnimationState(self):
@@ -164,5 +177,5 @@ class InputRegion(object):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
                               width=325, height=200)
 
-    def dropdouwn_callout(self, event):
+    def dropdown_callout(self, event):
         print("#### REPRESENTATIONAL MODEL UPDATED ####")
