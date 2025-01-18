@@ -25,6 +25,8 @@ class InputRegion(object):
         self.lst_inputNames = []
         self.lst_InputPaths = []
         self.initial_dir = initial_dir
+        self.var_inputTypes = tk.StringVar()
+        self.var_inputTypes.set(".com")
 
     def clear_variables(self):
         """Clear input-related variables."""
@@ -35,6 +37,7 @@ class InputRegion(object):
         self.var_isAnimation.set(False)
         self.lst_inputNames.clear()
         self.lst_InputPaths.clear()
+        self.var_inputTypes.set(".com")
 
     def setup_frame(self, parent):
         """Set up the main frame."""
@@ -60,8 +63,6 @@ class InputRegion(object):
         self.lbl_fileType = tk.Label(text="Input type", master=self.frm_inside)
         CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
         self.lst_inputTypes = [".com", ".xyz"] #planning on reading .mol files in the future as well.
-        self.var_inputTypes = tk.StringVar()
-        self.var_inputTypes.set(".com")
         self.drp_inputTypes = tk.OptionMenu(self.frm_inside, 
                                         self.var_inputTypes, 
                                         *self.lst_inputTypes,

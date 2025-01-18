@@ -35,8 +35,9 @@ for module in importlib_modules:
         print(f"Error while importing/reloading {module}: {e}")
 
 class Main_Body(object):
-    def __init__(self, i_folder_path, i_file_name, o_folder_path, o_file_name,
+    def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation):
+        self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
         self.o_folder_path = o_folder_path
@@ -164,7 +165,8 @@ if __name__ == "__main__":
         raise FileNotFoundError(f"Error: The file 'parameters.txt' was not found at {params_file_path}")
     
     params_data = Receive_Parameters.get_parameters_data(params_file_path)
-    main_body_instance = Main_Body(params_data["i_folder_path"],
+    main_body_instance = Main_Body(params_data["i_file_type"],
+                                   params_data["i_folder_path"],
                                    params_data["i_file_name"],
                                    params_data["o_folder_path"],
                                    params_data["o_file_name"],

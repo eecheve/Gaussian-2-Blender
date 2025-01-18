@@ -1,7 +1,8 @@
-C:/Documents/Gaussian-2-Blender/input_examples/inorganic
-nitrogentrifluoride.com
+.xyz
+C:/Documents/Gaussian-2-Blender/input_examples/organic
+methyl_xanthate.com
 C:\Documents\Gaussian-2-Blender\output\
-nitrogentrifluoride
+methyl_xanthate
 Ball-and-Stick
 .fbx
 0

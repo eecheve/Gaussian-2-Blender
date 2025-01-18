@@ -28,16 +28,17 @@ def get_parameters_data(params_path):
     """
     parameters = extract_parameters_data(params_path)
     parameters_dict = {
-        "i_folder_path": parameters[0].strip(),
-        "i_file_name": parameters[1].strip(),
-        "o_folder_path": parameters[2].strip(),
-        "o_file_name": parameters[3].strip(),
-        "represent_type": parameters[4].strip(),
-        "o_file_type": parameters[5].strip(),
-        "str_is_ionic": parameters[6].strip(),
-        "str_unit_cell": parameters[7].strip(),
-        "str_ion_input_list": parameters[8].strip(),
-        "str_is_animation": parameters[9].strip(),
-        "str_ionic_cell": f"({parameters[6].strip()}_{parameters[7].strip()})" #still not sure why i need this
+        "i_file_type": parameters[0].strip(),
+        "i_folder_path": parameters[1].strip(),
+        "i_file_name": parameters[2].strip(),
+        "o_folder_path": parameters[3].strip(),
+        "o_file_name": parameters[4].strip(),
+        "represent_type": parameters[5].strip(),
+        "o_file_type": parameters[6].strip(),
+        "str_is_ionic": parameters[7].strip(),
+        "str_unit_cell": parameters[8].strip(),
+        "str_ion_input_list": parameters[9].strip(),
+        "str_is_animation": parameters[10].strip(),
+        "str_ionic_cell": f"({parameters[7].strip()}_{parameters[8].strip()})" #still not sure why i need this
     }
     return parameters_dict

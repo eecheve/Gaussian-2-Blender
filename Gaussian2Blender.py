@@ -114,7 +114,7 @@ class GaussianToBlenderApp:
                 return False
         return True
         
-    def overwrite_parameters_script(self, i_path, i_name, model_type, o_path, o_name, o_type, 
+    def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                               is_ionic, unit_cell, str_ion_list, is_anim):
         """
         overwrites bat script to handle the export or animation of molecules
@@ -137,6 +137,7 @@ class GaussianToBlenderApp:
 
         Utility.clear_file_contents(params_script)
         lines = [
+            i_type,
             i_path,
             i_name,
             o_path,
@@ -161,7 +162,7 @@ class GaussianToBlenderApp:
             frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
             Utility.append_lines_to_file(anim_frames, frames_list_strings)
         
-    def individual_convert(self, exec_loc, b_path, i_path, i_name, model_type, o_path, 
+    def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim):
         """ 
         Function to execute bat file that communicates with blender's python API 
@@ -180,7 +181,7 @@ class GaussianToBlenderApp:
         :param is_anim: boolean determining if input list is to be treated as animation
         """
         self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
-        self.overwrite_parameters_script(i_path, i_name, model_type, o_path, o_name, o_type, 
+        self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim)
         subprocess.call([exec_loc, b_path])
     
@@ -232,7 +233,8 @@ class GaussianToBlenderApp:
         exec_loc = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
         anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
         b_path = self.bPathReg.var_blenderPath.get() #blender path
-        i_path = self.inputReg.var_inputPath.get() #input specifications
+        i_type = self.inputReg.var_inputTypes.get() #input file type
+        i_path = self.inputReg.var_inputPath.get() #input specifications.
         i_names = self.inputReg.lst_inputNames #files to convert
         model_type = self.inputReg.var_modelTypes.get() #model specifications
         o_path = self.outputReg.ent_outputPath.get() #output path
@@ -246,13 +248,13 @@ class GaussianToBlenderApp:
             str_ion_list = params[3]
             if is_anim:
                 print("Converting main molecule for animation")
-                self.individual_convert(exec_loc, b_path, i_path, i_names[0], model_type,
+                self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
-                    self.individual_convert(exec_loc, b_path, i_path, i_names[i], model_type,
+                    self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim)   
         else:
