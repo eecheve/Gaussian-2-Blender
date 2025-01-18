@@ -1,8 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\external_data"
+    "\\external_data",
+    "\\gui",
+    "\\scripts"
   ],
-  "SelectedNode": "\\external_data\\covalent_radii.json",
+  "SelectedNode": "\\scripts\\Main_Body.py",
   "PreviewInSolutionExplorer": false
 }
