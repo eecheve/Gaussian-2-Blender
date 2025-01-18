@@ -73,7 +73,7 @@ class InputRegion(object):
         CreateTooltip(self.lbl_inputNames, "List of input files with the correct extension")
         
         self.btn_setInputName = tk.Button(text="set", master=self.frm_inside, command=self.setInputName)
-        CreateTooltip(self.btn_setInputName, "Select one or more '.com' gaussian input files")
+        CreateTooltip(self.btn_setInputName, "Select one or more input files")
         
         self.lbl_inputType = tk.Label(text="Model type", master=self.frm_inside)
         CreateTooltip(self.lbl_inputType, "Different representational models supported by Gaussian2Blender")
@@ -127,12 +127,19 @@ class InputRegion(object):
         
     def setInputName(self):
         """
-        opens a file dialog and allows to select one or more elements
-        updates the input names list and depicts all the elements to convert in the GUI
+        Opens a file dialog and allows selecting one or more files.
+        Filters files based on the selected input type from the dropdown menu.
+        Updates the input names list and displays all the elements to convert in the GUI.
         """
-        str_paths = tk.filedialog.askopenfilenames(initialdir = self.initial_dir)
+        input_type = self.var_inputTypes.get()
+        file_extension = f"*{input_type}"
+        file_types = [(f"{input_type.upper()} files", file_extension), ("All files", "*.*")]
+
+        str_paths = tk.filedialog.askopenfilenames(initialdir=self.initial_dir, filetypes=file_types)
+    
         if not str_paths:
-            return #no files selected
+            return  # No files selected
+
         if self.allFilesHaveSameValidExtension(str_paths):
             self.updateInputNameList(str_paths)
             path = os.path.dirname(str_paths[0])
@@ -142,7 +149,7 @@ class InputRegion(object):
                 f_name = os.path.basename(entry)
                 print("has correct file extension", f_name)
         else:
-            print("Not all selected files have the same valid extension. Please select files with either '.com' or '.xyz' extension.")
+            print(f"Not all selected files have the '{input_type}' extension. Please select files with the '{input_type}' extension.")
 
                 
     def isValidExtension(self, file_path):
@@ -172,7 +179,6 @@ class InputRegion(object):
             self.lst_inputNames.append(n)
             self.lst_InputPaths.append(entry)
         self.var_inputNames.set(s)
-        #print(self.lst_InputPaths, "The list of paths to convert is: ")
 
     def canvasConfig(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
