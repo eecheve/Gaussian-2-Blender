@@ -1,9 +1,9 @@
-.com
-C:/Documents/Gaussian-2-Blender/input_examples/organic
-dicyanomethanide.com
+.xyz
+C:/Documents/Gaussian-2-Blender/input_examples/xyz_files
+2-cyano-2-aminoaceticacid.xyz
 C:\Documents\Gaussian-2-Blender\output\
-dicyanomethanide
-Ball-and-Stick
+2-cyano-2-aminoaceticacid
+Van-der-Waals
 .fbx
 0
 0

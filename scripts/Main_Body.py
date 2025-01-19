@@ -17,7 +17,8 @@ importlib_modules = [
     "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
     "Create_Materials", "Primitives", "Export_Data", "Ions", 
     "Instantiate_Molecules", "Raw_Parameters", "Rig_Molecule", 
-    "Animate", "Clear_Transforms", "Parent_Relations", "Receive_Parameters"
+    "Animate", "Clear_Transforms", "Parent_Relations", "Receive_Parameters",
+    "XyzReader"
 ]
 
 for module in importlib_modules:
@@ -61,6 +62,26 @@ class Main_Body(object):
         self.connect_with_symbols = []
         self.bond_list = []
 
+    def Obtain_Coords_Connect(self, i_file_type):
+        """
+        Gets list of coordinates as a string with the atomic symbol and floats for each cartesian 
+        coordinate, as well as the connectivity list with numerical inidices associated with each atom
+        as well as the char specifying the atom type between connected pairs
+        """
+        if i_file_type == ".com":
+            self.Read_com_File()
+            self.Refine_com_File()
+        elif i_file_type == ".xyz":
+            self.Read_xyz_File()
+    
+    def Read_xyz_File(self):
+        print("1: Reading .xyz file ...")
+        xyzReader = XyzReader.XyzReader()
+        file_path = os.path.join(self.i_folder_path, self.i_file_name)
+        self.coords = xyzReader.extract_coords_from_xyz_file(file_path)
+        self.number_of_elements = len(self.coords)
+        self.connect_with_symbols = xyzReader.obtain_all_bond_orders(self.coords)
+    
     def Read_com_File(self):
         #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
         print("1: Reading .com file ...")     
@@ -169,8 +190,7 @@ if __name__ == "__main__":
                                    params_data["str_ionic_cell"],
                                    params_data["str_ion_input_list"],
                                    params_data["str_is_animation"])
-    main_body_instance.Read_com_File()
-    main_body_instance.Refine_com_File()
+    main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Build_Molecule()
     main_body_instance.Manage_Export_if_Animation()
