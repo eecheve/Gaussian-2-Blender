@@ -1,8 +1,8 @@
-.xyz
-C:/Documents/Gaussian-2-Blender/input_examples/xyz_files
-2-cyano-2-aminoaceticacid.xyz
+.com
+C:/Documents/Gaussian-2-Blender/input_examples/inorganic
+ferrocene.com
 C:\Documents\Gaussian-2-Blender\output\
-2-cyano-2-aminoaceticacid
+ferrocene
 Ball-and-Stick
 .fbx
 0

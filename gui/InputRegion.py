@@ -119,6 +119,7 @@ class InputRegion(object):
         :return: True if all files have the same valid extension, False otherwise.
         """
         valid_extensions = {".com", ".xyz"}
+        #valid_extensions = {".com", ".xyz", ".mol"} #<-- for future Emmanuel to tackle
         extensions = {os.path.splitext(path)[1].lower() for path in file_paths}
     
         if len(extensions) == 1 and extensions.pop() in valid_extensions:
@@ -155,7 +156,7 @@ class InputRegion(object):
     def isValidExtension(self, file_path):
         """
         Checks if the file has an acceptable extension.
-        Currently accepts '.com' and leaves a placeholder for '.xyz'.
+        Currently accepts '.com', '.xyz', and '.mol'.
 
         :param file_path: Path to the file.
         :return: True if the file has an accepted extension, False otherwise.
@@ -164,7 +165,9 @@ class InputRegion(object):
         if file_ext.lower() == ".com":
             return True
         elif file_ext.lower() == ".xyz":
-            pass  # Placeholder for future implementation
+            return True
+        #elif file_ext.lower() == ".mol": <--- for the future
+        #    return True
         return False
                 
     def updateInputNameList(self, string_list):

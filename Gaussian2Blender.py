@@ -29,7 +29,7 @@ class GaussianToBlenderApp:
 
     def _configure_root(self):
         self.root.title("Gaussian-2-Blender")
-        self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
+        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
         self.root.geometry('800x700')
         self.root.resizable(0,0)
