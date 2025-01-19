@@ -64,7 +64,7 @@ class Main_Body(object):
     def Read_com_File(self):
         #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
         print("1: Reading .com file ...")     
-        raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, self.i_file_name)
+        raw_coords_connect = Raw_Parameters.Set_Raw_Parameters(self.i_folder_path, self.i_file_name)
         self.raw_coords = raw_coords_connect[0]
         self.raw_connect = raw_coords_connect[1]
                

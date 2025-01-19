@@ -1,8 +1,8 @@
 .com
 C:/Documents/Gaussian-2-Blender/input_examples/organic
-E-2-fluorovinyloxytrimethylsilane.com
+dicyanomethanide.com
 C:\Documents\Gaussian-2-Blender\output\
-E-2-fluorovinyloxytrimethylsilane
+dicyanomethanide
 Ball-and-Stick
 .fbx
 0
