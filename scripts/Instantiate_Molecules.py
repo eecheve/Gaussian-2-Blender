@@ -19,13 +19,26 @@ importlib.reload(Ions)
 importlib.reload(Primitives)
 
 def handle_non_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data):
-    if represent_type == "Ball-and-Stick":
+    def ball_and_stick():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict)
-    elif represent_type == "Stick-only":
+
+    def stick_only():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
-    elif represent_type == "Van-der-Waals":
+
+    def van_der_waals():
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
+
+    # Dictionary mapping represent_type to corresponding functions
+    representations = {
+        "Ball-and-Stick": ball_and_stick,
+        "Stick-only": stick_only,
+        "Van-der-Waals": van_der_waals,
+    }
+
+    represent = representations.get(represent_type) #getting the corresponding function to use
+    if represent: #if represent_type can find its corresponding function
+        represent() #apply the corresponding function
     else:
         print("5: Error Instantiating geometries: unrecognized output type")
 
@@ -38,19 +51,33 @@ def handle_ionic(represent_type, names_and_pos, materials_dict, connect_with_sym
     refined_element_positions = Ions.RemoveSpecifiedIonsFromElementDict(refined_ion_data, names_and_pos)
     ion_positions = Ions.GetIonPositions(names_and_pos, refined_ion_data)
 
-    if represent_type == "Stick-only":
-        Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
-    elif represent_type == "Van-der-Waals":
-        Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
-        print("5: Ionic radii replaced with van der Waals radii")
-    elif represent_type == "Ball-and-Stick":
+    def ball_and_stick():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols, unit_cell)
         if refined_element_positions:
             Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict)
         if refined_ion_data:
             Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
+
+    def stick_only():
+        Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
+
+    def van_der_waals():
+        Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
+        print("5: Ionic radii replaced with van der Waals radii")
+
+    # Dictionary mapping represent_type to corresponding functions
+    representations = {
+        "Ball-and-Stick": ball_and_stick,
+        "Stick-only": stick_only,
+        "Van-der-Waals": van_der_waals,
+    }
+
+    represent = representations.get(represent_type) #getting the corresponding function to use
+    if represent: #if represent_type can find its corresponding function
+        represent() #apply the corresponding function
     else:
         print("5: Error Instantiating geometries: unrecognized output type")
+
 
 def Instantiate(is_ionic, represent_type, names_and_pos, materials_dict, connect_with_symbols,
                 element_data, ion_data, ion_input, unit_cell):

@@ -1,11 +1,11 @@
 .com
-C:/Documents/Gaussian-2-Blender/input_examples/inorganic
-hexacyanoferrate-ii.com
+C:/Documents/Gaussian-2-Blender/input_examples/minerals
+halite.com
 C:\Documents\Gaussian-2-Blender\output\
-hexacyanoferrate-ii
+halite
 Ball-and-Stick
 .fbx
+1
 0
-0
----
+(Cl_-1_VI)_(Na_1_VI)
 0

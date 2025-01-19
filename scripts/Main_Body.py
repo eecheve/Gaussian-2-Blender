@@ -201,4 +201,4 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    #main_body_instance.Manage_Export_if_Animation()
+    main_body_instance.Manage_Export_if_Animation()
