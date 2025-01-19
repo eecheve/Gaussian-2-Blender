@@ -59,8 +59,13 @@ class Main_Body(object):
         self.raw_key_frames = []
         
         self.names_and_pos = {}
+        self.materials_dict = {}
+        self.element_data = {}
+        self.ion_data = {}
         self.connect_with_symbols = []
         self.bond_list = []
+        self.ion_input = []
+        self.elements_present = []
 
     def Obtain_Coords_Connect(self, i_file_type):
         """
@@ -112,29 +117,30 @@ class Main_Body(object):
         self.ion_input_list = Refine_Data.rebuild_list(self.str_ion_input_list)
         self.ion_input_list = Refine_Data.make_tuple_in_list(self.ion_input_list)
     
-    def Build_Molecule(self):
-        #-----------------------------refine elemens section----------------------------------------------#
+    def Prepare_Atoms_and_Bonds(self):
         print("3: Checking present elements ...")
         self.names_and_pos = Refine_Elements.CreateDictionaryWithNamesAndPositions(self.coords, self.number_of_elements) #supports up to 999 elements
-        elements_present = Refine_Elements.GetElementsPresentInMolecule(self.coords)
-        print("3.1: elements present are", elements_present)
-        element_data = Refine_Elements.GetDataForExistingElements(elements_present, Atom_Data.Elements)
-        ion_data = Refine_Elements.GetDataForExistingElements(elements_present, Atom_Data.IonicRadii)
-        #----------------------------get ion specifications section---------------------------------------_
+        self.elements_present = Refine_Elements.GetElementsPresentInMolecule(self.coords)
+        print("3.1: elements present are", self.elements_present)
+        self.element_data = Refine_Elements.GetDataForExistingElements(self.elements_present, Atom_Data.Elements)
+        print("4: Creating and assigning materials ...")
+        self.materials_dict = Create_Materials.CreateAndAssignMaterials(self.element_data)
+        
+    def Prepare_Ions(self):
+        self.ion_data = Refine_Elements.GetDataForExistingElements(self.elements_present, Atom_Data.IonicRadii)
         print("4: Checking for present ion specifications ...")
         if self.ion_input_list: #checking if list is not empty
             print("4.1: ion_input_list is not empty")
-            ion_input = Ions.CreateIonDataFromInput(self.ion_input_list)
-        
+            self.ion_input = Ions.CreateIonDataFromInput(self.ion_input_list)
         else:
             print("4: There are no ions with charge, coordination and spin specified")
-            ion_input = []
-        #----------------------------instantiate primitives section---------------------------------------#
-        print("5: Creating and assigning materials ...")
-        materials_dict = Create_Materials.CreateAndAssignMaterials(element_data)
-        
+            self.ion_input = []    
+    
+    def Build_Molecule(self): #<----- TO DO separate into PrepareAtoms, PrepareBonds, PrepareIons   
+        #TO DO: separate inside Instantiate.py to make atoms and bonds separate functions
         Instantiate_Molecules.Instantiate(self.is_ionic, self.represent_type, self.names_and_pos, 
-                                materials_dict, self.connect_with_symbols, element_data, ion_data, ion_input, self.unit_cell)
+                                self.materials_dict, self.connect_with_symbols, self.element_data, 
+                                self.ion_data, self.ion_input, self.unit_cell)
                                           
     def Manage_Parent_Relations(self):
         Parent_Relations.Manage_Parent_Relations(self.names_and_pos, self.connect_with_symbols)
@@ -192,5 +198,7 @@ if __name__ == "__main__":
                                    params_data["str_is_animation"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Manage_Ionic_Information()
+    main_body_instance.Prepare_Atoms_and_Bonds()
+    main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    main_body_instance.Manage_Export_if_Animation()
+    #main_body_instance.Manage_Export_if_Animation()
