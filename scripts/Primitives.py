@@ -60,58 +60,73 @@ def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
         print("6: Material not found @Primitives.ModifyNamesAndMaterials")
     
 def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell="0"):
+    #helper functions to be stored in a dictionary, which wich will depend on the bond_type
+    def handle_single_bond(atom1, atom2):
+        bond_label = atom1 + '-' + atom2
+        bond_label2 = atom2 + '-' + atom1
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '-')
+        SelectTwoMeshesAndJoin(bond_label, bond_label2)
+    def handle_double_bond(atom1, atom2):
+        bond_label = atom1 + '=' + atom2
+        bond_label2 = atom2 + '=' + atom1
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '=')
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '=')
+        MoveObjectOnLocalAxis(bond_label, (0.0, 0.1, 0.0))
+        MoveObjectOnLocalAxis(bond_label2, (0.0, 0.1, 0.0))
+        MoveObjectOnLocalAxis(bond_label + ".001", (0.0, -0.1, 0.0))
+        MoveObjectOnLocalAxis(bond_label2 + ".001", (0.0, -0.1, 0.0))
+        SelectTwoMeshesAndJoin(bond_label, bond_label2)
+        SelectTwoMeshesAndJoin(bond_label + ".001", bond_label2 + ".001")
+        SelectTwoMeshesAndJoin(bond_label, bond_label + ".001")
+    def handle_triple_bond(atom1, atom2):
+        bond_label = atom1 + '#' + atom2
+        bond_label2 = atom2 + '#' + atom1
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '#')
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '#')
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '#')
+        MoveObjectOnLocalAxis(bond_label + ".001", (0.0, 0.15, 0.0))
+        MoveObjectOnLocalAxis(bond_label + ".002", (0.0, -0.15, 0.0))
+        MoveObjectOnLocalAxis(bond_label2 + ".001", (0.0, 0.15, 0.0))
+        MoveObjectOnLocalAxis(bond_label2 + ".002", (0.0, -0.15, 0.0))
+        SelectTwoMeshesAndJoin(bond_label, bond_label2)
+        SelectTwoMeshesAndJoin(bond_label + ".001", bond_label2 + ".001")
+        SelectTwoMeshesAndJoin(bond_label + ".002", bond_label2 + ".002")
+        SelectTwoMeshesAndJoin(bond_label + ".001", bond_label + ".002")
+        SelectTwoMeshesAndJoin(bond_label + ".001", bond_label2)
+    def handle_hydrogen_bond(atom1, atom2):
+        if unit_cell == "0":
+            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2, 0.06, h_bonding=True)
+        else:
+            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '_', unit_cell)
+    def handle_resonance_bond(atom1, atom2):
+        bond_label = atom1 + '%' + atom2
+        bond_label2 = atom2 + '%' + atom1
+        CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '%')
+        MoveObjectOnLocalAxis(bond_label, (0.0, 0.1, 0.0))
+        MoveObjectOnLocalAxis(bond_label2, (0.0, 0.1, 0.0))
+        SelectTwoMeshesAndJoin(bond_label, bond_label2)
+        CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '%', 0.18, 0.08)
+
+    #function dictionary, the keys will be the bond_types for each entry in connect_list
+    bond_actions = {
+        '_': handle_hydrogen_bond,
+        '-': handle_single_bond,
+        '=': handle_double_bond,
+        '#': handle_triple_bond,
+        'res1': handle_resonance_bond,
+    }
+
     for item in connect_list:
         atom1 = item[0]
         atom2 = item[1]
         bond_type = item[2]
-        print("6: Instantiating bond: ", atom1+bond_type+atom2)
-        if bond_type == '_':
-            if unit_cell == "0":
-                CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '_', 0.2, 0.06, h_bonding=True)
-            else:
-                CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell)
-        elif bond_type == '-':
-            bond_label = atom1 + '-' + atom2
-            bond_label2 = atom2 + '-' + atom1
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            SelectTwoMeshesAndJoin(bond_label, bond_label2)
-        elif bond_type == '=':
-            bond_label = atom1 + '=' + atom2
-            bond_label2 = atom2 + '=' + atom1
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
-            MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
-            MoveObjectOnLocalAxis(bond_label+".001",(0.0,-0.1,0.0))
-            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,-0.1,0.0))
-            SelectTwoMeshesAndJoin(bond_label, bond_label2)
-            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
-            SelectTwoMeshesAndJoin(bond_label, bond_label+".001")
-        elif bond_type == 'res1':
-            bond_label = atom1 + '%' + atom2
-            bond_label2 = atom2 + '%' + atom1
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, '%')
-            MoveObjectOnLocalAxis(bond_label,(0.0,0.1,0.0))
-            MoveObjectOnLocalAxis(bond_label2,(0.0,0.1,0.0))
-            SelectTwoMeshesAndJoin(bond_label, bond_label2)
-            CreateAndJoinTrantientBond(pos_dict, mat_dict, atom1, atom2, '%', 0.18, 0.08)
-        elif bond_type == '#':
-            bond_label = atom1 + '#' + atom2
-            bond_label2 = atom2 + "#" + atom1
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type)
-            MoveObjectOnLocalAxis(bond_label+".001",(0.0,0.15,0.0))
-            MoveObjectOnLocalAxis(bond_label+".002",(0.0,-0.15,0.0))
-            MoveObjectOnLocalAxis(bond_label2+".001",(0.0,0.15,0.0))
-            MoveObjectOnLocalAxis(bond_label2+".002",(0.0,-0.15,0.0))
-            SelectTwoMeshesAndJoin(bond_label, bond_label2)
-            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2+".001")
-            SelectTwoMeshesAndJoin(bond_label+".002", bond_label2+".002")
-            SelectTwoMeshesAndJoin(bond_label+".001", bond_label+".002")
-            SelectTwoMeshesAndJoin(bond_label+".001", bond_label2)
+        print("6: Instantiating bond: ", atom1 + bond_type + atom2)
+        action = bond_actions.get(bond_type)
+        if action:
+            action(atom1, atom2)
         else:
             print("Error on bond type! @Primitives.InstantiateBondsFromConnectivity")
+
             
 def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_len, bond_radius, h_bonding=False): 
     scene = bpy.context.scene
