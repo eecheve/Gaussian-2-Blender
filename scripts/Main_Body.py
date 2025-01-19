@@ -79,22 +79,16 @@ class Main_Body(object):
         raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, self.i_file_name)
         self.raw_coords = raw_coords_connect[0]
         self.raw_connect = raw_coords_connect[1]
-        
-        if self.str_is_animation == "0":
-            raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, self.i_file_name)
-            self.raw_coords = raw_coords_connect[0]
-            self.raw_connect = raw_coords_connect[1]
-        #else:
-        #    raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Animate()
-        #    self.raw_coords = raw_coords_connect[0]
-        #    self.raw_connect = raw_coords_connect[1]
-        #    self.raw_key_frames = raw_coords_connect[2]
-        
-    def Extract_Data(self):
+               
+    def Read_com_File(self):
         print("2: Refining extracted data ...")
         self.coords = Refine_Data.RefineCoordList(self.raw_coords)
         self.number_of_elements = len(self.coords)
+        print("2.1: number of elements in molecule is: ", self.number_of_elements)
+        connect = Refine_Data.RefineConnectivity(self.raw_connect)
+        self.connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, self.coords, self.number_of_elements)
 
+    def Manage_Ionic_Information(self):
         ionic_cell=Refine_Data.rebuild_list(self.str_ionic_cell)
         ionic_cell = Refine_Data.make_tuple_in_list(ionic_cell)
         self.is_ionic = ionic_cell[0][0]
@@ -102,10 +96,6 @@ class Main_Body(object):
 
         self.ion_input_list = Refine_Data.rebuild_list(self.str_ion_input_list)
         self.ion_input_list = Refine_Data.make_tuple_in_list(self.ion_input_list)
-
-        print("2.1: number of elements in molecule is: ", self.number_of_elements)
-        connect = Refine_Data.RefineConnectivity(self.raw_connect)
-        self.connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, self.coords, self.number_of_elements)
     
     def Build_Molecule(self):
         #-----------------------------refine elemens section----------------------------------------------#
@@ -157,6 +147,16 @@ class Main_Body(object):
     def ExportForAnimation(self):
         print("9: Exporting the results ...")
         Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
+
+    def Manage_Export_if_Animation(self):
+        if self.str_is_animation == "0":
+            self.Export()
+        else:
+            anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
+            export_path = os.path.join(main_body_instance.o_folder_path,
+                                   main_body_instance.o_file_name+main_body_instance.o_file_type)
+            Animate.animate(anim_frames_file)
+            Animate.export_animation(export_path)
     
 if __name__ == "__main__":
     params_file_path = os.path.join(blend_file_dir, "parameters.txt")
@@ -176,14 +176,7 @@ if __name__ == "__main__":
                                    params_data["str_ion_input_list"],
                                    params_data["str_is_animation"])
     main_body_instance.Set_Raw_Parameters()
-    main_body_instance.Extract_Data()
+    main_body_instance.Read_com_File()
+    main_body_instance.Manage_Ionic_Information()
     main_body_instance.Build_Molecule()
-    if main_body_instance.str_is_animation == "0":
-        main_body_instance.Export()
-    else:
-        print("7: The input list is interpreted as animation frames")
-        anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
-        export_path = os.path.join(main_body_instance.o_folder_path,
-                                   main_body_instance.o_file_name+main_body_instance.o_file_type)
-        Animate.animate(anim_frames_file)
-        Animate.export_animation(export_path)
+    main_body_instance.Manage_Export_if_Animation()
