@@ -11,8 +11,15 @@ import Import_Data
 import importlib #<-- for end user in case they want to add functionality. 
 importlib.reload(Import_Data)
 
-def Set_Raw_Parameters_Convert(i_folder_path, i_file_name):
-    file_path = i_folder_path + "\\" + i_file_name
+def Set_Raw_Parameters(i_folder_path, i_file_name):
+    """
+    Returns: 
+        raw_coords: List of lists, each entry has four items, the first is the element name (no index) 
+        the remaining three are the cartesian coordinates of such element
+        raw_connect: Connectivity information as is extracted from the .com file. The refinement is done
+        elsewhere
+    """
+    file_path = os.path.join(i_folder_path, i_file_name)
     raw_data = Import_Data.ExtractDataFromFile(file_path)
     raw_data = Import_Data.FilterOutExtraInformation('above', 2, 1, raw_data) #removes everything above the second line break +1 line, from the raw_data
     raw_data = Import_Data.FilterOutExtraInformation('below', 2, 1, raw_data) #raw coords and connectivity.
@@ -20,15 +27,6 @@ def Set_Raw_Parameters_Convert(i_folder_path, i_file_name):
     raw_coords = Import_Data.FilterOutExtraInformation('below', 1, 1, raw_data)
     raw_connect = Import_Data.FilterOutExtraInformation('above', 1, 0, raw_data)
     return raw_coords, raw_connect
-
-def Set_Raw_Parameters_Animate():
-    file_path = dir + "\\animation_frames.txt"
-    raw_data = Import_Data.ExtractDataFromFile(file_path)
-    raw_coord_frames = Import_Data.FilterOutExtraInformation('below', 1, 1, raw_data)
-    raw_connect = Import_Data.FilterOutExtraInformation('above', 1, 0, raw_data)
-    raw_coords = split_coord_frames(raw_coord_frames)[0]
-    raw_frames = split_coord_frames(raw_coord_frames)[1]
-    return raw_coords, raw_connect, raw_frames
         
 def split_coord_frames(raw_coord_frames):
     l = []
@@ -53,4 +51,3 @@ def count_animation_frames(raw_coord_frames):
     first_element = raw_coord_frames[0]
     total_frames = (len(first_element) - 1)/3 #first entry is element symbol, each following 3 are x y z.
     return int(total_frames - 1) #because the first frame will be used to build the molecule.
-

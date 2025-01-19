@@ -61,26 +61,21 @@ class Main_Body(object):
         self.connect_with_symbols = []
         self.bond_list = []
 
-    def Set_Raw_Parameters(self):
-        #-------------------------------confirming parameters section-------------------------------------#
-        print("0: input folder path is", self.i_folder_path)
-        print("0: input file name is", self.i_file_name)
-        print("0: output folder path is", self.o_folder_path)
-        print("0: output file name is", self.o_file_name)
-        print("0: representational model is", self.represent_type)
-        print("0: output type is", self.o_file_type)
-        print("0: ion and unit cell is", self.str_ionic_cell)
-        print("0: ion list is", self.str_ion_input_list)
-        print("0: is animation is", self.str_is_animation)    
-        #-------------------------------import data section-----------------------------------------------#
+    def Read_com_File(self):
         #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
-        print("1: Reading .com file ...")
-        
+        print("1: Reading .com file ...")     
         raw_coords_connect = Raw_Parameters.Set_Raw_Parameters_Convert(self.i_folder_path, self.i_file_name)
         self.raw_coords = raw_coords_connect[0]
         self.raw_connect = raw_coords_connect[1]
                
-    def Read_com_File(self):
+    def Refine_com_File(self):
+        """
+        Output:
+            coords: List of lists, first item in each entry is the element (no index), remaining three are
+            cartesian coordinates as float numbers.
+            connect_with_symbols: specifies the connectivity of each pair of elements bonded element 
+            (with numerical indices) and the char of the type of bond between them (_,-,=,#)
+        """
         print("2: Refining extracted data ...")
         self.coords = Refine_Data.RefineCoordList(self.raw_coords)
         self.number_of_elements = len(self.coords)
@@ -93,7 +88,6 @@ class Main_Body(object):
         ionic_cell = Refine_Data.make_tuple_in_list(ionic_cell)
         self.is_ionic = ionic_cell[0][0]
         self.unit_cell = ionic_cell[0][1]
-
         self.ion_input_list = Refine_Data.rebuild_list(self.str_ion_input_list)
         self.ion_input_list = Refine_Data.make_tuple_in_list(self.ion_input_list)
     
@@ -175,8 +169,8 @@ if __name__ == "__main__":
                                    params_data["str_ionic_cell"],
                                    params_data["str_ion_input_list"],
                                    params_data["str_is_animation"])
-    main_body_instance.Set_Raw_Parameters()
     main_body_instance.Read_com_File()
+    main_body_instance.Refine_com_File()
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Build_Molecule()
     main_body_instance.Manage_Export_if_Animation()
