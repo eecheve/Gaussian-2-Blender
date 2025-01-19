@@ -21,36 +21,21 @@ def CreateDictionaryWithNamesAndPositions(list, number_of_elements):
     input: list where each row has 4 items: name, and xyz coordinates.
     summary: creates a dictionary, assigns a number to each element, converts xyz into vector
     output: key -> Symbol+number (e.g. C01) value -> Vector3(xyz) !!If a dummy atom is present, is called "?s!!
-    note: supports up to 99 elements.
+    note: supports up to 999 elements.
     """
-    dict = {}
-    if number_of_elements < 100:
-        for i in range(len(list)):
-            if i < 9:
-                name = list[i][0] + '0' + str(i+1)
-            else:
-                name = list[i][0] + str(i+1)
-            x = list[i][1]
-            y = list[i][2]
-            z = list[i][3]
-            dict[name] = mathutils.Vector((x,y,z))
-        return dict
-    elif number_of_elements < 1000:
-        for i in range(len(list)):
-            if i < 9:
-                name = list[i][0] + '00' + str(i+1)
-            elif i < 99:
-                name = list[i][0] + '0' + str(i+1)
-            else:
-                name = list[i][0] + str(i+1)
-            x = list[i][1]
-            y = list[i][2]
-            z = list[i][3]
-            dict[name] = mathutils.Vector((x,y,z))
-        return dict
-    else:
+    if number_of_elements > 999:
         print("@Refine_Elements: Too many atoms, cannot process")
-        return dict
+        return {}
+
+    dict = {}
+    digits = 3 if number_of_elements >= 100 else 2
+
+    for i, (name, x, y, z) in enumerate(list):
+        formatted_index = f"{i+1:0{digits}}"
+        element_name = f"{name}{formatted_index}"
+        dict[element_name] = mathutils.Vector((x, y, z))
+    print("Temp, @Refine_Elements.CreateDictionaryWithNames", dict)
+    return dict
             
 def AddAtomLabelsToConnectList(atom_dict, connect_list): #<----------------- source of bugs, I think!!!!!
     """

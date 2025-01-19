@@ -1,11 +1,11 @@
-.com
-C:/Documents/Gaussian-2-Blender/input_examples/minerals
-halite.com
+.xyz
+C:/Documents/Gaussian-2-Blender/input_examples/xyz_files
+2-cyano-2-aminoaceticacid.xyz
 C:\Documents\Gaussian-2-Blender\output\
-halite
+2-cyano-2-aminoaceticacid
 Ball-and-Stick
 .fbx
-1
 0
-(Cl_-1_VI)_(Na_1_VI)
+0
+---
 0

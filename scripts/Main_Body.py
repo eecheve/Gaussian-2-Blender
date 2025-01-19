@@ -84,6 +84,7 @@ class Main_Body(object):
         xyzReader = XyzReader.XyzReader()
         file_path = os.path.join(self.i_folder_path, self.i_file_name)
         self.coords = xyzReader.extract_coords_from_xyz_file(file_path)
+        print("temp @Main_Body.Read_xyz_File, coords are", self.coords)
         self.number_of_elements = len(self.coords)
         self.connect_with_symbols = xyzReader.obtain_all_bond_orders(self.coords)
     
@@ -201,4 +202,4 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    #main_body_instance.Manage_Export_if_Animation()
+    main_body_instance.Manage_Export_if_Animation()

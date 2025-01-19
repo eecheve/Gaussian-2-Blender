@@ -36,9 +36,12 @@ class XyzReader():
         Returns:
         list: A list of lists with atomic symbols assigned a unique two-digit index.
         """
+        indexed_coords = []
         for index, entry in enumerate(raw_coords, start=1):
-            entry[0] = f"{entry[0]}{index:02d}"
-        return raw_coords
+            new_entry = entry.copy()  # Copy the original entry to avoid modifying it
+            new_entry[0] = f"{entry[0]}{index:02d}"
+            indexed_coords.append(new_entry)
+        return indexed_coords
     
     def obtain_all_bond_orders(self, raw_coordinates):
         """

@@ -19,13 +19,12 @@ importlib.reload(Ions)
 importlib.reload(Primitives)
 
 def handle_non_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data):
+    #helper functions. Which is going to be used depends on represent_type
     def ball_and_stick():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict)
-
     def stick_only():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
-
     def van_der_waals():
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
 
@@ -46,21 +45,19 @@ def handle_ionic(represent_type, names_and_pos, materials_dict, connect_with_sym
     refined_ion_data = Ions.RemoveNonSpecifiedIons(ion_data, ion_input)
     print("5: getting ionic radii from input ...")
     Ions.GetIonDataFromInput(refined_ion_data, ion_input)
-
     refined_element_data = Ions.RemoveSpecifiedIonsFromElementDict(refined_ion_data, element_data)
     refined_element_positions = Ions.RemoveSpecifiedIonsFromElementDict(refined_ion_data, names_and_pos)
     ion_positions = Ions.GetIonPositions(names_and_pos, refined_ion_data)
-
+    
+    #helper functions. Which is going to be used depends on represent_type
     def ball_and_stick():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols, unit_cell)
         if refined_element_positions:
             Primitives.InstantiateElementsFromDictionary(refined_element_positions, refined_element_data, materials_dict)
         if refined_ion_data:
             Primitives.InstantiateIonsFromDictionary(ion_positions, ion_input, materials_dict)
-
     def stick_only():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
-
     def van_der_waals():
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict, van_der_waals=True)
         print("5: Ionic radii replaced with van der Waals radii")
