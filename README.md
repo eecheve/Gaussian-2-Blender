@@ -51,6 +51,9 @@ To run the `Gaussian-2-Blender.py` Python script from the console:
    python Gaussian-2-Blender.py
     ```
 
+## DOCUMENTATION:
+A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
+
 ## FILE STRUCTURE:
 For users interested in extending the functionality of the program. This project is organized into several directories and files as follows:
 
