@@ -107,7 +107,6 @@ Gaussian-2-Blender/
 
 - output/: Folder for exporting molecules and animation results
   - molecule1.fbx: Exported molecule file 1 (e.g., .fbx format)
-  - animation1.mp4: Exported animation file 1 (e.g., .mp4 format)
   - ... (Other exported files)
 
 
