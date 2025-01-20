@@ -11,12 +11,40 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 - If you install Blender in a non-default path on Windows, note the path as it will be needed.
 - Download the entire 'Gaussian-2-Blender' package and unzip it to the desired location.
 - The executable `Gaussian-2-Blender.exe` will be ready to use. Do not move, rename, or delete any files or folders included in the package.
-- Click on this [YouTube link](https://youtu.be/w_bsJ7daaas) for a tutorial on using the tool.
+- Click on this [YouTube link](https://youtu.be/w_bsJ7daaas) for a tutorial on using the tool. NOTE: YouTube tutorial does not include information on animations.
 
-## GUI OVERVIEW:
+## INSTRUCTIONS:
+1. Double-click on the `Gaussian-Blender-Bridge.exe` file.
+2. Select one or more `.com` or `.xyz` files from the same folder.
+3. To render using ionic radii, select the `Check for Ionic Radii` option.
+4. Add each ion and select their charge, coordination, and spin multiplicity (when available).
+5. Select `Is Animation` if the series of input selected are all different frames of the same dynamic process
+6. If you plan to render an animation, make sure all the `.com` or `.xyz` files have the same atoms in the same order
+7. Click on `Convert!` to convert the `.com` input into the desired output type.
+8. Click on `Reset` to reset everything to their default values.
+
+## EXAMPLE FILES:
+- Example `.com` files are inside the `input_examples` folder, separated by categories.
+- For example, the file `Ice.com` is located in the `input_examples\inorganic\` folder.
+- The `output` folder starts empty and is the default location for 3D renderings from the tool.
+
+## FOR DEVELOPERS
+
+### RUNNING FROM THE CONSOLE:
+To run the `Gaussian-2-Blender.py` Python script from the console:
+1. Copy the `Gaussian-2-Blender.py` file to the `gui` folder.
+2. Open a terminal in the `Blender-Gaussian-Bridge/` folder and run:
+   ```bash
+   python Gaussian-2-Blender.py
+    ```
+
+### DOCUMENTATION:
+A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
+
+### GUI OVERVIEW:
 The `GaussianToBlender.py` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing `tkinter`, manages different regions and functionalities, including input, output, console, and ion management.
 
-### Key GUI Modules:
+#### Key GUI Modules:
 - `Information.py`: Manages help and about sections, providing instructions and application details.
 - `BlenderPath.py`: Allows users to set the path to the Blender executable.
 - `InputRegion.py`: Handles input file selection and management.
@@ -29,32 +57,7 @@ The `GaussianToBlender.py` application provides a graphical user interface (GUI)
 - `Coordinates.py`: Extracts Cartesian coordinates from molecular structure files.
 - `TextRedirector.py`: Redirects print statements to the console region within the GUI.
 
-## EXAMPLE FILES:
-- Example `.com` files are inside the `input_examples` folder, separated by categories.
-- For example, the file `Ice.com` is located in the `input_examples\inorganic\` folder.
-- The `output` folder starts empty and is the default location for 3D renderings from the tool.
-
-## INSTRUCTIONS:
-1. Double-click on the `Gaussian-Blender-Bridge.exe` file.
-2. Select one or more `.com` files from the same folder.
-3. To render using ionic radii, select the `Check for Ionic Radii` option.
-4. Add each ion and select their charge, coordination, and spin multiplicity (when available).
-5. Select `Is Animation` if the series of input selected are all different frames of the same dynamic process
-5. Click on `Convert!` to convert the `.com` input into the desired output type.
-6. Click on `Reset` to reset everything to their default values.
-
-## RUNNING FROM THE CONSOLE:
-To run the `Gaussian-2-Blender.py` Python script from the console:
-1. Copy the `Gaussian-2-Blender.py` file to the `gui` folder.
-2. Open a terminal in the `Blender-Gaussian-Bridge/` folder and run:
-   ```bash
-   python Gaussian-2-Blender.py
-    ```
-
-## DOCUMENTATION:
-A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
-
-## FILE STRUCTURE:
+### FILE STRUCTURE:
 For users interested in extending the functionality of the program. This project is organized into several directories and files as follows:
 
 GaussianToBlender/
