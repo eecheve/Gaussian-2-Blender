@@ -1,5 +1,5 @@
 import os
-#import sys
+import sys
 import subprocess
 
 import tkinter as tk
@@ -22,11 +22,18 @@ from gui.ActionsRegion import ActionsRegion
 class GaussianToBlenderApp:
     def __init__(self):
         self.root = tk.Tk()
-        self.g2b_path = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
+        #self.g2b_path = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
+        self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
         self._initialize_regions()
 
+    def _initialize_g2b_path(self):
+        if getattr(sys, 'frozen', False):  # Check if running as an executable
+            self.g2b_path = os.path.dirname(sys.executable)
+        else:  # Running as a script
+            self.g2b_path = os.path.dirname(os.path.realpath(__file__))
+    
     def _configure_root(self):
         self.root.title("Gaussian-2-Blender")
         #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
