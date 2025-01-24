@@ -1,5 +1,7 @@
 import os
 import sys
+import stat
+import platform
 import subprocess
 
 import tkinter as tk
@@ -78,9 +80,25 @@ class GaussianToBlenderApp:
         #Action Region
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
-                                       on_convert=self.convert_manager)
+                                       on_convert=self.convert)
         self.place(self.actionReg, row=4, column=1, pady=2, sticky="se")
 
+    def convert(self):
+        current_os = platform.system()
+        linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
+        windows_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
+
+        if current_os == "Windows":
+            # Windows OS detected
+            print(f"Detected {current_os} OS. Proceeding with conversion...")
+            self.convert_manager(windows_exe_path)
+        else:
+            # Non Windows OS detected
+            print(f"Detected {current_os} OS. Proceeding with conversion...")            
+            st = os.stat(linux_exe_path) # Add executable permission to the .sh script
+            os.chmod(linux_exe_path, st.st_mode | stat.S_IEXEC)
+            self.convert_manager(linux_exe_path)
+        
     def reset_to_defaults(self):
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
@@ -225,9 +243,11 @@ class GaussianToBlenderApp:
             str_ionList = "---"
         return is_ionic, unit_cell, ion_list, str_ionList
         
-    def convert_manager(self):
+    def convert_manager(self, exec_loc):
         """
         Manages the process of converting Gaussian input files to 3D object files using Blender's API.
+
+        :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
 
         The function performs the following steps:
         1. Collects necessary paths and parameters for the conversion process.
@@ -237,7 +257,7 @@ class GaussianToBlenderApp:
             - Iterates through the list of input files and calls the `individual_convert` function to process each file.
         4. If validation fails, outputs relevant error messages to the console.
         """
-        exec_loc = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
+        #exec_loc = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
         anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
         b_path = self.bPathReg.var_blenderPath.get() #blender path
         i_type = self.inputReg.var_inputTypes.get() #input file type
