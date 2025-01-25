@@ -1,5 +1,6 @@
 import sys
 import os
+import tkinter as tk
 
 class Utility(object):
     """Utility class holding functions used by several classes"""
@@ -39,3 +40,39 @@ class Utility(object):
                 if isinstance(line, bool):
                     line = "1" if line else "0" #makes the line 1 if line is True, 0 otherwise
                 f.writelines(line + '\n')
+
+    def customize_widget(tk_object, color_string):  
+        # Set the background color of the widget
+        tk_object.config(bg=color_string)
+
+    # def revert_widget(tk_object):
+    #     original_colors = { #at the moment is the same color, but will store it differently for the future
+    #         "Checkbutton": "#f0f0f0",
+    #         "OptionMenu": "#f0f0f0",
+    #         "Button": "#f0f0f0"
+    #     }
+        
+    #     widget_type = tk_object.winfo_class() # Check the type of the tkinter object
+
+    #     if widget_type in original_colors:
+    #         tk_object.config(bg=original_colors[widget_type])
+        
+    #     if tk_object in original_colors: # Revert the background color to the original value
+    #         tk_object.config(bg=original_colors[tk_object])
+    def revert_widget(tk_object):
+        """
+        Reverts a widget's appearance (background color) to its default state.
+        """
+        # Define the original colors for supported widget types
+        original_colors = {
+            "Checkbutton": "#f0f0f0",
+            "Menubutton": "#f0f0f0",
+            "Button": "#f0f0f0"
+        }
+
+        # Identify the widget's class type
+        widget_type = tk_object.winfo_class()
+
+        # Revert the background color for the main widget
+        if widget_type in original_colors:
+            tk_object.config(bg=original_colors[widget_type])

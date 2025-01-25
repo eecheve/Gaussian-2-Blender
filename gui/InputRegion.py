@@ -4,7 +4,7 @@ import os
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
+from gui.Utility import Utility
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
@@ -87,6 +87,13 @@ class InputRegion(object):
         self.chk_isAnimation = tk.Checkbutton(master=self.frm_inside, text="is animation",
                                            variable=self.var_isAnimation, command=self.updateAnimationState)
         CreateTooltip(self.chk_isAnimation, "Check if the input files will serve as animation frames.")
+
+    def reset_widget_bg_colors(self):
+        """recerts all the interactable widgets to their original colors"""
+        interactables = [self.btn_setInputPath, self.btn_setInputName,
+                         self.drp_inputTypes, self.drp_modelTypes, self.chk_isAnimation]
+        for interactable in interactables:
+            Utility.revert_widget(interactable)
 
     def position_widgets(self):
         """Position widgets in the frame."""

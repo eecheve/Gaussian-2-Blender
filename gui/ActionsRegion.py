@@ -18,11 +18,11 @@ class ActionsRegion:
     def _create_widgets(self):
         """Creates and positions the buttons within the interact frame."""
         # Reset button
-        btn_reset = tk.Button(text="Reset", width=20, master=self.frame, command=self.on_reset)
-        CreateTooltip(btn_reset, "Click here to reset input values to default")
-        btn_reset.grid(row=0, column=1)
+        self.btn_reset = tk.Button(text="Reset", width=20, master=self.frame, command=self.on_reset)
+        CreateTooltip(self.btn_reset, "Click here to reset input values to default")
+        self.btn_reset.grid(row=0, column=1)
 
         # Convert button
-        btn_convert = tk.Button(text="Convert!", width=20, master=self.frame, command=self.on_convert)
-        CreateTooltip(btn_convert, "Click here to convert the molecule(s) to the specified format")
-        btn_convert.grid(row=0, column=2)
+        self.btn_convert = tk.Button(text="Convert!", width=20, master=self.frame, command=self.on_convert)
+        CreateTooltip(self.btn_convert, "Click here to convert the molecule(s) to the specified format")
+        self.btn_convert.grid(row=0, column=2)

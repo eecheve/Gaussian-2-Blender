@@ -1,26 +1,37 @@
 import tkinter as tk
 import webbrowser
 from gui.CreateTooltip import CreateTooltip
+from gui.Utility import Utility
 
 class Information(object):
     """
     Region containing the instructions on how to use Gaussian2Blender
     """
-    def __init__(self, parent):
-        self.frame = tk.LabelFrame(master=parent,
+    def __init__(self, parent_class, parent_tk):
+        self.frame = tk.LabelFrame(master=parent_tk,
                                       padx=5, 
                                       text="Gaussian2Blender Information", 
                                       fg="blue", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
         
+        self.btn_about = tk.Button(text="About", width=20, master=self.frame, command=self.about)
+        self.btn_about.grid(row=0, column=0)
+        CreateTooltip(self.btn_about, "Click here to see the current version of Gaussian2Blender")
+        
         self.btn_help = tk.Button(text="Help", width=20, master=self.frame, command=self.help)
-        self.btn_help.grid(row=0, column=0)
+        self.btn_help.grid(row=0, column=1)
         CreateTooltip(self.btn_help, "Click here to open a new window with instructions on how to use Gaussian2Blender")
 
-        self.btn_about = tk.Button(text="About", width=20, master=self.frame, command=self.about)
-        self.btn_about.grid(row=0, column=1)
-        CreateTooltip(self.btn_about, "Click here to see the current version of Gaussian2Blender")
+        self.btn_help_single = tk.Button(text="Guide: single convert", width=20, master=self.frame, 
+                                         command=parent_class.help_single_convert)
+        self.btn_help_single.grid(row=0, column=2, padx=(30, 0))
+        CreateTooltip(self.btn_help_single, "Click here to for a guided walkthrough to convert a single molecule")
+
+        self.btn_help_anim = tk.Button(text="Guide: animation convert", width=20, master=self.frame, 
+                                         command=parent_class.help_animation_convert)
+        self.btn_help_anim.grid(row=0, column=3)
+        CreateTooltip(self.btn_help_anim, "Click here to for a guided walkthrough to make an animation")
 
         self.instructions_text = (
             "1. Set the path to the Blender executable by navigating to the Blender installation directory.\n\n"
@@ -38,7 +49,7 @@ class Information(object):
             "Please cite the following paper if you use this tool: J. Chem. Educ. 2021, 98(10), 3348-3355\n"
             "To access the original paper follow this url: https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515"
             )
-       
+               
     def _initialize_popup(self, popup):
 
         self.about_info = tk.Label(master=popup,
