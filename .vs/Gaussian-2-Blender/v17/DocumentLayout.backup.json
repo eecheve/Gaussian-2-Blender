@@ -7,28 +7,12 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Gaussian2Blender.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\scripts\\ReadMolecules.sh||{3B902123-F8A7-4915-9F01-361F908088D0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\ReadMolecules.sh||{3B902123-F8A7-4915-9F01-361F908088D0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\gui\\Information.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:gui\\Information.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\gui\\InputRegion.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:gui\\InputRegion.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\scripts\\Main_Body.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\Main_Body.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\scripts\\XyzReader.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\XyzReader.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\scripts\\BondOrderCalculator.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\BondOrderCalculator.py||{8B382828-6202-11D1-8870-0000F87579D2}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\scripts\\Import_Data.py||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:scripts\\Import_Data.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Documents\\Gaussian-2-Blender\\gui\\Utility.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:gui\\Utility.py||{8B382828-6202-11D1-8870-0000F87579D2}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,81 +22,33 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ReadMolecules.sh",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\scripts\\ReadMolecules.sh",
-              "RelativeDocumentMoniker": "scripts\\ReadMolecules.sh",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\scripts\\ReadMolecules.sh",
-              "RelativeToolTip": "scripts\\ReadMolecules.sh",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2025-01-24T18:12:03.637Z",
+              "Title": "Information.py",
+              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\gui\\Information.py",
+              "RelativeDocumentMoniker": "gui\\Information.py",
+              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\gui\\Information.py",
+              "RelativeToolTip": "gui\\Information.py",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABsAAAA6AAAAAAAAAA==",
+              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
+              "WhenOpened": "2025-01-25T13:21:21.561Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "InputRegion.py",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\gui\\InputRegion.py",
-              "RelativeDocumentMoniker": "gui\\InputRegion.py",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\gui\\InputRegion.py",
-              "RelativeToolTip": "gui\\InputRegion.py",
-              "ViewState": "AgIAAGMAAAAAAAAAAAAAAHgAAAAqAAAAAAAAAA==",
+              "Title": "Utility.py",
+              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\gui\\Utility.py",
+              "RelativeDocumentMoniker": "gui\\Utility.py",
+              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\gui\\Utility.py",
+              "RelativeToolTip": "gui\\Utility.py",
+              "ViewState": "AgIAAB0AAAAAAAAAAIAwwC0AAAAIAAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
-              "WhenOpened": "2025-01-19T18:36:58.989Z",
+              "WhenOpened": "2025-01-25T13:01:55.748Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "XyzReader.py",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\scripts\\XyzReader.py",
-              "RelativeDocumentMoniker": "scripts\\XyzReader.py",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\scripts\\XyzReader.py",
-              "RelativeToolTip": "scripts\\XyzReader.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACoAAAAeAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
-              "WhenOpened": "2025-01-19T11:26:47.361Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "BondOrderCalculator.py",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\scripts\\BondOrderCalculator.py",
-              "RelativeDocumentMoniker": "scripts\\BondOrderCalculator.py",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\scripts\\BondOrderCalculator.py",
-              "RelativeToolTip": "scripts\\BondOrderCalculator.py",
-              "ViewState": "AgIAAD8AAAAAAAAAAAAwwF4AAAABAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
-              "WhenOpened": "2025-01-19T11:26:00.444Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Import_Data.py",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\scripts\\Import_Data.py",
-              "RelativeDocumentMoniker": "scripts\\Import_Data.py",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\scripts\\Import_Data.py",
-              "RelativeToolTip": "scripts\\Import_Data.py",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
-              "WhenOpened": "2025-01-19T10:04:48.019Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Main_Body.py",
-              "DocumentMoniker": "C:\\Documents\\Gaussian-2-Blender\\scripts\\Main_Body.py",
-              "RelativeDocumentMoniker": "scripts\\Main_Body.py",
-              "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\scripts\\Main_Body.py",
-              "RelativeToolTip": "scripts\\Main_Body.py",
-              "ViewState": "AgIAAMAAAAAAAAAAAAAAAMsAAAAEAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
-              "WhenOpened": "2025-01-19T09:48:37.803Z"
             },
             {
               "$type": "Document",
@@ -122,7 +58,7 @@
               "RelativeDocumentMoniker": "Gaussian2Blender.py",
               "ToolTip": "C:\\Documents\\Gaussian-2-Blender\\Gaussian2Blender.py",
               "RelativeToolTip": "Gaussian2Blender.py",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAAAB0BAAA6AAAAAAAAAA==",
               "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAMuSURBVDhPrVTPTxNREP627e7SQm0F2mKLUEVICP5IMBqUhB6NJ4/GGGPwoIf\u002BCR7VxBBPhnAxAeVC4kEuJB6Qi0Y8oCGKpoKQUpEWAhX6c7vb3X1Ol5UauzEc/JLJm31v3pdv5u0M/isYY5zpGohEIs8GBgZu8Dxv7tQik8mwbDb7YGpq6lEqlcqa2/twmOs\u002BBgcHEQgEzK9azMzMsHg8fsdut7Pp6enHKysrafPIQA1hBRRkelUQAcLhMEi9jTLxdnZ23pZl2elwOIYWFxe3zTBrwmAwaHpVcFy1OoIg8P39/c1Efo3KJquq\u002BpBEFCpnNiPiL9CFGvtd14rSyclJDA8P22dnZ1tcLlevKIp\u002B45BgqXBpacn0qqDUQGniXN9F9J6/AIeNg1TIyaOjo9/NEAOWhN3d3aZXRV5W8Sq2jY2sBElSwFNuR9x2x5HWtkabrZrogRXKDUEsb\u002BSxmSlg7tsG1LICX4PAX\u002Blpbff7/Q1mmHUNK6/5t2WKKt4uphBbS0NXy2QasvkiV1RtTrfb7TKvWhNWoGkaNHD4ulXGxNwmPibSOH3Ui95wI5rqeahESq8Ln7dwavLpjXe69HlB1/U2y5RXV1eNdb3E48VCDuvpHF1WoJWJhEyjdHWNVNKvJHBbgDQPlOZ74Ls7ZKmwq6vLsCKrw\u002BZu3lCjl1UquA6P0wGPi4eX7EzYhdNB6j5NoiL/AJS1S5YKY7GYsa6tS5BlUkOptTU6EI1IcNp3aQboNAh0eIUdhJybgFrcI9V2Pf9U2B4KQKCIisLbEQFnWz6gx7eMk/4VnGyOobU\u002BDk79SQF5IqNG4YM7loSKohjWfljE8WYn3KIdvkM6OKYBukIEMq2kkj7BiIJRF9Wd0iCEnlimnEwmjVUkuxU5jgzdD3jooUpEppWosT1kTlJE/S127UA89gV1J76Nj48PWRJ2dHSY3h4qg0HUkwz5AmcQajRc6vtIGRHam9aev1y/9/r1xNuRkZFiDeHY2Nj\u002BIPgTN69fThwVQ2Eon4iQHiD3HqzhPNOcvek3b\u002B7HK2Rm6MFAY\u002BoQ08uPWCmRYvl5ncnJBO29JLsajUbDe1HAL6CnYE1YMsFsAAAAAElFTkSuQmCC",
               "WhenOpened": "2025-01-18T17:31:55.593Z",
               "EditorCaption": ""

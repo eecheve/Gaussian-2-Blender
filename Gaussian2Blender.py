@@ -56,7 +56,7 @@ class GaussianToBlenderApp:
         # To use the coordinates module
         self.coordinates = Coordinates() #creating an instance of the Coordinates class
         # Instructions Region
-        self.instructions = Information(self.root)
+        self.instructions = Information(self, self.root)
         self.place(self.instructions, row=0, column=0, columnspan=2, pady=2, padx=2, sticky="ew")
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
@@ -287,6 +287,13 @@ class GaussianToBlenderApp:
         else:
             print("Cannot convert input to fbx animation, check console for errors")
 
+    def help_single_convert(self):
+        Utility.customize_widget(tk_object=self.inputReg.btn_setInputName,
+                                 color_string="#fcff70", index=1)
+
+    def help_animation_convert(self):
+        print("here goes the guide to convert for animation")
+            
     def run(self):
         self.root.mainloop()
 
