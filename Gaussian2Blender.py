@@ -15,6 +15,7 @@ from gui.Coordinates import Coordinates
 from gui.Information import Information
 from gui.BlenderPath import BlenderPath
 from gui.InputRegion import InputRegion
+from gui.WalkthroughRegion import WalkthroughRegion
 from gui.OutputRegion import OutputRegion
 from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
@@ -65,23 +66,26 @@ class GaussianToBlenderApp:
         self.bPathReg.setBlenderPath(self.str_blenderPath)
         # Input Region
         self.inputReg = InputRegion(self.root, self.g2b_path)
-        self.place(self.inputReg, row=2, column=0, padx=2, pady=2, sticky="W")
+        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
+        # Walkthrough Region
+        self.guideReg = WalkthroughRegion(self.root)
+        self.place(self.guideReg, row=2, column=1, padx=2, pady=2)
         # Output Region
         self.outputReg = OutputRegion(self.root, self.g2b_path)
-        self.place(self.outputReg, row=2, column=1, sticky="SW")
-        # Console Region
-        self.consoleReg = ConsoleRegion(self.root)
-        self.place(self.consoleReg, row=5, column=0, columnspan=3, pady=2, padx=2)
+        self.place(self.outputReg, row=3, column=1, sticky="SW")
         # Ion Region
         self.ionReg = IonRegion(self.root)
-        self.place(self.ionReg, row=3, column=0, padx=2, pady=2, sticky="W", rowspan=2)
+        self.place(self.ionReg, row=4, column=0, padx=2, pady=2, sticky="W", rowspan=2)
         self.codeReg = IonConventions(self.root)
-        self.place(self.codeReg, row=3, column=1, padx=2, pady=2, sticky="W")
+        self.place(self.codeReg, row=4, column=1, padx=2, pady=2, sticky="W")
         #Action Region
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
                                        on_convert=self.convert)
-        self.place(self.actionReg, row=4, column=1, pady=2, sticky="se")
+        self.place(self.actionReg, row=5, column=1, pady=2, sticky="se")
+        # Console Region
+        self.consoleReg = ConsoleRegion(self.root)
+        self.place(self.consoleReg, row=6, column=0, columnspan=3, pady=2, padx=2)
 
     def convert(self):
         current_os = platform.system()
@@ -103,8 +107,10 @@ class GaussianToBlenderApp:
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
         self.inputReg.clear_variables()
+        self.inputReg.reset_widget_bg_colors()
         self.ionReg.clear_variables()
         self.consoleReg.clear_content()
+        self.guideReg.revert_text_to_default()
 
     def exceptions_test_passed(self, b_path, i_names, o_path):
         """

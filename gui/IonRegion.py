@@ -20,7 +20,7 @@ class IonRegion(object):
 
     def clear_variables(self):
         self.removeAllIons()
-        self.activator()
+        self.disable_ionic_buttons()
         self.var_ionNames.set("")
         self.int_hasIons.set(0)
         self.int_unitCell.set(0)
@@ -101,6 +101,12 @@ class IonRegion(object):
             self.chk_unitCell['state'] = tk.DISABLED
             self.removeAllIons()
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
+
+    def disable_ionic_buttons(self):
+        self.btn_addIon['state'] = tk.DISABLED
+        self.btn_removeIon['state'] = tk.DISABLED
+        self.chk_unitCell['state'] = tk.DISABLED
+        self.removeAllIons()
 
     def canvasConfig(self, event):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),

@@ -54,8 +54,8 @@ class Utility(object):
         tk_object.callout_label = callout_label
 
     def revert_widget(tk_object):
-        original_colors = {
-            "Checkbutton": "#ffffff",
+        original_colors = { #at the moment is the same color, but will store it differently for the future
+            "Checkbutton": "#f0f0f0",
             "OptionMenu": "#f0f0f0",
             "Button": "#f0f0f0"
         }
