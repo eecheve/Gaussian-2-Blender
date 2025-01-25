@@ -28,10 +28,10 @@ class Information(object):
         self.btn_help_single.grid(row=0, column=2, padx=(30, 0))
         CreateTooltip(self.btn_help_single, "Click here to for a guided walkthrough to convert a single molecule")
 
-        self.btn_help_single = tk.Button(text="Guide: animation convert", width=20, master=self.frame, 
+        self.btn_help_anim = tk.Button(text="Guide: animation convert", width=20, master=self.frame, 
                                          command=parent_class.help_animation_convert)
-        self.btn_help_single.grid(row=0, column=3)
-        CreateTooltip(self.btn_help_single, "Click here to for a guided walkthrough to make an animation")
+        self.btn_help_anim.grid(row=0, column=3)
+        CreateTooltip(self.btn_help_anim, "Click here to for a guided walkthrough to make an animation")
 
         self.instructions_text = (
             "1. Set the path to the Blender executable by navigating to the Blender installation directory.\n\n"

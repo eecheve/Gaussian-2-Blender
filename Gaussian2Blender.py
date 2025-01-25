@@ -10,6 +10,7 @@ from tkinter import filedialog
 #utility modules
 from gui.Utility import Utility
 from gui.Coordinates import Coordinates
+from gui.Tutorial import Tutorial
 
 #gui modules
 from gui.Information import Information
@@ -30,6 +31,8 @@ class GaussianToBlenderApp:
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
         self._initialize_regions()
+        self.initialize_single_tutorial()
+        self.initialize_animation_tutorial()
 
     def _initialize_g2b_path(self):
         if getattr(sys, 'frozen', False):  # Check if running as an executable
@@ -87,6 +90,58 @@ class GaussianToBlenderApp:
         self.consoleReg = ConsoleRegion(self.root)
         self.place(self.consoleReg, row=6, column=0, columnspan=3, pady=2, padx=2)
 
+    def initialize_single_tutorial(self):
+        text_descriptions = [
+            "1. Click on the 'set' button to select one or more files to convert",
+            "2. Select the representational model for your 3D model", 
+            "3. Choose the output type for your 3D model",
+            "4. Click on 'convert' to start the conversion process",
+            "5. Click on 'reset' to remove the current button highlights"
+        ]
+    
+        # Step 2: Define the buttons that the user needs to press in order
+        action_buttons = [
+            self.inputReg.btn_setInputName,  # Button for selecting input file(s)
+            self.inputReg.drp_modelTypes,  # Dropdown to select model type (currently not used)
+            self.outputReg.drp_outputTypes,  # Dropdown to select output type (currently not used)
+            self.actionReg.btn_convert       # Button to start the conversion process
+        ]
+    
+        # Step 3: Initialize the tutorial system with the buttons, descriptions, and actions
+        self.single_convert_tutorial = Tutorial(
+            action_buttons=action_buttons,  # List of buttons to be pressed in order
+            descriptions=text_descriptions,  # Corresponding descriptions for each step
+            walkthroughRegion=self.guideReg  # Walkthrough region to display tutorial instructions
+        )
+        
+    def initialize_animation_tutorial(self):
+        text_descriptions = [
+            "1. Click on the 'set' button to select one or more files to convert",
+            "2. Select the representational model for your 3D model",
+            "3. Click on the 'is animation' checkbox",
+            "NOTE1: make sure all the input files have the same extension",
+            "NOTE2: make sure all the input files have the same atoms in the same order",
+            "4. Choose the output type for your 3D model",
+            "5. Click on 'convert' to start the conversion process",
+            "6. Click on 'reset' to remove the current button highlights"
+        ]
+    
+        # Step 2: Define the buttons that the user needs to press in order
+        action_buttons = [
+            self.inputReg.btn_setInputName,  # Button for selecting input file(s)
+            self.inputReg.drp_modelTypes,  # Dropdown to select model type (currently not used)
+            self.inputReg.chk_isAnimation,
+            self.outputReg.drp_outputTypes,  # Dropdown to select output type (currently not used)
+            self.actionReg.btn_convert       # Button to start the conversion process
+        ]
+    
+        # Step 3: Initialize the tutorial system with the buttons, descriptions, and actions
+        self.animation_convert_tutorial = Tutorial(
+            action_buttons=action_buttons,  # List of buttons to be pressed in order
+            descriptions=text_descriptions,  # Corresponding descriptions for each step
+            walkthroughRegion=self.guideReg  # Walkthrough region to display tutorial instructions
+        ) 
+        
     def convert(self):
         current_os = platform.system()
         linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
@@ -111,6 +166,8 @@ class GaussianToBlenderApp:
         self.ionReg.clear_variables()
         self.consoleReg.clear_content()
         self.guideReg.revert_text_to_default()
+        self.single_convert_tutorial.reset_buttons_to_default()
+        self.animation_convert_tutorial.reset_buttons_to_default()
 
     def exceptions_test_passed(self, b_path, i_names, o_path):
         """
@@ -294,11 +351,12 @@ class GaussianToBlenderApp:
             print("Cannot convert input to fbx animation, check console for errors")
 
     def help_single_convert(self):
-        Utility.customize_widget(tk_object=self.inputReg.btn_setInputName,
-                                 color_string="#fcff70", index=1)
+        self.animation_convert_tutorial.reset_buttons_to_default()
+        self.single_convert_tutorial.start_tutorial()
 
     def help_animation_convert(self):
-        print("here goes the guide to convert for animation")
+        self.single_convert_tutorial.reset_buttons_to_default()
+        self.animation_convert_tutorial.start_tutorial()
             
     def run(self):
         self.root.mainloop()

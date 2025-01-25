@@ -41,33 +41,38 @@ class Utility(object):
                     line = "1" if line else "0" #makes the line 1 if line is True, 0 otherwise
                 f.writelines(line + '\n')
 
-    def customize_widget(tk_object, color_string, index):  
+    def customize_widget(tk_object, color_string):  
         # Set the background color of the widget
         tk_object.config(bg=color_string)
-    
-        # Create a callout label with the index number
-        callout_label = tk.Label(tk_object.master, text=str(index), bg=color_string)
-        callout_label.place(x=tk_object.winfo_x() + tk_object.winfo_width() + 5, 
-                            y=tk_object.winfo_y())
-    
-        # Store the callout label in the widget's dictionary
-        tk_object.callout_label = callout_label
 
+    # def revert_widget(tk_object):
+    #     original_colors = { #at the moment is the same color, but will store it differently for the future
+    #         "Checkbutton": "#f0f0f0",
+    #         "OptionMenu": "#f0f0f0",
+    #         "Button": "#f0f0f0"
+    #     }
+        
+    #     widget_type = tk_object.winfo_class() # Check the type of the tkinter object
+
+    #     if widget_type in original_colors:
+    #         tk_object.config(bg=original_colors[widget_type])
+        
+    #     if tk_object in original_colors: # Revert the background color to the original value
+    #         tk_object.config(bg=original_colors[tk_object])
     def revert_widget(tk_object):
-        original_colors = { #at the moment is the same color, but will store it differently for the future
+        """
+        Reverts a widget's appearance (background color) to its default state.
+        """
+        # Define the original colors for supported widget types
+        original_colors = {
             "Checkbutton": "#f0f0f0",
-            "OptionMenu": "#f0f0f0",
+            "Menubutton": "#f0f0f0",
             "Button": "#f0f0f0"
         }
-        
-        widget_type = tk_object.winfo_class() # Check the type of the tkinter object
 
+        # Identify the widget's class type
+        widget_type = tk_object.winfo_class()
+
+        # Revert the background color for the main widget
         if widget_type in original_colors:
             tk_object.config(bg=original_colors[widget_type])
-        
-        if tk_object in original_colors: # Revert the background color to the original value
-            tk_object.config(bg=original_colors[tk_object])
-    
-        if hasattr(tk_object, 'callout_label'): # Remove the callout label if it exists
-            tk_object.callout_label.destroy()
-            del tk_object.callout_label

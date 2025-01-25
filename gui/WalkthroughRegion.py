@@ -8,15 +8,15 @@ class WalkthroughRegion(object):
                                 fg="blue", 
                                 relief=tk.GROOVE, 
                                 borderwidth=2,
-                                width=300,  
-                                height=150) 
+                                width=390,  
+                                height=180) 
         self.frame.grid_propagate(False)
 
         self.default_text = "Click on 'Guide: single convert' or 'Guide: animation convert' for a guided tutorial on how to use this tool"
         self.guide_widget = tk.Label(master=self.frame,
                                      text=self.default_text,
                                      fg="black",
-                                     wraplength=280)
+                                     wraplength=370)
         self.guide_widget.grid(row=0, column=0)
 
     def revert_text_to_default(self):
