@@ -1,30 +1,57 @@
 import bpy
-
-def ExportSceneAs(folder_path, file_name, file_type): #https://docs.blender.org/api/current/bpy.ops.export_scene.html
+    
+def ExportSceneAs_old(folder_path, file_name, file_type):
     file_path = folder_path + "\\" + file_name + file_type
-    if file_type == ".fbx":
+    
+    export_functions = {
+        ".fbx": lambda: bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True, bake_anim=True, embed_textures=True),
+        ".dae": lambda: bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, apply_modifiers=True, 
+                                                   selected=True, use_blender_profile=True, use_texture_copies=True),
+        ".obj": lambda: bpy.ops.export_scene.obj(filepath=file_path, use_selection=True, use_materials=True),
+        ".x3d": lambda: bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True),
+        ".stl": lambda: bpy.ops.export_mesh.stl(filepath=file_path, use_selection=True)
+    }
+    
+    if file_type in export_functions:
         bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True, bake_anim=True)
-        bpy.ops.object.select_all(action='DESELECT')
-    elif file_type == ".dae": #currently, materials not saved using this settings.
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, apply_modifiers=True, 
-                                  selected=True, use_blender_profile=True, use_texture_copies=True) #use_textures_copies added
-        bpy.ops.object.select_all(action='DESELECT')
-    elif file_type == ".obj":
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.export_scene.obj(filepath=file_path, use_selection=True, use_materials=True)
-        bpy.ops.object.select_all(action='DESELECT')
-    elif file_type == ".x3d":
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True)
-        bpy.ops.object.select_all(action='DESELECT')
-    elif file_type == ".stl":
-        bpy.ops.object.select_all(action='SELECT')
-        bpy.ops.export_mesh.stl(filepath=file_path, use_selection=True) #https://docs.blender.org/api/current/bpy.ops.export_mesh.html
+        export_functions[file_type]()
         bpy.ops.object.select_all(action='DESELECT')
     else:
-        print("invalid file type")
+        print("Invalid file type")
+        
+def ExportSceneAs(folder_path, file_name, file_type):  
+    """
+    Exports the scene as the specified file type while ensuring transparency is enabled.
+
+    Parameters:
+    folder_path (str): The directory where the file will be saved.
+    file_name (str): The name of the exported file (without extension).
+    file_type (str): The format of the exported file (e.g., ".fbx", ".dae", ".obj", ".x3d", ".stl").
+    """
+
+    # Enable film transparency for proper alpha handling
+    bpy.context.scene.render.film_transparent = True  
+
+    file_path = folder_path + "\\" + file_name + file_type
+
+    export_functions = {
+        ".fbx": lambda: bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True, 
+                                                  bake_anim=True, embed_textures=True, 
+                                                  path_mode='COPY', use_active_collection=False),
+        ".dae": lambda: bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, 
+                                                  apply_modifiers=True, selected=True, 
+                                                  use_blender_profile=True, use_texture_copies=True),
+        ".obj": lambda: bpy.ops.export_scene.obj(filepath=file_path, use_selection=True, 
+                                                 use_materials=True),
+        ".x3d": lambda: bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True),
+        ".stl": lambda: bpy.ops.export_mesh.stl(filepath=file_path, use_selection=True)
+    }
+    if file_type in export_functions:
+        bpy.ops.object.select_all(action='SELECT')
+        export_functions[file_type]()
+        bpy.ops.object.select_all(action='DESELECT')
+    else:
+        print("Invalid file type")
         
 def ExportForAnimation(names_and_pos, bond_list, folder_path, file_name, file_type):
     file_path = folder_path + "\\" + file_name + file_type
@@ -45,4 +72,11 @@ def ExportForAnimation(names_and_pos, bond_list, folder_path, file_name, file_ty
                              bake_anim=True,
                              bake_space_transform=True) 
     #bpy.ops.object.select_all(action='DESELECT')
+    
+#TO DEBUG
+file_path = "C:\\Documents\\Gaussian-2-Blender\\output"
+file_name = "methyl_xanthate_highlighted3"
+file_type = ".fbx"
+
+ExportSceneAs(folder_path=file_path, file_name=file_name, file_type=file_type)
     

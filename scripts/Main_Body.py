@@ -170,7 +170,7 @@ class Main_Body(object):
         print("9: Exporting the results ...")
         Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
 
-    def Manage_Export_if_Animation(self):
+    def Manage_Export(self):
         if self.str_is_animation == "0":
             self.Export()
         else:
@@ -202,4 +202,4 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    main_body_instance.Manage_Export_if_Animation()
+    #main_body_instance.Manage_Export()
