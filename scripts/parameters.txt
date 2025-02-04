@@ -1,10 +1,10 @@
 .com
 C:/Documents/Gaussian-2-Blender/input_examples/com_files/organic
-methyl_xanthate.com
+acrylonitrile.com
 C:\Documents\Gaussian-2-Blender\output\
-methyl_xanthate
+acrylonitrile
 Ball-and-Stick
-.fbx
+.obj
 0
 0
 ---

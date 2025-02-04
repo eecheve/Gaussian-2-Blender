@@ -35,8 +35,15 @@ def AssignMaterial(material_name, material_color):
         assignment.diffuse_color = material_color
     return assignment
 
-def RemoveAllMaterials():
-    for m in bpy.data.materials:
-        bpy.data.materials.remove(m)
+def RemoveAllMaterialsAndMeshes():
+    """
+    Removes all materials and meshes from the Blender scene.
+    """
+    # Remove all materials
+    for mat in bpy.data.materials:
+        bpy.data.materials.remove(mat)
+    # Remove all meshes
+    for mesh in bpy.data.meshes:
+        bpy.data.meshes.remove(mesh)
         
-RemoveAllMaterials()
+RemoveAllMaterialsAndMeshes()

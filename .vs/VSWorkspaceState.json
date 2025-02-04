@@ -2,7 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\external_data",
-    "\\gui"
+    "\\gui",
+    "\\scripts"
   ],
   "SelectedNode": "\\Gaussian2Blender.py",
   "PreviewInSolutionExplorer": false
