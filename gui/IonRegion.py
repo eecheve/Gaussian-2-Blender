@@ -101,7 +101,7 @@ class IonRegion(object):
             self.chk_unitCell['state'] = tk.DISABLED
             self.removeAllIons()
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
-
+         
     def disable_ionic_buttons(self):
         self.btn_addIon['state'] = tk.DISABLED
         self.btn_removeIon['state'] = tk.DISABLED

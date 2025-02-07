@@ -22,6 +22,7 @@ from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
+from gui.BondConventions import BondConventions
 
 class GaussianToBlenderApp:
     def __init__(self):
@@ -61,10 +62,10 @@ class GaussianToBlenderApp:
         self.coordinates = Coordinates() #creating an instance of the Coordinates class
         # Instructions Region
         self.instructions = Information(self, self.root)
-        self.place(self.instructions, row=0, column=0, columnspan=2, pady=2, padx=2, sticky="ew")
+        self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
-        self.place(self.bPathReg, row=1, column=0, columnspan=2, pady=2, padx=2, sticky="w")
+        self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
         self.str_blenderPath = self.bPathReg.searchBlenderPath()
         self.bPathReg.setBlenderPath(self.str_blenderPath)
         # Input Region
@@ -72,20 +73,22 @@ class GaussianToBlenderApp:
         self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
         # Walkthrough Region
         self.guideReg = WalkthroughRegion(self.root)
-        self.place(self.guideReg, row=2, column=1, padx=2, pady=2)
+        self.place(self.guideReg, row=2, column=1, columnspan=2, padx=2, pady=2)
         # Output Region
         self.outputReg = OutputRegion(self.root, self.g2b_path)
-        self.place(self.outputReg, row=3, column=1, sticky="SW")
+        self.place(self.outputReg, row=3, column=1, sticky="SW", columnspan=2)
         # Ion Region
         self.ionReg = IonRegion(self.root)
         self.place(self.ionReg, row=4, column=0, padx=2, pady=2, sticky="W", rowspan=2)
         self.codeReg = IonConventions(self.root)
         self.place(self.codeReg, row=4, column=1, padx=2, pady=2, sticky="W")
+        self.bondCodes = BondConventions(self.root)
+        self.place(self.bondCodes, row=4, column=2, padx=2, pady=2, sticky="W")
         #Action Region
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
                                        on_convert=self.convert)
-        self.place(self.actionReg, row=5, column=1, pady=2, sticky="se")
+        self.place(self.actionReg, row=5, column=1, pady=2, columnspan=2, sticky="se")
         # Console Region
         self.consoleReg = ConsoleRegion(self.root)
         self.place(self.consoleReg, row=6, column=0, columnspan=3, pady=2, padx=2)
@@ -162,6 +165,7 @@ class GaussianToBlenderApp:
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
         self.inputReg.clear_variables()
+        self.inputReg.reset_highlighter_options()
         self.inputReg.reset_widget_bg_colors()
         self.ionReg.clear_variables()
         self.consoleReg.clear_content()
