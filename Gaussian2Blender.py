@@ -23,6 +23,7 @@ from gui.IonRegion import IonRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
+from gui.HighlighterRegion import HighlighterRegion
 
 class GaussianToBlenderApp:
     def __init__(self):
@@ -32,6 +33,7 @@ class GaussianToBlenderApp:
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
         self._initialize_regions()
+        self.place_regions()
         self.initialize_single_tutorial()
         self.initialize_animation_tutorial()
 
@@ -45,7 +47,7 @@ class GaussianToBlenderApp:
         self.root.title("Gaussian-2-Blender")
         #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
-        self.root.geometry('800x700')
+        self.root.geometry('800x800')
         self.root.resizable(0,0)
 
     def place(self, region, **kwargs):
@@ -62,36 +64,50 @@ class GaussianToBlenderApp:
         self.coordinates = Coordinates() #creating an instance of the Coordinates class
         # Instructions Region
         self.instructions = Information(self, self.root)
-        self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
-        self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
         self.str_blenderPath = self.bPathReg.searchBlenderPath()
         self.bPathReg.setBlenderPath(self.str_blenderPath)
+
         # Input Region
         self.inputReg = InputRegion(self.root, self.g2b_path)
-        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
+        
         # Walkthrough Region
         self.guideReg = WalkthroughRegion(self.root)
-        self.place(self.guideReg, row=2, column=1, columnspan=2, padx=2, pady=2)
+        
+        # Highlighter Region
+        self.highlightReg = HighlighterRegion(self.root)
+        
         # Output Region
         self.outputReg = OutputRegion(self.root, self.g2b_path)
-        self.place(self.outputReg, row=3, column=1, sticky="SW", columnspan=2)
+        
         # Ion Region
         self.ionReg = IonRegion(self.root)
-        self.place(self.ionReg, row=4, column=0, padx=2, pady=2, sticky="W", rowspan=2)
+        
+        #Conventions
         self.codeReg = IonConventions(self.root)
-        self.place(self.codeReg, row=4, column=1, padx=2, pady=2, sticky="W")
         self.bondCodes = BondConventions(self.root)
-        self.place(self.bondCodes, row=4, column=2, padx=2, pady=2, sticky="W")
+
         #Action Region
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
                                        on_convert=self.convert)
-        self.place(self.actionReg, row=5, column=1, pady=2, columnspan=2, sticky="se")
         # Console Region
         self.consoleReg = ConsoleRegion(self.root)
-        self.place(self.consoleReg, row=6, column=0, columnspan=3, pady=2, padx=2)
+
+    def place_regions(self):
+        self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
+        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
+        self.place(self.guideReg, row=2, column=1, columnspan=2, padx=2, pady=2)
+        self.place(self.outputReg, row=3, column=1, sticky="SW", columnspan=2)
+        self.place(self.highlightReg, row=4, column=0, padx=2, pady=2)
+        self.place(self.ionReg, row=5, column=0, padx=2, pady=2, sticky="W", rowspan=2)
+        self.place(self.codeReg, row=5, column=1, padx=2, pady=2, sticky="W")
+        self.place(self.bondCodes, row=5, column=2, padx=2, pady=2, sticky="W")
+        self.place(self.actionReg, row=6, column=1, pady=2, columnspan=2, sticky="se")
+        self.place(self.consoleReg, row=7, column=0, columnspan=3, pady=2, padx=2)
 
     def initialize_single_tutorial(self):
         text_descriptions = [
@@ -165,7 +181,7 @@ class GaussianToBlenderApp:
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
         self.inputReg.clear_variables()
-        self.inputReg.reset_highlighter_options()
+        self.highlightReg.reset_highlighter_options()
         self.inputReg.reset_widget_bg_colors()
         self.ionReg.clear_variables()
         self.consoleReg.clear_content()
@@ -207,7 +223,7 @@ class GaussianToBlenderApp:
         return True
         
     def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                              is_ionic, unit_cell, str_ion_list, is_anim):
+                              is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """
         overwrites bat script to handle the export or animation of molecules
     
@@ -239,7 +255,9 @@ class GaussianToBlenderApp:
             str(is_ionic),
             str(unit_cell),
             str_ion_list,
-            is_anim
+            is_anim,
+            hl_atoms,
+            hl_bonds
         ]
         Utility.append_lines_to_file(params_script, lines)
     
@@ -255,7 +273,7 @@ class GaussianToBlenderApp:
             Utility.append_lines_to_file(anim_frames, frames_list_strings)
         
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim):
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """ 
         Function to execute bat file that communicates with blender's python API 
     
@@ -274,7 +292,7 @@ class GaussianToBlenderApp:
         """
         self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
         self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim)
+                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds)
         subprocess.call([exec_loc, b_path])
     
     def assign_ionic_params(self):
@@ -334,6 +352,8 @@ class GaussianToBlenderApp:
         o_path = self.outputReg.ent_outputPath.get() #output path
         o_type = self.outputReg.var_outputTypes.get() #output type
         is_anim = self.inputReg.var_isAnimation.get() #is animation
+        hl_atoms = self.highlightReg.var_hlAtomList.get() #list of atoms to highlight
+        hl_bonds = self.highlightReg.var_hlBondList.get() #list of bonds to highlight
         if self.exceptions_test_passed(b_path, i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -344,13 +364,15 @@ class GaussianToBlenderApp:
                 print("Converting main molecule for animation")
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list, is_anim) 
+                                    unit_cell, str_ion_list, is_anim,
+                                    hl_atoms, hl_bonds) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                        unit_cell, str_ion_list, is_anim)   
+                                        unit_cell, str_ion_list, is_anim,
+                                        hl_atoms, hl_bonds)   
         else:
             print("Cannot convert input to fbx animation, check console for errors")
 
