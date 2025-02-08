@@ -47,6 +47,8 @@ def separate_elements_from_bonds():
     elements = []
     bonds = []
     for ob in context.scene.objects:
+        if "_highlight" in ob.name:
+            continue  # Skip objects that are highlights
         if '-' in ob.name or '=' in ob.name or '_' in ob.name or '#' in ob.name or '%' in ob.name:
             bonds.append(ob)
         else:

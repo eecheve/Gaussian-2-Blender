@@ -18,7 +18,7 @@ importlib_modules = [
     "Create_Materials", "Primitives", "Export_Data", "Ions", 
     "Instantiate_Molecules", "Raw_Parameters", "Rig_Molecule", 
     "Animate", "Clear_Transforms", "Parent_Relations", "Receive_Parameters",
-    "XyzReader"
+    "XyzReader", "AtomHighlighter"
 ]
 
 for module in importlib_modules:
@@ -37,7 +37,8 @@ for module in importlib_modules:
 
 class Main_Body(object):
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
-                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation):
+                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation,
+                 atom_hl_list, bond_hl_list):
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
@@ -48,6 +49,8 @@ class Main_Body(object):
         self.str_ionic_cell = str_ionic_cell
         self.str_ion_input_list = str_ion_input_list
         self.str_is_animation = str_is_animation
+        self.atom_hl_list = atom_hl_list
+        self.bond_hl_list = bond_hl_list        
         
         self.coords = []
         self.number_of_elements = 0
@@ -137,8 +140,7 @@ class Main_Body(object):
             print("4: There are no ions with charge, coordination and spin specified")
             self.ion_input = []    
     
-    def Build_Molecule(self): #<----- TO DO separate into PrepareAtoms, PrepareBonds, PrepareIons   
-        #TO DO: separate inside Instantiate.py to make atoms and bonds separate functions
+    def Build_Molecule(self): 
         Instantiate_Molecules.Instantiate(self.is_ionic, self.represent_type, self.names_and_pos, 
                                 self.materials_dict, self.connect_with_symbols, self.element_data, 
                                 self.ion_data, self.ion_input, self.unit_cell)
@@ -169,6 +171,32 @@ class Main_Body(object):
     def ExportForAnimation(self):
         print("9: Exporting the results ...")
         Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
+        
+    def Highlight_Atoms(self):
+        print("XX: highlighting atoms if info is present")
+        if not self.atom_hl_list.strip(): # Check if atom_hl_list is empty or contains only whitespace
+            print("XX: No atoms to highlight, skipping function.")
+            return    
+        atom_list = self.atom_hl_list.replace(" ", "").split(",") #removes empty spaces and then separates by commas
+        for atom in atom_list:
+            AtomHighlighter.highlight_atom(atom)
+            
+    def Highlight_Bonds(self):
+        separators = ['-', '=', '#', '%']
+        print("YY: highlighting bonds if info is present")
+        if not self.bond_hl_list.strip(): # Check if atom_hl_list is empty or contains only whitespace
+            print("XX: No bonds to highlight, skipping function.")
+            return
+        bond_list = self.bond_hl_list.replace(" ", "").split(";") #removes empty spaces and then separates by semicolons
+        for bond in bond_list:
+            print("current bond is:", bond)
+            for sep in separators:
+                print("current sep is:", sep)
+                if sep in bond:
+                    print("separator found")
+                    atom1, atom2 = bond.split(sep)  # Split bond string using the found separator
+                    AtomHighlighter.highlight_bond(atom1, atom2)
+                    break  # Exit separator loop once a match is found
 
     def Manage_Export(self):
         if self.str_is_animation == "0":
@@ -196,10 +224,14 @@ if __name__ == "__main__":
                                    params_data["o_file_type"],
                                    params_data["str_ionic_cell"],
                                    params_data["str_ion_input_list"],
-                                   params_data["str_is_animation"])
+                                   params_data["str_is_animation"],
+                                   params_data["atom_hl_list"],
+                                   params_data["bond_hl_list"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    #main_body_instance.Manage_Export()
+    main_body_instance.Highlight_Atoms()
+    main_body_instance.Highlight_Bonds()
+    main_body_instance.Manage_Export()

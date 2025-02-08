@@ -8,6 +8,6 @@ Ball-and-Stick
 0
 0
 ---
-0
+1
 O01, H02
 O01-H02

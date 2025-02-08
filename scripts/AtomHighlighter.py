@@ -220,8 +220,8 @@ def highlight_bond(atom_1, atom_2, outline_size=0.33, transparency_value=0.5, ou
     highlight_cylinder.matrix_parent_inverse = bond_obj.matrix_world.inverted()
         
 #TO DEBUG
-mat_dict = {'C': bpy.data.materials['C'], 'S': bpy.data.materials['S'], 'O': bpy.data.materials['O'], 'H': bpy.data.materials['H'], 'Xx': bpy.data.materials['Xx']}
+#mat_dict = {'C': bpy.data.materials['C'], 'S': bpy.data.materials['S'], 'O': bpy.data.materials['O'], 'H': bpy.data.materials['H'], 'Xx': bpy.data.materials['Xx']}
 
-highlight_atom(atom_name="C01", transparency_value=0.2)
-highlight_atom(atom_name="O04", transparency_value=0.2)
-highlight_bond(atom_1="C01", atom_2="O04", transparency_value=0.2, outline_size=0.33)
+#highlight_atom(atom_name="C01", transparency_value=0.2)
+#highlight_atom(atom_name="O04", transparency_value=0.2)
+#highlight_bond(atom_1="C01", atom_2="O04", transparency_value=0.2, outline_size=0.33)
