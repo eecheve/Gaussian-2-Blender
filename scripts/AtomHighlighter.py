@@ -55,7 +55,7 @@ def highlight_atom(atom_name, outline_size=1.5, transparency_value=0.5, outline_
     # Create the highlight sphere
     bpy.ops.mesh.primitive_uv_sphere_add(radius=outline_size * obj.dimensions[0] / 2, location=obj.location)
     highlight_sphere = bpy.context.object
-    highlight_sphere.name = f"{atom_name}_highlight"
+    highlight_sphere.name = f"{atom_name}*highlight" #naming format with '*' to avoid interverence with animate module
     bpy.ops.object.shade_smooth() # Apply smooth shading
     
     # Make the instantiated object a child of the selected object
@@ -80,7 +80,7 @@ def create_highlight_material_old(object_name, transparency_value=0.5, outline_c
     Returns:
     bpy.types.Material: The created highlight material.
     """
-    mat = bpy.data.materials.new(name=f"{object_name}_highlight")
+    mat = bpy.data.materials.new(name=f"{object_name}*highlight")
     mat.use_nodes = True
     nodes = mat.node_tree.nodes
     links = mat.node_tree.links
@@ -130,7 +130,7 @@ def create_highlight_material(object_name, transparency_value=0.5, outline_color
     Returns:
     bpy.types.Material: The created highlight material.
     """
-    mat = bpy.data.materials.new(name=f"{object_name}_highlight")
+    mat = bpy.data.materials.new(name=f"{object_name}*highlight")
     mat.use_nodes = True
     nodes = mat.node_tree.nodes
     links = mat.node_tree.links
@@ -200,7 +200,7 @@ def highlight_bond(atom_1, atom_2, outline_size=0.33, transparency_value=0.5, ou
     # Create the highlight cylinder
     bpy.ops.mesh.primitive_cylinder_add(radius=outline_size / 2, depth=bond_orientation.length, location=bond_loc)
     highlight_cylinder = bpy.context.object
-    highlight_cylinder.name = f"{atom_1}_{atom_2}_highlight"
+    highlight_cylinder.name = f"{atom_1}*{atom_2}*highlight"
     bpy.ops.object.shade_smooth() # Apply smooth shading
     
     # Set the rotation of the cylinder
@@ -208,7 +208,7 @@ def highlight_bond(atom_1, atom_2, outline_size=0.33, transparency_value=0.5, ou
     highlight_cylinder.rotation_euler[2] = phi
     
     # Create the highlight material
-    mat = create_highlight_material(f"{atom_1}_{atom_2}", transparency_value, outline_color)
+    mat = create_highlight_material(f"{atom_1}*{atom_2}", transparency_value, outline_color)
     
     # Assign the material to the instantiated object
     highlight_cylinder.data.materials.append(mat)

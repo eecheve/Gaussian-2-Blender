@@ -47,7 +47,7 @@ def separate_elements_from_bonds():
     elements = []
     bonds = []
     for ob in context.scene.objects:
-        if "_highlight" in ob.name:
+        if "highlight" in ob.name:
             continue  # Skip objects that are highlights
         if '-' in ob.name or '=' in ob.name or '_' in ob.name or '#' in ob.name or '%' in ob.name:
             bonds.append(ob)
@@ -142,8 +142,7 @@ def ExtractDataFromFile(path):
     with open(path) as f:
         content = f.readlines()
         for line in content:
-            # store the line as list in file_data
-            l.append(line.split())
+            l.append(line.split()) # store the line as list in file_data
     print("8.1: The data in animation_frames.txt was properly read")
     return l
 
@@ -318,15 +317,41 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, 
                                    bond_type=type,
                                    step_size=step_size)
     
-def bake_all_animations(end_frame=40):
-    """
-    Bakes all animations for every object in the scene.
-    """
-    print("12: all animations were baked")
-    bpy.ops.nla.bake(frame_start=0, frame_end=end_frame,
-                     step=1, only_selected=False, visual_keying=True, 
-                     clear_constraints=False, clear_parents=False, 
-                     bake_types={'OBJECT'})
+def bake_all_animations(element_list, bond_list, end_frame=40):
+    print("12: Starting baking animations...")
+    
+    total_objects = len(element_list) + len(bond_list)
+    print(f"12.1: Total objects to bake: {total_objects}")
+    
+    # Bake elements
+    for element in element_list:
+        bpy.context.view_layer.objects.active = element
+        bpy.ops.object.select_all(action='DESELECT')
+        element.select_set(True)
+        print(f"12.2: Baking animation for element: {element.name}")
+        bpy.ops.nla.bake(
+            frame_start=0, frame_end=end_frame,
+            step=1, only_selected=True, visual_keying=True, 
+            clear_constraints=False, clear_parents=False,  
+            bake_types={'OBJECT'}
+        )
+    
+    # Bake bonds
+    for bond in bond_list:
+        bpy.context.view_layer.objects.active = bond
+        bpy.ops.object.select_all(action='DESELECT')
+        bond.select_set(True)
+        print(f"12.3: Baking animation for bond: {bond.name}")
+        bpy.ops.nla.bake(
+            frame_start=0, frame_end=end_frame,
+            step=1, only_selected=True, visual_keying=True, 
+            clear_constraints=False, clear_parents=False,  
+            bake_types={'OBJECT'}
+        )
+    
+    print("12.4: Baking complete!")
+
+
                      
 def animate(anim_frames_path, step_size=20):
     """
@@ -348,14 +373,15 @@ def animate(anim_frames_path, step_size=20):
     anim_data = refine_anim_data(raw_anim_data)
     number_of_frames = calculate_number_of_frames(anim_frames_path)
     print("9: the number of frames is: ", number_of_frames)
-    #element_list = separate_elements_from_bonds()[0]
+    element_list = separate_elements_from_bonds()[0]
     bond_list = separate_elements_from_bonds()[1]
     bond_types = detect_bond_types(bond_list)
     print("9: present bonds are: ", bond_types)
     end_frame = int((number_of_frames - 1)*step_size)
     print("9: the end frame is assigned to: ", end_frame)
     build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
-    bake_all_animations(end_frame)
+    #bake_all_animations(end_frame)
+    bake_all_animations(element_list, bond_list, end_frame)
 
 def export_animation(filepath):
     """
@@ -395,8 +421,9 @@ def export_animation(filepath):
 #bond_list = separate_elements_from_bonds()[1]
 #bond_types = detect_bond_types(bond_list)
 #end_frame = (number_of_frames - 1)*20
+
 #build_animations(anim_data, bond_list, bond_types, 20, number_of_frames, end_frame)
-#bake_all_animations(anim_length)
+#bake_all_animations(element_list, bond_list, end_frame)
 #export_animation(export_path)
 
 #clear_all_animations()

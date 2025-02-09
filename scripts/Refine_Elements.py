@@ -34,7 +34,6 @@ def CreateDictionaryWithNamesAndPositions(list, number_of_elements):
         formatted_index = f"{i+1:0{digits}}"
         element_name = f"{name}{formatted_index}"
         dict[element_name] = mathutils.Vector((x, y, z))
-    print("Temp, @Refine_Elements.CreateDictionaryWithNames", dict)
     return dict
             
 def AddAtomLabelsToConnectList(atom_dict, connect_list): #<----------------- source of bugs, I think!!!!!

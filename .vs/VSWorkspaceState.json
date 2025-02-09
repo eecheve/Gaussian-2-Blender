@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
+    "\\gui",
     "\\scripts"
   ],
-  "SelectedNode": "\\Gaussian2Blender.py",
+  "SelectedNode": "\\scripts\\Main_Body.py",
   "PreviewInSolutionExplorer": false
 }
