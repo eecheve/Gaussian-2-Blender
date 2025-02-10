@@ -270,4 +270,4 @@ if __name__ == "__main__":
     main_body_instance.Highlight_Atoms()
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()
-    #main_body_instance.Manage_Export()
+    main_body_instance.Manage_Export()

@@ -5,12 +5,14 @@ def ExportSceneAs(folder_path, file_name, file_type):
     file_path = folder_path + "\\" + file_name + file_type
     
     export_functions = {
-        ".fbx": lambda: bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True, bake_anim=True, embed_textures=True),
+        #".x3d": lambda: bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True), #NO LONGER SUPPORTED IN BLENDER4.1+
+        ".fbx": lambda: bpy.ops.export_scene.fbx(filepath=file_path, use_selection=True, bake_anim=False, embed_textures=True),
+        ".glb": lambda: bpy.ops.export_scene.gltf(filepath=file_path, use_selection=True,export_materials='EXPORT',
+                                                    export_animations=False),
         ".dae": lambda: bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, apply_modifiers=True, 
                                                    selected=True, use_blender_profile=True, use_texture_copies=True),
         ".obj": lambda: bpy.ops.wm.obj_export(filepath=file_path, export_selected_objects=True, export_materials=True),
-        ".x3d": lambda: bpy.ops.export_scene.x3d(filepath=file_path, use_selection=True),
-        ".stl": lambda: bpy.ops.export_mesh.stl(filepath=file_path, use_selection=True) 
+        ".stl": lambda: bpy.ops.wm.stl_export(filepath=file_path, export_selected_objects=True)
     }
     
     if file_type in export_functions:
@@ -22,13 +24,7 @@ def ExportSceneAs(folder_path, file_name, file_type):
         print("Invalid file type")
         
 #TO DEBUG
-file_path = "C:\\Documents\\Gaussian-2-Blender\\output"
-file_name = "water_obj"
-file_type = ".obj"
-
-#install_io_scene_obj()
-#addon_is_installed("io_scene_obj")
-#print("**********")
-
-ExportSceneAs(folder_path=file_path, file_name=file_name, file_type=file_type)
-
+#file_path = "C:\\Documents\\Gaussian-2-Blender\\output"
+#file_name = "water_gltf"
+#file_type = ".glb"
+#ExportSceneAs(folder_path=file_path, file_name=file_name, file_type=file_type)
