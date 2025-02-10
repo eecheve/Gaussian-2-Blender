@@ -1,9 +1,3 @@
-# adding this file path to Blender find directory because it was not finding BondOrderCalculator
-#filepath = bpy.data.filepath
-#dir = os.path.dirname(filepath)
-#if not dir in sys.path:
-#   sys.path.append(dir)
-
 from BondOrderCalculator import BondOrderCalculator
 
 class XyzReader():

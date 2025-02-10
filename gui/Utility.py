@@ -42,23 +42,9 @@ class Utility(object):
                 f.writelines(line + '\n')
 
     def customize_widget(tk_object, color_string):  
-        # Set the background color of the widget
+        """Set the background color of the widget"""
         tk_object.config(bg=color_string)
 
-    # def revert_widget(tk_object):
-    #     original_colors = { #at the moment is the same color, but will store it differently for the future
-    #         "Checkbutton": "#f0f0f0",
-    #         "OptionMenu": "#f0f0f0",
-    #         "Button": "#f0f0f0"
-    #     }
-        
-    #     widget_type = tk_object.winfo_class() # Check the type of the tkinter object
-
-    #     if widget_type in original_colors:
-    #         tk_object.config(bg=original_colors[widget_type])
-        
-    #     if tk_object in original_colors: # Revert the background color to the original value
-    #         tk_object.config(bg=original_colors[tk_object])
     def revert_widget(tk_object):
         """
         Reverts a widget's appearance (background color) to its default state.

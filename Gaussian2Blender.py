@@ -26,9 +26,16 @@ from gui.BondConventions import BondConventions
 from gui.HighlighterRegion import HighlighterRegion
 
 class GaussianToBlenderApp:
+    '''
+    GUI built using the tkinter library to convert computational chemistry files into 3D modeling files.
+    This application facilitates the conversion of Gaussian computational chemistry files into Blender-compatible
+    3D representations.
+    '''
     def __init__(self):
+        """
+        Initializes the GaussianToBlenderApp GUI, setting up the main application window and regions.
+        """
         self.root = tk.Tk()
-        #self.g2b_path = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
         self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
@@ -38,12 +45,18 @@ class GaussianToBlenderApp:
         self.initialize_animation_tutorial()
 
     def _initialize_g2b_path(self):
+        """
+        Determines the file path where the application is running, distinguishing between executable and script mode.
+        """
         if getattr(sys, 'frozen', False):  # Check if running as an executable
             self.g2b_path = os.path.dirname(sys.executable)
         else:  # Running as a script
             self.g2b_path = os.path.dirname(os.path.realpath(__file__))
     
     def _configure_root(self):
+        """
+        Configures the root tkinter window with title, dimensions, and resizability settings.
+        """
         self.root.title("Gaussian-2-Blender")
         #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
@@ -60,30 +73,22 @@ class GaussianToBlenderApp:
         region.frame.grid(**kwargs)
         
     def _initialize_regions(self):
-        # To use the coordinates module
-        self.coordinates = Coordinates() #creating an instance of the Coordinates class
-        # Instructions Region
-        self.instructions = Information(self, self.root)
+        """
+        Initializes various UI regions required for user interaction within the application.
+        """
+        self.coordinates = Coordinates() # To use the coordinates module
+        self.instructions = Information(self, self.root) # Instructions Region
         
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
         self.str_blenderPath = self.bPathReg.searchBlenderPath()
         self.bPathReg.setBlenderPath(self.str_blenderPath)
 
-        # Input Region
-        self.inputReg = InputRegion(self.root, self.g2b_path)
-        
-        # Walkthrough Region
-        self.guideReg = WalkthroughRegion(self.root)
-        
-        # Highlighter Region
-        self.highlightReg = HighlighterRegion(self.root)
-        
-        # Output Region
-        self.outputReg = OutputRegion(self.root, self.g2b_path)
-        
-        # Ion Region
-        self.ionReg = IonRegion(self.root)
+        self.inputReg = InputRegion(self.root, self.g2b_path) # Input Region
+        self.guideReg = WalkthroughRegion(self.root) # Walkthrough Region
+        self.highlightReg = HighlighterRegion(self.root) # Highlighter Region
+        self.outputReg = OutputRegion(self.root, self.g2b_path) # Output Region
+        self.ionReg = IonRegion(self.root) # Ion Region
         
         #Conventions
         self.codeReg = IonConventions(self.root)
@@ -93,10 +98,13 @@ class GaussianToBlenderApp:
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
                                        on_convert=self.convert)
-        # Console Region
-        self.consoleReg = ConsoleRegion(self.root)
+        
+        self.consoleReg = ConsoleRegion(self.root) # Console Region
 
     def place_regions(self):
+        """
+        Places all initialized regions into the tkinter grid layout.
+        """
         self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
         self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
         self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
@@ -110,6 +118,9 @@ class GaussianToBlenderApp:
         self.place(self.consoleReg, row=7, column=0, columnspan=3, pady=2, padx=2)
 
     def initialize_single_tutorial(self):
+        """
+        Sets up the step-by-step tutorial for a single molecule conversion process.
+        """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
             "2. Select the representational model for your 3D model", 
@@ -121,8 +132,8 @@ class GaussianToBlenderApp:
         # Step 2: Define the buttons that the user needs to press in order
         action_buttons = [
             self.inputReg.btn_setInputName,  # Button for selecting input file(s)
-            self.inputReg.drp_modelTypes,  # Dropdown to select model type (currently not used)
-            self.outputReg.drp_outputTypes,  # Dropdown to select output type (currently not used)
+            self.inputReg.drp_modelTypes,  # Dropdown to select model type
+            self.outputReg.drp_outputTypes,  # Dropdown to select output type
             self.actionReg.btn_convert       # Button to start the conversion process
         ]
     
@@ -134,6 +145,9 @@ class GaussianToBlenderApp:
         )
         
     def initialize_animation_tutorial(self):
+        """
+        Sets up the tutorial for animated molecular conversions.
+        """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
             "2. Select the representational model for your 3D model",
@@ -162,6 +176,9 @@ class GaussianToBlenderApp:
         ) 
         
     def convert(self):
+        """
+        Determines the operating system and executes the appropriate script for converting molecular data.
+        """
         current_os = platform.system()
         linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
         windows_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
@@ -178,6 +195,9 @@ class GaussianToBlenderApp:
             self.convert_manager(linux_exe_path)
         
     def reset_to_defaults(self):
+        """
+        Resets the GUI components to their default states, clearing paths, input selections, and highlights.
+        """
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
         self.inputReg.clear_variables()
@@ -262,6 +282,9 @@ class GaussianToBlenderApp:
         Utility.append_lines_to_file(params_script, lines)
     
     def overwrite_animation_frames(self, is_anim):
+        """
+        If the input represents an animation, prepares animation frame data for conversion.
+        """
         if is_anim:
             anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
             if not os.path.exists(anim_frames):
@@ -296,6 +319,9 @@ class GaussianToBlenderApp:
         subprocess.call([exec_loc, b_path])
     
     def assign_ionic_params(self):
+        """
+        Retrieves and formats ionic parameters for molecular conversion.
+        """
         is_ionic = self.ionReg.int_hasIons.get()
         if not is_ionic:
             is_ionic = "0"
@@ -330,19 +356,19 @@ class GaussianToBlenderApp:
         
     def convert_manager(self, exec_loc):
         """
-        Manages the process of converting Gaussian input files to 3D object files using Blender's API.
+         Manages the process of converting Gaussian input files to 3D object files using Blender's API.
 
-        :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
+         :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
 
-        The function performs the following steps:
-        1. Collects necessary paths and parameters for the conversion process.
-        2. Validates the inputs using the `exceptions_test_passed` function.
-        3. If validation succeeds:
-            - Retrieves ionic parameters.
-            - Iterates through the list of input files and calls the `individual_convert` function to process each file.
-        4. If validation fails, outputs relevant error messages to the console.
+         The function performs the following steps:
+         1. Collects necessary paths and parameters for the conversion process.
+         2. Validates the inputs using the `exceptions_test_passed` function.
+         3. If validation succeeds: 
+         3.1. Retrieves ionic parameters
+         3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
+         4. If validation fails, outputs relevant error messages to the console.
+
         """
-        #exec_loc = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
         anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
         b_path = self.bPathReg.var_blenderPath.get() #blender path
         i_type = self.inputReg.var_inputTypes.get() #input file type
@@ -377,10 +403,16 @@ class GaussianToBlenderApp:
             print("Cannot convert input to fbx animation, check console for errors")
 
     def help_single_convert(self):
+        """
+        Starts the step-by-step tutorial for single molecule conversion.
+        """
         self.animation_convert_tutorial.reset_buttons_to_default()
         self.single_convert_tutorial.start_tutorial()
 
     def help_animation_convert(self):
+        """
+        Starts the step-by-step tutorial for animation-based molecular conversions.
+        """
         self.single_convert_tutorial.reset_buttons_to_default()
         self.animation_convert_tutorial.start_tutorial()
             

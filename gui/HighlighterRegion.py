@@ -16,24 +16,39 @@ ELEMENTS = { #dictionary containing the atomic symbol of all 118 elements in the
 
 class HighlighterRegion(object):
     def __init__(self, parent):
+        """
+        Initializes the highlighter region and its widgets.
+
+        Parameters:
+            parent (tk.Widget): The parent widget to attach the highlighter frame to.
+        """
         self.initialize_variables()
         self.setup_frame(parent)
         self.add_widgets()
         self.position_widgets()
 
     def initialize_variables(self):
+        """
+        Initializes the variables for atom and bond highlighting.
+        """
         self.var_hlAtomList = tk.StringVar()
         self.var_hlBondList = tk.StringVar()
         self.var_highlightAtoms = tk.BooleanVar(value=False)
         self.var_highlightBonds = tk.BooleanVar(value=False)
 
     def clear_variables(self):
+        """
+        Clears the atom and bond highlighting variables (reset to defaults).
+        """
         self.var_hlAtomList.set("")
         self.var_hlBondList.set("")
         self.var_highlightAtoms.set(False)
         self.var_highlightBonds.set(False)
 
     def reset_highlighter_options(self):
+        """
+        Resets the highlighter options (e.g., disables widgets and clears input lists).
+        """
         self.var_highlightAtoms.set(False)
         self.var_highlightBonds.set(False)
         self.lbl_highlightedAtoms['state'] = tk.DISABLED
@@ -44,10 +59,19 @@ class HighlighterRegion(object):
         self.var_hlBondList.set("")
 
     def setup_frame(self, parent):
+        """
+        Sets up the frame for the highlighter region.
+
+        Parameters:
+            parent (tk.Widget): The parent widget to attach the frame to.
+        """
         self.frame = tk.LabelFrame(master=parent, padx=5, text="Highlight atoms and bonds", 
                                    fg="blue", relief=tk.GROOVE, borderwidth=2)
 
     def add_widgets(self):
+        """
+        Adds widgets (checkboxes, labels, and entry fields) for atom and bond highlighting.
+        """
         self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms",
                                                  variable=self.var_highlightAtoms, command=self.toggleAtomHighlighter)
         CreateTooltip(self.chk_highlightAtoms, "Check if you want to highlight one or more atoms in your 3D structure")
@@ -79,6 +103,9 @@ class HighlighterRegion(object):
         CreateTooltip(self.ent_hlBondList, "Separate each bond by a semicolon. E.g. C01-C02; C03=C04; C01#C09; O08%C06 etc")
 
     def position_widgets(self):
+        """
+        Positions the widgets inside the frame using grid layout.
+        """
         self.chk_highlightAtoms.grid(row=0, column=0)
         self.lbl_highlightedAtoms.grid(row=1, column=0)
         self.ent_hlAtomList.grid(row=1, column=1)
@@ -87,6 +114,10 @@ class HighlighterRegion(object):
         self.ent_hlBondList.grid(row=3, column=1)
 
     def toggleAtomHighlighter(self):
+        """
+        Toggles the state of atom highlighting. Enables or disables the atom list entry.
+        If the checkbox is checked, the atom list entry is enabled. If unchecked, it is disabled and cleared.
+        """
         if self.var_highlightAtoms.get() == True:
             print("Please select the atoms to highlight separated by commas")
             self.lbl_highlightedAtoms['state'] = tk.NORMAL
@@ -98,6 +129,10 @@ class HighlighterRegion(object):
             self.var_hlAtomList.set("")
 
     def toggleBondHighlighter(self):
+        """
+        Toggles the state of bond highlighting. Enables or disables the bond list entry.
+        If the checkbox is checked, the bond list entry is enabled. If unchecked, it is disabled and cleared.
+        """
         if self.var_highlightBonds.get() == True:
             print("Please select the atoms to highlight separated by commas")
             self.lbl_highlightedBonds['state'] = tk.NORMAL
@@ -109,7 +144,15 @@ class HighlighterRegion(object):
             self.var_hlBondList.set("")
 
     def check_for_atom_syntax(self, entry: str) -> bool:
-        """Checks if the entry follows the format: ElementSymbol + two-digit number."""
+        """
+        Checks if the atom entry follows the correct syntax: ElementSymbol + two-digit number.
+
+        Parameters:
+            entry (str): The atom entry to validate (e.g., "C01", "H02").
+
+        Returns:
+            bool: True if the entry is valid, False otherwise.
+        """
         # Use regex to find where letters end and digits begin
         match = re.match(r"([A-Z][a-z]?)(\d+)$", entry)  # Ensures first letter is uppercase, second is optional lowercase
         if not match:
@@ -130,7 +173,15 @@ class HighlighterRegion(object):
         return True
 
     def validate_atom_list(self, entry: str) -> bool:
-        """Validates a comma-separated list of atomic symbols with numbers."""
+        """
+        Validates a comma-separated list of atom entries.
+
+        Parameters:
+            entry (str): A comma-separated string of atom entries to validate (e.g., "C01, H02").
+
+        Returns:
+            bool: True if all entries are valid, False if any entry is invalid.
+        """
     
         # Step 1: Remove spaces and newlines
         entry = entry.replace(" ", "").replace("\n", "")
@@ -149,7 +200,15 @@ class HighlighterRegion(object):
         return True
 
     def on_validate_atom_list(self, event=None):
-        """Validation function called when the entry loses focus or Enter is pressed."""
+        """
+        Handles validation when the atom entry loses focus or the Enter key is pressed.
+
+        Parameters:
+            event (tk.Event, optional): The event that triggered the validation. Default is None.
+
+        Returns:
+            str | None: Returns "break" if Enter was pressed and input is invalid, otherwise None.
+        """
         self.event = event
         user_input = self.var_hlAtomList.get().strip()
 
@@ -170,7 +229,15 @@ class HighlighterRegion(object):
         return None  # Default return
 
     def validate_bond_list(self, entry: str) -> bool:
-        """Validates a semicolon-separated list of bond entries."""
+        """
+        Validates a semicolon-separated list of bond entries.
+
+        Parameters:
+            entry (str): A semicolon-separated string of bond entries to validate (e.g., "C01-C02; C03=C04").
+
+        Returns:
+            bool: True if all bond entries are valid, False if any entry is invalid.
+        """
     
         # Remove spaces and newlines
         entry = entry.replace(" ", "").replace("\n", "")
@@ -189,7 +256,15 @@ class HighlighterRegion(object):
         return True
     
     def on_validate_bond_list(self, event=None):
-        """Validation function called when the bond entry loses focus or Enter is pressed."""
+        """
+        Handles validation when the bond entry loses focus or the Enter key is pressed.
+
+        Parameters:
+            event (tk.Event, optional): The event that triggered the validation. Default is None.
+
+        Returns:
+            str | None: Returns "break" if Enter was pressed and input is invalid, otherwise None.
+        """
         self.event = event
         user_input = self.var_hlBondList.get().strip()
 
@@ -210,7 +285,15 @@ class HighlighterRegion(object):
         return None  # Default return
     
     def check_for_bond_syntax(self, entry: str) -> bool:
-        """Checks if the entry follows the correct bond syntax."""
+        """
+        Checks if the bond entry follows the correct syntax (e.g., "C01-C02", "C03=C04").
+
+        Parameters:
+            entry (str): The bond entry to validate.
+
+        Returns:
+            bool: True if the bond entry follows the correct syntax, False otherwise.
+        """
         # Define the bond separators
         separators = ["-", "=", "#", "%"]
     
@@ -237,7 +320,14 @@ class HighlighterRegion(object):
         return True
         
     def on_enable_editing(self, event, tk_textbox, tk_checkbox_variable):
-        """Enable editing when any entry box is clicked."""
+        """
+        Enables editing for the clicked entry box if the associated checkbox is checked.
+
+        Parameters:
+            event (tk.Event): The event that triggered this function.
+            tk_textbox (tk.Entry): The text entry widget to enable or disable.
+            tk_checkbox_variable (tk.BooleanVar): The associated checkbox's variable that determines the state.
+        """
         self.event = event
         if tk_checkbox_variable.get() == True:
             tk_textbox.config(state=tk.NORMAL)  # Enable the specific textbox that was clicked

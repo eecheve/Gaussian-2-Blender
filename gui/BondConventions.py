@@ -1,7 +1,6 @@
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
 
 class BondConventions(object):
     """region of the window that specifies meaning of some coordination values"""
@@ -34,10 +33,3 @@ class BondConventions(object):
         self.lbl_ab_code.grid(row=2, column=0)
         self.lbl_tripleBond.grid(row=3, column=1)
         self.lbl_tb_code.grid(row=3, column=0)
-
-
-        
-
-
-
-

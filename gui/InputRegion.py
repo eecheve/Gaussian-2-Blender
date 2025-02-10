@@ -9,6 +9,13 @@ from gui.Utility import Utility
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
     def __init__(self, parent, initial_dir):
+        """
+        Initializes the InputRegion by setting up variables, frame, canvas, and widgets.
+
+        Parameters:
+            parent (tk.Widget): The parent widget to attach the frame to.
+            initial_dir (str): The initial directory path for file dialogs.
+        """
         self.initialize_variables(initial_dir)
         self.setup_frame(parent)
         self.setup_canvas()
@@ -16,7 +23,12 @@ class InputRegion(object):
         self.position_widgets()
 
     def initialize_variables(self, initial_dir):
-        """Initialize instance variables."""
+        """
+        Initializes instance variables related to input paths, file types, and model types.
+
+        Parameters:
+            initial_dir (str): The initial directory path for file dialogs.
+        """
         self.var_inputPaths = tk.StringVar()
         self.var_inputNames = tk.StringVar()
         self.var_modelTypes = tk.StringVar()
@@ -31,7 +43,9 @@ class InputRegion(object):
         self.var_inputTypes.set(".com")
 
     def clear_variables(self):
-        """Clear input-related variables."""
+        """
+        Clears all variables related to the input fields and resets default values.
+        """
         self.var_inputPaths.set("")
         self.var_inputNames.set("")
         self.var_modelTypes.set("")
@@ -44,11 +58,18 @@ class InputRegion(object):
         self.var_inputTypes.set(".com")
 
     def setup_frame(self, parent):
-        """Set up the main frame."""
+        """
+        Sets up the main frame for the input region.
+
+        Parameters:
+            parent (tk.Widget): The parent widget to attach the frame to.
+        """
         self.frame = tk.LabelFrame(master=parent, padx=5, text="Input", fg="blue", relief=tk.GROOVE, borderwidth=2)
 
     def setup_canvas(self):
-        """Set up the canvas and scrollable frame."""
+        """
+        Sets up the canvas with a scrollable frame for the input region.
+        """
         self.canvas = tk.Canvas(self.frame)
         self.frm_inside = tk.Frame(self.canvas)
         self.scrl_frame = tk.Scrollbar(master=self.frame, orient="vertical", command=self.canvas.yview)
@@ -59,7 +80,9 @@ class InputRegion(object):
         self.frm_inside.bind("<Configure>", self.canvasConfig)
 
     def add_widgets(self):
-        """Add and configure widgets."""
+        """
+        Adds and configures widgets like buttons, labels, dropdown menus, and checkboxes.
+        """
         self.btn_setInputPath = tk.Button(text="set", master=self.frm_inside)
         self.lbl_inputLabel = tk.Label(text="Input name(s)", master=self.frm_inside)
         CreateTooltip(self.lbl_inputLabel, "Name(s) of the file(s) to be converted")
@@ -93,14 +116,18 @@ class InputRegion(object):
         CreateTooltip(self.chk_isAnimation, "Check if the input files will serve as animation frames.")
 
     def reset_widget_bg_colors(self):
-        """recerts all the interactable widgets to their original colors"""
+        """
+        Resets the background color of all interactable widgets to their original state.
+        """
         interactables = [self.btn_setInputPath, self.btn_setInputName,
                          self.drp_inputTypes, self.drp_modelTypes, self.chk_isAnimation]
         for interactable in interactables:
             Utility.revert_widget(interactable)
 
     def position_widgets(self):
-        """Position widgets in the frame."""
+        """
+        Positions all the widgets inside the frame using grid layout.
+        """
         self.lbl_fileType.grid(row=1, column=0)
         self.drp_inputTypes.grid(row=1, column=1)
         self.lbl_inputLabel.grid(row=2, column=0)
@@ -111,6 +138,10 @@ class InputRegion(object):
         self.chk_isAnimation.grid(row=4, column=0)
  
     def updateAnimationState(self):
+        """
+        Updates the animation state based on the checkbox for animation files.
+        Prints messages based on whether the 'is animation' checkbox is checked or unchecked.
+        """
         if not self.var_isAnimation.get():
             print("The files will not be treated as animation.")
             return #this is called when che checkbox was checked, and is unchecked now
@@ -124,9 +155,12 @@ class InputRegion(object):
     def allFilesHaveSameValidExtension(self, file_paths):
         """
         Checks if all files in the list have the same valid extension.
-    
-        :param file_paths: List of file paths.
-        :return: True if all files have the same valid extension, False otherwise.
+
+        Parameters:
+            file_paths (list): List of file paths to check.
+
+        Returns:
+            bool: True if all files have the same valid extension, False otherwise.
         """
         valid_extensions = {".com", ".xyz"}
         #valid_extensions = {".com", ".xyz", ".mol"} #<-- for future Emmanuel to tackle
@@ -138,9 +172,8 @@ class InputRegion(object):
             
     def setInputName(self):
         """
-        Opens a file dialog and allows selecting one or more files.
-        Filters files based on the selected input type from the dropdown menu.
-        Updates the input names list and displays all the elements to convert in the GUI.
+        Opens a file dialog to select files and updates the input names list.
+        Filters files based on the selected input type and ensures they have the correct extension.
         """
         input_type = self.var_inputTypes.get()
         file_extension = f"*{input_type}"
@@ -165,11 +198,13 @@ class InputRegion(object):
                 
     def isValidExtension(self, file_path):
         """
-        Checks if the file has an acceptable extension.
-        Currently accepts '.com', '.xyz', and '.mol'.
+        Checks if the file has a valid extension.
 
-        :param file_path: Path to the file.
-        :return: True if the file has an accepted extension, False otherwise.
+        Parameters:
+            file_path (str): The file path to check.
+
+        Returns:
+            bool: True if the file has a valid extension, False otherwise.
         """
         _, file_ext = os.path.splitext(file_path)
         if file_ext.lower() == ".com":
@@ -181,6 +216,12 @@ class InputRegion(object):
         return False
                 
     def updateInputNameList(self, string_list):
+        """
+        Updates the list of input names and paths.
+
+        Parameters:
+            string_list (list): A list of file paths to update the input names and paths.
+        """
         self.lst_inputNames.clear()
         self.lst_InputPaths.clear()
         self.var_inputNames.set("")
@@ -194,8 +235,20 @@ class InputRegion(object):
         self.var_inputNames.set(s)
 
     def canvasConfig(self, event):
+        """
+        Configures the canvas when the size of the scrollable frame changes.
+
+        Parameters:
+            event (tk.Event): The event that triggers this configuration.
+        """
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
                               width=325, height=200)
 
     def dropdown_callout(self, event):
+        """
+        Prints a message when the dropdown selection is changed.
+
+        Parameters:
+            event (tk.Event): The event triggered by the dropdown selection.
+        """
         print("#### REPRESENTATIONAL MODEL UPDATED ####")

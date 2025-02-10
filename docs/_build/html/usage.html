@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Getting Started &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=f4115360" />
+    <script src="_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="For Developers" href="developers.html" />
+    <link rel="prev" title="Welcome to Gaussian-2-Blender’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Link to this heading">¶</a></h1>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Install Blender on your machine. Link: <a class="reference external" href="https://www.blender.org/download/">https://www.blender.org/download/</a></p></li>
+<li><p>Install the latest version of Python. Link: <a class="reference external" href="https://www.python.org/downloads/">https://www.python.org/downloads/</a></p></li>
+<li><p>No programming knowledge is required to use this tool.</p></li>
+</ul>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>If you install Blender in a non-default path on Windows, note the path as it will be needed.</p></li>
+<li><p>Download the entire ‘Gaussian-2-Blender’ package and unzip it to the desired location.</p></li>
+<li><p>The executable <code class="docutils literal notranslate"><span class="pre">Gaussian-2-Blender.exe</span></code> will be ready to use. Do not move, rename, or delete any files or folders included in the package.</p></li>
+<li><p>Click on this <a class="reference external" href="https://youtu.be/w_bsJ7daaas">https://youtu.be/w_bsJ7daaas</a> for a tutorial on using the tool. NOTE: YouTube tutorial does not include information on animations.</p></li>
+</ul>
+</section>
+</section>
+<section id="instructions">
+<h1>Instructions<a class="headerlink" href="#instructions" title="Link to this heading">¶</a></h1>
+<section id="example-files">
+<h2>Example files<a class="headerlink" href="#example-files" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>Example <code class="docutils literal notranslate"><span class="pre">.com</span></code> and <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> files are inside the <code class="docutils literal notranslate"><span class="pre">input_examples</span></code> folder, separated by categories.</p></li>
+<li><p>For example, the file <code class="docutils literal notranslate"><span class="pre">Ice.com</span></code> is located in the <code class="docutils literal notranslate"><span class="pre">input_examples\com_files\inorganic\</span></code> folder.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">output</span></code> folder starts empty and is the default location for 3D renderings from the tool.</p></li>
+</ul>
+</section>
+<section id="executing-gaussian-2-blender">
+<h2>Executing Gaussian-2-Blender<a class="headerlink" href="#executing-gaussian-2-blender" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Double-click on the <code class="docutils literal notranslate"><span class="pre">Gaussian-Blender-Bridge.exe</span></code> file.</p></li>
+<li><p>Select one or more <code class="docutils literal notranslate"><span class="pre">.com</span></code> or <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> files from the same folder.</p></li>
+<li><p>Select <code class="docutils literal notranslate"><span class="pre">Is</span> <span class="pre">Animation</span></code> to export as an animated <code class="docutils literal notranslate"><span class="pre">fbx</span></code> object</p></li>
+<li><p>If you plan to render an animation, make sure all the <code class="docutils literal notranslate"><span class="pre">.com</span></code> or <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> files have the exact same atoms in the exact same order</p></li>
+<li><p>To render using ionic radii, select the <code class="docutils literal notranslate"><span class="pre">Check</span> <span class="pre">for</span> <span class="pre">Ionic</span> <span class="pre">Radii</span></code> option.</p></li>
+<li><p>Add each ion and select their charge, coordination, and spin multiplicity (when available).</p></li>
+<li><p>Click on <code class="docutils literal notranslate"><span class="pre">Convert!</span></code> to convert the <code class="docutils literal notranslate"><span class="pre">.com</span></code> or <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> input into the desired output type.</p></li>
+<li><p>Click on <code class="docutils literal notranslate"><span class="pre">Reset</span></code> to reset everything to their default values.</p></li>
+</ol>
+</section>
+<section id="running-gaussian-2-blender-from-the-console">
+<h2>Running Gaussian-2-Blender from the console<a class="headerlink" href="#running-gaussian-2-blender-from-the-console" title="Link to this heading">¶</a></h2>
+<p>To run the <code class="docutils literal notranslate"><span class="pre">Gaussian-2-Blender.py</span></code> Python script from the console:
+1. Copy the <code class="docutils literal notranslate"><span class="pre">Gaussian-2-Blender.py</span></code> file to the <code class="docutils literal notranslate"><span class="pre">gui</span></code> folder.
+2. Open a terminal in the <code class="docutils literal notranslate"><span class="pre">Blender-Gaussian-Bridge/</span></code> folder and run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python<span class="w"> </span>Gaussian-2-Blender.py
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#instructions">Instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#example-files">Example files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#executing-gaussian-2-blender">Executing Gaussian-2-Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-gaussian-2-blender-from-the-console">Running Gaussian-2-Blender from the console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Content</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html#main-script">Main Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to Gaussian-2-Blender’s documentation!</a></li>
+      <li>Next: <a href="developers.html" title="next chapter">For Developers</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/usage.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

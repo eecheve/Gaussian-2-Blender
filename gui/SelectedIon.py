@@ -1,12 +1,22 @@
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#from gui.Ionic import Ionic
 from gui.Ionic import IonData
 
 class SelectedIon(object):
-    """Ion data widget that contains the information for one ion"""
+    """
+    Ion data widget that contains the information for one ion.
+    This widget allows the user to select an element, specify its charge,
+    and coordination number based on predefined ionic radii data.
+    """
     def __init__(self, parent, row_number, column_number):
+        """
+        Initialize the ion selection widget.
+
+        :param parent: The parent tkinter widget where this widget will be placed.
+        :param row_number: The row position in the parent layout.
+        :param column_number: The column position in the parent layout.
+        """
         self.var_ion = tk.StringVar()
         self.var_chargeCoord = tk.StringVar()
         self.var_charge = tk.StringVar()
@@ -14,7 +24,7 @@ class SelectedIon(object):
         self.var_spin = tk.StringVar()
 
         self.frm_ion = tk.Frame(master=parent)
-        self.frm_ion.grid(row=row_number, column=column_number, columnspan=4) #<---columnspan=3
+        self.frm_ion.grid(row=row_number, column=column_number, columnspan=4)
         
         self.lbl_element = tk.Label(master=self.frm_ion,
                                     text="Element")
@@ -47,6 +57,9 @@ class SelectedIon(object):
         self.opt_charge.grid(column=3, row=0)
 
     def change_charge(self, *args):
+        """
+        Update the charge and coordination options when a new element is selected.
+        """
         self.var_chargeCoord.set("")
         self.opt_charge['menu'].delete(0, 'end')
         for element in IonData.IonicRadii:
@@ -68,6 +81,9 @@ class SelectedIon(object):
         return
             
     def delete(self):
+        """
+        Remove this ion selection widget from the UI.
+        """
         self.frm_ion.destroy()
 
 

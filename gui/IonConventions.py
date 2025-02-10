@@ -1,7 +1,6 @@
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
 
 class IonConventions(object):
     """region of the window that specifies meaning of some coordination values"""

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BlenderPath &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for BlenderPath</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+
+<span class="kn">from</span> <span class="nn">gui.CreateTooltip</span> <span class="kn">import</span> <span class="n">CreateTooltip</span>
+<span class="c1">#tooltip = CreateTooltip.CreateTooltip</span>
+
+<span class="kn">from</span> <span class="nn">gui.Utility</span> <span class="kn">import</span> <span class="n">Utility</span>
+<span class="c1">#utility = Utility.Utility</span>
+
+<div class="viewcode-block" id="BlenderPath">
+<a class="viewcode-back" href="../gui.html#BlenderPath.BlenderPath">[docs]</a>
+<span class="k">class</span> <span class="nc">BlenderPath</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A section of the window used to search and set the path</span>
+<span class="sd">    where Blender is installed on the user&#39;s machine.</span>
+<span class="sd">    This class provides a graphical user interface (GUI) element</span>
+<span class="sd">    where the user can see the Blender executable path and select</span>
+<span class="sd">    it if it is not already set. The path is stored and can be</span>
+<span class="sd">    used by the program to interface with Blender.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize the BlenderPath GUI section.</span>
+<span class="sd">    </span>
+<span class="sd">        :param parent: The parent widget in which this section will be placed.</span>
+<span class="sd">        &quot;&quot;&quot;</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+                                           <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Blender executable location&quot;</span><span class="p">,</span> 
+                                           <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> 
+                                           <span class="n">relief</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">GROOVE</span><span class="p">,</span> 
+                                           <span class="n">width</span><span class="o">=</span><span class="mi">800</span><span class="p">,</span> 
+                                           <span class="n">height</span><span class="o">=</span><span class="mi">170</span><span class="p">,</span> 
+                                           <span class="n">borderwidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderLabel</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Blender path&quot;</span><span class="p">,</span>
+            <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ttp_blenderLabel</span> <span class="o">=</span> <span class="n">CreateTooltip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderLabel</span><span class="p">,</span>
+            <span class="s2">&quot;Folder path where Blender is installed in your machine&quot;</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderPath</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span>
+            <span class="n">textvariable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span><span class="p">,</span>
+            <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+            <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_setBlenderPath</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span>
+            <span class="n">text</span><span class="o">=</span><span class="s2">&quot;search&quot;</span><span class="p">,</span>
+            <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+            <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lookForBlenderPath</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ttp_setBlenderPath</span> <span class="o">=</span> <span class="n">CreateTooltip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_setBlenderPath</span><span class="p">,</span>
+            <span class="s2">&quot;Click here to select blender.exe path if default is not found&quot;</span><span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderLabel</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderPath</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_setBlenderPath</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BlenderPath.searchBlenderPath">
+<a class="viewcode-back" href="../gui.html#BlenderPath.BlenderPath.searchBlenderPath">[docs]</a>
+    <span class="k">def</span> <span class="nf">searchBlenderPath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Searches the default installation directory for Blender (`blender.exe`).</span>
+
+<span class="sd">        :return: The path to the Blender installation directory or a failure message.</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">blender</span> <span class="o">=</span> <span class="s2">&quot;blender.exe&quot;</span>
+        <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="s2">&quot;C:</span><span class="se">\\</span><span class="s2">Program Files</span><span class="se">\\</span><span class="s2">Blender Foundation&quot;</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">blender</span><span class="p">:</span>
+                        <span class="c1">#return os.path.abspath(os.path.join(root, name))</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Blender executable found in&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lbl_blenderPath</span><span class="p">,</span> <span class="s2">&quot;the search for the blender path is not necessary&quot;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;blender.exe not found within Program_Files\Blender_Foundation&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;please instal Blender before using Gaussian-2-Blender or set manually the path in which Blender is installed&quot;</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="s2">&quot;blender.exe not found&quot;</span></div>
+
+                    <span class="c1">#sys.stderr.write(&quot;blender.exe not found within Program_Files\\Blender_Foundation\n&quot;)</span>
+                    
+<div class="viewcode-block" id="BlenderPath.lookForBlenderPath">
+<a class="viewcode-back" href="../gui.html#BlenderPath.BlenderPath.lookForBlenderPath">[docs]</a>
+    <span class="k">def</span> <span class="nf">lookForBlenderPath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens a file dialog for the user to manually select the Blender installation path.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">str_path</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askdirectory</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">Utility</span><span class="o">.</span><span class="n">findFile</span><span class="p">(</span><span class="s2">&quot;blender.exe&quot;</span><span class="p">,</span> <span class="n">str_path</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">str_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#print(f&quot;{bcolors.WARNING}Error: blender.exe not found in specified path. Please select the path in which is installed{bcolors.ENDC}&quot;)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: blender.exe not found in specified path. Please select the path in which is installed&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;blender.exe not found&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BlenderPath.setBlenderPath">
+<a class="viewcode-back" href="../gui.html#BlenderPath.BlenderPath.setBlenderPath">[docs]</a>
+    <span class="k">def</span> <span class="nf">setBlenderPath</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">str_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set the Blender path to the specified value.</span>
+<span class="sd">        :param str_path: The full path to the Blender installation directory.</span>
+<span class="sd">        :type str_path: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_blenderPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">str_path</span><span class="p">)</span></div>
+</div>
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

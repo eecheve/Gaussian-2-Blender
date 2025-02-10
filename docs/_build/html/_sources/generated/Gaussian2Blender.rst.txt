@@ -1,0 +1,29 @@
+﻿Gaussian2Blender
+================
+
+.. automodule:: Gaussian2Blender
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      GaussianToBlenderApp
+   
+   
+
+   
+   
+   
+
+
+

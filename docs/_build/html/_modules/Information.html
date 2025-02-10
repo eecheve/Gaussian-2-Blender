@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Information &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=b02e927a" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Information</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+<span class="kn">from</span> <span class="nn">gui.CreateTooltip</span> <span class="kn">import</span> <span class="n">CreateTooltip</span>
+<span class="kn">from</span> <span class="nn">gui.Utility</span> <span class="kn">import</span> <span class="n">Utility</span>
+
+<div class="viewcode-block" id="Information">
+<a class="viewcode-back" href="../gui.html#Information.Information">[docs]</a>
+<span class="k">class</span> <span class="nc">Information</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Region containing the instructions on how to use Gaussian2Blender</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_class</span><span class="p">,</span> <span class="n">parent_tk</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">parent_tk</span><span class="p">,</span>
+                                      <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> 
+                                      <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Gaussian2Blender Information&quot;</span><span class="p">,</span> 
+                                      <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> 
+                                      <span class="n">relief</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">GROOVE</span><span class="p">,</span> 
+                                      <span class="n">borderwidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_about</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;About&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">about</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_about</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_about</span><span class="p">,</span> <span class="s2">&quot;Click here to see the current version of Gaussian2Blender&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Help&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">help</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_help</span><span class="p">,</span> <span class="s2">&quot;Click here to open a new window with instructions on how to use Gaussian2Blender&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help_single</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Guide: single convert&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> 
+                                         <span class="n">command</span><span class="o">=</span><span class="n">parent_class</span><span class="o">.</span><span class="n">help_single_convert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help_single</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_help_single</span><span class="p">,</span> <span class="s2">&quot;Click here to for a guided walkthrough to convert a single molecule&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help_anim</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Guide: animation convert&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> 
+                                         <span class="n">command</span><span class="o">=</span><span class="n">parent_class</span><span class="o">.</span><span class="n">help_animation_convert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_help_anim</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_help_anim</span><span class="p">,</span> <span class="s2">&quot;Click here to for a guided walkthrough to make an animation&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">instructions_text</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;1. Set the path to the Blender executable by navigating to the Blender installation directory.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;2. Select the Gaussian input files that you want to convert.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;3. Choose the output directory where the converted files will be saved.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;4. Choose the type of model you want to export (e.g., ball-and-stick, van-der-Waals, etc.).</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;5. Set up any ionic parameters if your molecule is ionic. You can add ions manually.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;6. Click &#39;Convert!&#39; to start the conversion process. This will create the output files in the specified directory.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;7. If you need to reset the input fields, click &#39;Reset&#39; to restore default values.</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;8. Check the output console for progress and any error messages during the conversion process.&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">about_text</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Gaussian2Blender was written and is maintained by Dr. Echeverri-Jimenez</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;Please cite the following paper if you use this tool: J. Chem. Educ. 2021, 98(10), 3348-3355</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="s2">&quot;To access the original paper follow this url: https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515&quot;</span>
+            <span class="p">)</span>
+               
+    <span class="k">def</span> <span class="nf">_initialize_popup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">popup</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">about_info</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">popup</span><span class="p">,</span>
+                                   <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">about_text</span><span class="p">,</span>
+                                   <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_ver</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">popup</span><span class="p">,</span>
+                                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;version: &quot;</span><span class="p">,</span>
+                                    <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_version</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">popup</span><span class="p">,</span>
+                                    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;2025.1.0 &quot;</span><span class="p">,</span>
+                                    <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_auth</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">popup</span><span class="p">,</span>
+                                 <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Echeverri-Jimenez CER3D Group&quot;</span><span class="p">,</span>
+                                 <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">about_info</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_ver</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_version</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_auth</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_close</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">popup</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Close&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">popup</span><span class="o">.</span><span class="n">destroy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_close</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+       
+<div class="viewcode-block" id="Information.help">
+<a class="viewcode-back" href="../gui.html#Information.Information.help">[docs]</a>
+    <span class="k">def</span> <span class="nf">help</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pops up a small window specifying the isntructions on how to use the program&quot;&quot;&quot;</span>
+        <span class="n">popup_window</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">popup_window</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Instructions&quot;</span><span class="p">)</span>
+
+        <span class="n">content</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">popup_window</span><span class="p">,</span>
+                           <span class="n">text</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">instructions_text</span><span class="p">,</span>
+                           <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span>
+                           <span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+                           <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">,</span>  <span class="c1"># Makes the text left-aligned</span>
+                           <span class="n">width</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                           <span class="n">wraplength</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">content</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">btn_close</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">popup_window</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Close&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="n">popup_window</span><span class="o">.</span><span class="n">destroy</span><span class="p">)</span>
+        <span class="n">btn_close</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pady</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">popup_window</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">&quot;800x500&quot;</span><span class="p">)</span>  <span class="c1"># Customize as needed</span></div>
+
+
+<div class="viewcode-block" id="Information.open_url">
+<a class="viewcode-back" href="../gui.html#Information.Information.open_url">[docs]</a>
+    <span class="k">def</span> <span class="nf">open_url</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Opens JCE seminal paper in a new web browser window&quot;&quot;&quot;</span>
+        <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="Information.about">
+<a class="viewcode-back" href="../gui.html#Information.Information.about">[docs]</a>
+    <span class="k">def</span> <span class="nf">about</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pops up a small window with version information about the program&quot;&quot;&quot;</span>
+        <span class="n">popup_window</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Toplevel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="n">popup_window</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;About&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_popup</span><span class="p">(</span><span class="n">popup_window</span><span class="p">)</span>
+        <span class="n">popup_window</span><span class="o">.</span><span class="n">geometry</span><span class="p">(</span><span class="s2">&quot;800x200&quot;</span><span class="p">)</span>  <span class="c1"># Customize as needed</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

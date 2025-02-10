@@ -1,0 +1,22 @@
+/* Fix the sidebar to the left */
+/* .sphinxsidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    overflow-y: auto; 
+    background-color: #f8f9fa;
+    border-right: 1px solid #ddd;
+    padding: 5px;
+    z-index: 1000; 
+} */
+
+/* .sphinxsidebarwrapper {
+    position: relative;
+} */
+
+/* Make the body background color lighter */
+/* body {
+    background-color: #fafafa;
+} */
