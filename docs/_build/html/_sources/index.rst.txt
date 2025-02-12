@@ -22,6 +22,7 @@ Contents
    developers
    gui
    api
+   components
    cite
 
 .. note::

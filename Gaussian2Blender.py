@@ -120,6 +120,9 @@ class GaussianToBlenderApp:
     def initialize_single_tutorial(self):
         """
         Sets up the step-by-step tutorial for a single molecule conversion process.
+
+        calls:
+          - `InputRegion`, `OutputRegion`, `ActionRegion`
         """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
@@ -147,6 +150,8 @@ class GaussianToBlenderApp:
     def initialize_animation_tutorial(self):
         """
         Sets up the tutorial for animated molecular conversions.
+
+        Modules called: `InputRegion`, `OutputRegion`, `ActionRegion`
         """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
@@ -178,6 +183,9 @@ class GaussianToBlenderApp:
     def convert(self):
         """
         Determines the operating system and executes the appropriate script for converting molecular data.
+
+        Calls:
+        - self.convert_manager
         """
         current_os = platform.system()
         linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
@@ -197,6 +205,10 @@ class GaussianToBlenderApp:
     def reset_to_defaults(self):
         """
         Resets the GUI components to their default states, clearing paths, input selections, and highlights.
+
+        Calls:
+        - `clear` functions from the following modules:
+        `BlenderPath`, `OutputRegion`, `InputRegion`, `IonRegion`, `ConsoleRegion`, `Information`, `Tutorial`
         """
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
@@ -246,6 +258,9 @@ class GaussianToBlenderApp:
                               is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """
         overwrites bat script to handle the export or animation of molecules
+
+        Calls:
+        - `clear_file_contents` and `append_lines_to_file` from `Utility` module.
     
         :param i_path: Input file path
         :param i_name: Input file name
@@ -284,6 +299,9 @@ class GaussianToBlenderApp:
     def overwrite_animation_frames(self, is_anim):
         """
         If the input represents an animation, prepares animation frame data for conversion.
+
+        Calls:
+        - `append_lines_to_file` from `Utility` module.
         """
         if is_anim:
             anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
@@ -299,6 +317,9 @@ class GaussianToBlenderApp:
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """ 
         Function to execute bat file that communicates with blender's python API 
+
+        Calls:
+        - `self.overwrite_animation_frames` and `self.overwrite_parameters_script`.
     
         :param excec_loc: path to the ReadMolecules.bat file which communicates with python
         :param b_path: location of the blender executable
@@ -321,6 +342,9 @@ class GaussianToBlenderApp:
     def assign_ionic_params(self):
         """
         Retrieves and formats ionic parameters for molecular conversion.
+
+        Calls:
+        - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
         """
         is_ionic = self.ionReg.int_hasIons.get()
         if not is_ionic:
@@ -356,17 +380,23 @@ class GaussianToBlenderApp:
         
     def convert_manager(self, exec_loc):
         """
-         Manages the process of converting Gaussian input files to 3D object files using Blender's API.
+        Manages the process of converting Gaussian input files to 3D object files using Blender's API.
 
-         :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
+        Calls:
+        - `self.exceptions_test_passed`.
+        - `self.assign_ionic_params`.
+        - `self.individual_convert`.
 
-         The function performs the following steps:
-         1. Collects necessary paths and parameters for the conversion process.
-         2. Validates the inputs using the `exceptions_test_passed` function.
-         3. If validation succeeds: 
-         3.1. Retrieves ionic parameters
-         3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
-         4. If validation fails, outputs relevant error messages to the console.
+
+        :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
+
+        The function performs the following steps:
+        1. Collects necessary paths and parameters for the conversion process.
+        2. Validates the inputs using the `exceptions_test_passed` function.
+        3. If validation succeeds: 
+        3.1. Retrieves ionic parameters
+        3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
+        4. If validation fails, outputs relevant error messages to the console.
 
         """
         anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
@@ -405,6 +435,9 @@ class GaussianToBlenderApp:
     def help_single_convert(self):
         """
         Starts the step-by-step tutorial for single molecule conversion.
+
+        Calls:
+        - `start_tutorial` from `Tutorial` module.
         """
         self.animation_convert_tutorial.reset_buttons_to_default()
         self.single_convert_tutorial.start_tutorial()
@@ -412,6 +445,9 @@ class GaussianToBlenderApp:
     def help_animation_convert(self):
         """
         Starts the step-by-step tutorial for animation-based molecular conversions.
+
+        Calls:
+        - `start_tutorial` from `Tutorial` module.
         """
         self.single_convert_tutorial.reset_buttons_to_default()
         self.animation_convert_tutorial.start_tutorial()

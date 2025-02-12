@@ -9,7 +9,7 @@
 import os
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock #to avoid importing bpy
 
 #------------------------------------------------------------------------------------
 # Mock modules to avoid sphinx from crashing due to it not recognizing bpy
@@ -50,18 +50,18 @@ extensions = [
     'sphinx.ext.napoleon',    # Support for Google-style and NumPy-style docstrings
     'sphinx.ext.viewcode',    # Adds links to source code in documentation
     'sphinx.ext.autosummary', #To make automatic summaries for each function
-    #'sphinx.ext.graphviz', #to make connections between modules and scripts
+    'sphinx.ext.graphviz', #to make connections between modules and scripts
+    'sphinx.ext.inheritance_diagram', #to build an inheritance diagram
     ]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 autosummary_generate = True
+graphviz_output_format = 'svg'
+graphviz_dot = 'C:/Program Files/Graphviz/bin/dot.exe'
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
-html_css_files = [
-    'style.css',
-]

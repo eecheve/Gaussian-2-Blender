@@ -8,7 +8,7 @@
     <title>GUI &#8212; Gaussian-2-Blender 2025.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="_static/style.css?v=f4115360" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
     <script src="_static/documentation_options.js?v=9da58f5d"></script>
     <script src="_static/doctools.js?v=9a2dae69"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
@@ -50,18 +50,26 @@ This application facilitates the conversion of Gaussian computational chemistry 
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">assign_ionic_params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.assign_ionic_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Retrieves and formats ionic parameters for molecular conversion.</p>
+<p>Calls:
+- <cite>int_hasIons.get</cite>, <cite>lst_ions</cite>, and <cite>int_unitCell.get</cite> from <cite>IonRegion</cite> module</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Determines the operating system and executes the appropriate script for converting molecular data.</p>
+<p>Calls:
+- self.convert_manager</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">convert_manager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exec_loc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.convert_manager"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Manages the process of converting Gaussian input files to 3D object files using Blender’s API.</p>
+<p>Calls:
+- <cite>self.exceptions_test_passed</cite>.
+- <cite>self.assign_ionic_params</cite>.
+- <cite>self.individual_convert</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>exec_loc</strong> – the path to the executable that will communicate with MainBody.py that handles the Blender part.</p>
@@ -103,18 +111,24 @@ before running the <cite>convert_manager</cite> function.</p>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">help_animation_convert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.help_animation_convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the step-by-step tutorial for animation-based molecular conversions.</p>
+<p>Calls:
+- <cite>start_tutorial</cite> from <cite>Tutorial</cite> module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">help_single_convert</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.help_single_convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Starts the step-by-step tutorial for single molecule conversion.</p>
+<p>Calls:
+- <cite>start_tutorial</cite> from <cite>Tutorial</cite> module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">individual_convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exec_loc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_ionic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_ion_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_anim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hl_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hl_bonds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.individual_convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Function to execute bat file that communicates with blender’s python API</p>
+<p>Calls:
+- <cite>self.overwrite_animation_frames</cite> and <cite>self.overwrite_parameters_script</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -139,24 +153,35 @@ before running the <cite>convert_manager</cite> function.</p>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">initialize_animation_tutorial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.initialize_animation_tutorial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sets up the tutorial for animated molecular conversions.</p>
+<p>Modules called: <cite>InputRegion</cite>, <cite>OutputRegion</cite>, <cite>ActionRegion</cite></p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">initialize_single_tutorial</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.initialize_single_tutorial"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Sets up the step-by-step tutorial for a single molecule conversion process.</p>
+<dl class="simple">
+<dt>calls:</dt><dd><ul class="simple">
+<li><p><cite>InputRegion</cite>, <cite>OutputRegion</cite>, <cite>ActionRegion</cite></p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">overwrite_animation_frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_anim</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.overwrite_animation_frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>If the input represents an animation, prepares animation frame data for conversion.</p>
+<p>Calls:
+- <cite>append_lines_to_file</cite> from <cite>Utility</cite> module.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">overwrite_parameters_script</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_ionic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_ion_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_anim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hl_atoms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hl_bonds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.overwrite_parameters_script"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>overwrites bat script to handle the export or animation of molecules</p>
+<p>Calls:
+- <cite>clear_file_contents</cite> and <cite>append_lines_to_file</cite> from <cite>Utility</cite> module.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -199,6 +224,9 @@ before running the <cite>convert_manager</cite> function.</p>
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">reset_to_defaults</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Gaussian2Blender.html#GaussianToBlenderApp.reset_to_defaults"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Resets the GUI components to their default states, clearing paths, input selections, and highlights.</p>
+<p>Calls:
+- <cite>clear</cite> functions from the following modules:
+<cite>BlenderPath</cite>, <cite>OutputRegion</cite>, <cite>InputRegion</cite>, <cite>IonRegion</cite>, <cite>ConsoleRegion</cite>, <cite>Information</cite>, <cite>Tutorial</cite></p>
 </dd></dl>
 
 <dl class="py method">
@@ -1127,6 +1155,7 @@ and coordination number based on predefined ionic radii data.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">UML Components Diagram</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
 </ul>
 
