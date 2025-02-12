@@ -13,11 +13,11 @@ importlib.reload(Import_Data)
 
 def Set_Raw_Parameters(i_folder_path, i_file_name):
     """
-    Returns: 
-        raw_coords: List of lists, each entry has four items, the first is the element name (no index) 
-        the remaining three are the cartesian coordinates of such element
-        raw_connect: Connectivity information as is extracted from the .com file. The refinement is done
-        elsewhere
+    Extracts raw coordinates and connectivity information from a .com file.
+
+    :param i_folder_path: (str) The path to the folder containing the file.
+    :param i_file_name: (str) The name of the file to be processed.
+    :return: (tuple) A tuple containing raw coordinates and connectivity information.
     """
     file_path = os.path.join(i_folder_path, i_file_name)
     raw_data = Import_Data.ExtractDataFromFile(file_path)
@@ -29,6 +29,12 @@ def Set_Raw_Parameters(i_folder_path, i_file_name):
     return raw_coords, raw_connect
         
 def split_coord_frames(raw_coord_frames):
+    """
+    Splits raw coordinate frames into individual frames for each element.
+
+    :param raw_coord_frames: (list) List of raw coordinate frames.
+    :return: (tuple) A tuple containing lists of initial coordinates and animated coordinates.
+    """
     l = []
     m = []
     frame_count = count_animation_frames(raw_coord_frames)
@@ -48,6 +54,12 @@ def split_coord_frames(raw_coord_frames):
     return l, m
         
 def count_animation_frames(raw_coord_frames):
+    """
+    Counts the number of animation frames in the raw coordinate frames.
+
+    :param raw_coord_frames: (list) List of raw coordinate frames.
+    :return: (int) The number of animation frames.
+    """
     first_element = raw_coord_frames[0]
     total_frames = (len(first_element) - 1)/3 #first entry is element symbol, each following 3 are x y z.
     return int(total_frames - 1) #because the first frame will be used to build the molecule.

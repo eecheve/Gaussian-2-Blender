@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main_Body &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=f4115360" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Main_Body</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span><span class="p">,</span> <span class="n">data</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">radians</span><span class="p">,</span> <span class="n">degrees</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span>
+
+<span class="n">blend_file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span> <span class="c1">#folder location for ReadMolecules00.blend</span>
+<span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">)</span> <span class="c1">#ensuring the environment is in the correct file path</span>
+<span class="k">if</span> <span class="n">blend_file_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">)</span>
+    
+<span class="kn">import</span> <span class="nn">Receive_Parameters</span>
+
+<div class="viewcode-block" id="Main_Body">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body">[docs]</a>
+<span class="k">class</span> <span class="nc">Main_Body</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Main class for managing molecule processing in Blender. Handles reading, refining, </span>
+<span class="sd">    and exporting molecular structures while managing parent-child relations and animations.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_file_type</span><span class="p">,</span> <span class="n">i_folder_path</span><span class="p">,</span> <span class="n">i_file_name</span><span class="p">,</span> <span class="n">o_folder_path</span><span class="p">,</span> <span class="n">o_file_name</span><span class="p">,</span>
+                 <span class="n">represent_type</span><span class="p">,</span> <span class="n">o_file_type</span><span class="p">,</span> <span class="n">str_ionic_cell</span><span class="p">,</span> <span class="n">str_ion_input_list</span><span class="p">,</span> <span class="n">str_is_animation</span><span class="p">,</span>
+                 <span class="n">atom_hl_list</span><span class="p">,</span> <span class="n">bond_hl_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the Main_Body class with input and output parameters.</span>
+<span class="sd">        </span>
+<span class="sd">        :param i_file_type: Type of input file (.xyz or .com).</span>
+<span class="sd">        :param i_folder_path: Path to input folder.</span>
+<span class="sd">        :param i_file_name: Name of the input file.</span>
+<span class="sd">        :param o_folder_path: Path to output folder.</span>
+<span class="sd">        :param o_file_name: Name of the output file.</span>
+<span class="sd">        :param represent_type: Representation type for molecules.</span>
+<span class="sd">        :param o_file_type: Output file format.</span>
+<span class="sd">        :param str_ionic_cell: String representation of ionic cell data.</span>
+<span class="sd">        :param str_ion_input_list: String representation of ion input list.</span>
+<span class="sd">        :param str_is_animation: Determines if animation should be applied.</span>
+<span class="sd">        :param atom_hl_list: List of atoms to highlight.</span>
+<span class="sd">        :param bond_hl_list: List of bonds to highlight.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_file_type</span> <span class="o">=</span> <span class="n">i_file_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_folder_path</span> <span class="o">=</span> <span class="n">i_folder_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i_file_name</span> <span class="o">=</span> <span class="n">i_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">o_folder_path</span> <span class="o">=</span> <span class="n">o_folder_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">o_file_name</span> <span class="o">=</span> <span class="n">o_file_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">represent_type</span> <span class="o">=</span> <span class="n">represent_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">o_file_type</span> <span class="o">=</span> <span class="n">o_file_type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">str_ionic_cell</span> <span class="o">=</span> <span class="n">str_ionic_cell</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">str_ion_input_list</span> <span class="o">=</span> <span class="n">str_ion_input_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">str_is_animation</span> <span class="o">=</span> <span class="n">str_is_animation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">atom_hl_list</span> <span class="o">=</span> <span class="n">atom_hl_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_hl_list</span> <span class="o">=</span> <span class="n">bond_hl_list</span>        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_ionic</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_cell</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_coords</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_connect</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_frames</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_input</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements_present</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># Dictionary to store dynamically loaded modules</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">load_modules</span><span class="p">()</span>  <span class="c1"># Load all modules dynamically</span>
+
+
+<div class="viewcode-block" id="Main_Body.load_modules">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.load_modules">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Dynamically imports all required modules and stores them in self.imported_modules.</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">MODULES_TO_IMPORT</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;Atom_Data&quot;</span><span class="p">,</span> <span class="s2">&quot;Import_Data&quot;</span><span class="p">,</span> <span class="s2">&quot;Refine_Data&quot;</span><span class="p">,</span> <span class="s2">&quot;Refine_Elements&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Create_Materials&quot;</span><span class="p">,</span> <span class="s2">&quot;Primitives&quot;</span><span class="p">,</span> <span class="s2">&quot;Export_Data&quot;</span><span class="p">,</span> <span class="s2">&quot;Ions&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;Instantiate_Molecules&quot;</span><span class="p">,</span> <span class="s2">&quot;Raw_Parameters&quot;</span><span class="p">,</span> <span class="s2">&quot;Animate&quot;</span><span class="p">,</span> <span class="s2">&quot;Clear_Transforms&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;XyzReader&quot;</span><span class="p">,</span> <span class="s2">&quot;AtomHighlighter&quot;</span>
+        <span class="p">]</span>
+
+        <span class="n">blend_file_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">)</span>  <span class="c1"># Set the correct file path</span>
+        <span class="k">if</span> <span class="n">blend_file_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">module</span> <span class="ow">in</span> <span class="n">MODULES_TO_IMPORT</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">module</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">:</span>
+                    <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">[</span><span class="n">module</span><span class="p">])</span>  <span class="c1"># Reload for live coding</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">[</span><span class="n">module</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module</span><span class="p">)</span>
+
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Successfully imported </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="ne">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Module </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2"> not found: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error while importing </span><span class="si">{</span><span class="n">module</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.get_module">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.get_module">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_module</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">module_name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Retrieve and reload a module to apply the latest changes.</span>
+
+<span class="sd">        :param module_name: (str) Name of the module to retrieve.</span>
+<span class="sd">        :return: (module) The imported module.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">module_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">module_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">])</span>  <span class="c1"># Reload module &lt;-- important</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">imported_modules</span><span class="p">[</span><span class="n">module_name</span><span class="p">]</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Obtain_Coords_Connect">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Obtain_Coords_Connect">[docs]</a>
+    <span class="k">def</span> <span class="nf">Obtain_Coords_Connect</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i_file_type</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Gets list of coordinates as a string with the atomic symbol and floats for each cartesian </span>
+<span class="sd">        coordinate, as well as the connectivity list with numerical inidices associated with each atom</span>
+<span class="sd">        as well as the char specifying the atom type between connected pairs</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">            - `Read_com_File` and `Refine_com_File` if the input file type is .com.</span>
+<span class="sd">            - `Read_xyz_File` if the input file type is .xyz.</span>
+
+<span class="sd">        :param i_file_type: (str) Type of input file (.xyz or .com).</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">i_file_type</span> <span class="o">==</span> <span class="s2">&quot;.com&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Read_com_File</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Refine_com_File</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="n">i_file_type</span> <span class="o">==</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Read_xyz_File</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Read_xyz_File">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Read_xyz_File">[docs]</a>
+    <span class="k">def</span> <span class="nf">Read_xyz_File</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads atomic data from an .xyz file.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `extract_coords_from_xyz_file` and `obtain_all_bond_orders` from `XyzReader` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1: Reading .xyz file ...&quot;</span><span class="p">)</span>
+        <span class="n">XyzReader</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;XyzReader&quot;</span><span class="p">)</span>
+        <span class="n">xyzReader</span> <span class="o">=</span> <span class="n">XyzReader</span><span class="o">.</span><span class="n">XyzReader</span><span class="p">()</span>
+        <span class="n">file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_folder_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_file_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">xyzReader</span><span class="o">.</span><span class="n">extract_coords_from_xyz_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span> <span class="o">=</span> <span class="n">xyzReader</span><span class="o">.</span><span class="n">obtain_all_bond_orders</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Read_com_File">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Read_com_File">[docs]</a>
+    <span class="k">def</span> <span class="nf">Read_com_File</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads atomic data from a .com file.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `Set_Raw_Parameters` from `Raw_Parameters` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;1: Reading .com file ...&quot;</span><span class="p">)</span>  
+        <span class="n">Raw_Parameters</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Raw_Parameters&quot;</span><span class="p">)</span>   
+        <span class="n">raw_coords_connect</span> <span class="o">=</span> <span class="n">Raw_Parameters</span><span class="o">.</span><span class="n">Set_Raw_Parameters</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">i_folder_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i_file_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_coords</span> <span class="o">=</span> <span class="n">raw_coords_connect</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">raw_connect</span> <span class="o">=</span> <span class="n">raw_coords_connect</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+               
+<div class="viewcode-block" id="Main_Body.Refine_com_File">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Refine_com_File">[docs]</a>
+    <span class="k">def</span> <span class="nf">Refine_com_File</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Refines extracted data from a .com file.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `RefineCoordList`, `RefineConnectivity`, and `AddElementSymbolsToConnecrivityList` from `Refine_Data` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2: Refining extracted data ...&quot;</span><span class="p">)</span>
+        <span class="n">Refine_Data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Refine_Data&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coords</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">RefineCoordList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_coords</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;2.1: number of elements in molecule is: &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span><span class="p">)</span>
+        <span class="n">connect</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">RefineConnectivity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">raw_connect</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">AddElementSymbolsToConnecrivityList</span><span class="p">(</span><span class="n">connect</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Main_Body.Manage_Ionic_Information">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Manage_Ionic_Information">[docs]</a>
+    <span class="k">def</span> <span class="nf">Manage_Ionic_Information</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manages ionic information for the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `rebuild_list` and `make_tuple_in_list` from `Refine_Data` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Refine_Data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Refine_Data&quot;</span><span class="p">)</span>
+        <span class="n">ionic_cell</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">rebuild_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">str_ionic_cell</span><span class="p">)</span>
+        <span class="n">ionic_cell</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">make_tuple_in_list</span><span class="p">(</span><span class="n">ionic_cell</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_ionic</span> <span class="o">=</span> <span class="n">ionic_cell</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_cell</span> <span class="o">=</span> <span class="n">ionic_cell</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">rebuild_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">str_ion_input_list</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span> <span class="o">=</span> <span class="n">Refine_Data</span><span class="o">.</span><span class="n">make_tuple_in_list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Prepare_Atoms_and_Bonds">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Prepare_Atoms_and_Bonds">[docs]</a>
+    <span class="k">def</span> <span class="nf">Prepare_Atoms_and_Bonds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepares atoms and bonds for the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `CreateDictionaryWithNamesAndPositions`, `GetElementsPresentInMolecule`, and `GetDataForExistingElements` from `Refine_Elements` module.</span>
+<span class="sd">        - `CreateAndAssignMaterials` from `Create_Materials` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3: Checking present elements ...&quot;</span><span class="p">)</span>
+        <span class="n">Refine_Elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Refine_Elements&quot;</span><span class="p">)</span>
+        <span class="n">Atom_Data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Atom_Data&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span> <span class="o">=</span> <span class="n">Refine_Elements</span><span class="o">.</span><span class="n">CreateDictionaryWithNamesAndPositions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_elements</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">elements_present</span> <span class="o">=</span> <span class="n">Refine_Elements</span><span class="o">.</span><span class="n">GetElementsPresentInMolecule</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;3.1: elements present are&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">elements_present</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">element_data</span> <span class="o">=</span> <span class="n">Refine_Elements</span><span class="o">.</span><span class="n">GetDataForExistingElements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements_present</span><span class="p">,</span> <span class="n">Atom_Data</span><span class="o">.</span><span class="n">Elements</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4: Creating and assigning materials ...&quot;</span><span class="p">)</span>
+        <span class="n">Create_Materials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Create_Materials&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials_dict</span> <span class="o">=</span> <span class="n">Create_Materials</span><span class="o">.</span><span class="n">CreateAndAssignMaterials</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">element_data</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="Main_Body.Prepare_Ions">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Prepare_Ions">[docs]</a>
+    <span class="k">def</span> <span class="nf">Prepare_Ions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepares ions for the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `GetDataForExistingElements` from `Refine_Elements` module.</span>
+<span class="sd">        - `CreateIonDataFromInput` from `Ions` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Refine_Elements</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Refine_Elements&quot;</span><span class="p">)</span>
+        <span class="n">Atom_Data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Atom_Data&quot;</span><span class="p">)</span>
+        <span class="n">Ions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Ions&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ion_data</span> <span class="o">=</span> <span class="n">Refine_Elements</span><span class="o">.</span><span class="n">GetDataForExistingElements</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">elements_present</span><span class="p">,</span> <span class="n">Atom_Data</span><span class="o">.</span><span class="n">IonicRadii</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4: Checking for present ion specifications ...&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4.1: ion_input_list is not empty&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ion_input</span> <span class="o">=</span> <span class="n">Ions</span><span class="o">.</span><span class="n">CreateIonDataFromInput</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ion_input_list</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;4: There are no ions with charge, coordination, and spin specified&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ion_input</span> <span class="o">=</span> <span class="p">[]</span>    </div>
+
+    
+<div class="viewcode-block" id="Main_Body.Build_Molecule">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Build_Molecule">[docs]</a>
+    <span class="k">def</span> <span class="nf">Build_Molecule</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> 
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Builds the molecule by instantiating elements and bonds.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `Instantiate` from `Instantiate_Molecules` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Instantiate_Molecules</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Instantiate_Molecules&quot;</span><span class="p">)</span>
+        <span class="n">Instantiate_Molecules</span><span class="o">.</span><span class="n">Instantiate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">is_ionic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">represent_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span><span class="p">,</span> 
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">materials_dict</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">element_data</span><span class="p">,</span> 
+                                          <span class="bp">self</span><span class="o">.</span><span class="n">ion_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ion_input</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_cell</span><span class="p">)</span></div>
+
+                                          
+<div class="viewcode-block" id="Main_Body.Manage_Parent_Relations">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Manage_Parent_Relations">[docs]</a>
+    <span class="k">def</span> <span class="nf">Manage_Parent_Relations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manages parent-child relationships for the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `Manage_Parent_Relations` from `Parent_Relations` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Parent_Relations</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Parent_Relations&quot;</span><span class="p">)</span>
+        <span class="n">Parent_Relations</span><span class="o">.</span><span class="n">Manage_Parent_Relations</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Reset_Transforms">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Reset_Transforms">[docs]</a>
+    <span class="k">def</span> <span class="nf">Reset_Transforms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets transforms for bonds and elements.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `get_bond_obj_list`, `Apply_Bond_Transforms`, and `Apply_Element_Transforms` from `Clear_Transforms` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">Clear_Transforms</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Clear_Transforms&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bond_list</span> <span class="o">=</span> <span class="n">Clear_Transforms</span><span class="o">.</span><span class="n">get_bond_obj_list</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6.1: Applying bond transforms&quot;</span><span class="p">)</span>
+        <span class="n">Clear_Transforms</span><span class="o">.</span><span class="n">Apply_Bond_Transforms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bond_list</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6.2: Applying element transforms&quot;</span><span class="p">)</span>
+        <span class="n">Clear_Transforms</span><span class="o">.</span><span class="n">Apply_Element_Transforms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span><span class="p">)</span></div>
+
+         
+    <span class="k">def</span> <span class="nf">Animate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Animates the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `Animate` from `Animate` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;8: Animating molecule ...&quot;</span><span class="p">)</span>
+        <span class="n">Animate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Animate&quot;</span><span class="p">)</span>
+        <span class="n">Animate</span><span class="o">.</span><span class="n">Animate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">o_file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_key_frames</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">connect_with_symbols</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="Main_Body.Export">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Export">[docs]</a>
+    <span class="k">def</span> <span class="nf">Export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Exports the results to the specified file format.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `ExportSceneAs` from `Export_Data` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;9: Exporting the results ...&quot;</span><span class="p">)</span>
+        <span class="n">Export_Data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Export_Data&quot;</span><span class="p">)</span>
+        <span class="n">Export_Data</span><span class="o">.</span><span class="n">ExportSceneAs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">o_folder_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">o_file_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">o_file_type</span><span class="p">)</span></div>
+
+               
+<div class="viewcode-block" id="Main_Body.Highlight_Atoms">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Highlight_Atoms">[docs]</a>
+    <span class="k">def</span> <span class="nf">Highlight_Atoms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Highlights specified atoms in the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `highlight_atom` from `AtomHighlighter` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7: highlighting atoms if info is present&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_hl_list</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7.1: No atoms to highlight, skipping function.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>    
+        <span class="n">AtomHighlighter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;AtomHighlighter&quot;</span><span class="p">)</span>
+        <span class="n">atom_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">atom_hl_list</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">atom</span> <span class="ow">in</span> <span class="n">atom_list</span><span class="p">:</span>
+            <span class="n">AtomHighlighter</span><span class="o">.</span><span class="n">highlight_atom</span><span class="p">(</span><span class="n">atom</span><span class="p">)</span></div>
+
+            
+<div class="viewcode-block" id="Main_Body.Highlight_Bonds">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Highlight_Bonds">[docs]</a>
+    <span class="k">def</span> <span class="nf">Highlight_Bonds</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Highlights specified bonds in the molecule.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `highlight_bond` from `AtomHighlighter` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">separators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7: highlighting bonds if info is present&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_hl_list</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;7.2: No bonds to highlight, skipping function.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">AtomHighlighter</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;AtomHighlighter&quot;</span><span class="p">)</span>
+        <span class="n">bond_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bond_hl_list</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bond</span> <span class="ow">in</span> <span class="n">bond_list</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">sep</span> <span class="ow">in</span> <span class="n">separators</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sep</span> <span class="ow">in</span> <span class="n">bond</span><span class="p">:</span>
+                    <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span> <span class="o">=</span> <span class="n">bond</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">sep</span><span class="p">)</span>
+                    <span class="n">AtomHighlighter</span><span class="o">.</span><span class="n">highlight_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">)</span>
+                    <span class="k">break</span>  </div>
+
+
+<div class="viewcode-block" id="Main_Body.Animate">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Animate">[docs]</a>
+    <span class="k">def</span> <span class="nf">Animate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Animates the molecule if animation is enabled.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `animate` from `Animate` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_is_animation</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#blend_file_dir = os.path.dirname(__file__)  # Ensure this variable is defined</span>
+            <span class="n">blend_file_dir</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s2">&quot;//&quot;</span><span class="p">)</span>  <span class="c1"># Correctly gets the .blend file directory</span>
+            <span class="n">anim_frames_file</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">,</span> <span class="s2">&quot;animation_frames.txt&quot;</span><span class="p">)</span>
+            <span class="n">Animate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Animate&quot;</span><span class="p">)</span>
+            <span class="n">Animate</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="n">anim_frames_file</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="Main_Body.Manage_Export">
+<a class="viewcode-back" href="../api.html#Main_Body.Main_Body.Manage_Export">[docs]</a>
+    <span class="k">def</span> <span class="nf">Manage_Export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Manages the export process based on whether animation is enabled.</span>
+
+<span class="sd">        Calls:</span>
+<span class="sd">        - `Export` or `export_animation` from `Animate` module.</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">str_is_animation</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Export</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">Animate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_module</span><span class="p">(</span><span class="s2">&quot;Animate&quot;</span><span class="p">)</span>
+            <span class="n">export_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">o_folder_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">o_file_name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">o_file_type</span><span class="p">)</span>
+            <span class="n">Animate</span><span class="o">.</span><span class="n">export_animation</span><span class="p">(</span><span class="n">export_path</span><span class="p">)</span></div>
+</div>
+
+    
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">params_file_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">blend_file_dir</span><span class="p">,</span> <span class="s2">&quot;parameters.txt&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">params_file_path</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: The file &#39;parameters.txt&#39; was not found at </span><span class="si">{</span><span class="n">params_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="n">params_data</span> <span class="o">=</span> <span class="n">Receive_Parameters</span><span class="o">.</span><span class="n">get_parameters_data</span><span class="p">(</span><span class="n">params_file_path</span><span class="p">)</span>
+    <span class="n">main_body_instance</span> <span class="o">=</span> <span class="n">Main_Body</span><span class="p">(</span><span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;i_file_type&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;i_folder_path&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;i_file_name&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;o_folder_path&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;o_file_name&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;represent_type&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;o_file_type&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;str_ionic_cell&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;str_ion_input_list&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;str_is_animation&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;atom_hl_list&quot;</span><span class="p">],</span>
+                                   <span class="n">params_data</span><span class="p">[</span><span class="s2">&quot;bond_hl_list&quot;</span><span class="p">])</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Obtain_Coords_Connect</span><span class="p">(</span><span class="n">main_body_instance</span><span class="o">.</span><span class="n">i_file_type</span><span class="p">)</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Manage_Ionic_Information</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Prepare_Atoms_and_Bonds</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Prepare_Ions</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Build_Molecule</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Highlight_Atoms</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Highlight_Bonds</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Animate</span><span class="p">()</span>
+    <span class="n">main_body_instance</span><span class="o">.</span><span class="n">Manage_Export</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

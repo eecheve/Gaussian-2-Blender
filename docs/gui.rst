@@ -3,32 +3,6 @@ GUI
 All the scripts and modules tasked to create the GUI for Gaussian-2-Blender.
 The GUI was built using Python's ``tkinter`` library.
 
-Content
----------
-
-.. :toctree:: 
-   :maxdepth: 2
-   :caption: Content:
-    
-   Gaussian2Blender
-   ActionsRegion
-   BlenderPath
-   BondConventions
-   ConsoleRegion
-   Coordinates
-   CreateTooltip
-   HighlighterRegion
-   Information
-   InputRegion
-   IonConventions
-   Ionic
-   IonRegion
-   OutputRegion
-   SelectedIon
-   TextRedirector
-   Tutorial
-   Utility
-
 Main GUI Script
 -----------------
 .. automodule:: Gaussian2Blender

@@ -18,9 +18,10 @@ importlib.reload(Atom_Data)
 
 def CreateIonDataFromInput(ionInputList):
     """
-    input: ionInputList <list>(string, string, string, string): list of ions to specify and their properties
-    summary: takes values in each entry of the ionInputList and makes a IonDataDict
-    output: dictionary<string, Ionic>: dict of Ionic class wich contains info with no radius value
+    takes values in each entry of the ionInputList and makes a IonDataDict
+
+    :param ionInputList: <list>(string, string, string, string) list of ions to specify and their properties
+    :return: dictionary<string, Ionic> dict of Ionic class wich contains info with no radius value
     """
     d = {}
     for ionInput in ionInputList:
@@ -32,9 +33,9 @@ def CreateIonDataFromInput(ionInputList):
 
 def GetIonPositions(names_and_pos, ion_input):
     """
-    input: names_and_pos dict<string, Vector3>: dictionary that contains the position of each labelled element present.
-    input: ion_input dict<string, Ionic>: dict of Ionic class wich contains info with no radius value
-    output: dict<string, Vector3>: refined dict with only the ions from the ion_input dict
+    :param names_and_pos: dict<string, Vector3> dictionary that contains the position of each labelled element present.
+    :param ion_input: dict<string, Ionic> dict of Ionic class wich contains info with no radius value
+    :return: dict<string, Vector3> refined dict with only the ions from the ion_input dict
     """
     d = names_and_pos.copy()
     for element_num in names_and_pos:
@@ -45,12 +46,12 @@ def GetIonPositions(names_and_pos, ion_input):
 
 def RemoveNonSpecifiedIons(ion_dict, ion_input):
     """
-    input: ion_dict <dictionary>: contains the symbols and possible ion radii for all present elements,
-    input: ion_input dict<string, Ionic>: dict of Ionic class wich contains info with no radius value
-    summary: removes from the ion dictionary the elements that were not specified in input list
-    output: smaller dictionary
-    error output: prints out an error if input list contains an ion non present in dictionary
-    error output: prints out an error if ion_input is empty
+    removes from the ion dictionary the elements that were not specified in input list
+
+    :param ion_dict: <dictionary> contains the symbols and possible ion radii for all present elements,
+    :param ion_input: dict<string, Ionic> dict of Ionic class wich contains info with no radius value
+    :return: smaller dictionary
+    :raises [Error]: prints out an error if input list contains an ion not present in dictionary or if ion_input is empty
     """
     d = {}
     for ion_num in ion_dict:
@@ -69,10 +70,11 @@ def RemoveNonSpecifiedIons(ion_dict, ion_input):
 
 def RemoveSpecifiedIonsFromElementDict(ion_dict, element_dict):
     """
-    input: ion_dict <dictionary>: contains the symbols and the possible radii for specified elements,
-    input: element_dict <dictionary>: dictionary off all elements present
-    summary: removes specified ions from dict of all elements present
-    output: smaller dictionary
+    removes specified ions from dict of all elements present
+
+    :param ion_dict: dict<str:Ionic> contains the symbols and the possible radii for specified elements,
+    :param element_dict: dict<str:bpy.data.object>: dictionary off all elements present
+    :return: dict<str:Ionic> smaller dictionary
     """
     d = element_dict.copy()
     for element_num in element_dict:
@@ -85,10 +87,11 @@ def RemoveSpecifiedIonsFromElementDict(ion_dict, element_dict):
 
 def GetIonDataFromInput(ion_data_dict, ion_input):
     """
-    input: ion_dict <dictionary>: contains the symbols and possible ionic radii for elements of interest
-    input: ion_input dict<string, Ionic>: dict of Ionic class wich contains info with no radius value
-    summary: gets the correct ionic radii data set from the ionInputList for each element in ion_dict
-    output: dictionary<string, float>: Element symbol and their ionic radius
+    gets the correct ionic radii data set from the ionInputList for each element in ion_dict
+
+    :param ion_dict: dict<str:Ionic> contains the symbols and possible ionic radii for elements of interest
+    :param ion_input: dict<string:Ionic> dict of Ionic class wich contains info with no radius value
+    :return: dictionary<string, float>: Element symbol and their ionic radius
     """
     for ion in ion_input:
         symbol = ion

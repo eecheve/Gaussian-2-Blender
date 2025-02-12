@@ -13,8 +13,10 @@ importlib.reload(Atom_Data)
 
 def CreateAndAssignMaterials(ref_dict):
     """
-    ref_dict: Dictionary<string, Atom_Data> elements present in the molecule and their data
-    summary: Instantiates the materials for the elements present in the molecule
+    Instantiates the materials for the elements present in the molecule.
+
+    :param ref_dict: (dict) Dictionary of elements present in the molecule and their data.
+    :return: (dict) Dictionary of created materials.
     """
     d = {}
     for key in ref_dict:
@@ -25,9 +27,11 @@ def CreateAndAssignMaterials(ref_dict):
 
 def AssignMaterial(material_name, material_color):
     """
-    material_color: Tuple<(float, float, float, int)> RGBA values for material
-    summary: If material does not exist: creates it and assigns its name and diffuse color
-    returns: material object
+    Creates a material if it does not exist and assigns its name and diffuse color.
+
+    :param material_name: (str) Name of the material.
+    :param material_color: (tuple) RGBA values for the material.
+    :return: (bpy.types.Material) The created or existing material.
     """
     assignment = bpy.data.materials.get(material_name)
     if assignment is None:
@@ -38,6 +42,8 @@ def AssignMaterial(material_name, material_color):
 def RemoveAllMaterialsAndMeshes():
     """
     Removes all materials and meshes from the Blender scene.
+
+    :return: None
     """
     # Remove all materials
     for mat in bpy.data.materials:

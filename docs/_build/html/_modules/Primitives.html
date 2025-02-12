@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Primitives &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=f4115360" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Primitives</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+
+<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">mathutils</span>
+
+<div class="viewcode-block" id="InstantiateElementsFromDictionary">
+<a class="viewcode-back" href="../api.html#Primitives.InstantiateElementsFromDictionary">[docs]</a>
+<span class="k">def</span> <span class="nf">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">van_der_waals</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    instantiates spheres of different radii &amp; materials at the allocated Vector3 positions.</span>
+
+<span class="sd">    :param pos_dict: Dictionary&lt;string, Vector3&gt; all the symbols &amp; labels of elements and their Vector3 positions</span>
+<span class="sd">    :param element_data: Dictionary&lt;string, Atom_Data(class)&gt; available data for the present elements</span>
+<span class="sd">    :param materials_dict: Dictionary&lt;string, bpy.Material&gt; materials that can be accessed with present elements&#39; symbols</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pos_dict</span><span class="p">:</span>
+        <span class="n">e_symbol</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span> <span class="c1">#remove numbers from name</span>
+        <span class="k">if</span> <span class="n">e_symbol</span> <span class="ow">in</span> <span class="n">element_data</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">van_der_waals</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                 <span class="n">r</span> <span class="o">=</span> <span class="n">element_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">e_symbol</span><span class="p">)</span><span class="o">.</span><span class="n">get_radius</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">else</span><span class="p">:</span>
+                 <span class="n">r</span> <span class="o">=</span> <span class="n">element_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">e_symbol</span><span class="p">)</span><span class="o">.</span><span class="n">get_vanDerWaals</span><span class="p">()</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">z</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_uv_sphere_add</span><span class="p">(</span><span class="n">enter_editmode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">e_symbol</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">shade_smooth</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6: Instantiating element: &quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AddElement(): invalid element name&quot;</span><span class="p">)</span></div>
+
+            
+<div class="viewcode-block" id="InstantiateIonsFromDictionary">
+<a class="viewcode-back" href="../api.html#Primitives.InstantiateIonsFromDictionary">[docs]</a>
+<span class="k">def</span> <span class="nf">InstantiateIonsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiates spheres for ions at the allocated Vector3 positions.</span>
+
+<span class="sd">    :param pos_dict: (dict) All the symbols and labels of ions and their Vector3 positions.</span>
+<span class="sd">    :param ion_data: (dict) Available data for the present ions.</span>
+<span class="sd">    :param materials_dict: (dict) Materials that can be accessed with present ions&#39; symbols.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">pos_dict</span><span class="p">:</span>
+        <span class="n">i_symbol</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span> <span class="c1">#remove numbers from name</span>
+        <span class="k">if</span> <span class="n">i_symbol</span> <span class="ow">in</span> <span class="n">ion_data</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">ion_data</span><span class="p">[</span><span class="n">i_symbol</span><span class="p">]</span><span class="o">.</span><span class="n">radius</span> <span class="o">/</span><span class="mi">2</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">x</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">y</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">z</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_uv_sphere_add</span><span class="p">(</span><span class="n">enter_editmode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">),</span> <span class="n">radius</span><span class="o">=</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">i_symbol</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">)</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">shade_smooth</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6: Instantiating ion: &quot;</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;AddElement(): invalid element name&quot;</span><span class="p">)</span></div>
+
+                    
+<div class="viewcode-block" id="ModifyNamesAndMaterials">
+<a class="viewcode-back" href="../api.html#Primitives.ModifyNamesAndMaterials">[docs]</a>
+<span class="k">def</span> <span class="nf">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">e_symbol</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    names of the active object and appends to it the required material.</span>
+
+<span class="sd">    :param obj_name: (str) The name of the sphere to be instantiated.</span>
+<span class="sd">    :param e_symbol: (str) Atom symbol, taken from name, used to access materials.</span>
+<span class="sd">    :param materials_dict: (dict) Materials that can be accessed with present elements&#39; symbols.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">obj_name</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">obj_name</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">materials_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">e_symbol</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6: Material not found @Primitives.ModifyNamesAndMaterials&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="InstantiateBondsFromConnectivity">
+<a class="viewcode-back" href="../api.html#Primitives.InstantiateBondsFromConnectivity">[docs]</a>
+<span class="k">def</span> <span class="nf">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">connect_list</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiates bonds based on connectivity information.</span>
+
+<span class="sd">    :param pos_dict: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param mat_dict: (dict) Atomic symbols and their materials.</span>
+<span class="sd">    :param connect_list: (list) List of connections between atoms.</span>
+<span class="sd">    :param unit_cell: (str) Unit cell identifier.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#helper functions to be stored in a dictionary, which wich will depend on the bond_type</span>
+    <span class="k">def</span> <span class="nf">handle_single_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+        <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
+        <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">handle_double_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+        <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
+        <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">)</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">)</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label2</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">handle_triple_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+        <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
+        <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">,</span> <span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">)</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">handle_hydrogen_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">unit_cell</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+            <span class="n">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="n">h_bonding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">handle_resonance_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+        <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
+        <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
+        <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">)</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">bond_label2</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
+        <span class="n">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">)</span>
+
+    <span class="c1">#function dictionary, the keys will be the bond_types for each entry in connect_list</span>
+    <span class="n">bond_actions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;_&#39;</span><span class="p">:</span> <span class="n">handle_hydrogen_bond</span><span class="p">,</span>
+        <span class="s1">&#39;-&#39;</span><span class="p">:</span> <span class="n">handle_single_bond</span><span class="p">,</span>
+        <span class="s1">&#39;=&#39;</span><span class="p">:</span> <span class="n">handle_double_bond</span><span class="p">,</span>
+        <span class="s1">&#39;#&#39;</span><span class="p">:</span> <span class="n">handle_triple_bond</span><span class="p">,</span>
+        <span class="s1">&#39;res1&#39;</span><span class="p">:</span> <span class="n">handle_resonance_bond</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">connect_list</span><span class="p">:</span>
+        <span class="n">atom1</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">atom2</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">bond_type</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;6: Instantiating bond: &quot;</span><span class="p">,</span> <span class="n">atom1</span> <span class="o">+</span> <span class="n">bond_type</span> <span class="o">+</span> <span class="n">atom2</span><span class="p">)</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">bond_actions</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">bond_type</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">action</span><span class="p">:</span>
+            <span class="n">action</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error on bond type! @Primitives.InstantiateBondsFromConnectivity&quot;</span><span class="p">)</span></div>
+
+
+            
+<div class="viewcode-block" id="CreateAndJoinTrantientBond">
+<a class="viewcode-back" href="../api.html#Primitives.CreateAndJoinTrantientBond">[docs]</a>
+<span class="k">def</span> <span class="nf">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">dash_len</span><span class="p">,</span> <span class="n">bond_radius</span><span class="p">,</span> <span class="n">h_bonding</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates and joins transient bonds between two atoms.</span>
+
+<span class="sd">    :param pos_dict: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param mat_dict: (dict) Atomic symbols and their materials.</span>
+<span class="sd">    :param key1: (str) Symbol and number for the first atom.</span>
+<span class="sd">    :param key2: (str) Symbol and number for the second atom.</span>
+<span class="sd">    :param bond_type: (str) Type of bond.</span>
+<span class="sd">    :param dash_len: (float) Length of each dash in the bond.</span>
+<span class="sd">    :param bond_radius: (float) Radius of the bond.</span>
+<span class="sd">    :param h_bonding: (bool) Whether the bond is a hydrogen bond.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="c1">#temporary names for the bonds instantiated</span>
+    <span class="n">name1</span> <span class="o">=</span> <span class="n">key1</span> <span class="o">+</span> <span class="n">bond_type</span> <span class="o">+</span> <span class="n">key2</span>
+    <span class="n">name2</span> <span class="o">=</span> <span class="n">key2</span> <span class="o">+</span> <span class="n">bond_type</span> <span class="o">+</span> <span class="n">key1</span>
+    <span class="c1">#spawn positions for elements, their distance and how many dashes the bond would have</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key1</span><span class="p">)</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key2</span><span class="p">)</span>
+    <span class="n">vector</span> <span class="o">=</span> <span class="n">end</span> <span class="o">-</span> <span class="n">origin</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">vector</span><span class="o">.</span><span class="n">magnitude</span>
+    <span class="n">normal_vector</span> <span class="o">=</span> <span class="n">vector</span> <span class="o">/</span> <span class="n">distance</span>
+    <span class="n">dash_nmbr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">distance</span><span class="o">/</span><span class="n">dash_len</span><span class="p">)</span> <span class="c1">#number of times dash_len fits in distance.</span>
+    <span class="n">ref_nmbr</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dash_nmbr</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span> <span class="c1">#middle point in the number of dashes</span>
+    <span class="c1">#elements taken from names by removing numerical part</span>
+    <span class="n">type1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+    <span class="n">type2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">key2</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;OBJECT&quot;</span><span class="p">)</span>     <span class="c1">#ensure program is in object mode</span>
+    <span class="c1">#instantiating dashes between spawn points and mid point</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dash_nmbr</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#will instantiate dashes only in half of the spaces </span>
+            <span class="n">mid_point</span> <span class="o">=</span> <span class="p">(</span><span class="n">normal_vector</span> <span class="o">*</span> <span class="n">dash_len</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">origin</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_cylinder_add</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">bond_radius</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">dash_len</span><span class="p">,</span> <span class="n">enter_editmode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">mid_point</span><span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">vector</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">z</span><span class="o">/</span><span class="n">distance</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span> <span class="c1">#dash orientation management</span>
+            <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
+            <span class="k">if</span> <span class="n">h_bonding</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">ref_nmbr</span><span class="p">:</span> <span class="c1">#dashes closest to atom 1</span>
+                    <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">type1</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span> <span class="c1">#dashes closest to atom 2</span>
+                    <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">type2</span><span class="p">,</span>  <span class="n">mat_dict</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="s2">&quot;Xx&quot;</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span> <span class="c1">#For trantient or hydrogen bonding</span>
+    <span class="c1">#getting all the objects with name that starts with name1</span>
+    <span class="n">name1_objs</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name1</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Objects to join: </span><span class="si">{</span><span class="p">[</span><span class="n">o</span><span class="o">.</span><span class="n">name</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">name1_objs</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">JoinMeshesFromObjectList</span><span class="p">(</span><span class="n">name1_objs</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Joined meshes for: </span><span class="si">{</span><span class="n">name1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="CreateFragmentedBonds">
+<a class="viewcode-back" href="../api.html#Primitives.CreateFragmentedBonds">[docs]</a>
+<span class="k">def</span> <span class="nf">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiates bonds from atoms to the middle-point and joins them.</span>
+
+<span class="sd">    :param pos_dict: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param mat_dict: (dict) Atomic symbols and their materials.</span>
+<span class="sd">    :param atom1: (str) Symbol and number for the first atom.</span>
+<span class="sd">    :param atom2: (str) Symbol and number for the second atom.</span>
+<span class="sd">    :param bond_type: (str) Type of bond (single, double, or triple).</span>
+<span class="sd">    :param unit_cell: (str) Unit cell identifier.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#temporary names for the bonds instantiated</span>
+    <span class="n">name1</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="n">bond_type</span> <span class="o">+</span> <span class="n">atom2</span>
+    <span class="n">name2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="n">bond_type</span> <span class="o">+</span> <span class="n">atom1</span>
+    <span class="c1">#spawn positions for elements and their middle point</span>
+    <span class="n">v1</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atom1</span><span class="p">)</span>
+    <span class="n">v3</span> <span class="o">=</span> <span class="n">pos_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atom2</span><span class="p">)</span>
+    <span class="n">v2</span> <span class="o">=</span> <span class="p">(</span><span class="n">v1</span><span class="o">+</span><span class="n">v3</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span>
+    <span class="c1">#elements taken from names by removing numerical part</span>
+    <span class="n">element1</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atom1</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+    <span class="n">element2</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">atom2</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
+    <span class="c1">#instantiating bonds and assigning materials and names</span>
+    <span class="k">if</span> <span class="n">unit_cell</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+        <span class="n">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+        <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">element1</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span>
+        <span class="n">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">)</span>
+        <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name2</span><span class="p">,</span> <span class="n">element2</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span>  
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)</span>
+        <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="s2">&quot;Xx&quot;</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span>
+        <span class="n">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">v3</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)</span>
+        <span class="n">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">name2</span><span class="p">,</span> <span class="s2">&quot;Xx&quot;</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="MoveObjectOnLocalAxis">
+<a class="viewcode-back" href="../api.html#Primitives.MoveObjectOnLocalAxis">[docs]</a>
+<span class="k">def</span> <span class="nf">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Moves an object along its local axis.</span>
+
+<span class="sd">    :param obj_name: (str) Name of the object to move.</span>
+<span class="sd">    :param value: (tuple) Vector by which to move the object.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">obj_name</span><span class="p">]</span>
+    <span class="n">distz</span> <span class="o">=</span> <span class="n">mathutils</span><span class="o">.</span><span class="n">Vector</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="n">rotationMAT</span> <span class="o">=</span> <span class="n">obj</span><span class="o">.</span><span class="n">rotation_euler</span><span class="o">.</span><span class="n">to_matrix</span><span class="p">()</span>
+    <span class="n">rotationMAT</span><span class="o">.</span><span class="n">invert</span><span class="p">()</span>
+    <span class="n">zVector</span> <span class="o">=</span> <span class="n">distz</span> <span class="o">@</span> <span class="n">rotationMAT</span> <span class="c1"># project the vector to the world using the rotation matrix</span>
+    <span class="n">obj</span><span class="o">.</span><span class="n">location</span> <span class="o">+=</span> <span class="n">zVector</span></div>
+
+    
+<div class="viewcode-block" id="InstantiateBondBetweenTwoPoints">
+<a class="viewcode-back" href="../api.html#Primitives.InstantiateBondBetweenTwoPoints">[docs]</a>
+<span class="k">def</span> <span class="nf">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.06</span><span class="p">):</span> <span class="c1">#p1 and p2 are the origin and end points</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Instantiates a bond between two points.</span>
+
+<span class="sd">    :param p1: (Mathutils.Vector) Origin point.</span>
+<span class="sd">    :param p2: (Mathutils.Vector) End point.</span>
+<span class="sd">    :param r: (float) Radius of the bond.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">p2</span> <span class="o">-</span> <span class="n">p1</span> <span class="c1">#vector between the two points</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">magnitude</span>
+    <span class="n">m_p</span> <span class="o">=</span> <span class="p">(</span><span class="n">p1</span><span class="o">+</span><span class="n">p2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#midpoint between p1 and p2</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_cylinder_add</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">r</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">d</span><span class="p">,</span> <span class="n">enter_editmode</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">m_p</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="c1">#returns a bug if phi is 90 degrees, as tan(90) is not defined</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#to handle the 90 degrees exception</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="o">/</span><span class="n">d</span><span class="p">)</span> <span class="c1">#returns a bug if theta is 0 degrees</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span> </div>
+
+    
+<div class="viewcode-block" id="SelectTwoMeshesAndJoin">
+<a class="viewcode-back" href="../api.html#Primitives.SelectTwoMeshesAndJoin">[docs]</a>
+<span class="k">def</span> <span class="nf">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Selects two mesh objects and joins them.</span>
+
+<span class="sd">    :param name1: (str) Name of the first mesh object.</span>
+<span class="sd">    :param name2: (str) Name of the second mesh object.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="p">[</span><span class="n">obj</span> <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;MESH&#39;</span> <span class="ow">and</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">in</span> <span class="p">{</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">}]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Could not find two mesh objects named </span><span class="si">{</span><span class="n">name1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">name2</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">)</span>  <span class="c1"># Ensure we are in Object Mode</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obs</span><span class="p">:</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error joining objects </span><span class="si">{</span><span class="n">name1</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">name2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    <span class="c1">#finally:</span>
+    <span class="c1">#    for obj in obs:</span>
+    <span class="c1">#        obj.select_set(False)  # Deselect all objects after joining</span>
+    
+<div class="viewcode-block" id="JoinMeshesFromObjectList">
+<a class="viewcode-back" href="../api.html#Primitives.JoinMeshesFromObjectList">[docs]</a>
+<span class="k">def</span> <span class="nf">JoinMeshesFromObjectList</span><span class="p">(</span><span class="n">obj_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Joins a list of mesh objects.</span>
+
+<span class="sd">    :param obj_list: (list) List of mesh objects to join.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">mode_set</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s1">&#39;OBJECT&#39;</span><span class="p">)</span> <span class="c1"># Ensure we&#39;re in Object Mode before joining</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span> <span class="c1"># Deselect all objects first</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">obj_list</span><span class="p">:</span> <span class="c1"># Select and activate the objects in the list</span>
+        <span class="n">obj</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">obj_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">original_name</span> <span class="o">=</span> <span class="n">obj_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">join</span><span class="p">()</span> <span class="c1"># Join the selected objects</span>
+    <span class="n">joined_object</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">active_object</span>
+    <span class="n">joined_object</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">original_name</span></div>
+
+    <span class="c1">#print(f&quot;Joined {len(obj_list)} objects: {[obj.name for obj in obj_list]}&quot;)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -6,9 +6,10 @@ import mathutils
 
 def GetElementsPresentInMolecule(list):
     """
-    input: list of elements and their xyz coordinates (as string values)
-    summary: checks for first value of each entry in list, if symbol present, skip
-    output: a list of all the elements present (no repeats)
+    Checks for the presence of elements in the molecule and returns a list of unique elements.
+
+    :param list: (list) List of elements and their xyz coordinates (as string values).
+    :return: (list) A list of all the elements present (no repeats).
     """
     l = []
     for entry in list:
@@ -18,10 +19,11 @@ def GetElementsPresentInMolecule(list):
 
 def CreateDictionaryWithNamesAndPositions(list, number_of_elements):
     """
-    input: list where each row has 4 items: name, and xyz coordinates.
-    summary: creates a dictionary, assigns a number to each element, converts xyz into vector
-    output: key -> Symbol+number (e.g. C01) value -> Vector3(xyz) !!If a dummy atom is present, is called "?s!!
-    note: supports up to 999 elements.
+    Creates a dictionary with element names and their positions.
+
+    :param list: (list) Each row has 4 items: name, and xyz coordinates.
+    :param number_of_elements: (int) Number of elements.
+    :return: (dict) Dictionary with keys as Symbol+number (e.g., C01) and values as Vector3(xyz).
     """
     if number_of_elements > 999:
         print("@Refine_Elements: Too many atoms, cannot process")
@@ -38,9 +40,11 @@ def CreateDictionaryWithNamesAndPositions(list, number_of_elements):
             
 def AddAtomLabelsToConnectList(atom_dict, connect_list): #<----------------- source of bugs, I think!!!!!
     """
-    input: atom_dict <dictionary>: contains atom labels with symbols and index, connect_list <list>: list to update
-    summary: before this, the connectivity list did not have indexes on their corresponding elements
-    output: adds the indexes to the elements involved in specific bonds
+    Adds atom labels with symbols and indexes to the connectivity list.
+
+    :param atom_dict: (dict) Contains atom labels with symbols and indexes.
+    :param connect_list: (list) List to update.
+    :return: None
     """
     for key in atom_dict:
         key_num = int(''.join(filter(str.isdigit, key))) #removes char from string
@@ -52,7 +56,11 @@ def AddAtomLabelsToConnectList(atom_dict, connect_list): #<----------------- sou
                 
 def GetDataForExistingElements(list, ref_dict):
     """
-    gets a smaller list of type <Atom_Data> only for the present elements
+    Gets a smaller list of type <Atom_Data> only for the present elements.
+
+    :param list: (list) List of elements present.
+    :param ref_dict: (dict) Reference dictionary with element data.
+    :return: (dict) Dictionary with data for the present elements.
     """
     d = {}
     for element in list:

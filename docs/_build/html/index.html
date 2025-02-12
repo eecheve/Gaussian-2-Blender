@@ -40,11 +40,11 @@ into 3D models ready to be used in Blender, Maya, Unity, Unreal, and other progr
 <li><p>Check out the <a class="reference internal" href="usage.html"><span class="doc">Getting Started</span></a> section for further information on how to use the program.</p></li>
 <li><p>Check out the <a class="reference internal" href="developers.html"><span class="doc">For Developers</span></a> section if you plan to extend the functionality of the program.</p></li>
 <li><p>Check out the <a class="reference internal" href="gui.html"><span class="doc">GUI</span></a> section to see all the scripts and modules to build the program’s graphical user interface.</p></li>
+<li><p>Check out the <a class="reference internal" href="api.html"><span class="doc">Blender API</span></a> section to see all the scripts and modules that handle the creation of 3D models in Blender</p></li>
 </ul>
 <section id="contents">
 <h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h2>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="usage.html#prerequisites">Prerequisites</a></li>
@@ -71,84 +71,47 @@ into 3D models ready to be used in Blender, Maya, Unity, Unreal, and other progr
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#content">Content</a></li>
 <li class="toctree-l2"><a class="reference internal" href="gui.html#main-gui-script">Main GUI Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ActionsRegion">Actions Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#ActionsRegion.ActionsRegion"><code class="docutils literal notranslate"><span class="pre">ActionsRegion</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ActionsRegion">Actions Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BlenderPath">Blender Path Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BondConventions">Bond Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ConsoleRegion">Console Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Coordinates">Coordinates Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-CreateTooltip">Create Tooltip Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-HighlighterRegion">Highlighter Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Information">Information Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-InputRegion">Input Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonConventions">Ion Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Ionic">Ionic Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonRegion">Ion Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-OutputRegion">Output Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-SelectedIon">Selected Ion Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-TextRedirector">Text Redirector Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Tutorial">Tutorial Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Utility">Utility Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-WalkthroughRegion">Walkthrough Region Module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BlenderPath">Blender Path Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#BlenderPath.BlenderPath"><code class="docutils literal notranslate"><span class="pre">BlenderPath</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#main-body-script">Main Body script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#animate-module">Animate Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#atom-highlighter-module">Atom Highlighter Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#atom-data-module">Atom Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#bond-order-calculator-module">Bond Order Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#clear-transforms-module">Clear Transforms Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#create-materials-module">Create Materials Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#export-data-module">Export Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#import-data-module">Import Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#instantiate-molecules-module">Instantiate Molecules Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ions-module">Ions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#primitives-module">Primitives Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#raw-parameters-module">Raw Parameters Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#receive-parameters-module">Receive Parameters Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#refine-data-module">Refine Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#refine-elements-module">Refine Elements Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#xyz-reader-module">XYZ Reader Module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BondConventions">Bond Conventions Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#BondConventions.BondConventions"><code class="docutils literal notranslate"><span class="pre">BondConventions</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ConsoleRegion">Console Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#ConsoleRegion.ConsoleRegion"><code class="docutils literal notranslate"><span class="pre">ConsoleRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Coordinates">Coordinates Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#Coordinates.Coordinates"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-CreateTooltip">Create Tooltip Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#CreateTooltip.CreateTooltip"><code class="docutils literal notranslate"><span class="pre">CreateTooltip</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-HighlighterRegion">Highlighter Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#HighlighterRegion.HighlighterRegion"><code class="docutils literal notranslate"><span class="pre">HighlighterRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Information">Information Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#Information.Information"><code class="docutils literal notranslate"><span class="pre">Information</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-InputRegion">Input Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#InputRegion.InputRegion"><code class="docutils literal notranslate"><span class="pre">InputRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonConventions">Ion Conventions Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#IonConventions.IonConventions"><code class="docutils literal notranslate"><span class="pre">IonConventions</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Ionic">Ionic Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#Ionic.Ionic"><code class="docutils literal notranslate"><span class="pre">Ionic</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonRegion">Ion Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#IonRegion.IonRegion"><code class="docutils literal notranslate"><span class="pre">IonRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-OutputRegion">Output Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#OutputRegion.OutputRegion"><code class="docutils literal notranslate"><span class="pre">OutputRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-SelectedIon">Selected Ion Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#SelectedIon.SelectedIon"><code class="docutils literal notranslate"><span class="pre">SelectedIon</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-TextRedirector">Text Redirector Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#TextRedirector.TextRedirector"><code class="docutils literal notranslate"><span class="pre">TextRedirector</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Tutorial">Tutorial Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#Tutorial.Tutorial"><code class="docutils literal notranslate"><span class="pre">Tutorial</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Utility">Utility Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#Utility.Utility"><code class="docutils literal notranslate"><span class="pre">Utility</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="gui.html#module-WalkthroughRegion">Walkthrough Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="gui.html#WalkthroughRegion.WalkthroughRegion"><code class="docutils literal notranslate"><span class="pre">WalkthroughRegion</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Content</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#main-script">Main Script</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cite.html#program-development">Program development</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cite.html#program-applications">Program applications</a></li>
@@ -190,15 +153,13 @@ of the current changes is to submit the updated version as a usable app in the <
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Content</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#main-script">Main Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
 </ul>
 

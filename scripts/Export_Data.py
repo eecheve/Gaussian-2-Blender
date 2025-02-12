@@ -2,6 +2,14 @@ import bpy
 import os
     
 def ExportSceneAs(folder_path, file_name, file_type):
+    """
+    Exports the Blender scene to the specified file type.
+
+    :param folder_path: (str) The path to the folder where the file will be saved.
+    :param file_name: (str) The name of the file to be saved.
+    :param file_type: (str) The type of file to export (e.g., .fbx, .glb, .dae, .obj, .stl).
+    :return: None
+    """
     file_path = folder_path + "\\" + file_name + file_type
     
     export_functions = {

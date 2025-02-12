@@ -4,8 +4,10 @@ import os
 #---------------------------------------------------------------------------------------------
 def ExtractDataFromFile(path):
     """
-    path: <string> path to read the file
-    returns: a list of data. Each entry corresponds to a line in the file to read
+    Extracts data from a path and converts it to a list
+
+    :param path: (string) path to read the file
+    :return: (list) Each entry corresponds to a line in the file to read
     """
     l = []
     with open(path) as f:
@@ -15,13 +17,15 @@ def ExtractDataFromFile(path):
             l.append(line.split())
     return l
 
-def FilterOutExtraInformation(spec, line_break_nmbr, extra_nmbr, raw_data): #removes everything after the second line break from the .com file.
+def FilterOutExtraInformation(spec, line_break_nmbr, extra_nmbr, raw_data): 
     """
-    spec: <string> can be either 'above' or 'below'
-    line_break_nmbr: <int> will remove everything above or below that number of line breaks, depending of spec
-    extra_nmbr: <int> will remove an extra number of lines according to what's needed
-    raw_data: <[[values]]> data matrix to filter
-    returns: data matrix without the info bedore or after a specific number of line breaks.
+    Removes everything above or below a line break from a .com file.
+    
+    :param spec: <str> can be either 'above' or 'below'
+    :param line_break_nmbr: <int> will remove everything above or below that number of line breaks, depending of spec
+    :param extra_nmbr: <int> will remove an extra number of lines according to what's needed
+    :param raw_data: <[[values]]> data matrix to filter
+    :return: data matrix without the info before or after a specific number of line breaks.
     """
     if spec == 'above':
         l = []

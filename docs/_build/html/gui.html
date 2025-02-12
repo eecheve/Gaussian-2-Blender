@@ -14,7 +14,7 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Content" href="api.html" />
+    <link rel="next" title="Blender API" href="api.html" />
     <link rel="prev" title="For Developers" href="developers.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -37,9 +37,6 @@
 <h1>GUI<a class="headerlink" href="#gui" title="Link to this heading">¶</a></h1>
 <p>All the scripts and modules tasked to create the GUI for Gaussian-2-Blender.
 The GUI was built using Python’s <code class="docutils literal notranslate"><span class="pre">tkinter</span></code> library.</p>
-<section id="content">
-<h2>Content<a class="headerlink" href="#content" title="Link to this heading">¶</a></h2>
-</section>
 <section id="main-gui-script">
 <h2>Main GUI Script<a class="headerlink" href="#main-gui-script" title="Link to this heading">¶</a></h2>
 <dl class="py class">
@@ -1102,91 +1099,34 @@ and coordination number based on predefined ionic radii data.</p>
 
 
 <h3>Navigation</h3>
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GUI</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#content">Content</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#main-gui-script">Main GUI Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ActionsRegion">Actions Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ActionsRegion.ActionsRegion"><code class="docutils literal notranslate"><span class="pre">ActionsRegion</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ActionsRegion">Actions Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-BlenderPath">Blender Path Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-BondConventions">Bond Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ConsoleRegion">Console Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Coordinates">Coordinates Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-CreateTooltip">Create Tooltip Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-HighlighterRegion">Highlighter Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Information">Information Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-InputRegion">Input Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-IonConventions">Ion Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Ionic">Ionic Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-IonRegion">Ion Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-OutputRegion">Output Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-SelectedIon">Selected Ion Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-TextRedirector">Text Redirector Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Tutorial">Tutorial Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Utility">Utility Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-WalkthroughRegion">Walkthrough Region Module</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#module-BlenderPath">Blender Path Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#BlenderPath.BlenderPath"><code class="docutils literal notranslate"><span class="pre">BlenderPath</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-BondConventions">Bond Conventions Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#BondConventions.BondConventions"><code class="docutils literal notranslate"><span class="pre">BondConventions</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-ConsoleRegion">Console Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#ConsoleRegion.ConsoleRegion"><code class="docutils literal notranslate"><span class="pre">ConsoleRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Coordinates">Coordinates Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Coordinates.Coordinates"><code class="docutils literal notranslate"><span class="pre">Coordinates</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-CreateTooltip">Create Tooltip Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#CreateTooltip.CreateTooltip"><code class="docutils literal notranslate"><span class="pre">CreateTooltip</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-HighlighterRegion">Highlighter Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#HighlighterRegion.HighlighterRegion"><code class="docutils literal notranslate"><span class="pre">HighlighterRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Information">Information Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Information.Information"><code class="docutils literal notranslate"><span class="pre">Information</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-InputRegion">Input Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#InputRegion.InputRegion"><code class="docutils literal notranslate"><span class="pre">InputRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-IonConventions">Ion Conventions Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#IonConventions.IonConventions"><code class="docutils literal notranslate"><span class="pre">IonConventions</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Ionic">Ionic Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Ionic.Ionic"><code class="docutils literal notranslate"><span class="pre">Ionic</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-IonRegion">Ion Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#IonRegion.IonRegion"><code class="docutils literal notranslate"><span class="pre">IonRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-OutputRegion">Output Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#OutputRegion.OutputRegion"><code class="docutils literal notranslate"><span class="pre">OutputRegion</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-SelectedIon">Selected Ion Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#SelectedIon.SelectedIon"><code class="docutils literal notranslate"><span class="pre">SelectedIon</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-TextRedirector">Text Redirector Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#TextRedirector.TextRedirector"><code class="docutils literal notranslate"><span class="pre">TextRedirector</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Tutorial">Tutorial Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Tutorial.Tutorial"><code class="docutils literal notranslate"><span class="pre">Tutorial</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-Utility">Utility Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#Utility.Utility"><code class="docutils literal notranslate"><span class="pre">Utility</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#module-WalkthroughRegion">Walkthrough Region Module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#WalkthroughRegion.WalkthroughRegion"><code class="docutils literal notranslate"><span class="pre">WalkthroughRegion</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api.html">Content</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api.html#main-script">Main Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
 </ul>
 
@@ -1195,7 +1135,7 @@ and coordination number based on predefined ionic radii data.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="developers.html" title="previous chapter">For Developers</a></li>
-      <li>Next: <a href="api.html" title="next chapter">Content</a></li>
+      <li>Next: <a href="api.html" title="next chapter">Blender API</a></li>
   </ul></li>
 </ul>
 </div>

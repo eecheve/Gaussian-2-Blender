@@ -8,8 +8,10 @@ if not dir in sys.path:
 
 def extract_parameters_data(params_path):
     """
-    path: <string> path to read the file
-    returns: a list of data. Each entry corresponds to a line in the file to read
+    Extracts data from a parameters file.
+
+    :param params_path: (str) Path to the parameters file.
+    :return: (list) A list of data, each entry corresponding to a line in the file.
     """
     l = []
     with open(params_path, 'r') as f:
@@ -23,8 +25,10 @@ def extract_parameters_data(params_path):
 
 def get_parameters_data(params_path):
     """
-    :param params_path: <string> path to read the file
-    returns: a dictionary with the lines taken from the parameters file
+    Retrieves parameters data from a file and returns it as a dictionary.
+
+    :param params_path: (str) Path to the parameters file.
+    :return: (dict) A dictionary with the lines taken from the parameters file.
     """
     parameters = extract_parameters_data(params_path)
     parameters_dict = {

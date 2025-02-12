@@ -8,9 +8,10 @@ import mathutils
 
 def RefineCoordList(list):
     """
-    input: each entry on list is a list of four strings: the symbol and eac coordinate in x y z
-    summary: tries to convert string into float for each entry
-    output: each entry corresponds to an atom symbol and its coordinates
+    Converts string coordinates to floats for each entry in the list.
+
+    :param list: (list) Each entry is a list of four strings: the symbol and each coordinate in x, y, z.
+    :return: (list) Each entry corresponds to an atom symbol and its coordinates.
     """
     l = []
     for item in list:
@@ -25,10 +26,11 @@ def RefineCoordList(list):
 
 def RefineConnectivity(list):
     """
-    input: connectivity list where each line has all connect info for that one atom
-    summary: items in initial list must have at least 3 elements for them to be 
-    output: list of lists, each item in list has the numbers of the two atoms involved and the bond type.
-    """ 
+    Refines the connectivity list to ensure each item has at least three elements.
+
+    :param list: (list) Connectivity list where each line has all connect info for one atom.
+    :return: (list) List of lists, each item has the numbers of the two atoms involved and the bond type.
+    """
     l = []
     m = []
     for item in list: 
@@ -59,7 +61,10 @@ def RefineConnectivity(list):
 
 def ConvertStringToIndexInList(list):
     """
-    if an enty inside the list is a string of an int, it becomes an int.
+    Modifies entry list. If an enty inside the list is a string of an int, it becomes an int.
+
+    :param list: (list) List containing string representations of integers.
+    :return: (list) List with integers converted from strings.
     """
     l = []
     for item in list:
@@ -73,6 +78,14 @@ def ConvertStringToIndexInList(list):
     return l
 
 def AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements):
+    """
+    Adds element symbols to the connectivity list.
+
+    :param connect: (list) Connectivity list.
+    :param coords: (list) List of coordinates.
+    :param number_of_elements: (int) Number of elements.
+    :return: (list) Connectivity list with element symbols added.
+    """
     l = []
     if number_of_elements < 100:
         for entry in connect:
@@ -116,7 +129,10 @@ def AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements):
 
 def rebuild_list(str_list):
     """
-    takes a string of the list, and returns a list of strings
+    Converts a string representation of a list into an actual list of strings.
+
+    :param str_list: (str) String representation of a list.
+    :return: (list) List of strings.
     """
     k = str_list.split("_")
     str_in = ""
@@ -132,13 +148,22 @@ def rebuild_list(str_list):
 
 def make_tuple(str_in):
     """
-    makes a tuple out of a string of the form "(a,b,c)"
+    Converts a string representation of a tuple into an actual tuple.
+
+    :param str_in: (str) String of the form "(a,b,c)".
+    :return: (tuple) Tuple of the form (a, b, c).
     """
     str_in = str_in.strip("()")
     l = str_in.split(",")
     return tuple(l)
 
 def make_tuple_in_list(a_list):
+    """
+    Converts a list of string representations of tuples into a list of actual tuples.
+
+    :param a_list: (list) List of string representations of tuples.
+    :return: (list) List of tuples.
+    """
     l = []
     for entry in a_list:
         tup = make_tuple(entry)
@@ -146,6 +171,12 @@ def make_tuple_in_list(a_list):
     return l
 
 def refine_key_frames(raw_key_frames):
+    """
+    Refines raw key frames by converting coordinates to vectors.
+
+    :param raw_key_frames: (list) List of raw key frames.
+    :return: (list) List of refined key frames with vectors.
+    """
     raw = RefineCoordList(raw_key_frames)
     m = []
     count = len(raw[0])
@@ -162,7 +193,13 @@ def refine_key_frames(raw_key_frames):
     return m
 
 def create_frames_dict(key_frames):
-    dict = {}
+    """
+    Creates a dictionary of key frames with element names as keys and vectors as values.
+
+    :param key_frames: (list) List of key frames.
+    :return: (dict) Dictionary of key frames.
+    """
+    d = {}
     number_of_elements = len(key_frames)
     if number_of_elements < 100:
         for i in range(len(key_frames)):
@@ -173,8 +210,8 @@ def create_frames_dict(key_frames):
             vector_list = []
             for j in range(1, len(key_frames[i])):
                 vector_list.append(key_frames[i][j])
-            dict[name] = vector_list
-        return dict
+            d[name] = vector_list
+        return d
     elif number_of_elements < 1000:
         for i in range(len(key_frames)):
             if i < 9:
@@ -186,8 +223,8 @@ def create_frames_dict(key_frames):
             vector_list = []
             for j in range(1, len(key_frames[i])):
                 vector_list.append(key_frames[i][j])
-            dict[name] = vector_list
-        return dict
+            d[name] = vector_list
+        return d
     else:
         print("@Refine_Elements: Too many atoms, cannot process")
-        return dict
+        return d

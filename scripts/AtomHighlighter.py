@@ -5,10 +5,9 @@ def hex_to_rgba(hex_color):
     """
     Converts a hex color string to an RGBA list, supporting optional alpha.
 
-    Param: hex_color (str): A string representing the hex color (e.g., "#ea1517" or "#ea151780").
-
-    Returns:
-        list: A list of four float values representing the RGBA color.
+    :param hex_color: (str) A string representing the hex color (e.g., "#ea1517" or "#ea151780").
+    :return: A list of four float values representing the RGBA color.
+    :rtype: [float, float, float, float]
     """
     hex_color = hex_color.lstrip('#')
     if len(hex_color) == 6:  # No alpha
@@ -22,12 +21,10 @@ def find_bond_object(atom1, atom2):
     """
     Finds the bond object in the scene that contains atom1 and atom2 in its name.
 
-    Parameters:
-    atom1 (str): The name and index of the first atom (e.g., "C01").
-    atom2 (str): The name and index of the second atom (e.g., "C02").
-
-    Returns:
-    bpy.types.Object: The bond object if found, None otherwise.
+    :param atom1: (str) The name and index of the first atom (e.g., "C01").
+    :param atom2: (str) The name and index of the second atom (e.g., "C02").
+    :return: The bond object if found, None otherwise.
+    :rtype: bpy.types.Object or None
     """
     separators = ['-', '=', '#', '%', '_']
     for obj in bpy.data.objects:
@@ -40,11 +37,10 @@ def highlight_atom(atom_name, outline_size=1.5, transparency_value=0.5, outline_
     """
     Highlights an atom by creating a highlight sphere around it.
 
-    Parameters:
-    object_name (str): The name of the atom object to highlight.
-    outline_size (float): The size multiplier for the outline sphere relative to the atom object (default is 1.5).
-    transparency_value (float): The transparency value for the outline material (default is 0.5).
-    outline_color (str): The color of the outline in hex format (e.g., "#15eae3").
+    :param atom_name: (str) The name of the atom object to highlight.
+    :param outline_size: (float) The size multiplier for the outline sphere relative to the atom object (default is 1.5).
+    :param transparency_value: (float) The transparency value for the outline material (default is 0.5).
+    :param outline_color: (str) The color of the outline in hex format (default is "#15eae3").
     """
     # Try to get the object with the name atom_name
     obj = bpy.data.objects.get(atom_name)
@@ -68,67 +64,15 @@ def highlight_atom(atom_name, outline_size=1.5, transparency_value=0.5, outline_
     # Assign the material to the instantiated object
     highlight_sphere.data.materials.append(mat)
     
-def create_highlight_material_old(object_name, transparency_value=0.5, outline_color="#15eae3"):
-    """
-    Creates a highlight material with proper transparency handling.
-
-    Parameters:
-    object_name (str): The name of the object to highlight.
-    transparency_value (float): The transparency value for the outline material (default is 0.5).
-    outline_color (str): The color of the outline in hex format (e.g., "#15eae3").
-
-    Returns:
-    bpy.types.Material: The created highlight material.
-    """
-    mat = bpy.data.materials.new(name=f"{object_name}*highlight")
-    mat.use_nodes = True
-    nodes = mat.node_tree.nodes
-    links = mat.node_tree.links
-
-    # Clear default nodes
-    for node in nodes:
-        nodes.remove(node)
-
-    # Add new nodes
-    output_node = nodes.new(type='ShaderNodeOutputMaterial')
-    transparent_node = nodes.new(type='ShaderNodeBsdfTransparent')
-    emission_node = nodes.new(type='ShaderNodeEmission')
-    mix_node = nodes.new(type='ShaderNodeMixShader')
-    transparency_value_node = nodes.new(type='ShaderNodeValue')
-
-    # Set color and transparency correctly
-    rgba_color = hex_to_rgba(outline_color)  # Ensure this correctly extracts transparency
-    emission_node.inputs['Color'].default_value = rgba_color  # Ensure alpha is included
-    transparency_value_node.outputs[0].default_value = transparency_value  # Control transparency
-
-    # Link nodes correctly
-    links.new(transparency_value_node.outputs[0], mix_node.inputs[0])  # Mix factor
-    links.new(transparent_node.outputs['BSDF'], mix_node.inputs[1])  # Transparent path
-    links.new(emission_node.outputs['Emission'], mix_node.inputs[2])  # Emission path
-    links.new(mix_node.outputs[0], output_node.inputs[0])  # Final shader output
-
-    # Enable proper material transparency settings
-    mat.blend_method = 'BLEND'
-    mat.shadow_method = 'NONE'
-    mat.use_backface_culling = False  # Important for correct rendering
-    mat.show_transparent_back = True  # Ensures backface transparency in Eevee
-
-    # Set viewport display properties
-    mat.diffuse_color = rgba_color
-
-    return mat
-
 def create_highlight_material(object_name, transparency_value=0.5, outline_color="#15eae3"):
     """
     Creates a highlight material with the specified transparency and outline color.
 
-    Parameters:
-    object_name (str): The name of the object to highlight.
-    transparency_value (float): The transparency value for the material (default is 0.5).
-    outline_color (str): The color of the outline in hex format (e.g., "#15eae3").
-
-    Returns:
-    bpy.types.Material: The created highlight material.
+    :param object_name: (str) The name of the object to highlight.
+    :param transparency_value: (float) The transparency value for the material (default is 0.5).
+    :param outline_color: (str) The color of the outline in hex format (default is "#15eae3").
+    :return: The created highlight material.
+    :rtype: bpy.types.Material
     """
     mat = bpy.data.materials.new(name=f"{object_name}*highlight")
     mat.use_nodes = True
@@ -164,15 +108,11 @@ def highlight_bond(atom_1, atom_2, outline_size=0.33, transparency_value=0.5, ou
     """
     Highlights a bond by creating a highlight cylinder around it.
 
-    Parameters:
-    atom_1 (str): The name and index of the first atom (e.g., "C01").
-    atom_2 (str): The name and index of the second atom (e.g., "C02").
-    outline_size (float): The size multiplier for the outline cylinder relative to the bond (default is 0.3).
-    transparency_value (float): The transparency value for the outline material (default is 0.5).
-    outline_color (str): The color of the outline in hex format (e.g., "#15eae3").
-
-    Returns:
-    None
+    :param atom_1: (str) The name and index of the first atom (e.g., "C01").
+    :param atom_2: (str) The name and index of the second atom (e.g., "C02").
+    :param outline_size: (float) The size multiplier for the outline cylinder relative to the bond (default is 0.33).
+    :param transparency_value: (float) The transparency value for the outline material (default is 0.5).
+    :param outline_color: (str) The color of the outline in hex format (default is "#15eae3").
     """
     # Find the bond object
     bond_obj = find_bond_object(atom_1, atom_2)

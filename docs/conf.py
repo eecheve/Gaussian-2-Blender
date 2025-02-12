@@ -9,6 +9,23 @@
 import os
 import sys
 from pathlib import Path
+from unittest.mock import MagicMock
+
+#------------------------------------------------------------------------------------
+# Mock modules to avoid sphinx from crashing due to it not recognizing bpy
+class BpyMock(MagicMock):
+    @classmethod
+    def __getattr__(cls, name):
+        """
+        Mock module for the bpy that scaffolds the Blender Python API. This file will grow.
+        """
+        if name == "data":
+                return MagicMock(filepath="C:/Documents/Gaussian-2-Blender/dummy.blend")  # Return valid path
+        return MagicMock()
+
+MOCK_MODULES = ['bpy', 'bpy.types', 'bpy.props', 'bpy.utils', 'bpy.data', 'mathutils']
+sys.modules.update((mod_name, BpyMock()) for mod_name in MOCK_MODULES)
+#-------------------------------------------------------------------------------------
 
 # Get the absolute path of the project root
 root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
@@ -33,6 +50,7 @@ extensions = [
     'sphinx.ext.napoleon',    # Support for Google-style and NumPy-style docstrings
     'sphinx.ext.viewcode',    # Adds links to source code in documentation
     'sphinx.ext.autosummary', #To make automatic summaries for each function
+    #'sphinx.ext.graphviz', #to make connections between modules and scripts
     ]
 
 templates_path = ['_templates']

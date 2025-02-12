@@ -6,13 +6,11 @@ class XyzReader():
 
     def extract_coords_from_xyz_file(self, xyz_file_path):
         """
-        Extracts atomic data from an XYZ file.
-
-        Reads the file and returns lines with exactly four elements 
+        Extracts atomic data from an XYZ file. Reads the file and returns lines with exactly four elements 
         (atom symbol and three coordinates).
 
-        :param xyz_file_path (str): Path to the XYZ file.
-        :returns: A list of lines with atom symbol and (x, y, z) coordinates.
+        :param xyz_file_path: (str) Path to the XYZ file.
+        :return: A list of lines with atom symbol and (x, y, z) coordinates.
         """
         coords = []
         with open(xyz_file_path, 'r') as f:
@@ -27,8 +25,10 @@ class XyzReader():
 
     def assign_indices(self, raw_coords):
         """
-        Returns:
-        list: A list of lists with atomic symbols assigned a unique two-digit index.
+        Assigns unique two-digit indices to atomic symbols.
+
+        :param raw_coords: (list) List of raw coordinates.
+        :return: (list) A list of lists with atomic symbols assigned a unique two-digit index.
         """
         indexed_coords = []
         for index, entry in enumerate(raw_coords, start=1):
@@ -41,9 +41,8 @@ class XyzReader():
         """
         Computes bond orders for each unique pair of atoms using their coordinates.
 
-        Returns:
-        list: A list of tuples, where each tuple contains the atom pair, their coordinates,
-              and the bond order (if any).
+        :param raw_coordinates: (list) List of raw coordinates.
+        :return: (list) A list of tuples, where each tuple contains the atom pair, their coordinates, and the bond order (if any).
         """
         bond_orders = []
         bond_order_map = {1: '-', 2: '=', 3: '#'}

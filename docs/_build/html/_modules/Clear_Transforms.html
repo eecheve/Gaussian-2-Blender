@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clear_Transforms &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=f4115360" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Clear_Transforms</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+
+<div class="viewcode-block" id="Apply_Bond_Transforms">
+<a class="viewcode-back" href="../api.html#Clear_Transforms.Apply_Bond_Transforms">[docs]</a>
+<span class="k">def</span> <span class="nf">Apply_Bond_Transforms</span><span class="p">(</span><span class="n">bond_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies location and rotation transforms to a list of bond objects.</span>
+
+<span class="sd">    :param bond_list: (list) List of bond objects.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">bond</span> <span class="ow">in</span> <span class="n">bond_list</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">bond</span>
+        <span class="n">bond</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Apply_Element_Transforms">
+<a class="viewcode-back" href="../api.html#Clear_Transforms.Apply_Element_Transforms">[docs]</a>
+<span class="k">def</span> <span class="nf">Apply_Element_Transforms</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Applies location and rotation transforms to a list of element objects.</span>
+
+<span class="sd">    :param names_and_pos: (list) List of element object names.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">elem_name</span> <span class="ow">in</span> <span class="n">names_and_pos</span><span class="p">:</span>
+        <span class="n">elem_obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">elem_name</span><span class="p">]</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">elem_obj</span>
+        <span class="n">elem_obj</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">transform_apply</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="get_bond_obj_list">
+<a class="viewcode-back" href="../api.html#Clear_Transforms.get_bond_obj_list">[docs]</a>
+<span class="k">def</span> <span class="nf">get_bond_obj_list</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Retrieves a list of bond objects from the scene.</span>
+
+<span class="sd">    :return: (list) List of bond objects.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">mesh_objs</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span><span class="s1">&#39;MESH&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">mesh_objs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;=&quot;</span> <span class="ow">in</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;#&quot;</span> <span class="ow">in</span> <span class="n">ob</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="n">l</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ob</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">l</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

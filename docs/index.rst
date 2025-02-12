@@ -11,12 +11,12 @@ into 3D models ready to be used in Blender, Maya, Unity, Unreal, and other progr
 - Check out the :doc:`usage` section for further information on how to use the program.
 - Check out the :doc:`developers` section if you plan to extend the functionality of the program.
 - Check out the :doc:`gui` section to see all the scripts and modules to build the program's graphical user interface.
+- Check out the :doc:`api` section to see all the scripts and modules that handle the creation of 3D models in Blender
 
 Contents
 --------
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 2
    
    usage
    developers
