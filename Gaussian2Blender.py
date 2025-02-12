@@ -22,29 +22,45 @@ from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
+from gui.BondConventions import BondConventions
+from gui.HighlighterRegion import HighlighterRegion
 
 class GaussianToBlenderApp:
+    '''
+    GUI built using the tkinter library to convert computational chemistry files into 3D modeling files.
+    This application facilitates the conversion of Gaussian computational chemistry files into Blender-compatible
+    3D representations.
+    '''
     def __init__(self):
+        """
+        Initializes the GaussianToBlenderApp GUI, setting up the main application window and regions.
+        """
         self.root = tk.Tk()
-        #self.g2b_path = os.path.dirname(os.path.realpath(__file__)) #stores the dir of this python script
         self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
         self._initialize_regions()
+        self.place_regions()
         self.initialize_single_tutorial()
         self.initialize_animation_tutorial()
 
     def _initialize_g2b_path(self):
+        """
+        Determines the file path where the application is running, distinguishing between executable and script mode.
+        """
         if getattr(sys, 'frozen', False):  # Check if running as an executable
             self.g2b_path = os.path.dirname(sys.executable)
         else:  # Running as a script
             self.g2b_path = os.path.dirname(os.path.realpath(__file__))
     
     def _configure_root(self):
+        """
+        Configures the root tkinter window with title, dimensions, and resizability settings.
+        """
         self.root.title("Gaussian-2-Blender")
         #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
-        self.root.geometry('800x700')
+        self.root.geometry('800x800')
         self.root.resizable(0,0)
 
     def place(self, region, **kwargs):
@@ -57,40 +73,57 @@ class GaussianToBlenderApp:
         region.frame.grid(**kwargs)
         
     def _initialize_regions(self):
-        # To use the coordinates module
-        self.coordinates = Coordinates() #creating an instance of the Coordinates class
-        # Instructions Region
-        self.instructions = Information(self, self.root)
-        self.place(self.instructions, row=0, column=0, columnspan=2, pady=2, padx=2, sticky="ew")
+        """
+        Initializes various UI regions required for user interaction within the application.
+        """
+        self.coordinates = Coordinates() # To use the coordinates module
+        self.instructions = Information(self, self.root) # Instructions Region
+        
         # Blender Path Region
         self.bPathReg = BlenderPath(self.root)
-        self.place(self.bPathReg, row=1, column=0, columnspan=2, pady=2, padx=2, sticky="w")
         self.str_blenderPath = self.bPathReg.searchBlenderPath()
         self.bPathReg.setBlenderPath(self.str_blenderPath)
-        # Input Region
-        self.inputReg = InputRegion(self.root, self.g2b_path)
-        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
-        # Walkthrough Region
-        self.guideReg = WalkthroughRegion(self.root)
-        self.place(self.guideReg, row=2, column=1, padx=2, pady=2)
-        # Output Region
-        self.outputReg = OutputRegion(self.root, self.g2b_path)
-        self.place(self.outputReg, row=3, column=1, sticky="SW")
-        # Ion Region
-        self.ionReg = IonRegion(self.root)
-        self.place(self.ionReg, row=4, column=0, padx=2, pady=2, sticky="W", rowspan=2)
+
+        self.inputReg = InputRegion(self.root, self.g2b_path) # Input Region
+        self.guideReg = WalkthroughRegion(self.root) # Walkthrough Region
+        self.highlightReg = HighlighterRegion(self.root) # Highlighter Region
+        self.outputReg = OutputRegion(self.root, self.g2b_path) # Output Region
+        self.ionReg = IonRegion(self.root) # Ion Region
+        
+        #Conventions
         self.codeReg = IonConventions(self.root)
-        self.place(self.codeReg, row=4, column=1, padx=2, pady=2, sticky="W")
+        self.bondCodes = BondConventions(self.root)
+
         #Action Region
         self.actionReg = ActionsRegion(parent=self.root, 
                                        on_reset=self.reset_to_defaults, 
                                        on_convert=self.convert)
-        self.place(self.actionReg, row=5, column=1, pady=2, sticky="se")
-        # Console Region
-        self.consoleReg = ConsoleRegion(self.root)
-        self.place(self.consoleReg, row=6, column=0, columnspan=3, pady=2, padx=2)
+        
+        self.consoleReg = ConsoleRegion(self.root) # Console Region
+
+    def place_regions(self):
+        """
+        Places all initialized regions into the tkinter grid layout.
+        """
+        self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
+        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
+        self.place(self.guideReg, row=2, column=1, columnspan=2, padx=2, pady=2)
+        self.place(self.outputReg, row=3, column=1, sticky="SW", columnspan=2)
+        self.place(self.highlightReg, row=4, column=0, padx=2, pady=2)
+        self.place(self.ionReg, row=5, column=0, padx=2, pady=2, sticky="W", rowspan=2)
+        self.place(self.codeReg, row=5, column=1, padx=2, pady=2, sticky="W")
+        self.place(self.bondCodes, row=5, column=2, padx=2, pady=2, sticky="W")
+        self.place(self.actionReg, row=6, column=1, pady=2, columnspan=2, sticky="se")
+        self.place(self.consoleReg, row=7, column=0, columnspan=3, pady=2, padx=2)
 
     def initialize_single_tutorial(self):
+        """
+        Sets up the step-by-step tutorial for a single molecule conversion process.
+
+        calls:
+          - `InputRegion`, `OutputRegion`, `ActionRegion`
+        """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
             "2. Select the representational model for your 3D model", 
@@ -102,8 +135,8 @@ class GaussianToBlenderApp:
         # Step 2: Define the buttons that the user needs to press in order
         action_buttons = [
             self.inputReg.btn_setInputName,  # Button for selecting input file(s)
-            self.inputReg.drp_modelTypes,  # Dropdown to select model type (currently not used)
-            self.outputReg.drp_outputTypes,  # Dropdown to select output type (currently not used)
+            self.inputReg.drp_modelTypes,  # Dropdown to select model type
+            self.outputReg.drp_outputTypes,  # Dropdown to select output type
             self.actionReg.btn_convert       # Button to start the conversion process
         ]
     
@@ -115,6 +148,11 @@ class GaussianToBlenderApp:
         )
         
     def initialize_animation_tutorial(self):
+        """
+        Sets up the tutorial for animated molecular conversions.
+
+        Modules called: `InputRegion`, `OutputRegion`, `ActionRegion`
+        """
         text_descriptions = [
             "1. Click on the 'set' button to select one or more files to convert",
             "2. Select the representational model for your 3D model",
@@ -143,6 +181,12 @@ class GaussianToBlenderApp:
         ) 
         
     def convert(self):
+        """
+        Determines the operating system and executes the appropriate script for converting molecular data.
+
+        Calls:
+        - self.convert_manager
+        """
         current_os = platform.system()
         linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
         windows_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
@@ -159,9 +203,17 @@ class GaussianToBlenderApp:
             self.convert_manager(linux_exe_path)
         
     def reset_to_defaults(self):
+        """
+        Resets the GUI components to their default states, clearing paths, input selections, and highlights.
+
+        Calls:
+        - `clear` functions from the following modules:
+        `BlenderPath`, `OutputRegion`, `InputRegion`, `IonRegion`, `ConsoleRegion`, `Information`, `Tutorial`
+        """
         self.bPathReg.var_blenderPath.set(self.str_blenderPath)
         self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
         self.inputReg.clear_variables()
+        self.highlightReg.reset_highlighter_options()
         self.inputReg.reset_widget_bg_colors()
         self.ionReg.clear_variables()
         self.consoleReg.clear_content()
@@ -203,9 +255,12 @@ class GaussianToBlenderApp:
         return True
         
     def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                              is_ionic, unit_cell, str_ion_list, is_anim):
+                              is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """
         overwrites bat script to handle the export or animation of molecules
+
+        Calls:
+        - `clear_file_contents` and `append_lines_to_file` from `Utility` module.
     
         :param i_path: Input file path
         :param i_name: Input file name
@@ -235,11 +290,19 @@ class GaussianToBlenderApp:
             str(is_ionic),
             str(unit_cell),
             str_ion_list,
-            is_anim
+            is_anim,
+            hl_atoms,
+            hl_bonds
         ]
         Utility.append_lines_to_file(params_script, lines)
     
     def overwrite_animation_frames(self, is_anim):
+        """
+        If the input represents an animation, prepares animation frame data for conversion.
+
+        Calls:
+        - `append_lines_to_file` from `Utility` module.
+        """
         if is_anim:
             anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
             if not os.path.exists(anim_frames):
@@ -251,9 +314,12 @@ class GaussianToBlenderApp:
             Utility.append_lines_to_file(anim_frames, frames_list_strings)
         
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim):
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """ 
         Function to execute bat file that communicates with blender's python API 
+
+        Calls:
+        - `self.overwrite_animation_frames` and `self.overwrite_parameters_script`.
     
         :param excec_loc: path to the ReadMolecules.bat file which communicates with python
         :param b_path: location of the blender executable
@@ -270,10 +336,16 @@ class GaussianToBlenderApp:
         """
         self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
         self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim)
+                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds)
         subprocess.call([exec_loc, b_path])
     
     def assign_ionic_params(self):
+        """
+        Retrieves and formats ionic parameters for molecular conversion.
+
+        Calls:
+        - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
+        """
         is_ionic = self.ionReg.int_hasIons.get()
         if not is_ionic:
             is_ionic = "0"
@@ -310,17 +382,23 @@ class GaussianToBlenderApp:
         """
         Manages the process of converting Gaussian input files to 3D object files using Blender's API.
 
+        Calls:
+        - `self.exceptions_test_passed`.
+        - `self.assign_ionic_params`.
+        - `self.individual_convert`.
+
+
         :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
 
         The function performs the following steps:
         1. Collects necessary paths and parameters for the conversion process.
         2. Validates the inputs using the `exceptions_test_passed` function.
-        3. If validation succeeds:
-            - Retrieves ionic parameters.
-            - Iterates through the list of input files and calls the `individual_convert` function to process each file.
+        3. If validation succeeds: 
+        3.1. Retrieves ionic parameters
+        3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
         4. If validation fails, outputs relevant error messages to the console.
+
         """
-        #exec_loc = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
         anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
         b_path = self.bPathReg.var_blenderPath.get() #blender path
         i_type = self.inputReg.var_inputTypes.get() #input file type
@@ -330,6 +408,8 @@ class GaussianToBlenderApp:
         o_path = self.outputReg.ent_outputPath.get() #output path
         o_type = self.outputReg.var_outputTypes.get() #output type
         is_anim = self.inputReg.var_isAnimation.get() #is animation
+        hl_atoms = self.highlightReg.var_hlAtomList.get() #list of atoms to highlight
+        hl_bonds = self.highlightReg.var_hlBondList.get() #list of bonds to highlight
         if self.exceptions_test_passed(b_path, i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -340,21 +420,35 @@ class GaussianToBlenderApp:
                 print("Converting main molecule for animation")
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list, is_anim) 
+                                    unit_cell, str_ion_list, is_anim,
+                                    hl_atoms, hl_bonds) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                        unit_cell, str_ion_list, is_anim)   
+                                        unit_cell, str_ion_list, is_anim,
+                                        hl_atoms, hl_bonds)   
         else:
             print("Cannot convert input to fbx animation, check console for errors")
 
     def help_single_convert(self):
+        """
+        Starts the step-by-step tutorial for single molecule conversion.
+
+        Calls:
+        - `start_tutorial` from `Tutorial` module.
+        """
         self.animation_convert_tutorial.reset_buttons_to_default()
         self.single_convert_tutorial.start_tutorial()
 
     def help_animation_convert(self):
+        """
+        Starts the step-by-step tutorial for animation-based molecular conversions.
+
+        Calls:
+        - `start_tutorial` from `Tutorial` module.
+        """
         self.single_convert_tutorial.reset_buttons_to_default()
         self.animation_convert_tutorial.start_tutorial()
             

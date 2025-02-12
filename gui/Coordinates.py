@@ -1,5 +1,9 @@
 class Coordinates():
     def __init__(self):
+        """
+        Initializes the Coordinates object, setting up a mapping for newline characters
+        based on the operating system (Windows, Unix, Mac).
+        """
         self.newline_char_map = { 
             "windows": '\r\n',
             "unix": '\n',
@@ -7,6 +11,18 @@ class Coordinates():
         }
 
     def get_coordinates_line_numbers(self, file_lines, extension=".com"):
+        """
+        Finds the line numbers where the Cartesian coordinates are located in the file.
+
+        :param file_lines: List of lines read from the molecular structure file.
+        :type file_lines: list of str
+        :param extension: File extension to check (default is ".com").
+        :type extension: str, optional
+
+        :return: A tuple (start_line, end_line), where start_line is the first line
+                    containing coordinates and end_line is the line after the last coordinate.
+        :rtype: tuple
+        """
         start_line = 0
         end_line = 0
         if extension != ".com":
@@ -30,14 +46,15 @@ class Coordinates():
         """
         Extracts Cartesian coordinates from a molecular structure file.
 
-        :param file_path (str): The path to the file containing the molecular structure.
+        :param file_path: The path to the file containing the molecular structure.
+        :type file_path: str
 
-        Returns:
-            list of tuples: A list where each tuple contains:
-                - element (str): The atomic symbol (e.g., "C" for carbon).
-                - x (float): The x-coordinate of the atom.
-                - y (float): The y-coordinate of the atom.
-                - z (float): The z-coordinate of the atom.
+        :return: A list of tuples, where each tuple contains:
+                 - atom_id (str): The atomic symbol with an element index (e.g., "C01" for carbon).
+                 - x (float): The x-coordinate of the atom.
+                 - y (float): The y-coordinate of the atom.
+                 - z (float): The z-coordinate of the atom.
+        :rtype: list of tuple
         """
         #for compatibility, will check the type of newline on each .com file
         newline_type = self.check_newline_characters(file_path)
@@ -67,6 +84,15 @@ class Coordinates():
         return coordinates 
 
     def check_newline_characters(self, file_path):
+        """
+        Checks the newline character type used in a file.
+
+        :param file_path: The path to the file to check.
+        :type file_path: str
+
+        :return: The newline type used in the file: 'windows', 'unix', or 'mac'.
+        :rtype: str or None
+        """
         with open(file_path, 'rb') as f:
             content = f.read()
         if b'\r\n' in content:
@@ -84,10 +110,19 @@ class Coordinates():
 
     def check_animationframes(self, file_paths):
         """
-        1. Gets the first element of every tuple in the first coordinate
-        2. Creates a list 'coord' of coordinates for every file_path in the list
-        3. Compares the values in ref_elements and all_elements.
-        4. Returns True if all the elements match, otherwise False.
+        Checks whether all animation frames (molecular structure files) have the same number 
+        and identity of elements.
+
+        1. Gets the first element of every tuple in the first coordinate set.
+        2. Creates a list 'coord' of coordinates for every file_path in the list.
+        3. Compares the values in ref_elements (from the first file) with those in all_elements.
+        4. Returns True if all elements match, otherwise returns False.
+
+        :param file_paths: List of file paths to the molecular structure files.
+        :type file_paths: list of str
+
+        :return: True if all files have the same number and identity of elements, False otherwise.
+        :rtype: bool
         """
         print("Checking animation frames...")
         ref_elements = [] #reference elements to compare
@@ -114,11 +149,14 @@ class Coordinates():
     def combine_animation_frames(self, file_paths):
         """
         Combines Cartesian coordinates from multiple molecular structure files into a single list of tuples.
-        :param file_paths: a list of strings containing all the paths of the molecules to render as an animation
-        Returns:
-            list of tuples: A list where each tuple contains:
-                - atom_id (str): The identifier of the atom (e.g., "C01" for carbon).
-                - coordinates (float, float, ..., float): The Cartesian coordinates for the atom across all animation frames.
+
+        :param file_paths: A list of strings containing the paths to the files representing different frames.
+        :type file_paths: list of str
+
+        :return: A list of tuples, where each tuple contains:
+                 - atom_id (str): The identifier of the atom (e.g., "C01" for carbon).
+                 - coordinates (float, float, ..., float): The Cartesian coordinates for the atom across all frames.
+        :rtype: list of tuple
         """
         print("combining animation frames...")
         if self.check_animationframes(file_paths):

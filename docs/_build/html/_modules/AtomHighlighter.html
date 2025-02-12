@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AtomHighlighter &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for AtomHighlighter</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<div class="viewcode-block" id="hex_to_rgba">
+<a class="viewcode-back" href="../api.html#AtomHighlighter.hex_to_rgba">[docs]</a>
+<span class="k">def</span> <span class="nf">hex_to_rgba</span><span class="p">(</span><span class="n">hex_color</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Converts a hex color string to an RGBA list, supporting optional alpha.</span>
+
+<span class="sd">    :param hex_color: (str) A string representing the hex color (e.g., &quot;#ea1517&quot; or &quot;#ea151780&quot;).</span>
+<span class="sd">    :return: A list of four float values representing the RGBA color.</span>
+<span class="sd">    :rtype: [float, float, float, float]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">hex_color</span> <span class="o">=</span> <span class="n">hex_color</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">hex_color</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span><span class="p">:</span>  <span class="c1"># No alpha</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">hex_color</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">hex_color</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>  <span class="c1"># Includes alpha</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">hex_color</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid hex color format. Use #RRGGBB or #RRGGBBAA.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="find_bond_object">
+<a class="viewcode-back" href="../api.html#AtomHighlighter.find_bond_object">[docs]</a>
+<span class="k">def</span> <span class="nf">find_bond_object</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Finds the bond object in the scene that contains atom1 and atom2 in its name.</span>
+
+<span class="sd">    :param atom1: (str) The name and index of the first atom (e.g., &quot;C01&quot;).</span>
+<span class="sd">    :param atom2: (str) The name and index of the second atom (e.g., &quot;C02&quot;).</span>
+<span class="sd">    :return: The bond object if found, None otherwise.</span>
+<span class="sd">    :rtype: bpy.types.Object or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">separators</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sep</span> <span class="ow">in</span> <span class="n">separators</span><span class="p">:</span>
+            <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atom1</span><span class="si">}{</span><span class="n">sep</span><span class="si">}{</span><span class="n">atom2</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atom2</span><span class="si">}{</span><span class="n">sep</span><span class="si">}{</span><span class="n">atom1</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">obj</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="highlight_atom">
+<a class="viewcode-back" href="../api.html#AtomHighlighter.highlight_atom">[docs]</a>
+<span class="k">def</span> <span class="nf">highlight_atom</span><span class="p">(</span><span class="n">atom_name</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae333&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Highlights an atom by creating a highlight sphere around it.</span>
+
+<span class="sd">    :param atom_name: (str) The name of the atom object to highlight.</span>
+<span class="sd">    :param outline_size: (float) The size multiplier for the outline sphere relative to the atom object (default is 1.5).</span>
+<span class="sd">    :param transparency_value: (float) The transparency value for the outline material (default is 0.5).</span>
+<span class="sd">    :param outline_color: (str) The color of the outline in hex format (default is &quot;#15eae3&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Try to get the object with the name atom_name</span>
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">atom_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Object with name &#39;</span><span class="si">{</span><span class="n">atom_name</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Create the highlight sphere</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_uv_sphere_add</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">outline_size</span> <span class="o">*</span> <span class="n">obj</span><span class="o">.</span><span class="n">dimensions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">location</span><span class="p">)</span>
+    <span class="n">highlight_sphere</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span>
+    <span class="n">highlight_sphere</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atom_name</span><span class="si">}</span><span class="s2">*highlight&quot;</span> <span class="c1">#naming format with &#39;*&#39; to avoid interverence with animate module</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">shade_smooth</span><span class="p">()</span> <span class="c1"># Apply smooth shading</span>
+    
+    <span class="c1"># Make the instantiated object a child of the selected object</span>
+    <span class="n">highlight_sphere</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">obj</span>
+    <span class="n">highlight_sphere</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Create the highlight material</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">create_highlight_material</span><span class="p">(</span><span class="n">atom_name</span><span class="p">,</span> <span class="n">transparency_value</span><span class="p">,</span> <span class="n">outline_color</span><span class="p">)</span>
+    
+    <span class="c1"># Assign the material to the instantiated object</span>
+    <span class="n">highlight_sphere</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="create_highlight_material">
+<a class="viewcode-back" href="../api.html#AtomHighlighter.create_highlight_material">[docs]</a>
+<span class="k">def</span> <span class="nf">create_highlight_material</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a highlight material with the specified transparency and outline color.</span>
+
+<span class="sd">    :param object_name: (str) The name of the object to highlight.</span>
+<span class="sd">    :param transparency_value: (float) The transparency value for the material (default is 0.5).</span>
+<span class="sd">    :param outline_color: (str) The color of the outline in hex format (default is &quot;#15eae3&quot;).</span>
+<span class="sd">    :return: The created highlight material.</span>
+<span class="sd">    :rtype: bpy.types.Material</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">object_name</span><span class="si">}</span><span class="s2">*highlight&quot;</span><span class="p">)</span>
+    <span class="n">mat</span><span class="o">.</span><span class="n">use_nodes</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">nodes</span>
+    <span class="n">links</span> <span class="o">=</span> <span class="n">mat</span><span class="o">.</span><span class="n">node_tree</span><span class="o">.</span><span class="n">links</span>
+
+    <span class="c1"># Clear default nodes</span>
+    <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">nodes</span><span class="p">:</span>
+        <span class="n">nodes</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+
+    <span class="c1"># Add necessary nodes</span>
+    <span class="n">output_node</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShaderNodeOutputMaterial&#39;</span><span class="p">)</span>
+    <span class="n">principled_node</span> <span class="o">=</span> <span class="n">nodes</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ShaderNodeBsdfPrincipled&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set base color and transparency</span>
+    <span class="n">base_color</span> <span class="o">=</span> <span class="n">hex_to_rgba</span><span class="p">(</span><span class="n">outline_color</span><span class="p">)</span>
+    <span class="n">base_color</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">transparency_value</span>  <span class="c1"># Apply alpha value</span>
+
+    <span class="n">principled_node</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;Base Color&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">base_color</span>
+    <span class="n">principled_node</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;Alpha&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">default_value</span> <span class="o">=</span> <span class="n">transparency_value</span>
+
+    <span class="c1"># Link nodes</span>
+    <span class="n">links</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">principled_node</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="s1">&#39;BSDF&#39;</span><span class="p">],</span> <span class="n">output_node</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="s1">&#39;Surface&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Set transparency settings for proper viewport display</span>
+    <span class="n">mat</span><span class="o">.</span><span class="n">blend_method</span> <span class="o">=</span> <span class="s1">&#39;BLEND&#39;</span>
+    <span class="n">mat</span><span class="o">.</span><span class="n">shadow_method</span> <span class="o">=</span> <span class="s1">&#39;NONE&#39;</span>
+    <span class="n">mat</span><span class="o">.</span><span class="n">use_backface_culling</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">return</span> <span class="n">mat</span></div>
+
+    
+<div class="viewcode-block" id="highlight_bond">
+<a class="viewcode-back" href="../api.html#AtomHighlighter.highlight_bond">[docs]</a>
+<span class="k">def</span> <span class="nf">highlight_bond</span><span class="p">(</span><span class="n">atom_1</span><span class="p">,</span> <span class="n">atom_2</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Highlights a bond by creating a highlight cylinder around it.</span>
+
+<span class="sd">    :param atom_1: (str) The name and index of the first atom (e.g., &quot;C01&quot;).</span>
+<span class="sd">    :param atom_2: (str) The name and index of the second atom (e.g., &quot;C02&quot;).</span>
+<span class="sd">    :param outline_size: (float) The size multiplier for the outline cylinder relative to the bond (default is 0.33).</span>
+<span class="sd">    :param transparency_value: (float) The transparency value for the outline material (default is 0.5).</span>
+<span class="sd">    :param outline_color: (str) The color of the outline in hex format (default is &quot;#15eae3&quot;).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Find the bond object</span>
+    <span class="n">bond_obj</span> <span class="o">=</span> <span class="n">find_bond_object</span><span class="p">(</span><span class="n">atom_1</span><span class="p">,</span> <span class="n">atom_2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">bond_obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: Bond between &#39;</span><span class="si">{</span><span class="n">atom_1</span><span class="si">}</span><span class="s2">&#39; and &#39;</span><span class="si">{</span><span class="n">atom_2</span><span class="si">}</span><span class="s2">&#39; not found.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+    <span class="c1"># Get the locations of the atoms</span>
+    <span class="n">loc1</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">atom_1</span><span class="p">]</span><span class="o">.</span><span class="n">location</span>
+    <span class="n">loc2</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">atom_2</span><span class="p">]</span><span class="o">.</span><span class="n">location</span>
+    
+    <span class="c1"># Calculate bond location and orientation</span>
+    <span class="n">bond_loc</span> <span class="o">=</span> <span class="p">(</span><span class="n">loc1</span> <span class="o">+</span> <span class="n">loc2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">bond_orientation</span> <span class="o">=</span> <span class="n">loc2</span> <span class="o">-</span> <span class="n">loc1</span>
+    
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">bond_orientation</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">bond_orientation</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">bond_orientation</span><span class="o">.</span><span class="n">z</span> <span class="o">/</span> <span class="n">bond_orientation</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">theta</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Create the highlight cylinder</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">primitive_cylinder_add</span><span class="p">(</span><span class="n">radius</span><span class="o">=</span><span class="n">outline_size</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="n">bond_orientation</span><span class="o">.</span><span class="n">length</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">bond_loc</span><span class="p">)</span>
+    <span class="n">highlight_cylinder</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">object</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atom_1</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">atom_2</span><span class="si">}</span><span class="s2">*highlight&quot;</span>
+    <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">shade_smooth</span><span class="p">()</span> <span class="c1"># Apply smooth shading</span>
+    
+    <span class="c1"># Set the rotation of the cylinder</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
+    
+    <span class="c1"># Create the highlight material</span>
+    <span class="n">mat</span> <span class="o">=</span> <span class="n">create_highlight_material</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">atom_1</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">atom_2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">transparency_value</span><span class="p">,</span> <span class="n">outline_color</span><span class="p">)</span>
+    
+    <span class="c1"># Assign the material to the instantiated object</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+    
+    <span class="c1"># Set the parent of the highlight cylinder to the bond object</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">bond_obj</span>
+    
+    <span class="c1"># Ensure the highlight cylinder retains its location and rotation</span>
+    <span class="n">highlight_cylinder</span><span class="o">.</span><span class="n">matrix_parent_inverse</span> <span class="o">=</span> <span class="n">bond_obj</span><span class="o">.</span><span class="n">matrix_world</span><span class="o">.</span><span class="n">inverted</span><span class="p">()</span></div>
+
+        
+<span class="c1">#TO DEBUG</span>
+<span class="c1">#mat_dict = {&#39;C&#39;: bpy.data.materials[&#39;C&#39;], &#39;S&#39;: bpy.data.materials[&#39;S&#39;], &#39;O&#39;: bpy.data.materials[&#39;O&#39;], &#39;H&#39;: bpy.data.materials[&#39;H&#39;], &#39;Xx&#39;: bpy.data.materials[&#39;Xx&#39;]}</span>
+
+<span class="c1">#highlight_atom(atom_name=&quot;C01&quot;, transparency_value=0.2)</span>
+<span class="c1">#highlight_atom(atom_name=&quot;O04&quot;, transparency_value=0.2)</span>
+<span class="c1">#highlight_bond(atom_1=&quot;C01&quot;, atom_2=&quot;O04&quot;, transparency_value=0.2, outline_size=0.33)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

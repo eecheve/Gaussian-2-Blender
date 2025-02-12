@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ions &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Ions</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">mathutils</span>
+
+<span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    
+<span class="kn">import</span> <span class="nn">Atom_Data</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">Atom_Data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="CreateIonDataFromInput">
+<a class="viewcode-back" href="../api.html#Ions.CreateIonDataFromInput">[docs]</a>
+<span class="k">def</span> <span class="nf">CreateIonDataFromInput</span><span class="p">(</span><span class="n">ionInputList</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    takes values in each entry of the ionInputList and makes a IonDataDict</span>
+
+<span class="sd">    :param ionInputList: &lt;list&gt;(string, string, string, string) list of ions to specify and their properties</span>
+<span class="sd">    :return: dictionary&lt;string, Ionic&gt; dict of Ionic class wich contains info with no radius value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ionInput</span> <span class="ow">in</span> <span class="n">ionInputList</span><span class="p">:</span>
+        <span class="n">symbol</span> <span class="o">=</span> <span class="n">ionInput</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">charge</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ionInput</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">coordination</span> <span class="o">=</span> <span class="n">ionInput</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">symbol</span><span class="p">]</span> <span class="o">=</span> <span class="n">Atom_Data</span><span class="o">.</span><span class="n">Ionic</span><span class="p">(</span><span class="n">charge</span><span class="p">,</span> <span class="n">coordination</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="GetIonPositions">
+<a class="viewcode-back" href="../api.html#Ions.GetIonPositions">[docs]</a>
+<span class="k">def</span> <span class="nf">GetIonPositions</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param names_and_pos: dict&lt;string, Vector3&gt; dictionary that contains the position of each labelled element present.</span>
+<span class="sd">    :param ion_input: dict&lt;string, Ionic&gt; dict of Ionic class wich contains info with no radius value</span>
+<span class="sd">    :return: dict&lt;string, Vector3&gt; refined dict with only the ions from the ion_input dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">names_and_pos</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">element_num</span> <span class="ow">in</span> <span class="n">names_and_pos</span><span class="p">:</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">element_num</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()])</span> <span class="c1">#removes int from string</span>
+        <span class="k">if</span> <span class="n">element</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ion_input</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">element_num</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="RemoveNonSpecifiedIons">
+<a class="viewcode-back" href="../api.html#Ions.RemoveNonSpecifiedIons">[docs]</a>
+<span class="k">def</span> <span class="nf">RemoveNonSpecifiedIons</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    removes from the ion dictionary the elements that were not specified in input list</span>
+
+<span class="sd">    :param ion_dict: &lt;dictionary&gt; contains the symbols and possible ion radii for all present elements,</span>
+<span class="sd">    :param ion_input: dict&lt;string, Ionic&gt; dict of Ionic class wich contains info with no radius value</span>
+<span class="sd">    :return: smaller dictionary</span>
+<span class="sd">    :raises [Error]: prints out an error if input list contains an ion not present in dictionary or if ion_input is empty</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ion_num</span> <span class="ow">in</span> <span class="n">ion_dict</span><span class="p">:</span>
+        <span class="n">ion</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ion_num</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()])</span> <span class="c1">#removes int from string</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ion_input</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: no ion specification received&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">ion_dict</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">ion_input</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">ion_dict</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">entry</span> <span class="o">==</span> <span class="n">ion</span><span class="p">:</span>
+                        <span class="n">d</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span> <span class="o">=</span> <span class="n">ion_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">ion</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: specified ion for&quot;</span><span class="p">,</span><span class="n">entry</span><span class="p">,</span><span class="s2">&quot;is not present in molecule, specification will be ignored&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="RemoveSpecifiedIonsFromElementDict">
+<a class="viewcode-back" href="../api.html#Ions.RemoveSpecifiedIonsFromElementDict">[docs]</a>
+<span class="k">def</span> <span class="nf">RemoveSpecifiedIonsFromElementDict</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">element_dict</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    removes specified ions from dict of all elements present</span>
+
+<span class="sd">    :param ion_dict: dict&lt;str:Ionic&gt; contains the symbols and the possible radii for specified elements,</span>
+<span class="sd">    :param element_dict: dict&lt;str:bpy.data.object&gt;: dictionary off all elements present</span>
+<span class="sd">    :return: dict&lt;str:Ionic&gt; smaller dictionary</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">element_dict</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">element_num</span> <span class="ow">in</span> <span class="n">element_dict</span><span class="p">:</span>
+        <span class="n">element</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">element_num</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">i</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()])</span> <span class="c1">#removes int from string</span>
+        <span class="k">if</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">ion_dict</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">d</span><span class="p">[</span><span class="n">element_num</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">element_dict</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: none of the specified ions is present in the molecule&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+<div class="viewcode-block" id="GetIonDataFromInput">
+<a class="viewcode-back" href="../api.html#Ions.GetIonDataFromInput">[docs]</a>
+<span class="k">def</span> <span class="nf">GetIonDataFromInput</span><span class="p">(</span><span class="n">ion_data_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    gets the correct ionic radii data set from the ionInputList for each element in ion_dict</span>
+
+<span class="sd">    :param ion_dict: dict&lt;str:Ionic&gt; contains the symbols and possible ionic radii for elements of interest</span>
+<span class="sd">    :param ion_input: dict&lt;string:Ionic&gt; dict of Ionic class wich contains info with no radius value</span>
+<span class="sd">    :return: dictionary&lt;string, float&gt;: Element symbol and their ionic radius</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">ion</span> <span class="ow">in</span> <span class="n">ion_input</span><span class="p">:</span>
+        <span class="n">symbol</span> <span class="o">=</span> <span class="n">ion</span>
+        <span class="n">charge</span> <span class="o">=</span> <span class="n">ion_input</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span><span class="o">.</span><span class="n">charge</span>
+        <span class="n">coordination</span> <span class="o">=</span> <span class="n">ion_input</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span><span class="o">.</span><span class="n">coordination</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ion_data_dict</span><span class="p">:</span>
+            <span class="n">ion_data_list</span> <span class="o">=</span> <span class="n">ion_data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">ion_data</span> <span class="ow">in</span> <span class="n">ion_data_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ion_data</span><span class="o">.</span><span class="n">charge</span> <span class="o">==</span> <span class="n">charge</span> <span class="ow">and</span> <span class="n">ion_data</span><span class="o">.</span><span class="n">coordination</span> <span class="o">==</span> <span class="n">coordination</span><span class="p">:</span>
+                    <span class="n">ion_input</span><span class="p">[</span><span class="n">ion</span><span class="p">]</span><span class="o">.</span><span class="n">set_radius</span><span class="p">(</span><span class="n">ion_data</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span></div>
+
+
+    
+    
+            
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -24,10 +24,12 @@ def clear_all_animations():
         
 def calculate_number_of_frames(anim_frames_path):
     """
-    Calculates the number of frames from the animation data file.
-
-    :param anim_frames_path (str): The file path to the animation frames data file.
-    Returns: (int) The number of frames in the animation.
+    Determines the number of animation frames based on an input file.
+    
+    :param anim_frames_path: Path to the animation frames data file.
+    :type anim_frames_path: str
+    :return: Number of frames in the animation.
+    :rtype: int
     """
     with open(anim_frames_path, 'r') as file:
         first_line = file.readline().strip()  # Read the first line
@@ -39,14 +41,17 @@ def calculate_number_of_frames(anim_frames_path):
 
 def separate_elements_from_bonds():
     """
-    Separates objects in the scene into elements and bonds based on their names.
-    Returns:
-        tuple: A tuple containing a list of elements and a list of bonds.
+    Categorizes scene objects as elements or bonds based on naming conventions.
+    
+    :return: A tuple containing lists of elements and bonds.
+    :rtype: tuple[list, list]
     """
     context = bpy.context
     elements = []
     bonds = []
     for ob in context.scene.objects:
+        if "highlight" in ob.name:
+            continue  # Skip objects that are highlights
         if '-' in ob.name or '=' in ob.name or '_' in ob.name or '#' in ob.name or '%' in ob.name:
             bonds.append(ob)
         else:
@@ -55,11 +60,12 @@ def separate_elements_from_bonds():
 
 def filter_bond_list_by_type(bond_list):
     """
-    Filters bonds into categories based on their names.
-    Args:
-        bond_list (list): List of bond objects.
-    Returns:
-        tuple: A tuple containing lists of different types of bonds.
+    Categorizes bonds into different types based on naming conventions.
+    
+    :param bond_list: List of bond objects.
+    :type bond_list: list
+    :return: Tuple of categorized bond lists (dashed, single, aromatic, double, triple bonds).
+    :rtype: tuple[list, list, list, list, list]
     """
     dashed_bonds = []
     single_bonds = []
@@ -83,10 +89,12 @@ def filter_bond_list_by_type(bond_list):
 
 def insert_keyframes_to_all(number_of_frames, step_size=10):
     """
-    Inserts keyframes for all objects in the scene at intervals of 10 frames.
-    Args:
-        number_of_frames (int): The total number of keyframes to insert.
-        step_size (int): the spacing between each frame
+    Inserts location keyframes for all objects in the scene at specified frame intervals.
+    
+    :param number_of_frames: Total number of frames.
+    :type number_of_frames: int
+    :param step_size: Frame interval for keyframe insertion.
+    :type step_size: int, optional
     """
     context = bpy.context
     for i in range(0,number_of_frames):
@@ -95,11 +103,14 @@ def insert_keyframes_to_all(number_of_frames, step_size=10):
             
 def update_keyframe_locations(target, step_size, locations):
     """
-    Updates keyframe locations for a target object.
-    Args:
-        target (bpy.types.Object): The object to update.
-        step_size (int): The interval between frames.
-        locations (list): The locations for each frame (list of vectors).
+    Updates and inserts keyframe locations for a target object.
+    
+    :param target: Object to update.
+    :type target: bpy.types.Object
+    :param step_size: Interval between frames.
+    :type step_size: int
+    :param locations: List of location vectors for keyframes.
+    :type locations: list[mathutils.Vector]
     """
     target.location = locations[0]
     target.keyframe_insert(data_path="location", frame=0) #first keyframe is the first location
@@ -110,11 +121,13 @@ def update_keyframe_locations(target, step_size, locations):
 def update_keyframe_rotations(target, step_size, normals):
     """
     Updates keyframe rotations for a target object based on normals.
-    Args:
-        target (bpy.types.Object): The object to update.
-        extra_frames_nmbr (int): The number of additional frames.
-        step_size (int): The interval between frames.
-        normals (list): The normal vectors for each frame.
+
+    :param target: Object to update.
+    :type target: bpy.types.Object
+    :param step_size: Interval between frames.
+    :type step_size: int
+    :param normals: List of normal vectors for each frame
+    :type normals: list[mathutils.Vector]
     """
     target.keyframe_insert(data_path="rotation_euler", frame=0)
     for i, normal in enumerate(normals):
@@ -133,24 +146,27 @@ def update_keyframe_rotations(target, step_size, normals):
         
 def ExtractDataFromFile(path):
     """
-    path: <string> path to read the file
-    returns: a list of data. Each entry corresponds to a line in the file to read
+    Extracts data from a path and stores it as a list
+
+    :param path: <string> path to read the file
+    :returns: List[str] of data. Each entry corresponds to a line in the file to read
     """
     l = []
     with open(path) as f:
         content = f.readlines()
         for line in content:
-            # store the line as list in file_data
-            l.append(line.split())
+            l.append(line.split()) # store the line as list in file_data
     print("8.1: The data in animation_frames.txt was properly read")
     return l
 
 def refine_anim_data(raw_anim_data):
     """
-    Refines raw animation data into vectors.
-    : param raw_anim_data (list): The raw animation data.
-    Returns:
-        list: A refined list of data points with vectors.
+    Converts raw animation data into numerical vectors.
+    
+    :param raw_anim_data: Raw animation data.
+    :type raw_anim_data: list[list[str]]
+    :return: Refined animation data with numerical vectors.
+    :rtype: list[list]
     """
     refined_data = []
     for data_point in raw_anim_data:
@@ -170,21 +186,15 @@ def refine_anim_data(raw_anim_data):
 def get_bond_locations(bond_name, anim_data, type):
     """
     Calculates the center of mass for each bond location.
-    Args:
-        bond_name (str): The name of the bond.
-        anim_data (list): The animation data.
-        type (str): The bond type.
-    Returns:
-        list: The list of center locations for each bond.
-    """
-    """
-    Calculates the center of mass for each bond location.
-    Args:
-        bond_name (str): The name of the bond.
-        anim_data (list): The animation data.
-        type (str): The bond type.
-    Returns:
-        list: The list of center locations for each bond.
+
+    :param bond_name: The name of the bond.
+    :type bond_name: str
+    :param anim_data: The animation data.
+    :type anim_data: List[str]
+    :param type: The bond type.
+    :type type: char
+    :return: The list of center locations for each bond.
+    :rtype: List[mathutils.Vector]
     """
     print("Get bond locations is being called")
     l = []  # List to store center locations
@@ -213,12 +223,12 @@ def get_bond_locations(bond_name, anim_data, type):
 def get_bond_normals(bond_name, anim_data, type): #<---------------------------------------------------------
     """
     Calculates the normal vector for each bond location.
-    Args:
-        bond_name (str): The name of the bond.
-        anim_data (list): The animation data.
-        type (str): The bond type.
-    Returns:
-        list: The list of normal vectors for the bond.
+
+    :param bond_name: (str) The name of the bond.
+    :param anim_data: (List[str]) The animation data.
+    :param type: (str) The bond type.
+    :return: The list of normal vectors for the bond.
+    :rtype: List[Mathutils.Vector]
     """
     print("get bond normals is being called")
     n = []
@@ -244,10 +254,10 @@ def get_bond_normals(bond_name, anim_data, type): #<----------------------------
 def animate_elements_from_anim_data(anim_data, step_size=10):
     """
     Animates elements based on provided animation data.
-    Args:
-        anim_data (list): The animation data.
-        step_size (int): The interval between frames.
-        extra_frames (int): The number of additional frames.
+    
+    :param anim_data: (List[str]) The animation data.
+    :param step_size: (int) The interval between frames.
+    :param extra_frames: (int) The number of additional frames.
     """
     print("11: elements are being animated")
     for data_point in anim_data:
@@ -258,12 +268,12 @@ def animate_elements_from_anim_data(anim_data, step_size=10):
 def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=10):
     """
     Animates bonds based on their type and provided animation data.
-    Args:
-        bond_type_list (list): The list of bonds to animate.
-        anim_data (list): The animation data.
-        bond_type (str): The bond type.
-        step_size (int): The interval between frames.
-        extra_frames (int): The number of additional frames.
+    
+    :param bond_type_list: (List[char]) The list of bonds to animate.
+    :param anim_data: (List[str]) The animation data.
+    :param bond_type: (char) The bond type.
+    :param step_size: (int) The interval between frames.
+    :param extra_frames: (int) The number of additional frames.
     """
     print("11: bonds are being animated")
     if len(bond_type_list) != 0:
@@ -280,8 +290,10 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
 def detect_bond_types(bond_list):
     """
     Extract the unique bond types from the bond list.
-    :param bond_list (list): List of bpy.data.objects corresponding to the bonds in the molecule
-    Returns a set of unique bonds in bond_list 
+
+    :param bond_list: (List[bpy.data.object]) objects corresponding to the bonds in the molecule
+    :return: a set of unique bonds in bond_list 
+    :rtype: List[char]
     """
     spacer_mapping = {'_': 0, '-': 1, '%': 2, '=': 3, '#': 4}
     detected_spacers = {}
@@ -295,11 +307,18 @@ def detect_bond_types(bond_list):
 
 def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, end_frame):
     """
-    Animates elements and bonds based on the provided data.
-    Args:
-        anim_data (list): The animation data for elements.
-        bond_list (list): The list of bonds to animate.
-        bond_types (dict): A dictionary with all the unique bond types in the molecule
+    Constructs animations for elements and bonds in the scene.
+    
+    :param anim_data: Processed animation data.
+    :type anim_data: list[list]
+    :param bond_list: List of bond objects.
+    :type bond_list: list
+    :param bond_types: Dictionary mapping bond symbols to indices.
+    :type bond_types: dict
+    :param step_size: Frame interval between keyframes.
+    :type step_size: int
+    :param end_frame: Last frame in the animation.
+    :type end_frame: int
     """
     print("10: Animations are being built")
     print("10: build_animation() frame end should be:", end_frame)
@@ -316,49 +335,78 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, 
                                    bond_type=type,
                                    step_size=step_size)
     
-def bake_all_animations(end_frame=40):
+def bake_all_animations(element_list, bond_list, end_frame=40):
     """
-    Bakes all animations for every object in the scene.
+    Bakes all the animations in the scene.
+    
+    :param element_list: (List[bpy.data.object]) The list of elements present in the scene
+    :param bond_list: (List[bpy.data.object]) The list of bonds present in the scene
+    :param end_frame: (int) Optional. Determines the length of the animation
     """
-    print("12: all animations were baked")
-    bpy.ops.nla.bake(frame_start=0, frame_end=end_frame,
-                     step=1, only_selected=False, visual_keying=True, 
-                     clear_constraints=False, clear_parents=False, 
-                     bake_types={'OBJECT'})
+    print("12: Starting baking animations...")
+    
+    total_objects = len(element_list) + len(bond_list)
+    print(f"12.1: Total objects to bake: {total_objects}")
+    
+    # Bake elements
+    for element in element_list:
+        bpy.context.view_layer.objects.active = element
+        bpy.ops.object.select_all(action='DESELECT')
+        element.select_set(True)
+        print(f"12.2: Baking animation for element: {element.name}")
+        bpy.ops.nla.bake(
+            frame_start=0, frame_end=end_frame,
+            step=1, only_selected=True, visual_keying=True, 
+            clear_constraints=False, clear_parents=False,  
+            bake_types={'OBJECT'}
+        )
+    
+    # Bake bonds
+    for bond in bond_list:
+        bpy.context.view_layer.objects.active = bond
+        bpy.ops.object.select_all(action='DESELECT')
+        bond.select_set(True)
+        print(f"12.3: Baking animation for bond: {bond.name}")
+        bpy.ops.nla.bake(
+            frame_start=0, frame_end=end_frame,
+            step=1, only_selected=True, visual_keying=True, 
+            clear_constraints=False, clear_parents=False,  
+            bake_types={'OBJECT'}
+        )
+    
+    print("12.4: Baking complete!")
+
+
                      
 def animate(anim_frames_path, step_size=20):
     """
-    Animates elements and bonds in the scene based on the provided animation data.
+    Orchestrates animation of molecular elements and bonds.
     
-    :param anim_frames_path (str): The file path to the animation frames data. 
-    :param step_size (int): The number of frames between keyframes. Determines how frequently keyframes are inserted.
-    :param number_of_frames (int): The total number of frames for the animation. 
-    The function will:
-        1. Extract animation data from the specified file.
-        2. Refine the extracted data into a format suitable for animation.
-        3. Separate elements and bonds in the scene and detect bond types.
-        4. Set the end frame of the animation.
-        5. Animate the elements and bonds using the extracted data.
-        6. Bake the animation, which stores the keyframe data for all objects.
+    :param anim_frames_path: Filepath of the animation data.
+    :type anim_frames_path: str
+    :param step_size: Frame interval between keyframes.
+    :type step_size: int, optional
     """
     print("8: animation function is called")
     raw_anim_data = ExtractDataFromFile(anim_frames_path)
     anim_data = refine_anim_data(raw_anim_data)
     number_of_frames = calculate_number_of_frames(anim_frames_path)
     print("9: the number of frames is: ", number_of_frames)
-    #element_list = separate_elements_from_bonds()[0]
+    element_list = separate_elements_from_bonds()[0]
     bond_list = separate_elements_from_bonds()[1]
     bond_types = detect_bond_types(bond_list)
     print("9: present bonds are: ", bond_types)
     end_frame = int((number_of_frames - 1)*step_size)
     print("9: the end frame is assigned to: ", end_frame)
     build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
-    bake_all_animations(end_frame)
+    #bake_all_animations(end_frame)
+    bake_all_animations(element_list, bond_list, end_frame)
 
 def export_animation(filepath):
     """
     Exports the animation to the given filepath.
-    :param filepath: Path to save the exported file.
+
+    :param filepath: (str) Path to save the exported file.
     """
     print("13: the export path is", filepath)
     try:
@@ -393,8 +441,9 @@ def export_animation(filepath):
 #bond_list = separate_elements_from_bonds()[1]
 #bond_types = detect_bond_types(bond_list)
 #end_frame = (number_of_frames - 1)*20
+
 #build_animations(anim_data, bond_list, bond_types, 20, number_of_frames, end_frame)
-#bake_all_animations(anim_length)
+#bake_all_animations(element_list, bond_list, end_frame)
 #export_animation(export_path)
 
 #clear_all_animations()

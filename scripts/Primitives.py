@@ -7,10 +7,11 @@ import mathutils
 
 def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, van_der_waals = False):
     """
-    pos_dict: Dictionary<string, Vector3> all the symbols & labels of elements and their Vector3 positions
-    element_data: Dictionary<string, Atom_Data(class)> available data for the present elements
-    materials_dict: Dictionary<string, bpy.Material> materials that can be accessed with present elements' symbols
-    summary: instantiates spheres of different radii & materials at the allocated Vector3 positions.
+    instantiates spheres of different radii & materials at the allocated Vector3 positions.
+
+    :param pos_dict: Dictionary<string, Vector3> all the symbols & labels of elements and their Vector3 positions
+    :param element_data: Dictionary<string, Atom_Data(class)> available data for the present elements
+    :param materials_dict: Dictionary<string, bpy.Material> materials that can be accessed with present elements' symbols
     """
     for key in pos_dict:
         e_symbol = ''.join(i for i in key if not i.isdigit()) #remove numbers from name
@@ -30,6 +31,14 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             print("AddElement(): invalid element name")
             
 def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
+    """
+    Instantiates spheres for ions at the allocated Vector3 positions.
+
+    :param pos_dict: (dict) All the symbols and labels of ions and their Vector3 positions.
+    :param ion_data: (dict) Available data for the present ions.
+    :param materials_dict: (dict) Materials that can be accessed with present ions' symbols.
+    :return: None
+    """
     for key in pos_dict:
         i_symbol = ''.join(i for i in key if not i.isdigit()) #remove numbers from name
         if i_symbol in ion_data:
@@ -46,10 +55,12 @@ def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
                     
 def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     """
-    obj_name: <string> the name of the sphere to be instantiated
-    e_symbol: atom symbol, taken from name, used to access materials
-    materials_dict: Dictionary<string, bpy.Material> materials that can be accessed with present elements' symbols
-    summary: Changes names of the active object and appends to it the required material.
+    names of the active object and appends to it the required material.
+
+    :param obj_name: (str) The name of the sphere to be instantiated.
+    :param e_symbol: (str) Atom symbol, taken from name, used to access materials.
+    :param materials_dict: (dict) Materials that can be accessed with present elements' symbols.
+    :return: None
     """
     bpy.context.active_object.name = obj_name
     bpy.context.active_object.data.name = obj_name
@@ -60,6 +71,15 @@ def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
         print("6: Material not found @Primitives.ModifyNamesAndMaterials")
     
 def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell="0"):
+    """
+    Instantiates bonds based on connectivity information.
+
+    :param pos_dict: (dict) Atomic symbols and their positions.
+    :param mat_dict: (dict) Atomic symbols and their materials.
+    :param connect_list: (list) List of connections between atoms.
+    :param unit_cell: (str) Unit cell identifier.
+    :return: None
+    """
     #helper functions to be stored in a dictionary, which wich will depend on the bond_type
     def handle_single_bond(atom1, atom2):
         bond_label = atom1 + '-' + atom2
@@ -129,6 +149,19 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
 
             
 def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_len, bond_radius, h_bonding=False): 
+    """
+    Creates and joins transient bonds between two atoms.
+
+    :param pos_dict: (dict) Atomic symbols and their positions.
+    :param mat_dict: (dict) Atomic symbols and their materials.
+    :param key1: (str) Symbol and number for the first atom.
+    :param key2: (str) Symbol and number for the second atom.
+    :param bond_type: (str) Type of bond.
+    :param dash_len: (float) Length of each dash in the bond.
+    :param bond_radius: (float) Radius of the bond.
+    :param h_bonding: (bool) Whether the bond is a hydrogen bond.
+    :return: None
+    """
     scene = bpy.context.scene
     #temporary names for the bonds instantiated
     name1 = key1 + bond_type + key2
@@ -175,12 +208,15 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
 
 def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell="0"):
     """
-    pos_dict: Dictionary<string, Vector3>: atomic symbols and their positions
-    mat_dict: Dictionary<string, bpy.Material>: atomic symbols and their materials
-    atom1: <string>: symbol & number for atom to join 1
-    atom2: <string>: symbol & number for atom to join 2
-    bond_type: <string>: either single, double or triple
-    summary: instantiates bonds from atoms to middle-point and joins them
+    Instantiates bonds from atoms to the middle-point and joins them.
+
+    :param pos_dict: (dict) Atomic symbols and their positions.
+    :param mat_dict: (dict) Atomic symbols and their materials.
+    :param atom1: (str) Symbol and number for the first atom.
+    :param atom2: (str) Symbol and number for the second atom.
+    :param bond_type: (str) Type of bond (single, double, or triple).
+    :param unit_cell: (str) Unit cell identifier.
+    :return: None
     """
     #temporary names for the bonds instantiated
     name1 = atom1 + bond_type + atom2
@@ -205,6 +241,13 @@ def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell
         ModifyNamesAndMaterials(name2, "Xx", mat_dict)
         
 def MoveObjectOnLocalAxis(obj_name, value):
+    """
+    Moves an object along its local axis.
+
+    :param obj_name: (str) Name of the object to move.
+    :param value: (tuple) Vector by which to move the object.
+    :return: None
+    """
     obj = bpy.data.objects[obj_name]
     distz = mathutils.Vector(value)
     rotationMAT = obj.rotation_euler.to_matrix()
@@ -213,6 +256,14 @@ def MoveObjectOnLocalAxis(obj_name, value):
     obj.location += zVector
     
 def InstantiateBondBetweenTwoPoints(p1, p2, r=0.06): #p1 and p2 are the origin and end points
+    """
+    Instantiates a bond between two points.
+
+    :param p1: (Mathutils.Vector) Origin point.
+    :param p2: (Mathutils.Vector) End point.
+    :param r: (float) Radius of the bond.
+    :return: None
+    """
     v = p2 - p1 #vector between the two points
     d = v.magnitude
     m_p = (p1+p2)/2 #midpoint between p1 and p2
@@ -229,6 +280,13 @@ def InstantiateBondBetweenTwoPoints(p1, p2, r=0.06): #p1 and p2 are the origin a
     bpy.context.object.rotation_euler[2] = phi 
     
 def SelectTwoMeshesAndJoin(name1, name2):
+    """
+    Selects two mesh objects and joins them.
+
+    :param name1: (str) Name of the first mesh object.
+    :param name2: (str) Name of the second mesh object.
+    :return: None
+    """
     scene = bpy.context.scene
     obs = [obj for obj in scene.objects if obj.type == 'MESH' and obj.name in {name1, name2}]
     if len(obs) != 2:
@@ -247,6 +305,12 @@ def SelectTwoMeshesAndJoin(name1, name2):
     #        obj.select_set(False)  # Deselect all objects after joining
     
 def JoinMeshesFromObjectList(obj_list):
+    """
+    Joins a list of mesh objects.
+
+    :param obj_list: (list) List of mesh objects to join.
+    :return: None
+    """
     bpy.ops.object.mode_set(mode='OBJECT') # Ensure we're in Object Mode before joining
     bpy.ops.object.select_all(action='DESELECT') # Deselect all objects first
     for obj in obj_list: # Select and activate the objects in the list

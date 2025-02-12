@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>For Developers &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <script src="_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="GUI" href="gui.html" />
+    <link rel="prev" title="Getting Started" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="for-developers">
+<h1>For Developers<a class="headerlink" href="#for-developers" title="Link to this heading">¶</a></h1>
+<section id="gui-overview">
+<h2>GUI overview:<a class="headerlink" href="#gui-overview" title="Link to this heading">¶</a></h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">GaussianToBlender.py</span></code> application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender’s API. The main script, utilizing <code class="docutils literal notranslate"><span class="pre">tkinter</span></code>, manages different regions and functionalities, including input, output, console, and ion management.</p>
+</section>
+<section id="key-gui-modules">
+<h2>Key GUI Modules:<a class="headerlink" href="#key-gui-modules" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Information.py</span></code>: Manages help and about sections, providing instructions and application details.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BlenderPath.py</span></code>: Allows users to set the path to the Blender executable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InputRegion.py</span></code>: Handles input file selection and management.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OutputRegion.py</span></code>: Manages output paths and file types.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConsoleRegion.py</span></code>: Displays console output and error messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IonRegion.py</span></code>: Manages ion information for the molecules.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IonConventions.py</span></code>: Displays ion coordination codes and their meanings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ActionsRegion.py</span></code>: Provides buttons for resetting values and initiating conversions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Utility.py</span></code>: Contains utility functions for file management.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Coordinates.py</span></code>: Extracts Cartesian coordinates from molecular structure files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TextRedirector.py</span></code>: Redirects print statements to the console region within the GUI.</p></li>
+</ul>
+</section>
+</section>
+<section id="file-structure">
+<h1>File structure<a class="headerlink" href="#file-structure" title="Link to this heading">¶</a></h1>
+<p>For users interested in extending the functionality of the program. This project is organized into several directories and files as follows:</p>
+<section id="gaussiantoblender">
+<h2>GaussianToBlender/<a class="headerlink" href="#gaussiantoblender" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LICENSE.txt</span></code>: License file</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">README.md</span></code>: Project documentation in README form</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GaussianToBlender.exe</span></code>: Executable file created from GaussianToBlender.py</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">GaussianToBlender.py</span></code>: Python script for converting Gaussian data to Blender models (with tkinter GUI)</p></li>
+</ul>
+</section>
+<section id="gui">
+<h2>gui/<a class="headerlink" href="#gui" title="Link to this heading">¶</a></h2>
+<p>Folder containing GUI-related scripts</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>: Optional init file for the gui package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Information.py</span></code>: Manages help and about sections, provides instructions and application details</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BlenderPath.py</span></code>: Allows users to set the path to the Blender executable</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">InputRegion.py</span></code>: Handles input file selection and management</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OutputRegion.py</span></code>: Manages output paths and file types</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ConsoleRegion.py</span></code>: Displays console output and error messages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IonRegion.py</span></code>: Manages ion information for the molecules</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">IonConventions.py</span></code>: Displays ion coordination codes and their meanings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ActionsRegion.py</span></code>: Provides buttons for resetting values and initiating conversions</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Utility.py</span></code>: Contains utility functions for file management</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Coordinates.py</span></code>: Extracts Cartesian coordinates from molecular structure files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TextRedirector.py</span></code>: Redirects print statements to the console region within the GUI</p></li>
+<li><p>… (Other GUI-related files)</p></li>
+</ul>
+</section>
+<section id="scripts">
+<h2>scripts/<a class="headerlink" href="#scripts" title="Link to this heading">¶</a></h2>
+<p>Folder containing Blender API related scripts and modules</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>: Optional init file for the scripts package</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Main_Body.py</span></code>: Main script that orchestrates the molecular data conversion process</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AtomData.py</span></code>: Stores atomic and ionic data (e.g., radii, colors)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ImportData.py</span></code>: Extracts and filters molecular data from input files</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RefineData.py</span></code>: Refines molecular coordinates and connectivity data</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">RefineElements.py</span></code>: Identifies unique elements, positions, and connectivity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Create_Materials.py</span></code>: Manages materials for molecular elements in Blender</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Primitives.py</span></code>: Instantiates and manages 3D primitives for atoms and bonds</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Export_Data.py</span></code>: Exports Blender scenes and animations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Ions.py</span></code>: Handles ionic data within molecular structures</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Instantiate_Molecules.py</span></code>: Instantiates 3D geometries from Cartesian coordinates</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Raw_Parameters.py</span></code>: Extracts and processes raw coordinates/connectivity</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Animate.py</span></code>: Manages animation of molecular structures</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Clear_Transforms.py</span></code>: Applies transformations to bonds and elements</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Receive_Parameters.py</span></code>: Extracts and processes parameter data into a dictionary</p></li>
+<li><p>… (Other Blender-related scripts)</p></li>
+</ul>
+</section>
+<section id="input-examples">
+<h2>input_examples/<a class="headerlink" href="#input-examples" title="Link to this heading">¶</a></h2>
+<p>Folder containing example input files</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">com_files/example1.com</span></code>: Example input file 1 (e.g., Gaussian .com format)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">xyz_files/example2.xyz</span></code>: Example input file 2 (e.g., xyz format)</p></li>
+</ul>
+</section>
+<section id="output">
+<h2>output/<a class="headerlink" href="#output" title="Link to this heading">¶</a></h2>
+<p>Default folder for exporting molecules and animation results</p>
+<ul class="simple">
+<li><p>folder starts empty</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">For Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gui-overview">GUI overview:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#key-gui-modules">Key GUI Modules:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#file-structure">File structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#gaussiantoblender">GaussianToBlender/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gui">gui/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#scripts">scripts/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#input-examples">input_examples/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output">output/</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="usage.html" title="previous chapter">Getting Started</a></li>
+      <li>Next: <a href="gui.html" title="next chapter">GUI</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/developers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IonRegion &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for IonRegion</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+
+<span class="kn">from</span> <span class="nn">gui.CreateTooltip</span> <span class="kn">import</span> <span class="n">CreateTooltip</span>
+<span class="kn">from</span> <span class="nn">gui.SelectedIon</span> <span class="kn">import</span> <span class="n">SelectedIon</span>
+
+<div class="viewcode-block" id="IonRegion">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion">[docs]</a>
+<span class="k">class</span> <span class="nc">IonRegion</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Section of the app that receives information about possible ions present&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_variables</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_widgets</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_layout</span><span class="p">()</span>
+
+<div class="viewcode-block" id="IonRegion.initialize_variables">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.initialize_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize all variables used in the ion information section.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_ionNames</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_hasIons</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">IntVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_unitCell</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">IntVar</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.clear_variables">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.clear_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset all variables and remove existing ions from the section.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeAllIons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_ionic_buttons</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_ionNames</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_hasIons</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">int_unitCell</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.create_widgets">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.create_widgets">[docs]</a>
+    <span class="k">def</span> <span class="nf">create_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create all widgets and frames for the ion information section.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            parent (tk.Widget): The parent widget that will contain this section.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span>
+                                   <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+                                   <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Ion information&quot;</span><span class="p">,</span>
+                                   <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+                                   <span class="n">relief</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">GROOVE</span><span class="p">,</span>
+                                   <span class="n">borderwidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Scrollbar</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span>
+                                       <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span>
+                                       <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">yview</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">yscrollcommand</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">create_window</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                  <span class="n">window</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span>
+                                  <span class="n">anchor</span><span class="o">=</span><span class="s1">&#39;nw&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Configure&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvasConfig</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_hasIons</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;check for ionic radii&quot;</span><span class="p">,</span>
+                                          <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">int_hasIons</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">activator</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_hasIons</span><span class="p">,</span> <span class="s2">&quot;Check if some elements radii are ionic radii instead of covalent radii&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;unit cell boundaries&quot;</span><span class="p">,</span>
+                                           <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">int_unitCell</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span><span class="p">,</span> <span class="s2">&quot;Check to replace dashed bonds with solid lines&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span>
+                                    <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">addIon</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="p">,</span> <span class="s2">&quot;Click here to add another ion to specify&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;remove&quot;</span><span class="p">,</span>
+                                       <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">removeIon</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span><span class="p">,</span> <span class="s2">&quot;Click here to remove the last added ion&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.setup_layout">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.setup_layout">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup_layout</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Arrange the widgets and frames in the grid layout.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_hasIons</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.addIon">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.addIon">[docs]</a>
+    <span class="k">def</span> <span class="nf">addIon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add a new ion entry to the ion list.&quot;&quot;&quot;</span>
+        <span class="n">ion</span> <span class="o">=</span> <span class="n">SelectedIon</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ion</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.removeIon">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.removeIon">[docs]</a>
+    <span class="k">def</span> <span class="nf">removeIon</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove the last added ion from the list, if available.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span><span class="p">:</span>  <span class="c1"># Check if the ion list is not empty</span>
+            <span class="n">last_ion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">last_ion</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>  <span class="c1"># Assuming &#39;delete&#39; is a method for the ion object</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">-=</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No more ions to remove.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.removeAllIons">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.removeAllIons">[docs]</a>
+    <span class="k">def</span> <span class="nf">removeAllIons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove all ion entries from the list.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">ion</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span><span class="p">:</span>
+            <span class="n">ion</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_ions</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ionCount</span> <span class="o">=</span> <span class="mi">0</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.activator">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.activator">[docs]</a>
+    <span class="k">def</span> <span class="nf">activator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Enable or disable ionic input options based on the checkbox state.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">NORMAL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">NORMAL</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">NORMAL</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##### ACTIVATING IONS INFORMATION INPUT ####&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">removeAllIons</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### DEACTIVATING ION INFORMATION INPUT ####&quot;</span><span class="p">)</span></div>
+
+         
+<div class="viewcode-block" id="IonRegion.disable_ionic_buttons">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.disable_ionic_buttons">[docs]</a>
+    <span class="k">def</span> <span class="nf">disable_ionic_buttons</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Disable all ionic input buttons and remove existing ion entries.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_addIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_removeIon</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_unitCell</span><span class="p">[</span><span class="s1">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">DISABLED</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">removeAllIons</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IonRegion.canvasConfig">
+<a class="viewcode-back" href="../gui.html#IonRegion.IonRegion.canvasConfig">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvasConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configure the canvas scroll region based on the frame size.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            event (tk.Event): The event triggered by frame resizing.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">scrollregion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">),</span>
+                              <span class="n">width</span><span class="o">=</span><span class="mi">325</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">125</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

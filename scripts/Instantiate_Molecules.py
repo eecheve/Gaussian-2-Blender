@@ -19,7 +19,16 @@ importlib.reload(Ions)
 importlib.reload(Primitives)
 
 def handle_non_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data):
-    #helper functions. Which is going to be used depends on represent_type
+    """
+    Handles the instantiation of non-ionic molecules based on the representation type.
+
+    :param represent_type: (str) The type of representation (e.g., "Ball-and-Stick", "Stick-only", "Van-der-Waals").
+    :param names_and_pos: (dict) Atomic symbols and their positions.
+    :param materials_dict: (dict) Materials that can be accessed with present elements' symbols.
+    :param connect_with_symbols: (list) List of connections between atoms.
+    :param element_data: (dict) Available data for the present elements.
+    :return: None
+    """
     def ball_and_stick():
         Primitives.InstantiateBondsFromConnectivity(names_and_pos, materials_dict, connect_with_symbols)
         Primitives.InstantiateElementsFromDictionary(names_and_pos, element_data, materials_dict)
@@ -42,6 +51,19 @@ def handle_non_ionic(represent_type, names_and_pos, materials_dict, connect_with
         print("5: Error Instantiating geometries: unrecognized output type")
 
 def handle_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data, ion_data, ion_input, unit_cell):
+    """
+    Handles the instantiation of ionic molecules based on the representation type.
+
+    :param represent_type: (str) The type of representation (e.g., "Ball-and-Stick", "Stick-only", "Van-der-Waals").
+    :param names_and_pos: (dict) Atomic symbols and their positions.
+    :param materials_dict: (dict) Materials that can be accessed with present elements' symbols.
+    :param connect_with_symbols: (list) List of connections between atoms.
+    :param element_data: (dict) Available data for the present elements.
+    :param ion_data: (dict) Available data for the present ions.
+    :param ion_input: (dict) Input data for the ions.
+    :param unit_cell: (str) Unit cell identifier.
+    :return: None
+    """
     refined_ion_data = Ions.RemoveNonSpecifiedIons(ion_data, ion_input)
     print("5: getting ionic radii from input ...")
     Ions.GetIonDataFromInput(refined_ion_data, ion_input)
@@ -78,7 +100,20 @@ def handle_ionic(represent_type, names_and_pos, materials_dict, connect_with_sym
 
 def Instantiate(is_ionic, represent_type, names_and_pos, materials_dict, connect_with_symbols,
                 element_data, ion_data, ion_input, unit_cell):
-    """Manages the instantiation of all elements and/or ions from cartesian coordinates."""
+    """
+    Manages the instantiation of all elements and/or ions from Cartesian coordinates.
+
+    :param is_ionic: (str) Indicates if the molecule is ionic ("0" for non-ionic, otherwise ionic).
+    :param represent_type: (str) The type of representation (e.g., "Ball-and-Stick", "Stick-only", "Van-der-Waals").
+    :param names_and_pos: (dict) Atomic symbols and their positions.
+    :param materials_dict: (dict) Materials that can be accessed with present elements' symbols.
+    :param connect_with_symbols: (list) List of connections between atoms.
+    :param element_data: (dict) Available data for the present elements.
+    :param ion_data: (dict) Available data for the present ions.
+    :param ion_input: (dict) Input data for the ions.
+    :param unit_cell: (str) Unit cell identifier.
+    :return: None
+    """
     print("5: Instantiating geometries")
 
     if is_ionic == "0":

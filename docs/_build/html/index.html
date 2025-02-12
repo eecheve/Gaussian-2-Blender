@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Welcome to Gaussian-2-Blender’s documentation! &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <script src="_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting Started" href="usage.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="welcome-to-gaussian-2-blender-s-documentation">
+<h1>Welcome to Gaussian-2-Blender’s documentation!<a class="headerlink" href="#welcome-to-gaussian-2-blender-s-documentation" title="Link to this heading">¶</a></h1>
+<p><strong>Gaussian-2-Blender</strong> is an API to convert .com input files from Gaussian and .xyz files from various sources
+into 3D models ready to be used in Blender, Maya, Unity, Unreal, and other programs for 3D modeling.</p>
+<ul class="simple">
+<li><p>Check out the <a class="reference internal" href="usage.html"><span class="doc">Getting Started</span></a> section for further information on how to use the program.</p></li>
+<li><p>Check out the <a class="reference internal" href="developers.html"><span class="doc">For Developers</span></a> section if you plan to extend the functionality of the program.</p></li>
+<li><p>Check out the <a class="reference internal" href="gui.html"><span class="doc">GUI</span></a> section to see all the scripts and modules to build the program’s graphical user interface.</p></li>
+<li><p>Check out the <a class="reference internal" href="api.html"><span class="doc">Blender API</span></a> section to see all the scripts and modules that handle the creation of 3D models in Blender</p></li>
+</ul>
+<section id="contents">
+<h2>Contents<a class="headerlink" href="#contents" title="Link to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#setup">Setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#example-files">Example files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#executing-gaussian-2-blender">Executing Gaussian-2-Blender</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage.html#running-gaussian-2-blender-from-the-console">Running Gaussian-2-Blender from the console</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#gui-overview">GUI overview:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#key-gui-modules">Key GUI Modules:</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#gaussiantoblender">GaussianToBlender/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#gui">gui/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#scripts">scripts/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#input-examples">input_examples/</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developers.html#output">output/</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#main-gui-script">Main GUI Script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ActionsRegion">Actions Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BlenderPath">Blender Path Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-BondConventions">Bond Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-ConsoleRegion">Console Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Coordinates">Coordinates Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-CreateTooltip">Create Tooltip Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-HighlighterRegion">Highlighter Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Information">Information Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-InputRegion">Input Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonConventions">Ion Conventions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Ionic">Ionic Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-IonRegion">Ion Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-OutputRegion">Output Region Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-SelectedIon">Selected Ion Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-TextRedirector">Text Redirector Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Tutorial">Tutorial Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-Utility">Utility Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="gui.html#module-WalkthroughRegion">Walkthrough Region Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api.html#main-body-script">Main Body script</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#animate-module">Animate Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#atom-highlighter-module">Atom Highlighter Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#atom-data-module">Atom Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#bond-order-calculator-module">Bond Order Calculator Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#clear-transforms-module">Clear Transforms Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#create-materials-module">Create Materials Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#export-data-module">Export Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#import-data-module">Import Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#instantiate-molecules-module">Instantiate Molecules Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#ions-module">Ions Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#primitives-module">Primitives Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#raw-parameters-module">Raw Parameters Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#receive-parameters-module">Receive Parameters Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#refine-data-module">Refine Data Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#refine-elements-module">Refine Elements Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api.html#xyz-reader-module">XYZ Reader Module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">UML Components Diagram</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="components.html#blender-api">Blender API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="components.html#gui">GUI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cite.html#program-development">Program development</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cite.html#program-applications">Program applications</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Gaussian-2-Blender has already been published at the <em>Journal of Chemical Education</em> and is currently
+undergoing updates and changes to implement changes suggested by users and editors. The objective
+of the current changes is to submit the updated version as a usable app in the <em>Journal of Cheminformatics</em>.</p>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading">¶</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="#">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="usage.html" title="next chapter">Getting Started</a></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

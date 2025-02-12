@@ -1,7 +1,6 @@
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
 
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
@@ -47,7 +46,7 @@ class OutputRegion(object):
         self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")
 
-        self.lst_outputTypes = [".fbx", ".obj", ".dae", ".x3d", ".stl"]
+        self.lst_outputTypes = [".fbx", ".obj", ".dae", ".glb", ".stl"]
         self.var_outputTypes = tk.StringVar()
         self.var_outputTypes.set(".fbx")
         self.drp_outputTypes = tk.OptionMenu(self.frame, 

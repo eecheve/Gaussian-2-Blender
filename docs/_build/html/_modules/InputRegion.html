@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>InputRegion &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for InputRegion</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+
+<span class="kn">from</span> <span class="nn">gui.CreateTooltip</span> <span class="kn">import</span> <span class="n">CreateTooltip</span>
+<span class="kn">from</span> <span class="nn">gui.Utility</span> <span class="kn">import</span> <span class="n">Utility</span>
+
+<div class="viewcode-block" id="InputRegion">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion">[docs]</a>
+<span class="k">class</span> <span class="nc">InputRegion</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Section of the app that receives the input for the file(s) to convert&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">initial_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the InputRegion by setting up variables, frame, canvas, and widgets.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            parent (tk.Widget): The parent widget to attach the frame to.</span>
+<span class="sd">            initial_dir (str): The initial directory path for file dialogs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_variables</span><span class="p">(</span><span class="n">initial_dir</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_frame</span><span class="p">(</span><span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">setup_canvas</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_widgets</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position_widgets</span><span class="p">()</span>
+
+<div class="viewcode-block" id="InputRegion.initialize_variables">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.initialize_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">initialize_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">initial_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes instance variables related to input paths, file types, and model types.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            initial_dir (str): The initial directory path for file dialogs.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputPaths</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputNames</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_modelTypes</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputPath</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_isAnimation</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">BooleanVar</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_inputNames</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_InputPaths</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_dir</span> <span class="o">=</span> <span class="n">initial_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">StringVar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;.com&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.clear_variables">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.clear_variables">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Clears all variables related to the input fields and resets default values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputPaths</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputNames</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_modelTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_isAnimation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_inputNames</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_InputPaths</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;.com&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.setup_frame">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.setup_frame">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets up the main frame for the input region.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            parent (tk.Widget): The parent widget to attach the frame to.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">LabelFrame</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="n">parent</span><span class="p">,</span> <span class="n">padx</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Input&quot;</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="n">relief</span><span class="o">=</span><span class="n">tk</span><span class="o">.</span><span class="n">GROOVE</span><span class="p">,</span> <span class="n">borderwidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.setup_canvas">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.setup_canvas">[docs]</a>
+    <span class="k">def</span> <span class="nf">setup_canvas</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets up the canvas with a scrollable frame for the input region.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Frame</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Scrollbar</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frame</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">yview</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">yscrollcommand</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scrl_frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">create_window</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">window</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s1">&#39;nw&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Configure&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">canvasConfig</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.add_widgets">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.add_widgets">[docs]</a>
+    <span class="k">def</span> <span class="nf">add_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Adds and configures widgets like buttons, labels, dropdown menus, and checkboxes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputPath</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputLabel</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Input name(s)&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputLabel</span><span class="p">,</span> <span class="s2">&quot;Name(s) of the file(s) to be converted&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fileType</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Input type&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbl_fileType</span><span class="p">,</span> <span class="s2">&quot;List of file extensions currently accepted by the program&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_inputTypes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">]</span> <span class="c1">#planning on reading .mol files in the future as well.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drp_inputTypes</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">OptionMenu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> 
+                                        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="p">,</span> 
+                                        <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lst_inputTypes</span><span class="p">,</span>
+                                        <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropdown_callout</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drp_inputTypes</span><span class="p">,</span> <span class="s2">&quot;Choose one of the input types from this list&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputNames</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">textvariable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_inputNames</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">fg</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputNames</span><span class="p">,</span> <span class="s2">&quot;List of input files with the correct extension&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputName</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">setInputName</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputName</span><span class="p">,</span> <span class="s2">&quot;Select one or more input files&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputType</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Label</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s2">&quot;Model type&quot;</span><span class="p">,</span> <span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputType</span><span class="p">,</span> <span class="s2">&quot;Different representational models supported by Gaussian2Blender&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_modelTypes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Ball-and-Stick&quot;</span><span class="p">,</span> <span class="s2">&quot;Stick-only&quot;</span><span class="p">,</span> <span class="s2">&quot;Van-der-Waals&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_modelTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;Ball-and-Stick&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drp_modelTypes</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">OptionMenu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_modelTypes</span><span class="p">,</span> 
+                                            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">lst_modelTypes</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropdown_callout</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">drp_modelTypes</span><span class="p">,</span> <span class="s2">&quot;Choose one of the model representation options from this list&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_isAnimation</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">Checkbutton</span><span class="p">(</span><span class="n">master</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">frm_inside</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;is animation&quot;</span><span class="p">,</span>
+                                           <span class="n">variable</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">var_isAnimation</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">updateAnimationState</span><span class="p">)</span>
+        <span class="n">CreateTooltip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chk_isAnimation</span><span class="p">,</span> <span class="s2">&quot;Check if the input files will serve as animation frames.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.reset_widget_bg_colors">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.reset_widget_bg_colors">[docs]</a>
+    <span class="k">def</span> <span class="nf">reset_widget_bg_colors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Resets the background color of all interactable widgets to their original state.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">interactables</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputPath</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputName</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">drp_inputTypes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">drp_modelTypes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">chk_isAnimation</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">interactable</span> <span class="ow">in</span> <span class="n">interactables</span><span class="p">:</span>
+            <span class="n">Utility</span><span class="o">.</span><span class="n">revert_widget</span><span class="p">(</span><span class="n">interactable</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.position_widgets">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.position_widgets">[docs]</a>
+    <span class="k">def</span> <span class="nf">position_widgets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Positions all the widgets inside the frame using grid layout.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_fileType</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drp_inputTypes</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputLabel</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputNames</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btn_setInputName</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lbl_inputType</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;e&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">drp_modelTypes</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chk_isAnimation</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+ 
+<div class="viewcode-block" id="InputRegion.updateAnimationState">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.updateAnimationState">[docs]</a>
+    <span class="k">def</span> <span class="nf">updateAnimationState</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the animation state based on the checkbox for animation files.</span>
+<span class="sd">        Prints messages based on whether the &#39;is animation&#39; checkbox is checked or unchecked.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_isAnimation</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The files will not be treated as animation.&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="c1">#this is called when che checkbox was checked, and is unchecked now</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lst_inputNames</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: There must be more than one file to implement animations.&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_isAnimation</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Uncheck the checkbox if conditions are not met</span>
+            <span class="k">return</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;At least two files are present as input. Make sure they have the same number of elements in the same order for the animation to work properly.&quot;</span><span class="p">)</span></div>
+
+
+        
+<div class="viewcode-block" id="InputRegion.allFilesHaveSameValidExtension">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.allFilesHaveSameValidExtension">[docs]</a>
+    <span class="k">def</span> <span class="nf">allFilesHaveSameValidExtension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_paths</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if all files in the list have the same valid extension.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            file_paths (list): List of file paths to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if all files have the same valid extension, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">valid_extensions</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">}</span>
+        <span class="c1">#valid_extensions = {&quot;.com&quot;, &quot;.xyz&quot;, &quot;.mol&quot;} #&lt;-- for future Emmanuel to tackle</span>
+        <span class="n">extensions</span> <span class="o">=</span> <span class="p">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">file_paths</span><span class="p">}</span>
+    
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">extensions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">extensions</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span> <span class="ow">in</span> <span class="n">valid_extensions</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+            
+<div class="viewcode-block" id="InputRegion.setInputName">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.setInputName">[docs]</a>
+    <span class="k">def</span> <span class="nf">setInputName</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Opens a file dialog to select files and updates the input names list.</span>
+<span class="sd">        Filters files based on the selected input type and ensures they have the correct extension.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">input_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="n">file_extension</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;*</span><span class="si">{</span><span class="n">input_type</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">file_types</span> <span class="o">=</span> <span class="p">[(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">input_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> files&quot;</span><span class="p">,</span> <span class="n">file_extension</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;All files&quot;</span><span class="p">,</span> <span class="s2">&quot;*.*&quot;</span><span class="p">)]</span>
+
+        <span class="n">str_paths</span> <span class="o">=</span> <span class="n">tk</span><span class="o">.</span><span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilenames</span><span class="p">(</span><span class="n">initialdir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">initial_dir</span><span class="p">,</span> <span class="n">filetypes</span><span class="o">=</span><span class="n">file_types</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">str_paths</span><span class="p">:</span>
+            <span class="k">return</span>  <span class="c1"># No files selected</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allFilesHaveSameValidExtension</span><span class="p">(</span><span class="n">str_paths</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">updateInputNameList</span><span class="p">(</span><span class="n">str_paths</span><span class="p">)</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">str_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;##### SETTING INPUT FILES TO CONVERT ####&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_inputPath</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">str_paths</span><span class="p">:</span>
+                <span class="n">f_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;has correct file extension&quot;</span><span class="p">,</span> <span class="n">f_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Not all selected files have the &#39;</span><span class="si">{</span><span class="n">input_type</span><span class="si">}</span><span class="s2">&#39; extension. Please select files with the &#39;</span><span class="si">{</span><span class="n">input_type</span><span class="si">}</span><span class="s2">&#39; extension.&quot;</span><span class="p">)</span></div>
+
+
+                
+<div class="viewcode-block" id="InputRegion.isValidExtension">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.isValidExtension">[docs]</a>
+    <span class="k">def</span> <span class="nf">isValidExtension</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file_path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks if the file has a valid extension.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            file_path (str): The file path to check.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            bool: True if the file has a valid extension, False otherwise.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">file_ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.com&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="n">file_ext</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1">#elif file_ext.lower() == &quot;.mol&quot;: &lt;--- for the future</span>
+        <span class="c1">#    return True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+                
+<div class="viewcode-block" id="InputRegion.updateInputNameList">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.updateInputNameList">[docs]</a>
+    <span class="k">def</span> <span class="nf">updateInputNameList</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string_list</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the list of input names and paths.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            string_list (list): A list of file paths to update the input names and paths.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_inputNames</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lst_InputPaths</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputNames</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">string_list</span><span class="p">:</span>
+            <span class="n">n</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">n</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">s</span> <span class="o">+=</span> <span class="n">e</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lst_inputNames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lst_InputPaths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">var_inputNames</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">s</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.canvasConfig">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.canvasConfig">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvasConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Configures the canvas when the size of the scrollable frame changes.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            event (tk.Event): The event that triggers this configuration.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">scrollregion</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">canvas</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">),</span>
+                              <span class="n">width</span><span class="o">=</span><span class="mi">325</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="InputRegion.dropdown_callout">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.dropdown_callout">[docs]</a>
+    <span class="k">def</span> <span class="nf">dropdown_callout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prints a message when the dropdown selection is changed.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            event (tk.Event): The event triggered by the dropdown selection.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;#### REPRESENTATIONAL MODEL UPDATED ####&quot;</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

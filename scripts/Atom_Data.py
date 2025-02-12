@@ -1,15 +1,33 @@
 class Ionic:
-    """Ionic radius class. Stores: charge, spin, coordination"""
+    """
+    Represents an ionic radius with charge, coordination, and radius.
+
+    :param charge: (int) The ionic charge (default is 0).
+    :param coordination: (str) The coordination environment (default is an empty string).
+    :param radius: (float) The ionic radius (default is 0.0).
+    """
     def __init__(self, charge=0, coordination="", radius=0.0):
         self.charge = charge
         self.coordination = coordination
         self.radius = radius
         
     def set_radius(self, value: float):
+        """
+        Sets the ionic radius.
+
+        :param value: (float) The new radius value.
+        """
         self.radius = value
 
 class Atom_Data:
-    """Atom data class. Stores Radius: covalent; Color: tuple, RGBA values"""
+    """
+    Stores atomic data including covalent radius, van der Waals radius, RGBA color values, and ionic data.
+
+    :param radius: (float) The covalent radius of the atom.
+    :param vanDerWaals: (float) The van der Waals radius (default is 0.00 if not reported).
+    :param color: (tuple) RGBA values representing the atom color (default is gray: (0.5, 0.5, 0.5, 1)).
+    :param ionicData: (list) A list of Ionic objects representing ionic data (default is a list with one default Ionic instance).
+    """
 
     def __init__(self, radius: float, vanDerWaals=0.00, color=(0.5,0.5,0.5, 1), ionicData=[Ionic()]): # Gray is the default color if none is specified
         self.radius = radius #covalent radius
@@ -19,19 +37,28 @@ class Atom_Data:
 
     def get_radius(self):
         """
-        returns: <float> atom's covalent radius
+        Gets the atom's covalent radius.
+
+        :return: The covalent radius of the atom.
+        :rtype: float
         """
         return self.radius
 
     def get_color(self):
         """
-        returns: <tuple size 4> rgba values for color
+        Gets the RGBA color values of the atom.
+
+        :return: A tuple of 4 float values representing the RGBA color.
+        :rtype: tuple
         """
         return self.color
     
     def get_vanDerWaals(self):
         """
-        returns: vanDerWaals radius for element.
+        Gets the van der Waals radius of the atom.
+
+        :return: The van der Waals radius.
+        :rtype: float
         """
         return self.vanDerWaals
     

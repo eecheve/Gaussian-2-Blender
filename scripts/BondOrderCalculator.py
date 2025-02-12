@@ -9,12 +9,10 @@ class BondOrderCalculator():
     def initialize_covalent_radii(self):
         """
         Loads covalent radii data from a JSON file.
-
         The file is located in the 'external_data' directory, relative to the 
         script's location.
 
-        Returns:
-            dict: Covalent radii data.
+        :return: (dict{str:float}) Covalent radii data.
         """
         script_dir = os.path.dirname(__file__) # Get the directory of the current script
         json_file_path = os.path.join(script_dir, '..', 'external_data', 'covalent_radii.json') # Construct the path to the JSON file
@@ -25,12 +23,11 @@ class BondOrderCalculator():
         """
         Retrieve and sum the covalent radii values for the given atoms.
 
-        :param atom1 (str): The atomic symbol for the first atom.
-        :param atom2 (str): The atomic symbol for the second atom.
+        :param atom1: (str) The atomic symbol for the first atom.
+        :param atom2: (str) The atomic symbol for the second atom.
 
-        Returns:
-        list: A list containing the summed covalent radii values for single, double, and triple bonds.
-               If any value is '-', it will be represented as None in the result.
+        :returns: ([float, float, float]) A list containing the summed covalent radii values for single, double, and triple bonds.
+                 If any value is '-', it will be represented as None in the result.
         """
         # Read the json variable and search for the string atom1 (or atom2)
         list1 = self.covalent_radii_json.get(atom1, [None, None, None])
@@ -49,12 +46,9 @@ class BondOrderCalculator():
         """
         Calculate the distance between two points in Cartesian space.
 
-        Parameters:
-        pos1 (tuple or list): The (x, y, z) coordinates of the first point.
-        pos2 (tuple or list): The (x, y, z) coordinates of the second point.
-
-        Returns:
-        float: The distance between the two points.
+        :param pos1: ([float, float, float]) The (x, y, z) coordinates of the first point.
+        :param pos2: ([float, float, float]) The (x, y, z) coordinates of the second point.
+        :return: (float) The distance between the two points.
         """
         r1 = np.array(pos1)
         r2 = np.array(pos2)
@@ -65,15 +59,13 @@ class BondOrderCalculator():
         """
         Determine the bond order based on the distance between two atoms and their covalent radii.
 
-        Parameters:
-        atom1 (str): The atomic symbol for the first atom.
-        atom2 (str): The atomic symbol for the second atom.
-        pos1 (tuple or list): The (x, y, z) coordinates of the first atom.
-        pos2 (tuple or list): The (x, y, z) coordinates of the second atom.
-        threshold (float): The threshold value to determine the bond order.
+        :param atom1: (str) The atomic symbol for the first atom.
+        :param atom2: (str) The atomic symbol for the second atom.
+        :param pos1: (tuple or list) The (x, y, z) coordinates of the first atom.
+        :param pos2: (tuple or list) The (x, y, z) coordinates of the second atom.
+        :param threshold: (float) The threshold value to determine the bond order.
 
-        Returns:
-        int: The bond order (1 for single, 2 for double, 3 for triple) or None if no bond order is found.
+        :return: (int) The bond order (1 for single, 2 for double, 3 for triple) or None if no bond order is found.
         """
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)

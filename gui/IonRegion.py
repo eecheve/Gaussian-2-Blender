@@ -19,6 +19,7 @@ class IonRegion(object):
         self.int_unitCell = tk.IntVar()
 
     def clear_variables(self):
+        """Reset all variables and remove existing ions from the section."""
         self.removeAllIons()
         self.disable_ionic_buttons()
         self.var_ionNames.set("")
@@ -26,7 +27,11 @@ class IonRegion(object):
         self.int_unitCell.set(0)
 
     def create_widgets(self, parent):
-        """Create all widgets and frames for the ion information section."""
+        """Create all widgets and frames for the ion information section.
+        
+        Args:
+            parent (tk.Widget): The parent widget that will contain this section.
+        """
         self.frame = tk.LabelFrame(master=parent,
                                    padx=5,
                                    text="Ion information",
@@ -70,11 +75,13 @@ class IonRegion(object):
         self.btn_removeIon.grid(row=1, column=1)
 
     def addIon(self):
+        """Add a new ion entry to the ion list."""
         ion = SelectedIon(self.frm_inside, self.ionCount + 2, 0)
         self.lst_ions.append(ion)
         self.ionCount += 1
 
     def removeIon(self):
+        """Remove the last added ion from the list, if available."""
         if self.lst_ions:  # Check if the ion list is not empty
             last_ion = self.lst_ions.pop()
             last_ion.delete()  # Assuming 'delete' is a method for the ion object
@@ -84,12 +91,14 @@ class IonRegion(object):
                 print("No more ions to remove.")
 
     def removeAllIons(self):
+        """Remove all ion entries from the list."""
         for ion in self.lst_ions:
             ion.delete()
         self.lst_ions.clear()
         self.ionCount = 0
 
     def activator(self):
+        """Enable or disable ionic input options based on the checkbox state."""
         if self.btn_addIon['state'] == tk.DISABLED:
             self.btn_addIon['state'] = tk.NORMAL
             self.btn_removeIon['state'] = tk.NORMAL
@@ -101,13 +110,19 @@ class IonRegion(object):
             self.chk_unitCell['state'] = tk.DISABLED
             self.removeAllIons()
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
-
+         
     def disable_ionic_buttons(self):
+        """Disable all ionic input buttons and remove existing ion entries."""
         self.btn_addIon['state'] = tk.DISABLED
         self.btn_removeIon['state'] = tk.DISABLED
         self.chk_unitCell['state'] = tk.DISABLED
         self.removeAllIons()
 
     def canvasConfig(self, event):
+        """Configure the canvas scroll region based on the frame size.
+        
+        Args:
+            event (tk.Event): The event triggered by frame resizing.
+        """
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
                               width=325, height=125)

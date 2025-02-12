@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instantiate_Molecules &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <script src="../_static/documentation_options.js?v=9da58f5d"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Instantiate_Molecules</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">mathutils</span>
+
+<span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+    
+<span class="kn">import</span> <span class="nn">Primitives</span>
+<span class="kn">import</span> <span class="nn">Ions</span>
+
+<span class="kn">import</span> <span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">Ions</span><span class="p">)</span>
+<span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">Primitives</span><span class="p">)</span>
+
+<div class="viewcode-block" id="handle_non_ionic">
+<a class="viewcode-back" href="../api.html#Instantiate_Molecules.handle_non_ionic">[docs]</a>
+<span class="k">def</span> <span class="nf">handle_non_ionic</span><span class="p">(</span><span class="n">represent_type</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span> <span class="n">element_data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the instantiation of non-ionic molecules based on the representation type.</span>
+
+<span class="sd">    :param represent_type: (str) The type of representation (e.g., &quot;Ball-and-Stick&quot;, &quot;Stick-only&quot;, &quot;Van-der-Waals&quot;).</span>
+<span class="sd">    :param names_and_pos: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param materials_dict: (dict) Materials that can be accessed with present elements&#39; symbols.</span>
+<span class="sd">    :param connect_with_symbols: (list) List of connections between atoms.</span>
+<span class="sd">    :param element_data: (dict) Available data for the present elements.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">ball_and_stick</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">)</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">stick_only</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">van_der_waals</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">van_der_waals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Dictionary mapping represent_type to corresponding functions</span>
+    <span class="n">representations</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Ball-and-Stick&quot;</span><span class="p">:</span> <span class="n">ball_and_stick</span><span class="p">,</span>
+        <span class="s2">&quot;Stick-only&quot;</span><span class="p">:</span> <span class="n">stick_only</span><span class="p">,</span>
+        <span class="s2">&quot;Van-der-Waals&quot;</span><span class="p">:</span> <span class="n">van_der_waals</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">represent</span> <span class="o">=</span> <span class="n">representations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">represent_type</span><span class="p">)</span> <span class="c1">#getting the corresponding function to use</span>
+    <span class="k">if</span> <span class="n">represent</span><span class="p">:</span> <span class="c1">#if represent_type can find its corresponding function</span>
+        <span class="n">represent</span><span class="p">()</span> <span class="c1">#apply the corresponding function</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: Error Instantiating geometries: unrecognized output type&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="handle_ionic">
+<a class="viewcode-back" href="../api.html#Instantiate_Molecules.handle_ionic">[docs]</a>
+<span class="k">def</span> <span class="nf">handle_ionic</span><span class="p">(</span><span class="n">represent_type</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Handles the instantiation of ionic molecules based on the representation type.</span>
+
+<span class="sd">    :param represent_type: (str) The type of representation (e.g., &quot;Ball-and-Stick&quot;, &quot;Stick-only&quot;, &quot;Van-der-Waals&quot;).</span>
+<span class="sd">    :param names_and_pos: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param materials_dict: (dict) Materials that can be accessed with present elements&#39; symbols.</span>
+<span class="sd">    :param connect_with_symbols: (list) List of connections between atoms.</span>
+<span class="sd">    :param element_data: (dict) Available data for the present elements.</span>
+<span class="sd">    :param ion_data: (dict) Available data for the present ions.</span>
+<span class="sd">    :param ion_input: (dict) Input data for the ions.</span>
+<span class="sd">    :param unit_cell: (str) Unit cell identifier.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">refined_ion_data</span> <span class="o">=</span> <span class="n">Ions</span><span class="o">.</span><span class="n">RemoveNonSpecifiedIons</span><span class="p">(</span><span class="n">ion_data</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: getting ionic radii from input ...&quot;</span><span class="p">)</span>
+    <span class="n">Ions</span><span class="o">.</span><span class="n">GetIonDataFromInput</span><span class="p">(</span><span class="n">refined_ion_data</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">)</span>
+    <span class="n">refined_element_data</span> <span class="o">=</span> <span class="n">Ions</span><span class="o">.</span><span class="n">RemoveSpecifiedIonsFromElementDict</span><span class="p">(</span><span class="n">refined_ion_data</span><span class="p">,</span> <span class="n">element_data</span><span class="p">)</span>
+    <span class="n">refined_element_positions</span> <span class="o">=</span> <span class="n">Ions</span><span class="o">.</span><span class="n">RemoveSpecifiedIonsFromElementDict</span><span class="p">(</span><span class="n">refined_ion_data</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">)</span>
+    <span class="n">ion_positions</span> <span class="o">=</span> <span class="n">Ions</span><span class="o">.</span><span class="n">GetIonPositions</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">refined_ion_data</span><span class="p">)</span>
+    
+    <span class="c1">#helper functions. Which is going to be used depends on represent_type</span>
+    <span class="k">def</span> <span class="nf">ball_and_stick</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refined_element_positions</span><span class="p">:</span>
+            <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">refined_element_positions</span><span class="p">,</span> <span class="n">refined_element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">refined_ion_data</span><span class="p">:</span>
+            <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateIonsFromDictionary</span><span class="p">(</span><span class="n">ion_positions</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">stick_only</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">van_der_waals</span><span class="p">():</span>
+        <span class="n">Primitives</span><span class="o">.</span><span class="n">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">van_der_waals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: Ionic radii replaced with van der Waals radii&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Dictionary mapping represent_type to corresponding functions</span>
+    <span class="n">representations</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;Ball-and-Stick&quot;</span><span class="p">:</span> <span class="n">ball_and_stick</span><span class="p">,</span>
+        <span class="s2">&quot;Stick-only&quot;</span><span class="p">:</span> <span class="n">stick_only</span><span class="p">,</span>
+        <span class="s2">&quot;Van-der-Waals&quot;</span><span class="p">:</span> <span class="n">van_der_waals</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="n">represent</span> <span class="o">=</span> <span class="n">representations</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">represent_type</span><span class="p">)</span> <span class="c1">#getting the corresponding function to use</span>
+    <span class="k">if</span> <span class="n">represent</span><span class="p">:</span> <span class="c1">#if represent_type can find its corresponding function</span>
+        <span class="n">represent</span><span class="p">()</span> <span class="c1">#apply the corresponding function</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: Error Instantiating geometries: unrecognized output type&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Instantiate">
+<a class="viewcode-back" href="../api.html#Instantiate_Molecules.Instantiate">[docs]</a>
+<span class="k">def</span> <span class="nf">Instantiate</span><span class="p">(</span><span class="n">is_ionic</span><span class="p">,</span> <span class="n">represent_type</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span>
+                <span class="n">element_data</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Manages the instantiation of all elements and/or ions from Cartesian coordinates.</span>
+
+<span class="sd">    :param is_ionic: (str) Indicates if the molecule is ionic (&quot;0&quot; for non-ionic, otherwise ionic).</span>
+<span class="sd">    :param represent_type: (str) The type of representation (e.g., &quot;Ball-and-Stick&quot;, &quot;Stick-only&quot;, &quot;Van-der-Waals&quot;).</span>
+<span class="sd">    :param names_and_pos: (dict) Atomic symbols and their positions.</span>
+<span class="sd">    :param materials_dict: (dict) Materials that can be accessed with present elements&#39; symbols.</span>
+<span class="sd">    :param connect_with_symbols: (list) List of connections between atoms.</span>
+<span class="sd">    :param element_data: (dict) Available data for the present elements.</span>
+<span class="sd">    :param ion_data: (dict) Available data for the present ions.</span>
+<span class="sd">    :param ion_input: (dict) Input data for the ions.</span>
+<span class="sd">    :param unit_cell: (str) Unit cell identifier.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;5: Instantiating geometries&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_ionic</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+        <span class="n">handle_non_ionic</span><span class="p">(</span><span class="n">represent_type</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span> <span class="n">element_data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">handle_ionic</span><span class="p">(</span><span class="n">represent_type</span><span class="p">,</span> <span class="n">names_and_pos</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">connect_with_symbols</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">)</span>
+
+    <span class="n">set_every_object_origin</span><span class="p">()</span></div>
+
+
+            
+<div class="viewcode-block" id="set_every_object_origin">
+<a class="viewcode-back" href="../api.html#Instantiate_Molecules.set_every_object_origin">[docs]</a>
+<span class="k">def</span> <span class="nf">set_every_object_origin</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sets the origin of all mesh objects in the current Blender scene to the geometric center (median) of each object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">scene</span> <span class="o">=</span> <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">scene</span>
+    <span class="n">mesh_objs</span> <span class="o">=</span> <span class="p">[</span><span class="n">o</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span> <span class="k">if</span> <span class="n">o</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span><span class="s1">&#39;MESH&#39;</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">ob</span> <span class="ow">in</span> <span class="n">mesh_objs</span><span class="p">:</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">select_all</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s1">&#39;DESELECT&#39;</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">view_layer</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">active</span> <span class="o">=</span> <span class="n">ob</span>
+        <span class="n">ob</span><span class="o">.</span><span class="n">select_set</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">bpy</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">object</span><span class="o">.</span><span class="n">origin_set</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s1">&#39;ORIGIN_GEOMETRY&#39;</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="s1">&#39;MEDIAN&#39;</span><span class="p">)</span></div>
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<search id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Emmanuel Echeverri-Jimenez.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

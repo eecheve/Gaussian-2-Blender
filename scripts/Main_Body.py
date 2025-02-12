@@ -10,34 +10,33 @@ blend_file_dir = os.path.dirname(bpy.data.filepath) #folder location for ReadMol
 os.chdir(blend_file_dir) #ensuring the environment is in the correct file path
 if blend_file_dir not in sys.path:
     sys.path.append(blend_file_dir)
-
-
-# Import necessary modules for reload
-importlib_modules = [
-    "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
-    "Create_Materials", "Primitives", "Export_Data", "Ions", 
-    "Instantiate_Molecules", "Raw_Parameters", "Rig_Molecule", 
-    "Animate", "Clear_Transforms", "Parent_Relations", "Receive_Parameters",
-    "XyzReader"
-]
-
-for module in importlib_modules:
-    try:
-        # Dynamically import the module
-        mod = importlib.import_module(module)
-        # Reload the module
-        importlib.reload(mod)
-        # Optionally, assign the module to globals() if you need to use it
-        globals()[module] = mod
-        print(f"Successfully imported and reloaded {module}")
-    except ModuleNotFoundError as e:
-        print(f"Module {module} not found: {e}")
-    except Exception as e:
-        print(f"Error while importing/reloading {module}: {e}")
+    
+import Receive_Parameters
 
 class Main_Body(object):
+    """
+    Main class for managing molecule processing in Blender. Handles reading, refining, 
+    and exporting molecular structures while managing parent-child relations and animations.
+    """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
-                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation):
+                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation,
+                 atom_hl_list, bond_hl_list):
+        """
+        Initializes the Main_Body class with input and output parameters.
+        
+        :param i_file_type: Type of input file (.xyz or .com).
+        :param i_folder_path: Path to input folder.
+        :param i_file_name: Name of the input file.
+        :param o_folder_path: Path to output folder.
+        :param o_file_name: Name of the output file.
+        :param represent_type: Representation type for molecules.
+        :param o_file_type: Output file format.
+        :param str_ionic_cell: String representation of ionic cell data.
+        :param str_ion_input_list: String representation of ion input list.
+        :param str_is_animation: Determines if animation should be applied.
+        :param atom_hl_list: List of atoms to highlight.
+        :param bond_hl_list: List of bonds to highlight.
+        """
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
@@ -48,6 +47,8 @@ class Main_Body(object):
         self.str_ionic_cell = str_ionic_cell
         self.str_ion_input_list = str_ion_input_list
         self.str_is_animation = str_is_animation
+        self.atom_hl_list = atom_hl_list
+        self.bond_hl_list = bond_hl_list        
         
         self.coords = []
         self.number_of_elements = 0
@@ -66,12 +67,68 @@ class Main_Body(object):
         self.bond_list = []
         self.ion_input = []
         self.elements_present = []
+        
+        self.imported_modules = {}  # Dictionary to store dynamically loaded modules
+        self.load_modules()  # Load all modules dynamically
 
+
+    def load_modules(self):
+        """
+        Dynamically imports all required modules and stores them in self.imported_modules.
+
+        :return: None
+        """
+        MODULES_TO_IMPORT = [
+            "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
+            "Create_Materials", "Primitives", "Export_Data", "Ions", 
+            "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
+            "XyzReader", "AtomHighlighter"
+        ]
+
+        blend_file_dir = os.path.dirname(bpy.data.filepath)
+        os.chdir(blend_file_dir)  # Set the correct file path
+        if blend_file_dir not in sys.path:
+            sys.path.append(blend_file_dir)
+
+        for module in MODULES_TO_IMPORT:
+            try:
+                if module in self.imported_modules:
+                    importlib.reload(self.imported_modules[module])  # Reload for live coding
+                else:
+                    self.imported_modules[module] = importlib.import_module(module)
+
+                print(f"Successfully imported {module}")
+
+            except ModuleNotFoundError as e:
+                print(f"Module {module} not found: {e}")
+            except Exception as e:
+                print(f"Error while importing {module}: {e}")
+    
+    def get_module(self, module_name):
+        """
+        Retrieve and reload a module to apply the latest changes.
+
+        :param module_name: (str) Name of the module to retrieve.
+        :return: (module) The imported module.
+        """
+        if module_name not in self.imported_modules:
+            self.imported_modules[module_name] = importlib.import_module(module_name)
+        else:
+            importlib.reload(self.imported_modules[module_name])  # Reload module <-- important
+        return self.imported_modules[module_name]
+    
     def Obtain_Coords_Connect(self, i_file_type):
         """
         Gets list of coordinates as a string with the atomic symbol and floats for each cartesian 
         coordinate, as well as the connectivity list with numerical inidices associated with each atom
         as well as the char specifying the atom type between connected pairs
+
+        Calls:
+            - `Read_com_File` and `Refine_com_File` if the input file type is .com.
+            - `Read_xyz_File` if the input file type is .xyz.
+
+        :param i_file_type: (str) Type of input file (.xyz or .com).
+        :return: None
         """
         if i_file_type == ".com":
             self.Read_com_File()
@@ -80,30 +137,45 @@ class Main_Body(object):
             self.Read_xyz_File()
     
     def Read_xyz_File(self):
+        """
+        Reads atomic data from an .xyz file.
+
+        Calls:
+        - `extract_coords_from_xyz_file` and `obtain_all_bond_orders` from `XyzReader` module.
+        :return: None
+        """
         print("1: Reading .xyz file ...")
+        XyzReader = self.get_module("XyzReader")
         xyzReader = XyzReader.XyzReader()
         file_path = os.path.join(self.i_folder_path, self.i_file_name)
         self.coords = xyzReader.extract_coords_from_xyz_file(file_path)
-        print("temp @Main_Body.Read_xyz_File, coords are", self.coords)
         self.number_of_elements = len(self.coords)
         self.connect_with_symbols = xyzReader.obtain_all_bond_orders(self.coords)
     
     def Read_com_File(self):
-        #Extracts information from the .com file and produces two lists: one for coordinates and atom type, and other for connectivity.
-        print("1: Reading .com file ...")     
+        """
+        Reads atomic data from a .com file.
+
+        Calls:
+        - `Set_Raw_Parameters` from `Raw_Parameters` module.
+        :return: None
+        """
+        print("1: Reading .com file ...")  
+        Raw_Parameters = self.get_module("Raw_Parameters")   
         raw_coords_connect = Raw_Parameters.Set_Raw_Parameters(self.i_folder_path, self.i_file_name)
         self.raw_coords = raw_coords_connect[0]
         self.raw_connect = raw_coords_connect[1]
                
     def Refine_com_File(self):
         """
-        Output:
-            coords: List of lists, first item in each entry is the element (no index), remaining three are
-            cartesian coordinates as float numbers.
-            connect_with_symbols: specifies the connectivity of each pair of elements bonded element 
-            (with numerical indices) and the char of the type of bond between them (_,-,=,#)
+        Refines extracted data from a .com file.
+
+        Calls:
+        - `RefineCoordList`, `RefineConnectivity`, and `AddElementSymbolsToConnecrivityList` from `Refine_Data` module.
+        :return: None
         """
         print("2: Refining extracted data ...")
+        Refine_Data = self.get_module("Refine_Data")
         self.coords = Refine_Data.RefineCoordList(self.raw_coords)
         self.number_of_elements = len(self.coords)
         print("2.1: number of elements in molecule is: ", self.number_of_elements)
@@ -111,7 +183,15 @@ class Main_Body(object):
         self.connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, self.coords, self.number_of_elements)
 
     def Manage_Ionic_Information(self):
-        ionic_cell=Refine_Data.rebuild_list(self.str_ionic_cell)
+        """
+        Manages ionic information for the molecule.
+
+        Calls:
+        - `rebuild_list` and `make_tuple_in_list` from `Refine_Data` module.
+        :return: None
+        """
+        Refine_Data = self.get_module("Refine_Data")
+        ionic_cell = Refine_Data.rebuild_list(self.str_ionic_cell)
         ionic_cell = Refine_Data.make_tuple_in_list(ionic_cell)
         self.is_ionic = ionic_cell[0][0]
         self.unit_cell = ionic_cell[0][1]
@@ -119,65 +199,178 @@ class Main_Body(object):
         self.ion_input_list = Refine_Data.make_tuple_in_list(self.ion_input_list)
     
     def Prepare_Atoms_and_Bonds(self):
+        """
+        Prepares atoms and bonds for the molecule.
+
+        Calls:
+        - `CreateDictionaryWithNamesAndPositions`, `GetElementsPresentInMolecule`, and `GetDataForExistingElements` from `Refine_Elements` module.
+        - `CreateAndAssignMaterials` from `Create_Materials` module.
+        :return: None
+        """
         print("3: Checking present elements ...")
-        self.names_and_pos = Refine_Elements.CreateDictionaryWithNamesAndPositions(self.coords, self.number_of_elements) #supports up to 999 elements
+        Refine_Elements = self.get_module("Refine_Elements")
+        Atom_Data = self.get_module("Atom_Data")
+        self.names_and_pos = Refine_Elements.CreateDictionaryWithNamesAndPositions(self.coords, self.number_of_elements)
         self.elements_present = Refine_Elements.GetElementsPresentInMolecule(self.coords)
         print("3.1: elements present are", self.elements_present)
         self.element_data = Refine_Elements.GetDataForExistingElements(self.elements_present, Atom_Data.Elements)
         print("4: Creating and assigning materials ...")
+        Create_Materials = self.get_module("Create_Materials")
         self.materials_dict = Create_Materials.CreateAndAssignMaterials(self.element_data)
         
     def Prepare_Ions(self):
+        """
+        Prepares ions for the molecule.
+
+        Calls:
+        - `GetDataForExistingElements` from `Refine_Elements` module.
+        - `CreateIonDataFromInput` from `Ions` module.
+        :return: None
+        """
+        Refine_Elements = self.get_module("Refine_Elements")
+        Atom_Data = self.get_module("Atom_Data")
+        Ions = self.get_module("Ions")
         self.ion_data = Refine_Elements.GetDataForExistingElements(self.elements_present, Atom_Data.IonicRadii)
         print("4: Checking for present ion specifications ...")
-        if self.ion_input_list: #checking if list is not empty
+        if self.ion_input_list:
             print("4.1: ion_input_list is not empty")
             self.ion_input = Ions.CreateIonDataFromInput(self.ion_input_list)
         else:
-            print("4: There are no ions with charge, coordination and spin specified")
+            print("4: There are no ions with charge, coordination, and spin specified")
             self.ion_input = []    
     
-    def Build_Molecule(self): #<----- TO DO separate into PrepareAtoms, PrepareBonds, PrepareIons   
-        #TO DO: separate inside Instantiate.py to make atoms and bonds separate functions
+    def Build_Molecule(self): 
+        """
+        Builds the molecule by instantiating elements and bonds.
+
+        Calls:
+        - `Instantiate` from `Instantiate_Molecules` module.
+        :return: None
+        """
+        Instantiate_Molecules = self.get_module("Instantiate_Molecules")
         Instantiate_Molecules.Instantiate(self.is_ionic, self.represent_type, self.names_and_pos, 
-                                self.materials_dict, self.connect_with_symbols, self.element_data, 
-                                self.ion_data, self.ion_input, self.unit_cell)
+                                          self.materials_dict, self.connect_with_symbols, self.element_data, 
+                                          self.ion_data, self.ion_input, self.unit_cell)
                                           
     def Manage_Parent_Relations(self):
+        """
+        Manages parent-child relationships for the molecule.
+
+        Calls:
+        - `Manage_Parent_Relations` from `Parent_Relations` module.
+        :return: None
+        """
+        Parent_Relations = self.get_module("Parent_Relations")
         Parent_Relations.Manage_Parent_Relations(self.names_and_pos, self.connect_with_symbols)
     
-    def Reset_Transforms(self):    
+    def Reset_Transforms(self):
+        """
+        Resets transforms for bonds and elements.
+
+        Calls:
+        - `get_bond_obj_list`, `Apply_Bond_Transforms`, and `Apply_Element_Transforms` from `Clear_Transforms` module.
+        :return: None
+        """
+        Clear_Transforms = self.get_module("Clear_Transforms")
         self.bond_list = Clear_Transforms.get_bond_obj_list()
         print("6.1: Applying bond transforms")
-        Clear_Transforms.Apply_Bond_Transforms(self.bond_list)#<------- might be a source of problems in animation...
+        Clear_Transforms.Apply_Bond_Transforms(self.bond_list)
         print("6.2: Applying element transforms")
         Clear_Transforms.Apply_Element_Transforms(self.names_and_pos)
-    
-    def Rig_Molecule(self):
-        print("7: Rigging molecule ...")
-        Rig_Molecule.Rig_Molecule(self.o_file_name, self.names_and_pos, self.connect_with_symbols, self.bond_list)
-        
+         
     def Animate(self):
+        """
+        Animates the molecule.
+
+        Calls:
+        - `Animate` from `Animate` module.
+        :return: None
+        """
         print("8: Animating molecule ...")
+        Animate = self.get_module("Animate")
         Animate.Animate(self.o_file_name, self.names_and_pos, self.raw_key_frames, self.connect_with_symbols)
         
     def Export(self):
-        #------------------------export as something section----------------------------------------------#
-        print("9: Exporting the results ...")
-        Export_Data.ExportSceneAs(self.o_folder_path, self.o_file_name, self.o_file_type)
-        
-    def ExportForAnimation(self):
-        print("9: Exporting the results ...")
-        Export_Data.ExportForAnimation(self.names_and_pos, self.bond_list, self.o_folder_path, self.o_file_name, self.o_file_type)
+        """
+        Exports the results to the specified file format.
 
-    def Manage_Export_if_Animation(self):
+        Calls:
+        - `ExportSceneAs` from `Export_Data` module.
+        :return: None
+        """
+        print("9: Exporting the results ...")
+        Export_Data = self.get_module("Export_Data")
+        Export_Data.ExportSceneAs(self.o_folder_path, self.o_file_name, self.o_file_type)
+               
+    def Highlight_Atoms(self):
+        """
+        Highlights specified atoms in the molecule.
+
+        Calls:
+        - `highlight_atom` from `AtomHighlighter` module.
+        :return: None
+        """
+        print("7: highlighting atoms if info is present")
+        if not self.atom_hl_list.strip():
+            print("7.1: No atoms to highlight, skipping function.")
+            return    
+        AtomHighlighter = self.get_module("AtomHighlighter")
+        atom_list = self.atom_hl_list.replace(" ", "").split(",")
+        for atom in atom_list:
+            AtomHighlighter.highlight_atom(atom)
+            
+    def Highlight_Bonds(self):
+        """
+        Highlights specified bonds in the molecule.
+
+        Calls:
+        - `highlight_bond` from `AtomHighlighter` module.
+        :return: None
+        """
+        separators = ['-', '=', '#', '%']
+        print("7: highlighting bonds if info is present")
+        if not self.bond_hl_list.strip():
+            print("7.2: No bonds to highlight, skipping function.")
+            return
+        AtomHighlighter = self.get_module("AtomHighlighter")
+        bond_list = self.bond_hl_list.replace(" ", "").split(";")
+        for bond in bond_list:
+            for sep in separators:
+                if sep in bond:
+                    atom1, atom2 = bond.split(sep)
+                    AtomHighlighter.highlight_bond(atom1, atom2)
+                    break  
+
+    def Animate(self):
+        """
+        Animates the molecule if animation is enabled.
+
+        Calls:
+        - `animate` from `Animate` module.
+        :return: None
+        """
+        if self.str_is_animation == "0":
+            return
+        else:
+            #blend_file_dir = os.path.dirname(__file__)  # Ensure this variable is defined
+            blend_file_dir = bpy.path.abspath("//")  # Correctly gets the .blend file directory
+            anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
+            Animate = self.get_module("Animate")
+            Animate.animate(anim_frames_file)
+    
+    def Manage_Export(self):
+        """
+        Manages the export process based on whether animation is enabled.
+
+        Calls:
+        - `Export` or `export_animation` from `Animate` module.
+        :return: None
+        """
         if self.str_is_animation == "0":
             self.Export()
         else:
-            anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
-            export_path = os.path.join(main_body_instance.o_folder_path,
-                                   main_body_instance.o_file_name+main_body_instance.o_file_type)
-            Animate.animate(anim_frames_file)
+            Animate = self.get_module("Animate")
+            export_path = os.path.join(self.o_folder_path, self.o_file_name + self.o_file_type)
             Animate.export_animation(export_path)
     
 if __name__ == "__main__":
@@ -196,10 +389,15 @@ if __name__ == "__main__":
                                    params_data["o_file_type"],
                                    params_data["str_ionic_cell"],
                                    params_data["str_ion_input_list"],
-                                   params_data["str_is_animation"])
+                                   params_data["str_is_animation"],
+                                   params_data["atom_hl_list"],
+                                   params_data["bond_hl_list"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
-    main_body_instance.Manage_Export_if_Animation()
+    main_body_instance.Highlight_Atoms()
+    main_body_instance.Highlight_Bonds()
+    main_body_instance.Animate()
+    main_body_instance.Manage_Export()

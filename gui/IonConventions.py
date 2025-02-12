@@ -1,7 +1,6 @@
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
 
 class IonConventions(object):
     """region of the window that specifies meaning of some coordination values"""
@@ -69,8 +68,6 @@ class IonConventions(object):
         self.lbl_square.grid(row=2, column=1)
         self.lbl_py.grid(row=3, column=0)
         self.lbl_pyramidal.grid(row=3, column=1)
-
-
         
 
 
