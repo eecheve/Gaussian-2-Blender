@@ -26,9 +26,10 @@ Contents
    cite
 
 .. note::
-	Gaussian-2-Blender has already been published at the *Journal of Chemical Education* and is currently
-	undergoing updates and changes to implement changes suggested by users and editors. The objective
-	of the current changes is to submit the updated version as a usable app in the *Journal of Cheminformatics*.
+	**Gaussian-2-Blender** *V.2022.6* was published at the *Journal of Chemical Education*. The program is currently
+	undergoing updates to implement changes suggested by users. The objective of the current changes is to submit
+	the updated version to the *Journal of Cheminformatics*.  This documentation is for **Gaussian-2-Blender** *V.2025.2*.
+
 
 Indices and tables
 ==================

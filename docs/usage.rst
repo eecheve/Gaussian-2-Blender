@@ -7,6 +7,10 @@ Prerequisites
 - Install the latest version of Python. Link: https://www.python.org/downloads/
 - No programming knowledge is required to use this tool.
 
+.. note::
+	**Gaussian-2-Blender** *V.2025.2* was built for **Blender** *V.4.2*. If you encounter unexpected
+	running errors, please check your version of Blender and download the appropiate.
+
 Setup
 -----
 - If you install Blender in a non-default path on Windows, note the path as it will be needed.
