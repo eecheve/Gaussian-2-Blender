@@ -60,3 +60,4 @@ urllib3==2.3.0
     # via requests
 
 graphviz
+sphinx.ext.graphviz 
