@@ -39,7 +39,8 @@ To run the `Gaussian-2-Blender.py` Python script from the console:
     ```
 
 ### DOCUMENTATION:
-A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
+- A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
+- Additionally, this [link](https://gaussian-2-blender.readthedocs.io/en/latest/index.html) contains a searchable directory for the must up-to-date documentation.
 
 ### GUI OVERVIEW:
 The `GaussianToBlender.py` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing `tkinter`, manages different regions and functionalities, including input, output, console, and ion management.
