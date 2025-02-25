@@ -58,7 +58,7 @@ templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 autosummary_generate = True
 graphviz_output_format = 'svg'
-graphviz_dot = 'C:/Program Files/Graphviz/bin/dot.exe'
+#graphviz_dot = 'C:/Program Files/Graphviz/bin/dot.exe'
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
