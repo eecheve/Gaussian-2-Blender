@@ -1,13 +1,13 @@
 .com
-C:/Documents/Gaussian-2-Blender/input_examples/com_files/animations/water
-water_frame1.com
-C:\Documents\Gaussian-2-Blender\output\
-water_frame1
+/Users/admin/Documents/GitHub/Gaussian-2-Blender/input_examples/com_files/organic
+acrylonitrile.com
+/Users/admin/Documents/GitHub/Gaussian-2-Blender/output
+acrylonitrile
 Ball-and-Stick
-.fbx
+.glb
 0
 0
 ---
-1
-O01, H02
-O01-H02
+0
+
+

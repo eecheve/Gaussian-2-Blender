@@ -1,11 +1,9 @@
 import os
+import platform
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
-#tooltip = CreateTooltip.CreateTooltip
-
 from gui.Utility import Utility
-#utility = Utility.Utility
 
 class BlenderPath(object):
     """
@@ -60,23 +58,64 @@ class BlenderPath(object):
 
     def searchBlenderPath(self):
         """
-        Searches the default installation directory for Blender (`blender.exe`).
+        Searches the default installation directory for Blender's excecutable.
+        The search path is different depending on the machine's operating system.
 
         :return: The path to the Blender installation directory or a failure message.
         :rtype: str
         """
-        blender = "blender.exe"
-        for root, dirs, files in os.walk("C:\\Program Files\\Blender Foundation"):
-            for name in files:
-                if name in files:
-                    if name == blender:
-                        #return os.path.abspath(os.path.join(root, name))
-                        print("Blender executable found in", self.lbl_blenderPath, "the search for the blender path is not necessary")
-                        return os.path.abspath(root)
-                else:
-                    print("blender.exe not found within Program_Files\Blender_Foundation")
-                    print("please instal Blender before using Gaussian-2-Blender or set manually the path in which Blender is installed")
-                    return "blender.exe not found"
+        os_config = {
+            "Windows": {
+                "default_path": "C:\\Program Files\\Blender Foundation",
+                "executable": "blender.exe"
+            },
+            "Darwin": {
+                "default_path": "/Applications/Blender.app",
+                "executable": "Blender"
+            }
+        }
+        
+        current_os = platform.system()
+
+        if current_os not in os_config:
+            return f"Unsupported OS: {current_os}"
+        
+        config = os_config[current_os]
+        blender_exec = config["executable"]
+        search_path = config["default_path"]
+
+        if current_os == "Windows":
+            print("Windows OS detected. Proceeding to search for Blender executable")
+            for root, _, files in os.walk(search_path):
+                if blender_exec in files:
+                    print(f"Blender executable found in {root}. The search for the Blender path is not necessary")
+                    return os.path.abspath(root)
+                
+        else:
+            exec_path = os.path.join(search_path, "Contents", "MacOS")
+            bundle = os.path.join(exec_path, "Blender")
+            if os.path.isfile(bundle):
+                print(f"Blender application found in {exec_path}. The search for Blender path is not necessary")
+                return os.path.abspath(exec_path)
+            
+        print("If Blender is installed, please find its correct location and specify it in the Blender path")
+        response = f"{blender_exec} not found"
+        print(response)
+        return response
+                
+        
+        # blender = "blender.exe"
+        # for root, dirs, files in os.walk("C:\\Program Files\\Blender Foundation"):
+        #     for name in files:
+        #         if name in files:
+        #             if name == blender:
+        #                 #return os.path.abspath(os.path.join(root, name))
+        #                 print("Blender executable found in", self.lbl_blenderPath, "the search for the blender path is not necessary")
+        #                 return os.path.abspath(root)
+        #         else:
+        #             print("blender.exe not found within Program_Files\Blender_Foundation")
+        #             print("please instal Blender before using Gaussian-2-Blender or set manually the path in which Blender is installed")
+        #             return "blender.exe not found"
                     #sys.stderr.write("blender.exe not found within Program_Files\\Blender_Foundation\n")
                     
     def lookForBlenderPath(self):
@@ -99,4 +138,3 @@ class BlenderPath(object):
         :type str_path: str
         """
         self.var_blenderPath.set(str_path)
-
