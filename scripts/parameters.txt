@@ -1,7 +1,7 @@
 .com
 /Users/admin/Documents/GitHub/Gaussian-2-Blender/input_examples/com_files/organic
 acrylonitrile.com
-/Users/admin/Documents/GitHub/Gaussian-2-Blender/output
+/Users/admin/Documents/GitHub/Gaussian-2-Blender/output/
 acrylonitrile
 Ball-and-Stick
 .glb
