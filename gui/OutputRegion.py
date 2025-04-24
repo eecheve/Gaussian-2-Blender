@@ -1,3 +1,4 @@
+import os
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
@@ -5,27 +6,30 @@ from gui.CreateTooltip import CreateTooltip
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
     def __init__(self, parent, initial_dir):
-        self.def_outputPath = initial_dir + "\\output\\"
+        #self.def_outputPath = initial_dir + "\\output\\"
+        self.def_outputPath = os.path.join(initial_dir, "output", "")
         self.initial_dir = initial_dir
         
         self.frame = tk.LabelFrame(master=parent, 
                                         padx=5, 
                                         text="Output", 
                                         fg="blue", 
+                                        bg="#e0e0e0",
                                         relief=tk.GROOVE, 
                                         width=325, 
                                         height=102, 
                                         borderwidth=2)
 
         self.lbl_outputPath = tk.Label(text="Output path",
-                                      master=self.frame)
+                                      master=self.frame,
+                                      bg="#e0e0e0", fg='black')
 
         self.ttp_outputLabel = CreateTooltip(self.lbl_outputPath,
                                       "Folder path where the output will be saved")
 
         self.var_outputPath = tk.StringVar()
         self.var_outputPath.set(self.def_outputPath)
-        self.ent_outputPath = tk.Entry(width=35, 
+        self.ent_outputPath = tk.Entry(width=35, bg="#e0e0e0", fg='black',
                                        master=self.frame, 
                                        textvariable=self.var_outputPath)
 
@@ -41,7 +45,8 @@ class OutputRegion(object):
                                          "Select the folder path where you want your output to be")
 
         self.lbl_outputType = tk.Label(text="Output type", 
-                                       master=self.frame)
+                                       master=self.frame,
+                                       bg="#e0e0e0", fg='black')
 
         self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")

@@ -13,9 +13,11 @@ class ConsoleRegion(object):
                                       padx=5, 
                                       text="Console", 
                                       fg="blue", 
+                                      bg="#e0e0e0",
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
         self.text = tk.Text(master=self.frame, 
+                            fg='black', bg="white",
                             height=8,
                             width=80,
                             wrap="word")

@@ -6,6 +6,7 @@ import subprocess
 
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 
 #utility modules
 from gui.Utility import Utility
@@ -39,6 +40,7 @@ class GaussianToBlenderApp:
         self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
+        self._configure_style()
         self._initialize_regions()
         self.place_regions()
         self.initialize_single_tutorial()
@@ -61,7 +63,14 @@ class GaussianToBlenderApp:
         #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
         self.root.geometry('800x800')
-        self.root.resizable(0,0)
+        #self.root.resizable(0,0)
+        self.root.configure(bg="#e0e0e0")
+
+    def _configure_style(self):
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        #style.configure
 
     def place(self, region, **kwargs):
         """
@@ -221,6 +230,14 @@ class GaussianToBlenderApp:
         self.single_convert_tutorial.reset_buttons_to_default()
         self.animation_convert_tutorial.reset_buttons_to_default()
 
+    def get_blender_exec_name(self):
+        """
+        Returns the expected Blender executable filename based on the operating system
+
+        :return: Platform-specific Blender executable name
+        """
+        return "blender.exe" if platform.system() == "Windows" else "Blender"
+    
     def exceptions_test_passed(self, b_path, i_names, o_path):
         """
         Validates input parameters for the conversion process.
@@ -237,8 +254,8 @@ class GaussianToBlenderApp:
             bool: True if all tests pass, False otherwise.
         """
         tests = [
-            (not Utility.findFile("blender.exe", b_path), 
-                "The assigned blender path does not contain the blender.exe file"),
+            #(not Utility.findFile(self.get_blender_exec_name(), b_path), 
+            #    "The assigned blender path does not contain the blender executable"),
             (i_names is None or not i_names, 
                 "Please select at least one Gaussian input file to convert"),
             (not o_path, 
@@ -254,6 +271,8 @@ class GaussianToBlenderApp:
                 return False
         return True
         
+
+    
     def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                               is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
         """
