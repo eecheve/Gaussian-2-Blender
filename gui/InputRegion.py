@@ -64,14 +64,16 @@ class InputRegion(object):
         Parameters:
             parent (tk.Widget): The parent widget to attach the frame to.
         """
-        self.frame = tk.LabelFrame(master=parent, padx=5, text="Input", fg="blue", relief=tk.GROOVE, borderwidth=2)
+        self.frame = tk.LabelFrame(master=parent, padx=5, text="Input", 
+                                   fg="blue", bg="#e0e0e0",
+                                   relief=tk.GROOVE, borderwidth=2)
 
     def setup_canvas(self):
         """
         Sets up the canvas with a scrollable frame for the input region.
         """
-        self.canvas = tk.Canvas(self.frame)
-        self.frm_inside = tk.Frame(self.canvas)
+        self.canvas = tk.Canvas(self.frame, bg="#e0e0e0")
+        self.frm_inside = tk.Frame(self.canvas, bg="#e0e0e0")
         self.scrl_frame = tk.Scrollbar(master=self.frame, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.scrl_frame.set)
         self.scrl_frame.pack(side="right", fill="y")
@@ -84,10 +86,10 @@ class InputRegion(object):
         Adds and configures widgets like buttons, labels, dropdown menus, and checkboxes.
         """
         self.btn_setInputPath = tk.Button(text="set", master=self.frm_inside)
-        self.lbl_inputLabel = tk.Label(text="Input name(s)", master=self.frm_inside)
+        self.lbl_inputLabel = tk.Label(text="Input name(s)", bg="#e0e0e0", fg='black', master=self.frm_inside)
         CreateTooltip(self.lbl_inputLabel, "Name(s) of the file(s) to be converted")
         
-        self.lbl_fileType = tk.Label(text="Input type", master=self.frm_inside)
+        self.lbl_fileType = tk.Label(text="Input type", bg="#e0e0e0", fg='black', master=self.frm_inside)
         CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
         self.lst_inputTypes = [".com", ".xyz"] #planning on reading .mol files in the future as well.
         self.drp_inputTypes = tk.OptionMenu(self.frm_inside, 
@@ -96,22 +98,23 @@ class InputRegion(object):
                                         command=self.dropdown_callout)
         CreateTooltip(self.drp_inputTypes, "Choose one of the input types from this list")
 
-        self.lbl_inputNames = tk.Label(textvariable=self.var_inputNames, master=self.frm_inside, fg="gray")
+        self.lbl_inputNames = tk.Label(textvariable=self.var_inputNames, master=self.frm_inside, 
+                                       bg="#e0e0e0", fg='black')
         CreateTooltip(self.lbl_inputNames, "List of input files with the correct extension")
         
         self.btn_setInputName = tk.Button(text="set", master=self.frm_inside, command=self.setInputName)
         CreateTooltip(self.btn_setInputName, "Select one or more input files")
         
-        self.lbl_inputType = tk.Label(text="Model type", master=self.frm_inside)
+        self.lbl_inputType = tk.Label(text="Model type", bg="#e0e0e0", fg='black', master=self.frm_inside)
         CreateTooltip(self.lbl_inputType, "Different representational models supported by Gaussian2Blender")
         
         self.lst_modelTypes = ["Ball-and-Stick", "Stick-only", "Van-der-Waals"]
         self.var_modelTypes.set("Ball-and-Stick")
-        self.drp_modelTypes = tk.OptionMenu(self.frm_inside, self.var_modelTypes, 
+        self.drp_modelTypes = tk.OptionMenu(self.frm_inside, self.var_modelTypes,
                                             *self.lst_modelTypes, command=self.dropdown_callout)
         CreateTooltip(self.drp_modelTypes, "Choose one of the model representation options from this list")
         
-        self.chk_isAnimation = tk.Checkbutton(master=self.frm_inside, text="is animation",
+        self.chk_isAnimation = tk.Checkbutton(master=self.frm_inside, text="is animation", bg="#e0e0e0", fg='black',
                                            variable=self.var_isAnimation, command=self.updateAnimationState)
         CreateTooltip(self.chk_isAnimation, "Check if the input files will serve as animation frames.")
 

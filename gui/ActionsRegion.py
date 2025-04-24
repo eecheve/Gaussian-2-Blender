@@ -10,7 +10,7 @@ class ActionsRegion:
         :param on_reset: Callback function to reset the interface to defaults.
         :param on_convert: Callback function to manage the conversion process.
         """
-        self.frame = tk.LabelFrame(master=parent, text="Actions", fg="blue", relief=tk.GROOVE, borderwidth=2)
+        self.frame = tk.LabelFrame(master=parent, text="Actions", fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
         self.on_reset = on_reset
         self.on_convert = on_convert
         self._create_widgets()

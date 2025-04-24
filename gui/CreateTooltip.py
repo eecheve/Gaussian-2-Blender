@@ -73,7 +73,7 @@ class CreateTooltip(object): #https://stackoverflow.com/questions/3221956/how-do
         self.tw.wm_geometry("+%d+%d" % (x, y))
         label = tk.Label(self.tw, text=self.text, justify='left',
                        background="#ffffff", relief='solid', borderwidth=1,
-                       wraplength = self.wraplength)
+                       wraplength = self.wraplength, foreground='black')
         label.pack(ipadx=1)
 
     def hidetip(self):

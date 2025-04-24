@@ -24,14 +24,18 @@ class BlenderPath(object):
         
         self.frame = tk.LabelFrame(master=parent,
                                            text="Blender executable location", 
-                                           fg="blue", 
+                                           fg="blue",
+                                           bg="#e0e0e0",
                                            relief=tk.GROOVE, 
                                            width=800, 
                                            height=170, 
                                            borderwidth=2)
+        #Utility.set_bg_color(self.frame, "#d3d3d3")
 
         self.lbl_blenderLabel = tk.Label(
             text="Blender path",
+            bg="#e0e0e0",
+            fg='black',
             master=self.frame)
 
         self.ttp_blenderLabel = CreateTooltip(
@@ -42,11 +46,13 @@ class BlenderPath(object):
         self.lbl_blenderPath = tk.Label(
             textvariable = self.var_blenderPath,
             master=self.frame,
-            fg="gray")
+            fg="gray",
+            bg="#e0e0e0")
     
         self.btn_setBlenderPath = tk.Button(
             text="search",
             master=self.frame,
+            bg="#e0e0e0",
             command=self.lookForBlenderPath)
         self.ttp_setBlenderPath = CreateTooltip(
             self.btn_setBlenderPath,
@@ -102,21 +108,6 @@ class BlenderPath(object):
         response = f"{blender_exec} not found"
         print(response)
         return response
-                
-        
-        # blender = "blender.exe"
-        # for root, dirs, files in os.walk("C:\\Program Files\\Blender Foundation"):
-        #     for name in files:
-        #         if name in files:
-        #             if name == blender:
-        #                 #return os.path.abspath(os.path.join(root, name))
-        #                 print("Blender executable found in", self.lbl_blenderPath, "the search for the blender path is not necessary")
-        #                 return os.path.abspath(root)
-        #         else:
-        #             print("blender.exe not found within Program_Files\Blender_Foundation")
-        #             print("please instal Blender before using Gaussian-2-Blender or set manually the path in which Blender is installed")
-        #             return "blender.exe not found"
-                    #sys.stderr.write("blender.exe not found within Program_Files\\Blender_Foundation\n")
                     
     def lookForBlenderPath(self):
         """

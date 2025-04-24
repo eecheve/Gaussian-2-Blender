@@ -66,20 +66,21 @@ class HighlighterRegion(object):
             parent (tk.Widget): The parent widget to attach the frame to.
         """
         self.frame = tk.LabelFrame(master=parent, padx=5, text="Highlight atoms and bonds", 
-                                   fg="blue", relief=tk.GROOVE, borderwidth=2)
+                                   fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
 
     def add_widgets(self):
         """
         Adds widgets (checkboxes, labels, and entry fields) for atom and bond highlighting.
         """
-        self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms",
+        self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
                                                  variable=self.var_highlightAtoms, command=self.toggleAtomHighlighter)
         CreateTooltip(self.chk_highlightAtoms, "Check if you want to highlight one or more atoms in your 3D structure")
 
-        self.lbl_highlightedAtoms = tk.Label(text="Atom list", master=self.frame, state=tk.DISABLED)
+        self.lbl_highlightedAtoms = tk.Label(text="Atom list", master=self.frame, state=tk.DISABLED,
+                                             bg="#e0e0e0", fg='black')
         CreateTooltip(self.lbl_highlightedAtoms, "List of atoms to highlight in the resulting 3D model")
         
-        self.ent_hlAtomList = tk.Entry(width=30, master=self.frame, 
+        self.ent_hlAtomList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
                                        textvariable=self.var_hlAtomList, state=tk.DISABLED)
         self.ent_hlAtomList.bind("<FocusOut>", self.on_validate_atom_list)
         self.ent_hlAtomList.bind("<Return>", self.on_validate_atom_list)
@@ -87,14 +88,15 @@ class HighlighterRegion(object):
                                  self.on_enable_editing(event, self.ent_hlAtomList, self.var_highlightAtoms))
         CreateTooltip(self.ent_hlAtomList, "Separate each atom by a comma. E.g. C01, H02, H03, etc")
 
-        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight atoms",
+        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
                                                  variable=self.var_highlightBonds, command=self.toggleBondHighlighter)
         CreateTooltip(self.chk_highlightBonds, "Check if you want to highlight one or more bonds in your 3D structure")
 
-        self.lbl_highlightedBonds = tk.Label(text="Bonds list", master=self.frame, state=tk.DISABLED)
+        self.lbl_highlightedBonds = tk.Label(text="Bonds list", master=self.frame, state=tk.DISABLED,
+                                             bg="#e0e0e0", fg='black')
         CreateTooltip(self.lbl_highlightedBonds, "List of bonds to highlight: '-' singe, '=' double, '#' triple, '%' aromatic")
         
-        self.ent_hlBondList = tk.Entry(width=30, master=self.frame, 
+        self.ent_hlBondList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
                                        textvariable=self.var_hlBondList, state=tk.DISABLED)
         self.ent_hlBondList.bind("<FocusOut>", self.on_validate_bond_list)
         self.ent_hlBondList.bind("<Return>", self.on_validate_bond_list)

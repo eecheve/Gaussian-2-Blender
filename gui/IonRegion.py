@@ -36,11 +36,12 @@ class IonRegion(object):
                                    padx=5,
                                    text="Ion information",
                                    fg="blue",
+                                   bg="#e0e0e0",
                                    relief=tk.GROOVE,
                                    borderwidth=2)
 
-        self.canvas = tk.Canvas(self.frame)
-        self.frm_inside = tk.Frame(self.canvas)
+        self.canvas = tk.Canvas(self.frame, bg="#e0e0e0")
+        self.frm_inside = tk.Frame(self.canvas, bg="#e0e0e0")
         self.scrl_frame = tk.Scrollbar(master=self.frame,
                                        orient="vertical",
                                        command=self.canvas.yview)
@@ -51,10 +52,12 @@ class IonRegion(object):
         self.frm_inside.bind("<Configure>", self.canvasConfig)
 
         self.chk_hasIons = tk.Checkbutton(master=self.frm_inside, text="check for ionic radii",
+                                          fg='black', bg="#e0e0e0",
                                           variable=self.int_hasIons, command=self.activator)
         CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 
         self.chk_unitCell = tk.Checkbutton(master=self.frm_inside, text="unit cell boundaries",
+                                           fg='black', bg="#e0e0e0",
                                            variable=self.int_unitCell, state=tk.DISABLED)
         CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
 

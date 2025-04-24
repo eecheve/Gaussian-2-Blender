@@ -11,7 +11,8 @@ class Information(object):
         self.frame = tk.LabelFrame(master=parent_tk,
                                       padx=5, 
                                       text="Gaussian2Blender Information", 
-                                      fg="blue", 
+                                      fg="blue",
+                                      bg="#e0e0e0", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
         
@@ -54,16 +55,20 @@ class Information(object):
 
         self.about_info = tk.Label(master=popup,
                                    text=self.about_text,
+                                   bg="#e0e0e0",
                                    fg='black')
         self.lbl_ver = tk.Label(master=popup,
                                     text="version: ",
+                                    bg="#e0e0e0",
                                     fg="black")
         self.lbl_version = tk.Label(master=popup,
                                     text="2025.1.0 ",
+                                    bg="#e0e0e0",
                                     fg="gray")
         
         self.lbl_auth = tk.Label(master=popup,
                                  text="Echeverri-Jimenez CER3D Group",
+                                 bg="#e0e0e0",
                                  fg="gray")
 
         self.about_info.grid(row=0, column=0, columnspan=2)
@@ -82,6 +87,7 @@ class Information(object):
         content = tk.Label(popup_window,
                            text=self.instructions_text,
                            fg="black",
+                           bg="#e0e0e0",
                            padx=10, pady=10,
                            justify="left",  # Makes the text left-aligned
                            width=100, height=20,

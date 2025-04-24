@@ -45,6 +45,23 @@ class Utility(object):
         """Set the background color of the widget"""
         tk_object.config(bg=color_string)
 
+    def set_bg_color(widget, bg_color):
+        """
+        Recursively set the bg color for a widget and all its children
+
+        :param widget: The parent widget
+        :param bg_color: the bg color to set
+        """
+        try:
+            widget.configure(bg=bg_color)
+        except tk.TclError:
+            pass
+        for child in widget.winfo_children():
+            try:
+                child.configure(bg=bg_color)
+            except tk.TclError:
+                pass
+
     def revert_widget(tk_object):
         """
         Reverts a widget's appearance (background color) to its default state.
@@ -61,4 +78,5 @@ class Utility(object):
 
         # Revert the background color for the main widget
         if widget_type in original_colors:
-            tk_object.config(bg=original_colors[widget_type])
+            tk_object.config(bg=original_colors[widget_type],
+                             fg='black')

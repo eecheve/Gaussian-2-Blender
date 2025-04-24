@@ -6,6 +6,7 @@ import subprocess
 
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import ttk
 
 #utility modules
 from gui.Utility import Utility
@@ -39,6 +40,7 @@ class GaussianToBlenderApp:
         self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self._configure_root()
+        self._configure_style()
         self._initialize_regions()
         self.place_regions()
         self.initialize_single_tutorial()
@@ -62,6 +64,13 @@ class GaussianToBlenderApp:
         #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
         self.root.geometry('800x800')
         #self.root.resizable(0,0)
+        self.root.configure(bg="#e0e0e0")
+
+    def _configure_style(self):
+        style = ttk.Style()
+        style.theme_use("clam")
+
+        #style.configure
 
     def place(self, region, **kwargs):
         """

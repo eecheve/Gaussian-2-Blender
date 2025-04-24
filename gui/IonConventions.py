@@ -8,55 +8,64 @@ class IonConventions(object):
         self.frame = tk.LabelFrame(master=parent,
                                       padx=5, 
                                       text="Ion conventions", 
-                                      fg="blue", 
+                                      fg="blue",
+                                      bg="#e0e0e0",
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
 
         self.lbl_hs = tk.Label(master=self.frame,
                                      text="hs: ",
-                                     fg="black")
+                                     fg="black",
+                                     bg="#e0e0e0")
         self.ttp_hs = CreateTooltip(self.lbl_hs,
                               "code")
         
         self.lbl_highSpin = tk.Label(master=self.frame,
                                      text="high spin",
-                                     fg="gray")
+                                     fg="gray",
+                                     bg="#e0e0e0")
         self.ttp_highSpin = CreateTooltip(self.lbl_highSpin,
                                     "meaning")
 
         self.lbl_ls = tk.Label(master=self.frame,
                                      text="ls: ",
-                                     fg="black")
+                                     fg="black",
+                                     bg="#e0e0e0")
         self.ttp_ls = CreateTooltip(self.lbl_ls,
                               "code")
         
         self.lbl_lowSpin = tk.Label(master=self.frame,
                                      text="low spin",
-                                     fg="gray")
+                                     fg="gray",
+                                     bg="#e0e0e0")
         self.ttp_lowSpin = CreateTooltip(self.lbl_lowSpin,
                                     "meaning")
 
         self.lbl_py = tk.Label(master=self.frame,
                                      text="PY:",
-                                     fg="black")
+                                     fg="black",
+                                     bg="#e0e0e0")
         self.ttp_py = CreateTooltip(self.lbl_py,
                                     "code")
 
         self.lbl_pyramidal = tk.Label(master=self.frame,
                                      text="pyramidal",
-                                     fg="gray")
+                                     fg="gray",
+                                     bg="#e0e0e0")
         self.ttp_pyramidal = CreateTooltip(self.lbl_pyramidal,
                                     "meaning")
 
         self.lbl_sq = tk.Label(master=self.frame,
                                      text="SQ:",
-                                     fg="black")
+                                     fg="black",
+                                     bg="#e0e0e0")
         self.ttp_sq = CreateTooltip(self.lbl_sq,
                                     "code")
 
         self.lbl_square = tk.Label(master=self.frame,
                                      text="square-planar",
-                                     fg="gray")
+                                     fg="gray",
+                                     bg="#e0e0e0")
         self.ttp_square = CreateTooltip(self.lbl_square,
                                     "meaning")
 

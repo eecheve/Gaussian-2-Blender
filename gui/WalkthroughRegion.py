@@ -5,7 +5,8 @@ class WalkthroughRegion(object):
         self.frame = tk.LabelFrame(master=parent,
                                 padx=5, 
                                 text="Guided walkthrough", 
-                                fg="blue", 
+                                fg="blue",
+                                bg="#e0e0e0",
                                 relief=tk.GROOVE, 
                                 borderwidth=2,
                                 width=390,  
@@ -16,6 +17,7 @@ class WalkthroughRegion(object):
         self.guide_widget = tk.Label(master=self.frame,
                                      text=self.default_text,
                                      fg="black",
+                                     bg="#e0e0e0",
                                      wraplength=370)
         self.guide_widget.grid(row=0, column=0)
 
