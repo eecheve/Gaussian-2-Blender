@@ -1,8 +1,8 @@
 .com
 C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic
-acrylonitrile.com
-C:\Users\User\G2B\Gaussian-2-Blender\output\
-acrylonitrile
+methyl_xanthate.com
+C:/Users/User/G2B/Gaussian-2-Blender/output
+methyl_xanthate
 Ball-and-Stick
 .glb
 0
