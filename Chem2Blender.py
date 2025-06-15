@@ -26,15 +26,15 @@ from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
 from gui.HighlighterRegion import HighlighterRegion
 
-class GaussianToBlenderApp:
+class Chem2Blender:
     '''
     GUI built using the tkinter library to convert computational chemistry files into 3D modeling files.
-    This application facilitates the conversion of Gaussian computational chemistry files into Blender-compatible
+    This application facilitates the conversion of various computational chemistry files into Blender-compatible
     3D representations.
     '''
     def __init__(self):
         """
-        Initializes the GaussianToBlenderApp GUI, setting up the main application window and regions.
+        Initializes the Chem2Blender GUI, setting up the main application window and regions.
         """
         self.root = tk.Tk()
         self._initialize_g2b_path()
@@ -59,9 +59,9 @@ class GaussianToBlenderApp:
         """
         Configures the root tkinter window with title, dimensions, and resizability settings.
         """
-        self.root.title("Gaussian-2-Blender")
-        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Gaussian2Blender.py is inside gui folder
-        #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Gaussian2Blender.py is outside gui folder
+        self.root.title("Chem2Blender")
+        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Chem2Blender.py is inside gui folder
+        #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Chem2Blender.py is outside gui folder
         self.root.geometry('800x800')
         #self.root.resizable(0,0)
         self.root.configure(bg="#e0e0e0")
@@ -247,7 +247,7 @@ class GaussianToBlenderApp:
 
         Args:
             b_path (str): Path to the Blender executable.
-            i_names (list): List of Gaussian input file names to convert.
+            i_names (list): List of input file names to convert.
             o_path (str): Output directory path.
 
         Returns:
@@ -257,7 +257,7 @@ class GaussianToBlenderApp:
             #(not Utility.findFile(self.get_blender_exec_name(), b_path), 
             #    "The assigned blender path does not contain the blender executable"),
             (i_names is None or not i_names, 
-                "Please select at least one Gaussian input file to convert"),
+                "Please select at least one input file to convert"),
             (not o_path, 
                 "Please paste a path for the output file"),
             (not os.path.exists(o_path), 
@@ -399,7 +399,7 @@ class GaussianToBlenderApp:
         
     def convert_manager(self, exec_loc):
         """
-        Manages the process of converting Gaussian input files to 3D object files using Blender's API.
+        Manages the process of converting input files to 3D object files using Blender's API.
 
         Calls:
         - `self.exceptions_test_passed`.
@@ -475,5 +475,5 @@ class GaussianToBlenderApp:
         self.root.mainloop()
 
 if __name__ == "__main__":
-    app = GaussianToBlenderApp()
+    app = Chem2Blender()
     app.run()
