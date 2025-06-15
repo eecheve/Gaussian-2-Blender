@@ -20,6 +20,7 @@ Contents
    
    usage
    results
+   tutorial
    developers
    gui
    api
