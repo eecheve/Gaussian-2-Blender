@@ -53,7 +53,7 @@ class OutputRegion(object):
 
         self.lst_outputTypes = [".fbx", ".obj", ".dae", ".glb", ".stl"]
         self.var_outputTypes = tk.StringVar()
-        self.var_outputTypes.set(".fbx")
+        self.var_outputTypes.set(".glb")
         self.drp_outputTypes = tk.OptionMenu(self.frame, 
                                         self.var_outputTypes, 
                                         *self.lst_outputTypes,

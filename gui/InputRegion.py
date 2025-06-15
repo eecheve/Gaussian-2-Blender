@@ -91,7 +91,7 @@ class InputRegion(object):
         
         self.lbl_fileType = tk.Label(text="Input type", bg="#e0e0e0", fg='black', master=self.frm_inside)
         CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
-        self.lst_inputTypes = [".com", ".xyz"] #planning on reading .mol files in the future as well.
+        self.lst_inputTypes = [".com", ".xyz", ".mol2"] #planning on reading .mol files in the future as well.
         self.drp_inputTypes = tk.OptionMenu(self.frm_inside, 
                                         self.var_inputTypes, 
                                         *self.lst_inputTypes,
@@ -165,7 +165,7 @@ class InputRegion(object):
         Returns:
             bool: True if all files have the same valid extension, False otherwise.
         """
-        valid_extensions = {".com", ".xyz"}
+        valid_extensions = {".com", ".xyz", ".mol2"}
         #valid_extensions = {".com", ".xyz", ".mol"} #<-- for future Emmanuel to tackle
         extensions = {os.path.splitext(path)[1].lower() for path in file_paths}
     
@@ -214,8 +214,8 @@ class InputRegion(object):
             return True
         elif file_ext.lower() == ".xyz":
             return True
-        #elif file_ext.lower() == ".mol": <--- for the future
-        #    return True
+        elif file_ext.lower() == ".mol2": #currently in the making
+            return True
         return False
                 
     def updateInputNameList(self, string_list):

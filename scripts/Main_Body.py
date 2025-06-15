@@ -135,6 +135,25 @@ class Main_Body(object):
             self.Refine_com_File()
         elif i_file_type == ".xyz":
             self.Read_xyz_File()
+        elif i_file_type == ".mol2":
+            self.Read_mol2_File()
+    
+    def Read_mol2_File(self):
+        """
+        Reads atomic data from a .mol2 file.
+
+        Calls:
+        - `extract_coords_from_mol2_file` and `obtain_all_bond_orders` from `Mol2Reader` module.
+        :return: None
+        """
+        print("1: Reading .mol2 file ...")
+        Mol2Reader = self.get_module("Mol2Reader")
+        mol2Reader = Mol2Reader.Mol2Reader()
+        file_path = os.path.join(self.i_folder_path, self.i_file_name)
+        self.coords = mol2Reader.extract_coords_from_mol2_file(file_path)
+        self.number_of_elements = len(self.coords)
+        self.connect_with_symbols = mol2Reader.obtain_all_bond_orders(self.coords, file_path)
+
     
     def Read_xyz_File(self):
         """
