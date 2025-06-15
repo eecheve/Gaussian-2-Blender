@@ -36,6 +36,7 @@ class Chem2Blender:
         """
         Initializes the Chem2Blender GUI, setting up the main application window and regions.
         """
+        self.current_os = platform.system()
         self.root = tk.Tk()
         self._initialize_g2b_path()
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
@@ -45,13 +46,19 @@ class Chem2Blender:
         self.place_regions()
         self.initialize_single_tutorial()
         self.initialize_animation_tutorial()
-
+    
     def _initialize_g2b_path(self):
         """
         Determines the file path where the application is running, distinguishing between executable and script mode.
         """
         if getattr(sys, 'frozen', False):  # Check if running as an executable
-            self.g2b_path = os.path.dirname(sys.executable)
+            if self.current_os == "Darwin": #macOS
+                #the pyinstaller bundles gui and scripts inside Resources/ (see Chem2Blender_macOS.spec)
+                bundle_dir = os.path.dirname(sys.executable)
+                self.g2b_path = os.path.abspath(os.path.join(bundle_dir, "../Resources"))
+                sys.path.insert(0, self.g2b_path)
+            else: #Works well for Windows, don't know if it works for Linux really.
+                self.g2b_path = os.path.dirname(sys.executable)
         else:  # Running as a script
             self.g2b_path = os.path.dirname(os.path.realpath(__file__))
     
@@ -196,17 +203,17 @@ class Chem2Blender:
         Calls:
         - self.convert_manager
         """
-        current_os = platform.system()
+        #current_os = platform.system()
         linux_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.sh")
         windows_exe_path = os.path.join(self.g2b_path, "scripts", "ReadMolecules.bat")
 
-        if current_os == "Windows":
+        if self.current_os == "Windows":
             # Windows OS detected
-            print(f"Detected {current_os} OS. Proceeding with conversion...")
+            print(f"Detected {self.current_os} OS. Proceeding with conversion...")
             self.convert_manager(windows_exe_path)
         else:
             # Non Windows OS detected
-            print(f"Detected {current_os} OS. Proceeding with conversion...")            
+            print(f"Detected {self.current_os} OS. Proceeding with conversion...")            
             st = os.stat(linux_exe_path) # Add executable permission to the .sh script
             os.chmod(linux_exe_path, st.st_mode | stat.S_IEXEC)
             self.convert_manager(linux_exe_path)

@@ -1,0 +1,11 @@
+.com
+C:/Documents/Gaussian-2-Blender/input_examples/inorganic
+tetrachlorocobaltate-ii.com
+C:\Documents\Gaussian-2-Blender\output\
+tetrachlorocobaltate-ii
+Ball-and-Stick
+.fbx
+0
+0
+---
+0
