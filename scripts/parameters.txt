@@ -1,8 +1,8 @@
-.mol2
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/mol2_files
-tetrahydrofuran.mol2
+.com
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic
+acrylonitrile.com
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-tetrahydrofuran
+acrylonitrile
 Ball-and-Stick
 .glb
 0
