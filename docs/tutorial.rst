@@ -52,7 +52,6 @@ Step 3: Use Gaussian2Blender
 2. Follow the tool's procedure to convert the `.mol2` file into the desired format for Blender (e.g., `.obj`, `.blend`, etc.).
 
 
-
 From GROMACS to Blender
 ========================
 

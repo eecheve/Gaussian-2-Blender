@@ -27,9 +27,11 @@ Blender API
        Manage_Export [fillcolor=lightblue];
        Read_com_File [fillcolor=lightblue];
        Read_xyz_File [fillcolor=lightblue];
+       Read_mol2_File [fillcolor=lightblue];
 
        Raw_Parameters [fillcolor=lightgreen];
        XyzReader [fillcolor=lightgreen];
+       Mol2Reader [fillcolor=lightgreen];
        Refine_Data [fillcolor=lightgreen];
        Refine_Elements [fillcolor=lightgreen];
        Create_Materials [fillcolor=lightgreen];
@@ -51,8 +53,10 @@ Blender API
 
        Obtain_Coords_Connect -> Read_com_File;
        Obtain_Coords_Connect -> Read_xyz_File;
+       Obtain_Coords_Connect -> Read_mol2_File;
        Read_com_File -> Raw_Parameters;
        Read_xyz_File -> XyzReader;
+       Read_mol2_File -> Mol2Reader;
 
        Manage_Ionic_Information -> Refine_Data;
 
