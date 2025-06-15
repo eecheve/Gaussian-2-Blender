@@ -26,7 +26,7 @@ from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
 from gui.HighlighterRegion import HighlighterRegion
 
-class Chem2Blender:
+class TheorChem2Blender:
     '''
     GUI built using the tkinter library to convert computational chemistry files into 3D modeling files.
     This application facilitates the conversion of various computational chemistry files into Blender-compatible
@@ -34,7 +34,7 @@ class Chem2Blender:
     '''
     def __init__(self):
         """
-        Initializes the Chem2Blender GUI, setting up the main application window and regions.
+        Initializes the TheorChem2Blender GUI, setting up the main application window and regions.
         """
         self.current_os = platform.system()
         self.root = tk.Tk()
@@ -53,7 +53,7 @@ class Chem2Blender:
         """
         if getattr(sys, 'frozen', False):  # Check if running as an executable
             if self.current_os == "Darwin": #macOS
-                #the pyinstaller bundles gui and scripts inside Resources/ (see Chem2Blender_macOS.spec)
+                #the pyinstaller bundles gui and scripts inside Resources/ (see TheorChem2Blender_macOS.spec)
                 bundle_dir = os.path.dirname(sys.executable)
                 self.g2b_path = os.path.abspath(os.path.join(bundle_dir, "../Resources"))
                 sys.path.insert(0, self.g2b_path)
@@ -66,9 +66,9 @@ class Chem2Blender:
         """
         Configures the root tkinter window with title, dimensions, and resizability settings.
         """
-        self.root.title("Chem2Blender")
-        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while Chem2Blender.py is inside gui folder
-        #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when Chem2Blender.py is outside gui folder
+        self.root.title("TheorChem2Blender")
+        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while TheorChem2Blender.py is inside gui folder
+        #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when TheorChem2Blender.py is outside gui folder
         self.root.geometry('800x800')
         #self.root.resizable(0,0)
         self.root.configure(bg="#e0e0e0")
@@ -482,5 +482,5 @@ class Chem2Blender:
         self.root.mainloop()
 
 if __name__ == "__main__":
-    app = Chem2Blender()
+    app = TheorChem2Blender()
     app.run()

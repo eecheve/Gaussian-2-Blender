@@ -1,9 +1,9 @@
-.. Chem2Blender documentation master file, created by
+.. TheorChem2Blender documentation master file, created by
    sphinx-quickstart 
 
-Welcome to Chem2Blender's documentation!
+Welcome to TheorChem2Blender's documentation!
 ==============================================
-**Chem2Blender** (formerly known as **Gaussian-2-Blender**) is an API to convert .com input files from various sources
+**TheorChem2Blender** (formerly known as **Gaussian-2-Blender**) is an API to convert .com input files from various sources
 into 3D models ready to be used in Blender, Maya, Unity, Unreal, and other programs for 3D modeling.
 
 - Check out the :doc:`usage` section for further information on how to use the program.
@@ -29,7 +29,7 @@ Contents
 .. note::
 	**Gaussian-2-Blender** *V.2022.6* was published at the *Journal of Chemical Education*. The program is currently
 	undergoing updates to implement changes suggested by users. The objective of the current changes is to submit
-	the updated version to the *Journal of Cheminformatics*.  This documentation is for **Chem2Blender** *V.2025.2*, 
+	the updated version to the *Journal of Cheminformatics*.  This documentation is for **TheorChem2Blender** *V.2025.2*, 
    which is the next step in the life cycle of the program. I decided to implement more input files than only _Gaussian_.
 
 

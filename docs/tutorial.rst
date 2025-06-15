@@ -45,10 +45,10 @@ Step 2: Convert to .mol2 with Open Babel
 
       obabel input.mol -O output.mol2
 
-Step 3: Use Gaussian2Blender
+Step 3: Use TheorChem2Blender
 ------------------------------
 
-1. Open **Gaussian2Blender**.
+1. Open **TheorChem2Blender**.
 2. Follow the tool's procedure to convert the `.mol2` file into the desired format for Blender (e.g., `.obj`, `.blend`, etc.).
 
 
