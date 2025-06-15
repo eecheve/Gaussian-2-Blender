@@ -5,12 +5,12 @@ from gui.Utility import Utility
 
 class Information(object):
     """
-    Region containing the instructions on how to use Gaussian2Blender
+    Region containing the instructions on how to use Chem2Blender
     """
     def __init__(self, parent_class, parent_tk):
         self.frame = tk.LabelFrame(master=parent_tk,
                                       padx=5, 
-                                      text="Gaussian2Blender Information", 
+                                      text="Chem2Blender Information", 
                                       fg="blue",
                                       bg="#e0e0e0", 
                                       relief=tk.GROOVE, 
@@ -18,11 +18,11 @@ class Information(object):
         
         self.btn_about = tk.Button(text="About", width=20, master=self.frame, command=self.about)
         self.btn_about.grid(row=0, column=0)
-        CreateTooltip(self.btn_about, "Click here to see the current version of Gaussian2Blender")
+        CreateTooltip(self.btn_about, "Click here to see the current version of Chem2Blender")
         
         self.btn_help = tk.Button(text="Help", width=20, master=self.frame, command=self.help)
         self.btn_help.grid(row=0, column=1)
-        CreateTooltip(self.btn_help, "Click here to open a new window with instructions on how to use Gaussian2Blender")
+        CreateTooltip(self.btn_help, "Click here to open a new window with instructions on how to use Chem2Blender")
 
         self.btn_help_single = tk.Button(text="Guide: single convert", width=20, master=self.frame, 
                                          command=parent_class.help_single_convert)
@@ -46,7 +46,7 @@ class Information(object):
         )
         
         self.about_text = (
-            "Gaussian2Blender was written and is maintained by Dr. Echeverri-Jimenez\n"
+            "Chem2Blender was written and is maintained by Dr. Echeverri-Jimenez\n"
             "Please cite the following paper if you use this tool: J. Chem. Educ. 2021, 98(10), 3348-3355\n"
             "To access the original paper follow this url: https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515"
             )
@@ -67,7 +67,7 @@ class Information(object):
                                     fg="gray")
         
         self.lbl_auth = tk.Label(master=popup,
-                                 text="Echeverri-Jimenez CER3D Group",
+                                 text="cer3D-Cayey Group",
                                  bg="#e0e0e0",
                                  fg="gray")
 
