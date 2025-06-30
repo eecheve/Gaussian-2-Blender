@@ -1,5 +1,6 @@
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 .mol2
 C:/Users/User/G2B/Gaussian-2-Blender/input_examples/mol2_files
 benzene.mol2
@@ -8,12 +9,17 @@ benzene
 =======
 =======
 >>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
 .xyz
 C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/organic/trajectories
 carbon_dioxide_symmetric_vibration.xyz
 C:\Users\User\G2B\Gaussian-2-Blender\output\
 carbon_dioxide_symmetric_vibration
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
