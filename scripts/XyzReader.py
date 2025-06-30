@@ -4,24 +4,57 @@ class XyzReader():
     def __init__(self):
         self.calculator = BondOrderCalculator()
 
+    # def extract_coords_from_xyz_file(self, xyz_file_path):
+    #     """
+    #     Extracts atomic data from an XYZ file. Reads the file and returns lines with exactly four elements 
+    #     (atom symbol and three coordinates).
+
+    #     :param xyz_file_path: (str) Path to the XYZ file.
+    #     :return: A list of lines with atom symbol and (x, y, z) coordinates.
+    #     """
+    #     coords = []
+    #     with open(xyz_file_path, 'r') as f:         
+    #         for line in f:
+    #             split_line = line.split()
+    #             if len(split_line) == 4:
+    #                 # Convert coordinates to float
+    #                 atom = split_line[0]
+    #                 coordinates = list(map(float, split_line[1:]))
+    #                 coords.append([atom] + coordinates)
+    #     return coords
     def extract_coords_from_xyz_file(self, xyz_file_path):
         """
-        Extracts atomic data from an XYZ file. Reads the file and returns lines with exactly four elements 
-        (atom symbol and three coordinates).
+        Extracts the first set of atomic coordinates from an XYZ file, whether it's a single-molecule
+        or a trajectory file.
 
         :param xyz_file_path: (str) Path to the XYZ file.
-        :return: A list of lines with atom symbol and (x, y, z) coordinates.
+        :return: A list of [atom, x, y, z] entries for the first set of coordinates.
         """
         coords = []
         with open(xyz_file_path, 'r') as f:
-            for line in f:
-                split_line = line.split()
-                if len(split_line) == 4:
-                    # Convert coordinates to float
-                    atom = split_line[0]
-                    coordinates = list(map(float, split_line[1:]))
-                    coords.append([atom] + coordinates)
+            lines = f.readlines()
+
+        if not lines:
+            return coords  # Empty file
+
+        try:
+            num_atoms = int(lines[0].strip())
+        except ValueError:
+            raise ValueError("First line of the file must be the number of atoms.")
+
+        # Ensure there are enough lines for at least one full set
+        if len(lines) < num_atoms + 2:
+            raise ValueError("File does not contain enough lines for one full coordinate set.")
+
+        # Extract the first set of coordinates
+        for line in lines[2:2 + num_atoms]:
+            split_line = line.split()
+            if len(split_line) == 4:
+                atom = split_line[0]
+                coords.append([atom] + list(map(float, split_line[1:])))
+        
         return coords
+
 
     def assign_indices(self, raw_coords):
         """

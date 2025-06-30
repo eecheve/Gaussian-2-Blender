@@ -14,6 +14,8 @@ ELEMENTS = { #dictionary containing the atomic symbol of all 118 elements in the
     "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"
 }
 
+BONDS = {'_', '-', '=', '%', '#'}
+
 class HighlighterRegion(object):
     def __init__(self, parent):
         """
@@ -31,8 +33,10 @@ class HighlighterRegion(object):
         """
         Initializes the variables for atom and bond highlighting.
         """
+        self.var_forcedBondList = tk.StringVar()
         self.var_hlAtomList = tk.StringVar()
         self.var_hlBondList = tk.StringVar()
+        self.var_forceBonds = tk.BooleanVar(value=False)
         self.var_highlightAtoms = tk.BooleanVar(value=False)
         self.var_highlightBonds = tk.BooleanVar(value=False)
 
@@ -40,8 +44,10 @@ class HighlighterRegion(object):
         """
         Clears the atom and bond highlighting variables (reset to defaults).
         """
+        self.var_forcedBondList.set("")
         self.var_hlAtomList.set("")
         self.var_hlBondList.set("")
+        self.var_forceBonds.set(False)
         self.var_highlightAtoms.set(False)
         self.var_highlightBonds.set(False)
 
@@ -72,6 +78,25 @@ class HighlighterRegion(object):
         """
         Adds widgets (checkboxes, labels, and entry fields) for atom and bond highlighting.
         """
+        #-----------------------------------------------------------------------------
+        self.chk_forcedBonds = tk.Checkbutton(master=self.frame, text="force bonds", bg="#e0e0e0", fg='black',
+                                                 variable=self.var_forceBonds, command=self.toggleBondForcer)
+        CreateTooltip(self.chk_forcedBonds, "Check if you want to force a specific bond type between two atoms")
+
+        self.lbl_forcedBondsList = tk.Label(text="Forced bonds list", master=self.frame, state=tk.DISABLED,
+                                             bg="#e0e0e0", fg='black')
+        CreateTooltip(self.lbl_forcedBondsList, "Bond orders: 0.5:'_', 1:'-', 1.5:'%', 2:'=', 3:'#'")
+        
+        self.ent_forcedBondsList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
+                                       textvariable=self.var_forcedBondList, state=tk.DISABLED)
+        self.ent_forcedBondsList.bind("<FocusOut>", lambda event:
+                                 self.on_validate_bond_entry(event, self.var_forcedBondList, self.ent_forcedBondsList))
+        self.ent_forcedBondsList.bind("<Return>", lambda event:
+                                 self.on_validate_bond_entry(event, self.var_forcedBondList, self.ent_forcedBondsList))
+        self.ent_forcedBondsList.bind("<Button-1>", lambda event: 
+                                 self.on_enable_editing(event, self.ent_forcedBondsList, self.var_forceBonds))
+        CreateTooltip(self.ent_forcedBondsList, "Separate each bond by a semicolon. E.g. C01-C02; C02=O03; C04#C05; etc")
+        #-----------------------------------------------------------------------------
         self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
                                                  variable=self.var_highlightAtoms, command=self.toggleAtomHighlighter)
         CreateTooltip(self.chk_highlightAtoms, "Check if you want to highlight one or more atoms in your 3D structure")
@@ -87,7 +112,8 @@ class HighlighterRegion(object):
         self.ent_hlAtomList.bind("<Button-1>", lambda event: 
                                  self.on_enable_editing(event, self.ent_hlAtomList, self.var_highlightAtoms))
         CreateTooltip(self.ent_hlAtomList, "Separate each atom by a comma. E.g. C01, H02, H03, etc")
-
+        
+        #-----------------------------------------------------------------------------
         self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
                                                  variable=self.var_highlightBonds, command=self.toggleBondHighlighter)
         CreateTooltip(self.chk_highlightBonds, "Check if you want to highlight one or more bonds in your 3D structure")
@@ -98,8 +124,10 @@ class HighlighterRegion(object):
         
         self.ent_hlBondList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
                                        textvariable=self.var_hlBondList, state=tk.DISABLED)
-        self.ent_hlBondList.bind("<FocusOut>", self.on_validate_bond_list)
-        self.ent_hlBondList.bind("<Return>", self.on_validate_bond_list)
+        self.ent_hlBondList.bind("<FocusOut>", lambda event:
+                                 self.on_validate_bond_entry(event, self.var_hlBondList, self.ent_hlBondList))
+        self.ent_hlBondList.bind("<Return>", lambda event:
+                                 self.on_validate_bond_entry(event, self.var_hlBondList, self.ent_hlBondList))
         self.ent_hlBondList.bind("<Button-1>", lambda event: 
                                  self.on_enable_editing(event, self.ent_hlBondList, self.var_highlightBonds))
         CreateTooltip(self.ent_hlBondList, "Separate each bond by a semicolon. E.g. C01-C02; C03=C04; C01#C09; O08%C06 etc")
@@ -108,13 +136,31 @@ class HighlighterRegion(object):
         """
         Positions the widgets inside the frame using grid layout.
         """
-        self.chk_highlightAtoms.grid(row=0, column=0)
-        self.lbl_highlightedAtoms.grid(row=1, column=0)
-        self.ent_hlAtomList.grid(row=1, column=1)
-        self.chk_highlightBonds.grid(row=2, column=0)
-        self.lbl_highlightedBonds.grid(row=3, column=0)
-        self.ent_hlBondList.grid(row=3, column=1)
+        self.chk_forcedBonds.grid(row=0)
+        self.lbl_forcedBondsList.grid(row=1, column=0)
+        self.ent_forcedBondsList.grid(row=1, column=1)
+        self.chk_highlightAtoms.grid(row=2, column=0)
+        self.lbl_highlightedAtoms.grid(row=3, column=0)
+        self.ent_hlAtomList.grid(row=3, column=1)
+        self.chk_highlightBonds.grid(row=4, column=0)
+        self.lbl_highlightedBonds.grid(row=5, column=0)
+        self.ent_hlBondList.grid(row=5, column=1)
 
+    def toggleBondForcer(self):
+        """
+        Toggles the possibility of forcing two atoms to be bonded in a specific way. Only works when there is only one input file.
+        If the checkbox is checked, the bond force list entry is enabled. If unchecked, it is disabled and cleared.
+        """
+        if self.var_forceBonds.get() == True:
+            print("Please specify which bonds to force separated by semicolons")
+            self.lbl_forcedBondsList['state'] = tk.NORMAL
+            self.ent_forcedBondsList['state'] = tk.NORMAL
+        else:
+            print("List of atoms removed")
+            self.lbl_forcedBondsList['state'] = tk.DISABLED
+            self.ent_forcedBondsList['state'] = tk.DISABLED
+            self.var_forcedBondList.set("")
+    
     def toggleAtomHighlighter(self):
         """
         Toggles the state of atom highlighting. Enables or disables the atom list entry.
@@ -136,7 +182,7 @@ class HighlighterRegion(object):
         If the checkbox is checked, the bond list entry is enabled. If unchecked, it is disabled and cleared.
         """
         if self.var_highlightBonds.get() == True:
-            print("Please select the atoms to highlight separated by commas")
+            print("Please select the atoms to highlight separated by semicolons")
             self.lbl_highlightedBonds['state'] = tk.NORMAL
             self.ent_hlBondList['state'] = tk.NORMAL
         else:
@@ -256,39 +302,40 @@ class HighlighterRegion(object):
             return False
     
         return True
-    
-    def on_validate_bond_list(self, event=None):
+  
+    def on_validate_bond_entry(self, event=None, var=None, entry_widget=None):
         """
-        Handles validation when the bond entry loses focus or the Enter key is pressed.
+        Handler for validating bond entries.
 
         Parameters:
-            event (tk.Event, optional): The event that triggered the validation. Default is None.
+            event (tk.Event, optional): The event that triggered the validation.
+            var (tk.StringVar): The variable linked to the entry widget.
+            entry_widget (tk.Entry): The entry widget to validate.
 
         Returns:
             str | None: Returns "break" if Enter was pressed and input is invalid, otherwise None.
         """
         self.event = event
-        user_input = self.var_hlBondList.get().strip()
+        user_input = var.get().strip()
 
-        if self.validate_bond_list(user_input):  # Valid input: Keep it & confirm entry
-            print(f"Valid input: {user_input}")  # Confirmation message
-            self.ent_hlBondList.config(state=tk.DISABLED)  # Disable further editing
-            return True  # Allow normal event propagation
-
-        else:  # Invalid input: Clear entry
+        if self.validate_bond_list(user_input):
+            print(f"Valid input: {user_input}")
+            entry_widget.config(state=tk.DISABLED)
+            return True
+        else:
             print("Invalid input! Clearing entry box.")
-            self.var_hlBondList.set("")  # Clears the text box
-            self.ent_hlBondList.config(state=tk.NORMAL)  # Allow further editing
+            var.set("")  # Clear the StringVar
+            entry_widget.config(state=tk.NORMAL)
 
-            # If Enter was pressed, prevent unintended newline behavior
             if event and event.keysym == "Return":
                 return "break"
 
-        return None  # Default return
+        return None
+
     
     def check_for_bond_syntax(self, entry: str) -> bool:
         """
-        Checks if the bond entry follows the correct syntax (e.g., "C01-C02", "C03=C04").
+        Checks if the bond entry follows the correct syntax (e.g., "C01-C02"; "C03=C04").
 
         Parameters:
             entry (str): The bond entry to validate.

@@ -140,19 +140,44 @@ class InputRegion(object):
         self.drp_modelTypes.grid(row=3, column=1, sticky="w")
         self.chk_isAnimation.grid(row=4, column=0)
  
+    # def updateAnimationState(self):
+    #     """
+    #     Updates the animation state based on the checkbox for animation files.
+    #     Prints messages based on whether the 'is animation' checkbox is checked or unchecked.
+    #     """
+    #     if not self.var_isAnimation.get():
+    #         print("The files will not be treated as animation.")
+    #         return #this is called when che checkbox was checked, and is unchecked now
+    #     if len(self.lst_inputNames) < 2:
+    #         print("Error: There must be more than one file to implement animations.")
+    #         self.var_isAnimation.set(False)  # Uncheck the checkbox if conditions are not met
+    #         return
+    #     print("At least two files are present as input. Make sure they have the same number of elements in the same order for the animation to work properly.")
     def updateAnimationState(self):
         """
         Updates the animation state based on the checkbox for animation files.
-        Prints messages based on whether the 'is animation' checkbox is checked or unchecked.
+        Handles both .com and .xyz file types appropriately.
         """
         if not self.var_isAnimation.get():
             print("The files will not be treated as animation.")
-            return #this is called when che checkbox was checked, and is unchecked now
-        if len(self.lst_inputNames) < 2:
-            print("Error: There must be more than one file to implement animations.")
-            self.var_isAnimation.set(False)  # Uncheck the checkbox if conditions are not met
             return
-        print("At least two files are present as input. Make sure they have the same number of elements in the same order for the animation to work properly.")
+
+        file_type = os.path.splitext(self.lst_inputNames[0])[1].lower()
+
+        if file_type == ".com":
+            if len(self.lst_inputNames) < 2:
+                print("Error: There must be more than one .com file to implement animations.")
+                self.var_isAnimation.set(False)
+                return
+            print("At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.")
+
+        elif file_type == ".xyz":
+            print("Note: Only one .xyz file is required for animation.")
+            print("Make sure the .xyz file is a trajectory (contains multiple frames), or the animation will not work.")
+
+        else:
+            print(f"Unsupported file type: {file_type}, please choose either xyz or com files for animations")
+            self.var_isAnimation.set(False)
 
         
     def allFilesHaveSameValidExtension(self, file_paths):
