@@ -134,6 +134,7 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
         '=': handle_double_bond,
         '#': handle_triple_bond,
         'res1': handle_resonance_bond,
+        '%': handle_resonance_bond #function stored twice because xyz and com files manage aromatic bonds differently
     }
 
     for item in connect_list:

@@ -45,7 +45,7 @@ class XyzReader():
         :return: (list) A list of tuples, where each tuple contains the atom pair, their coordinates, and the bond order (if any).
         """
         bond_orders = []
-        bond_order_map = {1: '-', 2: '=', 3: '#'}
+        bond_order_map = {1: '-', 1.5: '%', 2: '=', 3: '#'}
         coords_with_indices = self.assign_indices(raw_coordinates)
         num_atoms = len(coords_with_indices)
         for i in range(num_atoms):

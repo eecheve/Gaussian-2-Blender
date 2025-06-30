@@ -51,7 +51,7 @@ class Mol2Reader():
         :return: (list) A list of tuples with atom pairs and their bond order symbol (i.e., '-', '=', '#').
         """
         bond_orders = []
-        bond_order_map = {1: '-', 2: '=', 3: '#'}
+        bond_order_map = {1: '-', 1.5:'%',  2: '=', 3: '#'}
         coords_with_indices = self.assign_indices(raw_coordinates)
         num_atoms = len(coords_with_indices)
         for i in range(num_atoms):
@@ -75,7 +75,7 @@ class Mol2Reader():
         :return: (list) A list of tuples with atom pairs and their bond order symbol (e.g., '-', '=', '#').
         """
         bond_orders = []
-        bond_order_map = {'1': '-', '2': '=', '3': '#', 'ar': ':'}
+        bond_order_map = {'1': '-', '2': '=', '3': '#', 'ar': '%'}
 
         coords_with_indices = self.assign_indices(raw_coordinates)
         atom_index_map = {i + 1: atom[0] for i, atom in enumerate(coords_with_indices)}

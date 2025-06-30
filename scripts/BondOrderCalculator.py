@@ -70,6 +70,14 @@ class BondOrderCalculator():
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
 
+        
+        # Check for intermediate bond order (1.5)
+        if references[0] is not None and references[1] is not None: #if each atoms has info for single and double bonds
+            avg_1_2 = (references[0] + references[1]) / 2 #getting the average between single and double
+            if abs(distance - avg_1_2) < threshold: #if the average +- distance is smaller than threshold
+                return 1.5 #assign aromatic bond order
+
+        # Check for other bond orders
         for i, ref in enumerate(references):
             if ref is not None and abs(ref - distance) < threshold:
                 return i + 1  # Return the bond order (1 for single, 2 for double, 3 for triple)
