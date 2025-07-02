@@ -82,6 +82,7 @@ class BondOrderCalculator():
             if ref is not None and abs(ref - distance) < threshold:
                 return i + 1  # Return the bond order (1 for single, 2 for double, 3 for triple)
 
+        print(f"get_bond_order_from_coordinates error: the distance between {atom1} and {atom2} is too long to render a bond in between")
         return None  # Return None if no bond order is found
 
     #TO DEBUG

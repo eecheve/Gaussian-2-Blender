@@ -20,7 +20,7 @@ class Main_Body(object):
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation,
-                 atom_hl_list, bond_hl_list):
+                 atom_hl_list, bond_hl_list, forced_bonds_list):
         """
         Initializes the Main_Body class with input and output parameters.
         
@@ -36,6 +36,7 @@ class Main_Body(object):
         :param str_is_animation: Determines if animation should be applied.
         :param atom_hl_list: List of atoms to highlight.
         :param bond_hl_list: List of bonds to highlight.
+        :param forced_bonds_list: List of bonds to overwrite.
         """
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
@@ -48,7 +49,8 @@ class Main_Body(object):
         self.str_ion_input_list = str_ion_input_list
         self.str_is_animation = str_is_animation
         self.atom_hl_list = atom_hl_list
-        self.bond_hl_list = bond_hl_list        
+        self.bond_hl_list = bond_hl_list
+        self.forced_bonds_list = forced_bonds_list
         
         self.coords = []
         self.number_of_elements = 0
@@ -82,7 +84,7 @@ class Main_Body(object):
             "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
             "Create_Materials", "Primitives", "Export_Data", "Ions", 
             "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
-            "XyzReader", "AtomHighlighter"
+            "XyzReader", "AtomHighlighter", "BondOverwriter"
         ]
 
         blend_file_dir = os.path.dirname(bpy.data.filepath)
@@ -201,6 +203,10 @@ class Main_Body(object):
         connect = Refine_Data.RefineConnectivity(self.raw_connect)
         self.connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, self.coords, self.number_of_elements)
 
+    def Overwrite_Bonds_if_Needed(self):
+        Overwriter = self.get_module("BondOverwriter")
+        self.connect_with_symbols = Overwriter.overwrite_connectivity(self.forced_bonds_list, self.connect_with_symbols)
+    
     def Manage_Ionic_Information(self):
         """
         Manages ionic information for the molecule.
@@ -410,8 +416,10 @@ if __name__ == "__main__":
                                    params_data["str_ion_input_list"],
                                    params_data["str_is_animation"],
                                    params_data["atom_hl_list"],
-                                   params_data["bond_hl_list"])
+                                   params_data["bond_hl_list"],
+                                   params_data["forced_bonds_list"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
+    main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()

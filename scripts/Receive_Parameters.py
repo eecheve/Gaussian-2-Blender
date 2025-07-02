@@ -43,8 +43,9 @@ def get_parameters_data(params_path):
         "str_unit_cell": parameters[8].strip(),
         "str_ion_input_list": parameters[9].strip(),
         "str_is_animation": parameters[10].strip(),
-        "str_ionic_cell": f"({parameters[7].strip()}_{parameters[8].strip()})", #still not sure why i need this
+        "str_ionic_cell": f"({parameters[7].strip()}_{parameters[8].strip()})", #don't remember why i need this
         "atom_hl_list": parameters[11].strip(),
-        "bond_hl_list": parameters[12].strip()
+        "bond_hl_list": parameters[12].strip(),
+        "forced_bonds_list": parameters[13].strip()
     }
     return parameters_dict

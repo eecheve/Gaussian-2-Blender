@@ -281,7 +281,7 @@ class TheorChem2Blender:
 
     
     def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                              is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
+                              is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """
         overwrites bat script to handle the export or animation of molecules
 
@@ -318,7 +318,8 @@ class TheorChem2Blender:
             str_ion_list,
             is_anim,
             hl_atoms,
-            hl_bonds
+            hl_bonds,
+            forced_bonds
         ]
         Utility.append_lines_to_file(params_script, lines)
     
@@ -340,7 +341,7 @@ class TheorChem2Blender:
             Utility.append_lines_to_file(anim_frames, frames_list_strings)
         
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds):
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """ 
         Function to execute bat file that communicates with blender's python API 
 
@@ -362,7 +363,7 @@ class TheorChem2Blender:
         """
         self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
         self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds)
+                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
         subprocess.call([exec_loc, b_path])
     
     def assign_ionic_params(self):
@@ -436,6 +437,7 @@ class TheorChem2Blender:
         is_anim = self.inputReg.var_isAnimation.get() #is animation
         hl_atoms = self.highlightReg.var_hlAtomList.get() #list of atoms to highlight
         hl_bonds = self.highlightReg.var_hlBondList.get() #list of bonds to highlight
+        forced_bonds = self.highlightReg.var_forcedBondList.get() #list of bonds to enforce/overwrite
         if self.exceptions_test_passed(b_path, i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -447,16 +449,16 @@ class TheorChem2Blender:
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds) 
+                                    hl_atoms, hl_bonds, forced_bonds) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds)   
+                                        hl_atoms, hl_bonds, forced_bonds)   
         else:
-            print("Cannot convert input to fbx animation, check console for errors")
+            print("Cannot convert input to animation, check console for errors")
 
     def help_single_convert(self):
         """

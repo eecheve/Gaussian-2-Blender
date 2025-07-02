@@ -4,24 +4,6 @@ class XyzReader():
     def __init__(self):
         self.calculator = BondOrderCalculator()
 
-    # def extract_coords_from_xyz_file(self, xyz_file_path):
-    #     """
-    #     Extracts atomic data from an XYZ file. Reads the file and returns lines with exactly four elements 
-    #     (atom symbol and three coordinates).
-
-    #     :param xyz_file_path: (str) Path to the XYZ file.
-    #     :return: A list of lines with atom symbol and (x, y, z) coordinates.
-    #     """
-    #     coords = []
-    #     with open(xyz_file_path, 'r') as f:         
-    #         for line in f:
-    #             split_line = line.split()
-    #             if len(split_line) == 4:
-    #                 # Convert coordinates to float
-    #                 atom = split_line[0]
-    #                 coordinates = list(map(float, split_line[1:]))
-    #                 coords.append([atom] + coordinates)
-    #     return coords
     def extract_coords_from_xyz_file(self, xyz_file_path):
         """
         Extracts the first set of atomic coordinates from an XYZ file, whether it's a single-molecule

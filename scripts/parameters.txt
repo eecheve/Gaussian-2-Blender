@@ -1,34 +1,8 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-.mol2
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/mol2_files
-benzene.mol2
-C:\Users\User\G2B\Gaussian-2-Blender\output\
-benzene
-=======
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 .xyz
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/organic/trajectories
-carbon_dioxide_symmetric_vibration.xyz
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/organic/static
+2-cyano-2-aminoaceticacid.xyz
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-carbon_dioxide_symmetric_vibration
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+2-cyano-2-aminoaceticacid
 Ball-and-Stick
 .glb
 0
@@ -37,3 +11,4 @@ Ball-and-Stick
 0
 
 
+O01#O02; N03-N04; O01=H11
