@@ -25,6 +25,7 @@ class ActionsRegion:
         self.btn_reset.grid(row=0, column=1)
 
         # Convert button
-        self.btn_convert = tk.Button(text="Convert!", width=20, master=self.frame, command=self.on_convert)
+        self.btn_convert = tk.Button(text="Convert!", width=20, bg="#b7ffc8",
+                                     master=self.frame, command=self.on_convert)
         CreateTooltip(self.btn_convert, "Click here to convert the molecule(s) to the specified format")
         self.btn_convert.grid(row=0, column=2)

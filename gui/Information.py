@@ -29,36 +29,58 @@ class Information(object):
         self.about_text = (
             "TheorChem2Blender was written and is maintained by Dr. Echeverri-Jimenez\n"
             "Please cite the following paper if you use this tool: J. Chem. Educ. 2021, 98(10), 3348-3355\n"
-            "To access the original paper follow this url: https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515"
+            "To access the original paper follow this url: "
             )
+        self.url = "https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515"
                
-    def _initialize_popup(self, popup):
+    # def _initialize_popup(self, popup):
 
-        self.about_info = tk.Label(master=popup,
-                                   text=self.about_text,
-                                   bg="#e0e0e0",
-                                   fg='black')
-        self.lbl_ver = tk.Label(master=popup,
-                                    text="version: ",
-                                    bg="#e0e0e0",
-                                    fg="black")
-        self.lbl_version = tk.Label(master=popup,
-                                    text="2025.1.0 ",
-                                    bg="#e0e0e0",
-                                    fg="gray")
+    #     self.about_info = tk.Label(master=popup,
+    #                                text=self.about_text,
+    #                                bg="#e0e0e0",
+    #                                fg='black')
+    #     self.lbl_ver = tk.Label(master=popup,
+    #                                 text="version: ",
+    #                                 bg="#e0e0e0",
+    #                                 fg="black")
+    #     self.lbl_version = tk.Label(master=popup,
+    #                                 text="2025.7.0",
+    #                                 bg="#e0e0e0",
+    #                                 fg="gray")
         
-        self.lbl_auth = tk.Label(master=popup,
-                                 text="cer3D-Cayey Group",
-                                 bg="#e0e0e0",
-                                 fg="gray")
+    #     self.lbl_auth = tk.Label(master=popup,
+    #                              text="cer3D-Cayey Group",
+    #                              bg="#e0e0e0",
+    #                              fg="gray")
 
-        self.about_info.grid(row=0, column=0, columnspan=2)
-        self.lbl_ver.grid(row=1, column=0)
-        self.lbl_version.grid(row=1, column=1)
+    #     self.about_info.grid(row=0, column=0, columnspan=2)
+    #     self.lbl_ver.grid(row=1, column=0)
+    #     self.lbl_version.grid(row=1, column=1)
+    #     self.lbl_auth.grid(row=2, column=0, columnspan=2)
+
+    #     self.btn_close = tk.Button(popup, text="Close", command=popup.destroy)
+    #     self.btn_close.grid(row=3, column=0, pady=10)
+
+    def _initialize_popup(self, popup):
+        text_widget = tk.Text(popup, bg="#e0e0e0", fg="black", wrap="word", height=6, width=100, borderwidth=0)
+        text_widget.insert("end", self.about_text)
+        text_widget.insert("end", self.url, "link")
+        text_widget.tag_config("link", foreground="blue", underline=1)
+        text_widget.tag_bind("link", "<Button-1>", lambda e: webbrowser.open_new(self.url))
+        text_widget.config(state="disabled")
+        text_widget.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+
+        self.lbl_ver = tk.Label(popup, text="version: ", bg="#e0e0e0", fg="black")
+        self.lbl_version = tk.Label(popup, text="2025.7.0", bg="#e0e0e0", fg="gray")
+        self.lbl_auth = tk.Label(popup, text="cer3D-Cayey Group", bg="#e0e0e0", fg="gray")
+
+        self.lbl_ver.grid(row=1, column=0, sticky="e")
+        self.lbl_version.grid(row=1, column=1, sticky="w")
         self.lbl_auth.grid(row=2, column=0, columnspan=2)
 
         self.btn_close = tk.Button(popup, text="Close", command=popup.destroy)
-        self.btn_close.grid(row=3, column=0, pady=10)
+        self.btn_close.grid(row=3, column=0, columnspan=2, pady=10)
+
        
     def help(self):
         """Pops up a small window specifying the isntructions on how to use the program"""
