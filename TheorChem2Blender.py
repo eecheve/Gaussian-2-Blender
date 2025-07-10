@@ -70,7 +70,7 @@ class TheorChem2BlenderTabSystem:
         """
         self.root = tk.Tk()
         self.root.title("TheorChem2Blender")
-        self.root.geometry("1000x800")
+        self.root.geometry("800x600")
         self.root.configure(bg="#e0e0e0")
     
     def _configure_style(self):

@@ -1,6 +1,6 @@
-﻿# Gaussian-2-Blender
+﻿# TheorChem-2-Blender
 
-Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file into a 3D object for modeling, 3D printing, animations, and other 3D applications.
+TheorChem-2-Blender is a tool that allows users to convert a various computational chemistry input filse into 3D objects for modeling, 3D printing, animations, and other 3D applications.
 
 ## PREREQUISITES:
 - Install Blender on your machine. Link: https://www.blender.org/download/
@@ -9,41 +9,37 @@ Gaussian-2-Blender is a tool that allows users to convert a Gaussian input file 
 
 ## SETUP:
 - If you install Blender in a non-default path on Windows, note the path as it will be needed.
-- Download the entire 'Gaussian-2-Blender' package and unzip it to the desired location.
-- The executable `Gaussian-2-Blender.exe` will be ready to use. Do not move, rename, or delete any files or folders included in the package.
-- Click on this [YouTube link](https://youtu.be/w_bsJ7daaas) for a tutorial on using the tool. NOTE: YouTube tutorial does not include information on animations.
+- Download the entire 'TheorChem-2-Blender' package and unzip it to the desired location.
+- If you have a Windows machine, the executable `TheorChem2Blender.exe` will be ready to use. Do not move, rename, or delete any files or folders included in the package.
+- Click on this [Documentation link](https://gaussian-2-blender.readthedocs.io/en/latest/index.html) for more information about the tool, its functions, and how to use it.
 
-## INSTRUCTIONS:
-1. Double-click on the `Gaussian-Blender-Bridge.exe` file.
-2. Select one or more `.com` or `.xyz` files from the same folder.
-3. To render using ionic radii, select the `Check for Ionic Radii` option.
-4. Add each ion and select their charge, coordination, and spin multiplicity (when available).
-5. Select `Is Animation` if the series of input selected are all different frames of the same dynamic process
-6. If you plan to render an animation, make sure all the `.com` or `.xyz` files have the same atoms in the same order
-7. Click on `Convert!` to convert the `.com` input into the desired output type.
+## INSTRUCTIONS (IF WINDOWS):
+1. Double-click on the `TheorChem2Blender.exe` file.
+2. The executable has various tabs: `Input`, `Customization`, `Ions`, `Output`, and `Convert!` 
+2. Each tab has a `Help` button on its top right part of the screen. Click on the button to know how to use the tab.
+3. (NOTE) If you plan to render an animation, make sure all the `.com` or `.xyz` files have the same atoms in the same order
+7. Click on `Convert!` to convert the input into the desired output type.
 8. Click on `Reset` to reset everything to their default values.
 
+## INSTRUCTIONS (IF NOT WINDOWS)
+1. Open a terminal in the `Blender-Gaussian-Bridge/` folder and run:
+   ```bash
+   python TheorChem2Blender.py
+    ```
+2. The rest of steps are the same as if you would have a windows machine.
+
 ## EXAMPLE FILES:
-- Example `.com` files are inside the `input_examples` folder, separated by categories.
-- For example, the file `Ice.com` is located in the `input_examples\inorganic\` folder.
+- There are `.com`, `.xyz`, and `.mol2` input files availables inside the `input_examples` folder. 
+- For example, the file `Ice.com` is located in the `input_examples\com_files\inorganic\` folder.
 - The `output` folder starts empty and is the default location for 3D renderings from the tool.
 
 ## FOR DEVELOPERS
 
-### RUNNING FROM THE CONSOLE:
-To run the `Gaussian-2-Blender.py` Python script from the console:
-1. Copy the `Gaussian-2-Blender.py` file to the `gui` folder.
-2. Open a terminal in the `Blender-Gaussian-Bridge/` folder and run:
-   ```bash
-   python Gaussian-2-Blender.py
-    ```
-
 ### DOCUMENTATION:
-- A Microsoft Word file called `Gaussian-2-Blender documentation.docx` can be found in the `docs/` folder.
-- Additionally, this [link](https://gaussian-2-blender.readthedocs.io/en/latest/index.html) contains a searchable directory for the must up-to-date documentation.
+- This [link](https://gaussian-2-blender.readthedocs.io/en/latest/index.html) contains a searchable directory for the must up-to-date documentation.
 
 ### GUI OVERVIEW:
-The `GaussianToBlender.py` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing `tkinter`, manages different regions and functionalities, including input, output, console, and ion management.
+The `TheorChem2Blender.py` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing `tkinter`, manages different regions and functionalities, including input, output, console, and ion management.
 
 #### Key GUI Modules:
 - `Information.py`: Manages help and about sections, providing instructions and application details.
