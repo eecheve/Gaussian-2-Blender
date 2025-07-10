@@ -77,4 +77,29 @@ class OutputRegion(object):
     def dropdown_callout(self, event):
         print("#### OUTPUT TYPE UPDATED ####")
 
+    def restrict_output_types_for_animation(self, is_animation):
+        """
+        Updates the list of selectable output file types based on whether animation is enabled.
+
+        Parameters:
+            is_animation (bool): Indicates whether the animation mode is active.
+
+        Behavior:
+            - Clears the current dropdown menu options.
+            - Populates the menu with the appropriate list of file types.
+            - Resets the selected output type if the current selection is no longer valid.
+        """
+        if is_animation:
+            allowed = [".fbx", ".glb"]
+        else:
+            allowed = [".fbx", ".obj", ".dae", ".glb", ".stl"]
+
+        menu = self.drp_outputTypes["menu"]
+        menu.delete(0, "end")
+        for opt in allowed:
+            menu.add_command(label=opt, command=lambda value=opt: self.var_outputTypes.set(value))
+
+        if self.var_outputTypes.get() not in allowed:
+            self.var_outputTypes.set(allowed[0])
+
 

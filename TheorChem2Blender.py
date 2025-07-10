@@ -14,9 +14,11 @@ from gui.Coordinates import Coordinates
 from gui.Tutorial import Tutorial
 
 #gui modules
+from gui.Instructions import Instructions
 from gui.Information import Information
 from gui.BlenderPath import BlenderPath
 from gui.InputRegion import InputRegion
+from gui.HighlighterRegion import HighlighterRegion
 from gui.WalkthroughRegion import WalkthroughRegion
 from gui.OutputRegion import OutputRegion
 from gui.ConsoleRegion import ConsoleRegion
@@ -24,29 +26,25 @@ from gui.IonRegion import IonRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
-from gui.HighlighterRegion import HighlighterRegion
 
-class TheorChem2Blender:
-    '''
-    GUI built using the tkinter library to convert computational chemistry files into 3D modeling files.
-    This application facilitates the conversion of various computational chemistry files into Blender-compatible
-    3D representations.
-    '''
+class TheorChem2BlenderTabSystem:
     def __init__(self):
-        """
-        Initializes the TheorChem2Blender GUI, setting up the main application window and regions.
-        """
+        #utility
+        self.coordinates = Coordinates() # To use the coordinates module
+        
+        #system vatiables and paths
         self.current_os = platform.system()
-        self.root = tk.Tk()
         self._initialize_g2b_path()
-        self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
+        self._initialize_scripts_path()
+        
+        #related to the gui
         self._configure_root()
         self._configure_style()
-        self._initialize_regions()
-        self.place_regions()
-        self.initialize_single_tutorial()
-        self.initialize_animation_tutorial()
-    
+        self._initialize_notebook()
+
+        #related to the tabs
+        self._create_tabs()
+   
     def _initialize_g2b_path(self):
         """
         Determines the file path where the application is running, distinguishing between executable and script mode.
@@ -59,26 +57,30 @@ class TheorChem2Blender:
                 sys.path.insert(0, self.g2b_path)
             else: #Works well for Windows, don't know if it works for Linux really.
                 self.g2b_path = os.path.dirname(sys.executable)
+                print(self.g2b_path)
         else:  # Running as a script
             self.g2b_path = os.path.dirname(os.path.realpath(__file__))
+    
+    def _initialize_scripts_path(self):
+        self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
     
     def _configure_root(self):
         """
         Configures the root tkinter window with title, dimensions, and resizability settings.
         """
+        self.root = tk.Tk()
         self.root.title("TheorChem2Blender")
-        #self.root.iconbitmap(Utility.resource_path("icon.ico")) #comment line while TheorChem2Blender.py is inside gui folder
-        #self.root.iconbitmap(script_dir+"\\icon.ico") #uncomment line when TheorChem2Blender.py is outside gui folder
-        self.root.geometry('800x800')
-        #self.root.resizable(0,0)
+        self.root.geometry("1000x800")
         self.root.configure(bg="#e0e0e0")
-
+    
     def _configure_style(self):
         style = ttk.Style()
         style.theme_use("clam")
 
-        #style.configure
-
+    def _initialize_notebook(self):
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.grid(row=0, column=0, sticky="nsew")
+   
     def place(self, region, **kwargs):
         """
         Places the specified region (frame) in the parent widget.
@@ -87,115 +89,113 @@ class TheorChem2Blender:
         :param kwargs: Placement options such as grid(row=.., column=..).
         """
         region.frame.grid(**kwargs)
-        
-    def _initialize_regions(self):
-        """
-        Initializes various UI regions required for user interaction within the application.
-        """
-        self.coordinates = Coordinates() # To use the coordinates module
-        self.instructions = Information(self, self.root) # Instructions Region
-        
-        # Blender Path Region
-        self.bPathReg = BlenderPath(self.root)
-        self.str_blenderPath = self.bPathReg.searchBlenderPath()
-        self.bPathReg.setBlenderPath(self.str_blenderPath)
-
-        self.inputReg = InputRegion(self.root, self.g2b_path) # Input Region
-        self.guideReg = WalkthroughRegion(self.root) # Walkthrough Region
-        self.highlightReg = HighlighterRegion(self.root) # Highlighter Region
-        self.outputReg = OutputRegion(self.root, self.g2b_path) # Output Region
-        self.ionReg = IonRegion(self.root) # Ion Region
-        
-        #Conventions
-        self.codeReg = IonConventions(self.root)
-        self.bondCodes = BondConventions(self.root)
-
-        #Action Region
-        self.actionReg = ActionsRegion(parent=self.root, 
-                                       on_reset=self.reset_to_defaults, 
-                                       on_convert=self.convert)
-        
-        self.consoleReg = ConsoleRegion(self.root) # Console Region
-
-    def place_regions(self):
-        """
-        Places all initialized regions into the tkinter grid layout.
-        """
-        self.place(self.instructions, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.bPathReg, row=1, column=0, columnspan=3, pady=2, padx=2, sticky="w")
-        self.place(self.inputReg, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
-        self.place(self.guideReg, row=2, column=1, columnspan=2, padx=2, pady=2)
-        self.place(self.outputReg, row=3, column=1, sticky="SW", columnspan=2)
-        self.place(self.highlightReg, row=4, column=0, padx=2, pady=2)
-        self.place(self.ionReg, row=5, column=0, padx=2, pady=2, sticky="W", rowspan=2)
-        self.place(self.codeReg, row=5, column=1, padx=2, pady=2, sticky="W")
-        self.place(self.bondCodes, row=5, column=2, padx=2, pady=2, sticky="W")
-        self.place(self.actionReg, row=6, column=1, pady=2, columnspan=2, sticky="se")
-        self.place(self.consoleReg, row=7, column=0, columnspan=3, pady=2, padx=2)
-
-    def initialize_single_tutorial(self):
-        """
-        Sets up the step-by-step tutorial for a single molecule conversion process.
-
-        calls:
-          - `InputRegion`, `OutputRegion`, `ActionRegion`
-        """
-        text_descriptions = [
-            "1. Click on the 'set' button to select one or more files to convert",
-            "2. Select the representational model for your 3D model", 
-            "3. Choose the output type for your 3D model",
-            "4. Click on 'convert' to start the conversion process",
-            "5. Click on 'reset' to remove the current button highlights"
-        ]
     
-        # Step 2: Define the buttons that the user needs to press in order
-        action_buttons = [
-            self.inputReg.btn_setInputName,  # Button for selecting input file(s)
-            self.inputReg.drp_modelTypes,  # Dropdown to select model type
-            self.outputReg.drp_outputTypes,  # Dropdown to select output type
-            self.actionReg.btn_convert       # Button to start the conversion process
-        ]
-    
-        # Step 3: Initialize the tutorial system with the buttons, descriptions, and actions
-        self.single_convert_tutorial = Tutorial(
-            action_buttons=action_buttons,  # List of buttons to be pressed in order
-            descriptions=text_descriptions,  # Corresponding descriptions for each step
-            walkthroughRegion=self.guideReg  # Walkthrough region to display tutorial instructions
-        )
-        
-    def initialize_animation_tutorial(self):
-        """
-        Sets up the tutorial for animated molecular conversions.
+    def _create_tabs(self):
+        # Tab 1: User Input
+        self.input_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.input_tab, text="Input")
+        self.initialize_input_region(self.input_tab)
+        self.initialize_blender_region(self.input_tab)
+        self.place(self.input_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.blender_path_region, row=1, column=0, padx=10, pady=10, sticky="ew")
+        self.place(self.input_region, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
 
-        Modules called: `InputRegion`, `OutputRegion`, `ActionRegion`
-        """
-        text_descriptions = [
-            "1. Click on the 'set' button to select one or more files to convert",
-            "2. Select the representational model for your 3D model",
-            "3. Click on the 'is animation' checkbox",
-            "NOTE1: make sure all the input files have the same extension",
-            "NOTE2: make sure all the input files have the same atoms in the same order",
-            "4. Choose the output type for your 3D model",
-            "5. Click on 'convert' to start the conversion process",
-            "6. Click on 'reset' to remove the current button highlights"
-        ]
-    
-        # Step 2: Define the buttons that the user needs to press in order
-        action_buttons = [
-            self.inputReg.btn_setInputName,  # Button for selecting input file(s)
-            self.inputReg.drp_modelTypes,  # Dropdown to select model type (currently not used)
-            self.inputReg.chk_isAnimation,
-            self.outputReg.drp_outputTypes,  # Dropdown to select output type (currently not used)
-            self.actionReg.btn_convert       # Button to start the conversion process
-        ]
-    
-        # Step 3: Initialize the tutorial system with the buttons, descriptions, and actions
-        self.animation_convert_tutorial = Tutorial(
-            action_buttons=action_buttons,  # List of buttons to be pressed in order
-            descriptions=text_descriptions,  # Corresponding descriptions for each step
-            walkthroughRegion=self.guideReg  # Walkthrough region to display tutorial instructions
-        ) 
+        # Tab 2: Customization
+        self.customization_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.customization_tab, text="Customization")
+        self.initialize_customization_region(self.customization_tab)
+        self.place(self.custom_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.highlight_region, row=1, column=0, padx=2, pady=2)
+        self.place(self.bond_conventions, row=2, column=0, padx=2, pady=2)
+
+        # Tab 3: Ions
+        self.ion_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.ion_tab, text="Ions")
+        self.initialize_ionic_region(self.ion_tab)
+        self.place(self.ion_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.ion_region, row=1, column=0, padx=2, pady=2, sticky="W")
+        self.place(self.ion_conventions, row=2, column=0, padx=2, pady=2)
+
+        # Tab 4: Output
+        self.output_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.output_tab, text="Output")
+        self.initialize_output_region(self.output_tab)
+        self.place(self.output_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.output_region, row=1, column=0, padx=2, pady=2, sticky="W")
+
+        # Tab 5: Actions
+        self.actions_tab = ttk.Frame(self.notebook)
+        self.actions_tab.grid_rowconfigure(0, weight=0) # actions_info
+        self.actions_tab.grid_rowconfigure(1, weight=1) # spacer
+        self.actions_tab.grid_rowconfigure(2, weight=0) # action_region
+        self.actions_tab.grid_columnconfigure(0, weight=1)
+        self.actions_tab.grid_columnconfigure(1, weight=1)
+        self.actions_tab.grid_columnconfigure(2, weight=1)
+        self.notebook.add(self.actions_tab, text="Convert!")
+        self.initialize_actions_region(self.actions_tab)
+        self.place(self.actions_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.action_region, row=2, column=2, padx=2, pady=2, sticky="se")
+
+        # In all tabs:
+        self.initialize_console_region()
+        self.place(self.console_region, row=3, column=0, columnspan=3, pady=2, padx=2)
+
+    def initialize_blender_region(self, parent):
+        self.blender_path_region = BlenderPath(parent)
+        self.str_blenderPath = self.blender_path_region.searchBlenderPath()
+        self.blender_path_region.setBlenderPath(self.str_blenderPath)
+
+    def initialize_input_region(self, parent):
+        self.input_info = Information(parent, instructions=Instructions.get("input"), 
+                                      title="Input Instructions", button_name="Input Help")
+        self.input_region = InputRegion(parent, self.g2b_path, 
+                                        on_animation_toggle=self.handle_animation_toggle) # Input Region
+
+    def initialize_customization_region(self, parent):
+        self.custom_info = Information(parent, instructions=Instructions.get("customization"),
+                                        title="Customization Instructions", button_name="Custom. Help")
+        self.highlight_region = HighlighterRegion(parent) # Highlighter Region
+        self.bond_conventions = BondConventions(parent)
+
+    def initialize_ionic_region(self, parent):
+        self.ion_info = Information(parent, instructions=Instructions.get("ions"),
+                                        title="Ion Instructions", button_name="Ions Help")
+        self.ion_region = IonRegion(parent)
+        self.ion_conventions = IonConventions(parent)
+
+    def initialize_output_region(self, parent):
+        self.output_info = Information(parent, instructions=Instructions.get("output"),
+                                        title="Output Instructions", button_name="Output Help")
+        self.output_region = OutputRegion(parent, self.g2b_path)
+
+    def initialize_actions_region(self, parent):
+        self.actions_info = Information(parent, instructions=Instructions.get("actions"),
+                                        title="Actions Instructions", button_name="Actions Help")
+        self.action_region = ActionsRegion(parent=parent, 
+                                       on_reset=self.reset_to_defaults,
+                                       on_convert=self.convert,
+                                       g2b_path=self.g2b_path,
+                                       current_os=self.current_os)
         
+    def initialize_console_region(self):
+        self.console_region = ConsoleRegion(self.root)
+        
+    
+    def reset_to_defaults(self):
+        """
+        Resets the GUI components to their default states, clearing paths, input selections, and highlights.
+
+        Calls:
+        - `clear` functions from the following modules:
+        `BlenderPath`, `OutputRegion`, `InputRegion`, `IonRegion`, `ConsoleRegion`, `Information`, `Tutorial`
+        """
+        self.blender_path_region.var_blenderPath.set(self.str_blenderPath)
+        self.output_region.var_outputPath.set(self.output_region.def_outputPath)
+        self.input_region.clear_variables()
+        self.highlight_region.reset_highlighter_options()
+        self.input_region.reset_widget_bg_colors()
+        self.ion_region.clear_variables()
+
     def convert(self):
         """
         Determines the operating system and executes the appropriate script for converting molecular data.
@@ -217,35 +217,63 @@ class TheorChem2Blender:
             st = os.stat(linux_exe_path) # Add executable permission to the .sh script
             os.chmod(linux_exe_path, st.st_mode | stat.S_IEXEC)
             self.convert_manager(linux_exe_path)
-        
-    def reset_to_defaults(self):
+
+    def convert_manager(self, exec_loc):
         """
-        Resets the GUI components to their default states, clearing paths, input selections, and highlights.
+        Manages the process of converting input files to 3D object files using Blender's API.
 
         Calls:
-        - `clear` functions from the following modules:
-        `BlenderPath`, `OutputRegion`, `InputRegion`, `IonRegion`, `ConsoleRegion`, `Information`, `Tutorial`
-        """
-        self.bPathReg.var_blenderPath.set(self.str_blenderPath)
-        self.outputReg.var_outputPath.set(self.outputReg.def_outputPath)
-        self.inputReg.clear_variables()
-        self.highlightReg.reset_highlighter_options()
-        self.inputReg.reset_widget_bg_colors()
-        self.ionReg.clear_variables()
-        self.consoleReg.clear_content()
-        self.guideReg.revert_text_to_default()
-        self.single_convert_tutorial.reset_buttons_to_default()
-        self.animation_convert_tutorial.reset_buttons_to_default()
+        - `self.exceptions_test_passed`.
+        - `self.assign_ionic_params`.
+        - `self.individual_convert`.
 
-    def get_blender_exec_name(self):
-        """
-        Returns the expected Blender executable filename based on the operating system
 
-        :return: Platform-specific Blender executable name
+        :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
+
+        The function performs the following steps:
+        1. Collects necessary paths and parameters for the conversion process.
+        2. Validates the inputs using the `exceptions_test_passed` function.
+        3. If validation succeeds: 
+        3.1. Retrieves ionic parameters
+        3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
+        4. If validation fails, outputs relevant error messages to the console.
+
         """
-        return "blender.exe" if platform.system() == "Windows" else "Blender"
-    
-    def exceptions_test_passed(self, b_path, i_names, o_path):
+        anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
+        b_path = self.blender_path_region.var_blenderPath.get() #blender path
+        i_type = self.input_region.var_inputTypes.get() #input file type
+        i_path = self.input_region.var_inputPath.get() #input specifications.
+        i_names = self.input_region.lst_inputNames #files to convert
+        is_anim = self.input_region.var_isAnimation.get() #is animation
+        model_type = self.input_region.var_modelTypes.get() #model specifications
+        hl_atoms = self.highlight_region.var_hlAtomList.get() #list of atoms to highlight
+        hl_bonds = self.highlight_region.var_hlBondList.get() #list of bonds to highlight
+        forced_bonds = self.highlight_region.var_forcedBondList.get() #list of bonds to enforce/overwrite
+        o_path = self.output_region.ent_outputPath.get() #output path
+        o_type = self.output_region.var_outputTypes.get() #output type
+        if self.exceptions_test_passed(i_names, o_path): 
+            params = self.assign_ionic_params()
+            is_ionic = params[0]
+            unit_cell = params[1]
+            ion_list = params[2]
+            str_ion_list = params[3]
+            if is_anim:
+                print("Converting main molecule for animation")
+                self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
+                                    o_path, i_names[0].split(".")[0], o_type, is_ionic,
+                                    unit_cell, str_ion_list, is_anim,
+                                    hl_atoms, hl_bonds, forced_bonds) 
+            else:
+                for i in range(len(i_names)):
+                    print("Batch converting", i+1, "of", len(i_names))
+                    self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
+                                        o_path, i_names[i].split(".")[0], o_type, is_ionic,
+                                        unit_cell, str_ion_list, is_anim,
+                                        hl_atoms, hl_bonds, forced_bonds)   
+        else:
+            print("Cannot convert input to animation, check console for errors")
+
+    def exceptions_test_passed(self, i_names, o_path):
         """
         Validates input parameters for the conversion process.
     
@@ -253,7 +281,6 @@ class TheorChem2Blender:
         before running the `convert_manager` function.
 
         Args:
-            b_path (str): Path to the Blender executable.
             i_names (list): List of input file names to convert.
             o_path (str): Output directory path.
 
@@ -277,9 +304,94 @@ class TheorChem2Blender:
                 print(error_message)
                 return False
         return True
-        
-
     
+    def assign_ionic_params(self):
+        """
+        Retrieves and formats ionic parameters for molecular conversion.
+
+        Calls:
+        - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
+        """
+        is_ionic = self.ion_region.int_hasIons.get()
+        if not is_ionic:
+            is_ionic = "0"
+            str_ionList = "---"
+        unit_cell = self.ion_region.int_unitCell.get()
+        if not unit_cell:
+            unit_cell = "0"
+        ion_list = self.ion_region.lst_ions
+        str_ionList = ""
+        if is_ionic == 1:
+            is_ionic = "1"
+            if ion_list:
+                for ion in ion_list:
+                    charge_coord = ion.var_chargeCoord.get().strip("()")
+                    lst_pair = charge_coord.split(',')
+                    str_charge = lst_pair[0]
+                    str_coord = lst_pair[1]
+                    str_ionList += "("
+                    str_ionList += ion.var_element.get()
+                    str_ionList += "_"
+                    str_ionList += str_charge
+                    str_ionList += "_"
+                    str_ionList += str_coord
+                    str_ionList += ")_"
+                str_ionList = str_ionList[:-1]
+                print(str_ionList)
+            else:
+                str_ionList = "---"
+        else:
+            str_ionList = "---"
+        return is_ionic, unit_cell, ion_list, str_ionList
+    
+    def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+        """ 
+        Function to execute bat file that communicates with blender's python API 
+
+        Calls:
+        - `self.overwrite_animation_frames` and `self.overwrite_parameters_script`.
+    
+        :param excec_loc: path to the ReadMolecules.bat file which communicates with python
+        :param b_path: location of the blender executable
+        :param i_path: list of input specifications
+        :param i_name: list of input names to be converted into 3D objects
+        :param model_type: type of model to export
+        :param o_path: output path
+        :param o_name: output names
+        :param o_type: output type
+        :param is_ionic: boolean specifyig wether the input is ionic
+        :param unit_cell: boolean specifying whether the input contains a unit cell
+        :param str_ion_list: list of strings containing all the ions within the input
+        :param is_anim: boolean determining if input list is to be treated as animation
+        """
+        self.overwrite_animation_frames(is_anim, i_type) #only does this if is_anim is True
+        self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+        subprocess.call([exec_loc, b_path])
+
+    def overwrite_animation_frames(self, is_anim, input_type):
+        """
+        If the input represents an animation, prepares animation frame data for conversion.
+
+        Calls:
+        - `append_lines_to_file` from `Utility` module.
+        """
+        if is_anim:
+            anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
+            if not os.path.exists(anim_frames):
+                raise FileNotFoundError(f"Cannot find 'parameters.txt' at {anim_frames}")
+            if input_type == ".com":
+                if len(self.input_region.lst_InputPaths) > 1: #at least two input files to be read
+                    frames_list = self.coordinates.combine_animation_frames(self.input_region.lst_InputPaths)
+                frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
+                Utility.append_lines_to_file(anim_frames, frames_list_strings)
+            elif input_type == ".xyz":
+                #here I will have to write again the logic to convert animations from .xyz files
+                pass
+            else:
+                raise ValueError(f"Animations with {input_type} files are not supported at the moment")
+
     def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                               is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """
@@ -306,183 +418,22 @@ class TheorChem2Blender:
 
         Utility.clear_file_contents(params_script)
         lines = [
-            i_type,
-            i_path,
-            i_name,
-            o_path,
-            o_name,
-            model_type,
-            o_type,
-            str(is_ionic),
-            str(unit_cell),
-            str_ion_list,
+            i_type, i_path, i_name,
+            o_path, o_name, model_type, o_type,
+            str(is_ionic), str(unit_cell), str_ion_list,
             is_anim,
-            hl_atoms,
-            hl_bonds,
-            forced_bonds
+            hl_atoms, hl_bonds, forced_bonds
         ]
         Utility.append_lines_to_file(params_script, lines)
     
-    def overwrite_animation_frames(self, is_anim):
-        """
-        If the input represents an animation, prepares animation frame data for conversion.
-
-        Calls:
-        - `append_lines_to_file` from `Utility` module.
-        """
-        if is_anim:
-            anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
-            if not os.path.exists(anim_frames):
-                raise FileNotFoundError(f"Cannot find 'parameters.txt' at {anim_frames}")
-            if len(self.inputReg.lst_InputPaths) > 1: #at least two input files to be read
-                print(self.inputReg.lst_InputPaths, "Input paths list is: ")
-                frames_list = self.coordinates.combine_animation_frames(self.inputReg.lst_InputPaths)
-            frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
-            Utility.append_lines_to_file(anim_frames, frames_list_strings)
-        
-    def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
-        """ 
-        Function to execute bat file that communicates with blender's python API 
-
-        Calls:
-        - `self.overwrite_animation_frames` and `self.overwrite_parameters_script`.
     
-        :param excec_loc: path to the ReadMolecules.bat file which communicates with python
-        :param b_path: location of the blender executable
-        :param i_path: list of input specifications
-        :param i_name: list of input names to be converted into 3D objects
-        :param model_type: type of model to export
-        :param o_path: output path
-        :param o_name: output names
-        :param o_type: output type
-        :param is_ionic: boolean specifyig wether the input is ionic
-        :param unit_cell: boolean specifying whether the input contains a unit cell
-        :param str_ion_list: list of strings containing all the ions within the input
-        :param is_anim: boolean determining if input list is to be treated as animation
-        """
-        self.overwrite_animation_frames(is_anim) #only does this if is_anim is True
-        self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
-        subprocess.call([exec_loc, b_path])
+    def handle_animation_toggle(self, is_animation):
+        self.output_region.restrict_output_types_for_animation(is_animation)
     
-    def assign_ionic_params(self):
-        """
-        Retrieves and formats ionic parameters for molecular conversion.
-
-        Calls:
-        - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
-        """
-        is_ionic = self.ionReg.int_hasIons.get()
-        if not is_ionic:
-            is_ionic = "0"
-            str_ionList = "---"
-        unit_cell = self.ionReg.int_unitCell.get()
-        if not unit_cell:
-            unit_cell = "0"
-        ion_list = self.ionReg.lst_ions
-        str_ionList = ""
-        if is_ionic == 1:
-            is_ionic = "1"
-            if ion_list:
-                for ion in ion_list:
-                    charge_coord = ion.var_chargeCoord.get().strip("()")
-                    lst_pair = charge_coord.split(',')
-                    str_charge = lst_pair[0]
-                    str_coord = lst_pair[1]
-                    str_ionList += "("
-                    str_ionList += ion.var_element.get()
-                    str_ionList += "_"
-                    str_ionList += str_charge
-                    str_ionList += "_"
-                    str_ionList += str_coord
-                    str_ionList += ")_"
-                str_ionList = str_ionList[:-1]
-                print(str_ionList)
-            else:
-                str_ionList = "---"
-        else:
-            str_ionList = "---"
-        return is_ionic, unit_cell, ion_list, str_ionList
-        
-    def convert_manager(self, exec_loc):
-        """
-        Manages the process of converting input files to 3D object files using Blender's API.
-
-        Calls:
-        - `self.exceptions_test_passed`.
-        - `self.assign_ionic_params`.
-        - `self.individual_convert`.
-
-
-        :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
-
-        The function performs the following steps:
-        1. Collects necessary paths and parameters for the conversion process.
-        2. Validates the inputs using the `exceptions_test_passed` function.
-        3. If validation succeeds: 
-        3.1. Retrieves ionic parameters
-        3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
-        4. If validation fails, outputs relevant error messages to the console.
-
-        """
-        anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
-        b_path = self.bPathReg.var_blenderPath.get() #blender path
-        i_type = self.inputReg.var_inputTypes.get() #input file type
-        i_path = self.inputReg.var_inputPath.get() #input specifications.
-        i_names = self.inputReg.lst_inputNames #files to convert
-        model_type = self.inputReg.var_modelTypes.get() #model specifications
-        o_path = self.outputReg.ent_outputPath.get() #output path
-        o_type = self.outputReg.var_outputTypes.get() #output type
-        is_anim = self.inputReg.var_isAnimation.get() #is animation
-        hl_atoms = self.highlightReg.var_hlAtomList.get() #list of atoms to highlight
-        hl_bonds = self.highlightReg.var_hlBondList.get() #list of bonds to highlight
-        forced_bonds = self.highlightReg.var_forcedBondList.get() #list of bonds to enforce/overwrite
-        if self.exceptions_test_passed(b_path, i_names, o_path): 
-            params = self.assign_ionic_params()
-            is_ionic = params[0]
-            unit_cell = params[1]
-            ion_list = params[2]
-            str_ion_list = params[3]
-            if is_anim:
-                print("Converting main molecule for animation")
-                self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
-                                    o_path, i_names[0].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds) 
-            else:
-                for i in range(len(i_names)):
-                    print("Batch converting", i+1, "of", len(i_names))
-                    self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
-                                        o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                        unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds)   
-        else:
-            print("Cannot convert input to animation, check console for errors")
-
-    def help_single_convert(self):
-        """
-        Starts the step-by-step tutorial for single molecule conversion.
-
-        Calls:
-        - `start_tutorial` from `Tutorial` module.
-        """
-        self.animation_convert_tutorial.reset_buttons_to_default()
-        self.single_convert_tutorial.start_tutorial()
-
-    def help_animation_convert(self):
-        """
-        Starts the step-by-step tutorial for animation-based molecular conversions.
-
-        Calls:
-        - `start_tutorial` from `Tutorial` module.
-        """
-        self.single_convert_tutorial.reset_buttons_to_default()
-        self.animation_convert_tutorial.start_tutorial()
-            
     def run(self):
         self.root.mainloop()
 
+
 if __name__ == "__main__":
-    app = TheorChem2Blender()
+    app = TheorChem2BlenderTabSystem()
     app.run()

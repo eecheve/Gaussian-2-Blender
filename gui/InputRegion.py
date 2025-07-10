@@ -8,7 +8,7 @@ from gui.Utility import Utility
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
-    def __init__(self, parent, initial_dir):
+    def __init__(self, parent, initial_dir, on_animation_toggle=None):
         """
         Initializes the InputRegion by setting up variables, frame, canvas, and widgets.
 
@@ -16,6 +16,7 @@ class InputRegion(object):
             parent (tk.Widget): The parent widget to attach the frame to.
             initial_dir (str): The initial directory path for file dialogs.
         """
+        self.on_animation_toggle = on_animation_toggle #function to handle animation changes in the gui
         self.initialize_variables(initial_dir)
         self.setup_frame(parent)
         self.setup_canvas()
@@ -140,44 +141,43 @@ class InputRegion(object):
         self.drp_modelTypes.grid(row=3, column=1, sticky="w")
         self.chk_isAnimation.grid(row=4, column=0)
  
-    # def updateAnimationState(self):
-    #     """
-    #     Updates the animation state based on the checkbox for animation files.
-    #     Prints messages based on whether the 'is animation' checkbox is checked or unchecked.
-    #     """
-    #     if not self.var_isAnimation.get():
-    #         print("The files will not be treated as animation.")
-    #         return #this is called when che checkbox was checked, and is unchecked now
-    #     if len(self.lst_inputNames) < 2:
-    #         print("Error: There must be more than one file to implement animations.")
-    #         self.var_isAnimation.set(False)  # Uncheck the checkbox if conditions are not met
-    #         return
-    #     print("At least two files are present as input. Make sure they have the same number of elements in the same order for the animation to work properly.")
     def updateAnimationState(self):
         """
         Updates the animation state based on the checkbox for animation files.
         Handles both .com and .xyz file types appropriately.
         """
-        if not self.var_isAnimation.get():
+        is_checked = self.var_isAnimation.get()
+
+        if not is_checked:
             print("The files will not be treated as animation.")
+            if self.on_animation_toggle:
+                self.on_animation_toggle(False)
             return
 
         file_type = os.path.splitext(self.lst_inputNames[0])[1].lower()
+        valid = True
 
         if file_type == ".com":
             if len(self.lst_inputNames) < 2:
                 print("Error: There must be more than one .com file to implement animations.")
-                self.var_isAnimation.set(False)
-                return
-            print("At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.")
+                valid = False
+            else:
+                print("At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.")
 
         elif file_type == ".xyz":
             print("Note: Only one .xyz file is required for animation.")
             print("Make sure the .xyz file is a trajectory (contains multiple frames), or the animation will not work.")
 
         else:
-            print(f"Unsupported file type: {file_type}, please choose either xyz or com files for animations")
+            print(f"Unsupported file type: {file_type}. Please choose either .xyz or .com files for animations.")
+            valid = False
+
+        if not valid:
             self.var_isAnimation.set(False)
+
+        if self.on_animation_toggle:
+            self.on_animation_toggle(valid)
+
 
         
     def allFilesHaveSameValidExtension(self, file_paths):
@@ -191,7 +191,6 @@ class InputRegion(object):
             bool: True if all files have the same valid extension, False otherwise.
         """
         valid_extensions = {".com", ".xyz", ".mol2"}
-        #valid_extensions = {".com", ".xyz", ".mol"} #<-- for future Emmanuel to tackle
         extensions = {os.path.splitext(path)[1].lower() for path in file_paths}
     
         if len(extensions) == 1 and extensions.pop() in valid_extensions:
@@ -207,7 +206,8 @@ class InputRegion(object):
         file_extension = f"*{input_type}"
         file_types = [(f"{input_type.upper()} files", file_extension), ("All files", "*.*")]
 
-        str_paths = tk.filedialog.askopenfilenames(initialdir=self.initial_dir, filetypes=file_types)
+        input_examples_dir = os.path.join(self.initial_dir, "input_examples")
+        str_paths = tk.filedialog.askopenfilenames(initialdir=input_examples_dir, filetypes=file_types)
     
         if not str_paths:
             return  # No files selected

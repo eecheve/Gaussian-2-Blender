@@ -71,7 +71,7 @@ class HighlighterRegion(object):
         Parameters:
             parent (tk.Widget): The parent widget to attach the frame to.
         """
-        self.frame = tk.LabelFrame(master=parent, padx=5, text="Highlight atoms and bonds", 
+        self.frame = tk.LabelFrame(master=parent, padx=5, text="Customize atoms and bonds", 
                                    fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
 
     def add_widgets(self):
