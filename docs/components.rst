@@ -93,11 +93,7 @@ GUI
       convert [fillcolor=lightblue];
       convert_manager [fillcolor=lightblue];
       exceptions_test_passed [fillcolor=lightblue];
-      help_animation_convert [fillcolor=lightblue];
-      help_single_convert [fillcolor=lightblue];
       individual_convert [fillcolor=lightblue];
-      initialize_animation_tutorial [fillcolor=lightblue];
-      initialize_single_tutorial [fillcolor=lightblue];
       overwrite_animation_frames [fillcolor=lightblue];
       overwrite_parameters_script [fillcolor=lightblue];
       reset_to_defaults [fillcolor=lightblue];
@@ -137,7 +133,6 @@ GUI
       individual_convert -> overwrite_parameters_script;
 
       overwrite_animation_frames -> Utility;
-
       overwrite_parameters_script -> Utility;
 
       reset_to_defaults -> BlenderPath;
@@ -146,8 +141,6 @@ GUI
       reset_to_defaults -> IonRegion;
       reset_to_defaults -> ConsoleRegion;
       reset_to_defaults -> Information;
-      reset_to_defaults -> Tutorial;
-
    }
 
 

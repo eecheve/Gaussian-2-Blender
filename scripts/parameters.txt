@@ -1,14 +1,14 @@
 .com
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/animations/DA_ciclopentadiene
-cyclopentadiene-ethene-(05).com
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic
+acrylonitrile.com
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-cyclopentadiene-ethene-(05)
+acrylonitrile
 Ball-and-Stick
-.fbx
+.glb
 0
 0
 ---
-1
+0
 
 
 
