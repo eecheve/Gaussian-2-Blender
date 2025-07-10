@@ -147,7 +147,8 @@ class TheorChem2BlenderTabSystem:
     def initialize_input_region(self, parent):
         self.input_info = Information(parent, instructions=Instructions.get("input"), 
                                       title="Input Instructions", button_name="Input Help")
-        self.input_region = InputRegion(parent, self.g2b_path) # Input Region
+        self.input_region = InputRegion(parent, self.g2b_path, 
+                                        on_animation_toggle=self.handle_animation_toggle) # Input Region
 
     def initialize_customization_region(self, parent):
         self.custom_info = Information(parent, instructions=Instructions.get("customization"),
@@ -418,6 +419,10 @@ class TheorChem2BlenderTabSystem:
             hl_atoms, hl_bonds, forced_bonds
         ]
         Utility.append_lines_to_file(params_script, lines)
+    
+    
+    def handle_animation_toggle(self, is_animation):
+        self.output_region.restrict_output_types_for_animation(is_animation)
     
     def run(self):
         self.root.mainloop()
