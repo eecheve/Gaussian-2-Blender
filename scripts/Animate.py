@@ -220,7 +220,7 @@ def get_bond_locations(bond_name, anim_data, type):
     print("bond locations are:", l)
     return l
 
-def get_bond_normals(bond_name, anim_data, type): #<---------------------------------------------------------
+def get_bond_normals(bond_name, anim_data, type):
     """
     Calculates the normal vector for each bond location.
 

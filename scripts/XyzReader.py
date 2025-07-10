@@ -74,7 +74,7 @@ class XyzReader():
                     bond_order_char = bond_order_map.get(bond_order)
                     bond_orders.append((atom1, atom2, bond_order_char))
         return bond_orders
-
+    
 #if __name__ == "__main__":
 #     test = XyzReader()
 #     raw_coords = test.extract_coords_from_xyz_file(

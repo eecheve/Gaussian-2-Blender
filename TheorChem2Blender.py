@@ -12,6 +12,7 @@ from tkinter import ttk
 from gui.Utility import Utility
 from gui.Coordinates import Coordinates
 from gui.Tutorial import Tutorial
+#from scripts.XyzReader import XyzReader
 
 #gui modules
 from gui.Instructions import Instructions
@@ -31,6 +32,7 @@ class TheorChem2BlenderTabSystem:
     def __init__(self):
         #utility
         self.coordinates = Coordinates() # To use the coordinates module
+        #self.xyzReader = XyzReader()
         
         #system vatiables and paths
         self.current_os = platform.system()
@@ -288,8 +290,6 @@ class TheorChem2BlenderTabSystem:
             bool: True if all tests pass, False otherwise.
         """
         tests = [
-            #(not Utility.findFile(self.get_blender_exec_name(), b_path), 
-            #    "The assigned blender path does not contain the blender executable"),
             (i_names is None or not i_names, 
                 "Please select at least one input file to convert"),
             (not o_path, 
@@ -312,6 +312,8 @@ class TheorChem2BlenderTabSystem:
         Calls:
         - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
         """
+        # 7/10/25 note: I wrote this function 4 years ago and I don't remember what it does.
+        # I cannot erase it or change is as it will break several things that I cannot be bothered to write again.
         is_ionic = self.ion_region.int_hasIons.get()
         if not is_ionic:
             is_ionic = "0"
@@ -387,8 +389,13 @@ class TheorChem2BlenderTabSystem:
                 frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
                 Utility.append_lines_to_file(anim_frames, frames_list_strings)
             elif input_type == ".xyz":
-                #here I will have to write again the logic to convert animations from .xyz files
-                pass
+                if len(self.input_region.lst_InputPaths) != 1:
+                    raise ValueError("Only one .xyz file should be provided for animation input.")
+                xyz_path = self.input_region.lst_InputPaths[0]
+                frames = self.extract_all_frames(xyz_path) 
+                combined = self.combine_xyz_animation_frames(frames)
+                frame_strings = [' '.join(map(str, frame)) for frame in combined]
+                Utility.append_lines_to_file(anim_frames, frame_strings)
             else:
                 raise ValueError(f"Animations with {input_type} files are not supported at the moment")
 
@@ -429,6 +436,76 @@ class TheorChem2BlenderTabSystem:
     
     def handle_animation_toggle(self, is_animation):
         self.output_region.restrict_output_types_for_animation(is_animation)
+
+    def extract_all_frames(self, xyz_file_path):
+        """
+        Extracts all coordinate frames from a multi-frame XYZ animation file.
+
+        :param xyz_file_path: (str) Path to the XYZ file containing multiple animation frames.
+        :return: (list) A list of frames, where each frame is a list of [atom, x, y, z] entries.
+        """
+        with open(xyz_file_path, 'r') as f:
+            lines = f.readlines()
+
+        frames = []
+        i = 0
+        while i < len(lines):
+            try:
+                num_atoms = int(lines[i].strip())
+            except ValueError:
+                raise ValueError(f"Invalid atom count at line {i+1}")
+            
+            frame_lines = lines[i+2:i+2+num_atoms]
+            if len(frame_lines) != num_atoms:
+                raise ValueError("Incomplete frame detected.")
+            
+            frame = []
+            for line in frame_lines:
+                parts = line.split()
+                if len(parts) != 4:
+                    raise ValueError("Invalid coordinate line.")
+                atom, x, y, z = parts
+                frame.append([atom, float(x), float(y), float(z)])
+            frames.append(frame)
+            i += num_atoms + 2
+        return frames
+
+    def combine_xyz_animation_frames(self, frames):
+        """
+        Combines atomic coordinates from multiple XYZ animation frames into a single list.
+
+        :param frames: (list) A list of frames, where each frame is a list of [atom, x, y, z] entries.
+        :return: (list) A list of tuples, where each tuple contains the atom ID and its coordinates across all frames.
+        """
+        if not frames:
+            return []
+
+        # Assign indices to atoms in the first frame
+        indexed_atoms = self.assign_indices(frames[0])
+        num_atoms = len(indexed_atoms)
+        combined = []
+
+        for i in range(num_atoms):
+            atom_id = indexed_atoms[i][0]
+            coords = []
+            for frame in frames:
+                coords.extend(frame[i][1:])  # x, y, z
+            combined.append((atom_id, *coords))
+        return combined
+    
+    def assign_indices(self, raw_coords):
+        """
+        Assigns unique two-digit indices to atomic symbols.
+
+        :param raw_coords: (list) List of raw coordinates.
+        :return: (list) A list of lists with atomic symbols assigned a unique two-digit index.
+        """
+        indexed_coords = []
+        for index, entry in enumerate(raw_coords, start=1):
+            new_entry = entry.copy()  # Copy the original entry to avoid modifying it
+            new_entry[0] = f"{entry[0]}{index:02d}"
+            indexed_coords.append(new_entry)
+        return indexed_coords
     
     def run(self):
         self.root.mainloop()
