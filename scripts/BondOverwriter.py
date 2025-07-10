@@ -4,21 +4,19 @@ def parse_connection_string(connect_list_string):
     """Splits the input string into a list of cleaned connection entries."""
     return [conn.strip() for conn in connect_list_string.split(';') if conn.strip()]
 
-def build_atom_identity_map(connect_with_symbols):
+def build_atom_identity_map(coords):
     """
-    Builds a map of atom indices to their element symbols from the connect_with_symbols list.
+    Builds a map of atom indices to their element symbols from a list of raw coordinates.
 
-    :param connect_with_symbols: (list) List of tuples like ('O01', 'C06', '-')
-    :return: (dict) Dictionary mapping index strings to element symbols, e.g., {'01': 'O', '06': 'C'}
+    :param coords: (list) List of [element, x, y, z] entries.
+    :return: (dict) Dictionary mapping index strings to element symbols, e.g., {'01': 'C', '02': 'O'}
     """
     identity_map = {}
-    for atom1, atom2, _ in connect_with_symbols:
-        for atom in (atom1, atom2):
-            symbol = ''.join(filter(str.isalpha, atom))
-            index = ''.join(filter(str.isdigit, atom))
-            identity_map[index] = symbol
+    for i, entry in enumerate(coords, start=1):
+        symbol = entry[0]
+        index = f"{i:02d}" # Two-digit index
+        identity_map[index] = symbol
     return identity_map
-
 
 def build_connection_lookup(connect_with_symbols):
     """Creates a dictionary of existing connections using unordered atom pairs as keys."""
@@ -46,7 +44,7 @@ def validate_atom_identity(atom_label, identity_map):
     if identity_map[index] != symbol:
         raise ValueError(f"Atom identity mismatch: expected {identity_map[index]}, got {symbol}.")
 
-def overwrite_connectivity(connect_list_string, connect_with_symbols):
+def overwrite_connectivity(connect_list_string, connect_with_symbols, coords):
     """
     Updates or appends bond connections based on a user-defined string.
     Validates that atom indices and identities match the current molecule.
@@ -62,7 +60,8 @@ def overwrite_connectivity(connect_list_string, connect_with_symbols):
     if not new_connections:
         return connect_with_symbols
 
-    atom_identity_map = build_atom_identity_map(connect_with_symbols)
+    atom_identity_map = build_atom_identity_map(coords)
+    print("BondOverwriter.overwrite_connectivity() atom_identity:", atom_identity_map)
     existing_connections = build_connection_lookup(connect_with_symbols)
 
     for conn in new_connections:
@@ -75,6 +74,3 @@ def overwrite_connectivity(connect_list_string, connect_with_symbols):
 
     print("optional step: overwriting conectivity list")
     return list(existing_connections.values())
-
-def test_run():
-    print("this is being called")
