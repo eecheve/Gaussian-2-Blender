@@ -34,9 +34,12 @@ Running the Executable from Windows
 
 Running the Executable from macOS
 ---------------------------------
-1. Navigate to the ``macOS`` folder inside the unzipped Chem2Blender package.
-2. Double-click on the ``TheorChem2Blender.app`` executable.
-3. Follow the same steps as in the Windows section to select files, configure options, and convert.
+1. Open a terminal in the source folder, and execute the following command:
+  .. code-block:: bash
+    
+     python3 TheorChem2Blender.py
+
+2. Follow the same steps as in the Windows section to select files, configure options, and convert.
 
 Running Chem2Blender from the Console
 -------------------------------------

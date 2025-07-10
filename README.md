@@ -24,7 +24,7 @@ TheorChem-2-Blender is a tool that allows users to convert a various computation
 ## INSTRUCTIONS (IF NOT WINDOWS)
 1. Open a terminal in the `Blender-Gaussian-Bridge/` folder and run:
    ```bash
-   python TheorChem2Blender.py
+   python3 TheorChem2Blender.py
     ```
 2. The rest of steps are the same as if you would have a windows machine.
 

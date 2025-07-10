@@ -49,15 +49,13 @@ Step 3: Use TheorChem2Blender
 ------------------------------
 
 1. Open **TheorChem2Blender**.
-2. Follow the tool's procedure to convert the `.mol2` file into the desired format for Blender (e.g., `.obj`, `.blend`, etc.).
+2. Follow the tool's procedure to convert the `.mol2` file into the desired format for Blender (e.g., `.obj`, `.fbx`, etc.).
 
 
-From GROMACS to Blender
-========================
+From Molecular Dynamics to Blender
+===================================
 
-Here I will add the documentation for the GROMACS-Blender pipeline
-
-
-From CP2K to Blender
-=====================
-Here I will add the documentation for the CP2K-Blender pipeline
+1. Follow the documentation from your favorite MD software (GROMAC, CP2K, etc) to get a `.xyz` trajectory file
+2. The trajectory file must contain in the same file all the molecule poses for all the time frames you want to animate
+3. Open **TheorChem2Blender**, choose the appropriate `.xyz` input and check the `is animation` box.
+4. Convert!
