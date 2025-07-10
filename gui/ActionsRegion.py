@@ -2,7 +2,7 @@ import tkinter as tk
 from gui.CreateTooltip import CreateTooltip
 
 class ActionsRegion:
-    def __init__(self, parent, on_reset, on_convert):
+    def __init__(self, parent, on_reset, on_convert, current_os, g2b_path):
         """
         Initializes the interact frame.
 
@@ -10,6 +10,8 @@ class ActionsRegion:
         :param on_reset: Callback function to reset the interface to defaults.
         :param on_convert: Callback function to manage the conversion process.
         """
+        self.current_os = current_os
+        self.g2b_path = g2b_path
         self.frame = tk.LabelFrame(master=parent, text="Actions", fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
         self.on_reset = on_reset
         self.on_convert = on_convert

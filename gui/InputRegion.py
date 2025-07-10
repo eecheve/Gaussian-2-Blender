@@ -140,19 +140,6 @@ class InputRegion(object):
         self.drp_modelTypes.grid(row=3, column=1, sticky="w")
         self.chk_isAnimation.grid(row=4, column=0)
  
-    # def updateAnimationState(self):
-    #     """
-    #     Updates the animation state based on the checkbox for animation files.
-    #     Prints messages based on whether the 'is animation' checkbox is checked or unchecked.
-    #     """
-    #     if not self.var_isAnimation.get():
-    #         print("The files will not be treated as animation.")
-    #         return #this is called when che checkbox was checked, and is unchecked now
-    #     if len(self.lst_inputNames) < 2:
-    #         print("Error: There must be more than one file to implement animations.")
-    #         self.var_isAnimation.set(False)  # Uncheck the checkbox if conditions are not met
-    #         return
-    #     print("At least two files are present as input. Make sure they have the same number of elements in the same order for the animation to work properly.")
     def updateAnimationState(self):
         """
         Updates the animation state based on the checkbox for animation files.

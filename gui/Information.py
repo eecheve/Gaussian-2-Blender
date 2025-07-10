@@ -7,44 +7,25 @@ class Information(object):
     """
     Region containing the instructions on how to use TheorChem2Blender
     """
-    def __init__(self, parent_class, parent_tk):
-        self.frame = tk.LabelFrame(master=parent_tk,
+    #def __init__(self, parent_class):
+    def __init__(self, parent_class, instructions, title="Information", button_name="Help"):
+        self.frame = tk.LabelFrame(master=parent_class,#parent_tk,
                                       padx=5, 
-                                      text="TheorChem2Blender Information", 
+                                      text=title, 
                                       fg="blue",
                                       bg="#e0e0e0", 
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
+        self.instructions = instructions
         
         self.btn_about = tk.Button(text="About", width=20, master=self.frame, command=self.about)
         self.btn_about.grid(row=0, column=0)
         CreateTooltip(self.btn_about, "Click here to see the current version of TheorChem2Blender")
         
-        self.btn_help = tk.Button(text="Help", width=20, master=self.frame, command=self.help)
+        self.btn_help = tk.Button(text=button_name, width=20, master=self.frame, command=self.help)
         self.btn_help.grid(row=0, column=1)
         CreateTooltip(self.btn_help, "Click here to open a new window with instructions on how to use TheorChem2Blender")
-
-        self.btn_help_single = tk.Button(text="Guide: single convert", width=20, master=self.frame, 
-                                         command=parent_class.help_single_convert)
-        self.btn_help_single.grid(row=0, column=2, padx=(30, 0))
-        CreateTooltip(self.btn_help_single, "Click here to for a guided walkthrough to convert a single molecule")
-
-        self.btn_help_anim = tk.Button(text="Guide: animation convert", width=20, master=self.frame, 
-                                         command=parent_class.help_animation_convert)
-        self.btn_help_anim.grid(row=0, column=3)
-        CreateTooltip(self.btn_help_anim, "Click here to for a guided walkthrough to make an animation")
-
-        self.instructions_text = (
-            "1. Set the path to the Blender executable by navigating to the Blender installation directory.\n\n"
-            "2. Select the Gaussian input files that you want to convert.\n\n"
-            "3. Choose the output directory where the converted files will be saved.\n\n"
-            "4. Choose the type of model you want to export (e.g., ball-and-stick, van-der-Waals, etc.).\n\n"
-            "5. Set up any ionic parameters if your molecule is ionic. You can add ions manually.\n\n"
-            "6. Click 'Convert!' to start the conversion process. This will create the output files in the specified directory.\n\n"
-            "7. If you need to reset the input fields, click 'Reset' to restore default values.\n\n"
-            "8. Check the output console for progress and any error messages during the conversion process."
-        )
-        
+       
         self.about_text = (
             "TheorChem2Blender was written and is maintained by Dr. Echeverri-Jimenez\n"
             "Please cite the following paper if you use this tool: J. Chem. Educ. 2021, 98(10), 3348-3355\n"
@@ -84,18 +65,21 @@ class Information(object):
         popup_window = tk.Toplevel(self.frame)
         popup_window.title("Instructions")
 
-        content = tk.Label(popup_window,
-                           text=self.instructions_text,
-                           fg="black",
-                           bg="#e0e0e0",
-                           padx=10, pady=10,
-                           justify="left",  # Makes the text left-aligned
-                           width=100, height=20,
-                           wraplength=500)
-        content.grid(row=0, column=0, padx=20, pady=20)
+        text_widget = tk.Text(popup_window, wrap="word", bg="#e0e0e0", width=100, height=20)
+        text_widget.tag_configure("normal", font=("Helvetica", 10))
+        text_widget.tag_configure("bold", font=("Helvetica", 10, "bold"))
+        text_widget.tag_configure("italic", font=("Helvetica", 10, "italic"))
+        text_widget.tag_configure("code", font=("Courier", 10))
+        
+        for part, tag in self.instructions:
+            text_widget.insert("end", part, tag)
+
+        text_widget.config(state="disabled") # read-only
+        text_widget.grid(row=0, column=0, padx=20, pady=20)
+
         btn_close = tk.Button(popup_window, text="Close", command=popup_window.destroy)
         btn_close.grid(row=1, column=0, pady=10)
-        popup_window.geometry("800x500")  # Customize as needed
+        popup_window.geometry("800x500")
 
     def open_url(self):
         """Opens JCE seminal paper in a new web browser window"""
@@ -106,4 +90,4 @@ class Information(object):
         popup_window = tk.Toplevel(self.frame)
         popup_window.title("About")
         self._initialize_popup(popup_window)
-        popup_window.geometry("800x200")  # Customize as needed
+        popup_window.geometry("800x200")

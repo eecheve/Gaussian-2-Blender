@@ -10,36 +10,32 @@ class Coordinates():
             "mac": '\r'
         }
 
-    def get_coordinates_line_numbers(self, file_lines, extension=".com"):
+    def get_coordinates_line_numbers(self, file_lines):
         """
         Finds the line numbers where the Cartesian coordinates are located in the file.
 
         :param file_lines: List of lines read from the molecular structure file.
         :type file_lines: list of str
         :param extension: File extension to check (default is ".com").
-        :type extension: str, optional
 
         :return: A tuple (start_line, end_line), where start_line is the first line
                     containing coordinates and end_line is the line after the last coordinate.
         :rtype: tuple
         """
+        newline_chars = set(self.newline_char_map.values()) #include new line chars
         start_line = 0
         end_line = 0
-        if extension != ".com":
-            print(".xyz functionality still in the works")
-            return
-        else:
-            newlines_count = 0
-            # Find the start of the coordinates section
-            for i,line in enumerate(file_lines):
-                if line.strip() == "":
-                     newlines_count += 1
-                     if newlines_count == 2: #when the second newline is found
-                         start_line = i+2 #starting line is inclusive
-                     elif newlines_count == 3: #third line
-                         end_line = i #end line is exclusive
-                         break
-            return (start_line, end_line)
+        newlines_count = 0
+        # Find the start of the coordinates section
+        for i,line in enumerate(file_lines):
+            if line in newline_chars or line.strip() == "": #if line is empty or is new line char
+                    newlines_count += 1
+                    if newlines_count == 2: #when the second newline is found
+                        start_line = i+2 #starting line is inclusive
+                    elif newlines_count == 3: #third line
+                        end_line = i #end line is exclusive
+                        break
+        return (start_line, end_line)
 
 
     def extract_cartesian_coordinates(self, file_path):
@@ -56,17 +52,9 @@ class Coordinates():
                  - z (float): The z-coordinate of the atom.
         :rtype: list of tuple
         """
-        #for compatibility, will check the type of newline on each .com file
-        newline_type = self.check_newline_characters(file_path)
-        newline_char = self.newline_char_map.get(newline_type)
+        with open(file_path, 'r', newline=None) as f:
+            lines = f.readlines()
 
-        if not newline_char:
-            raise ValueError("Unknown newline character type.")
-    
-        with open(file_path, 'r') as f: #reading the file and assigning the content to a variable
-            content = f.read()
-
-        lines = content.split(newline_char) #splitting the content by lines according to the newline character
         line_numbers = self.get_coordinates_line_numbers(lines) #start and end points of the cartesian coordinates in the list
         lines = lines[line_numbers[0]:line_numbers[1]] #raw cartesian coordinates, separated by spaces
 
@@ -105,7 +93,7 @@ class Coordinates():
             #print(f"The file {file_path} uses old Mac-style newlines (CR).")
             return "mac"
         else:
-            print(f"No standard newline characters found. Please check if {file_path} has the correct content")
+            #print(f"No standard newline characters found. Please check if {file_path} has the correct content")
             return
 
     def check_animationframes(self, file_paths):
