@@ -118,6 +118,28 @@ def update_keyframe_locations(target, step_size, locations):
             target.location = locations[i]  # Set the location to the ith vector
             target.keyframe_insert(data_path="location", frame=(i) * step_size)
         
+def update_keyframe_rotations_quaternion(target, step_size, normals):
+    """
+    Updates keyframe rotations for a target object using quaternion rotations based on normal vectors.
+
+    :param target: Object to update.
+    :type target: bpy.types.Object
+    :param step_size: Interval between frames.
+    :type step_size: int
+    :param normals: List of normal vectors for each frame.
+    :type normals: list[mathutils.Vector]
+    """
+    target.rotation_mode = 'QUATERNION'
+    target.keyframe_insert(data_path="rotation_quaternion", frame=0)
+    z_axis = mathutils.Vector((0, 0, 1))  # Default orientation
+
+    for i, normal in enumerate(normals):
+        if normal.length == 0:
+            continue  # Skip zero-length vectors to avoid errors
+        rotation_quat = z_axis.rotation_difference(normal)
+        target.rotation_quaternion = rotation_quat
+        target.keyframe_insert(data_path="rotation_quaternion", frame=i * step_size)
+
 def update_keyframe_rotations(target, step_size, normals):
     """
     Updates keyframe rotations for a target object based on normals.
@@ -129,6 +151,9 @@ def update_keyframe_rotations(target, step_size, normals):
     :param normals: List of normal vectors for each frame
     :type normals: list[mathutils.Vector]
     """
+    # function not used in version 2025.7 I'm replacing it with the update_keyframe_rotations_quaternion version.
+    # the quaternions function was written by a LLM, I don't understand it. I'm leaving the update_keyframe_rotations 
+    # here to fall back in case things fall apart because I'm not using a function I 100% understand what is doing.
     target.keyframe_insert(data_path="rotation_euler", frame=0)
     for i, normal in enumerate(normals):
         try:
@@ -247,7 +272,7 @@ def get_bond_normals(bond_name, anim_data, type):
         raise ValueError("Bond components not found in the animation data.")
     #finding normal vector for each bond
     for i in range(len(r1)):  # Assuming r1 and r2 have the same number of vectors
-        n_i = r2[i] - r1[i]  # Calculate the normal vector
+        n_i = (r2[i] - r1[i]).normalized()  # Calculate the normal vector
         n.append(n_i)  # Append the normal vector to the list
     return n
             
@@ -282,7 +307,7 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
             bond_normals = get_bond_normals(bond.name, anim_data, bond_type)
             update_keyframe_locations(target=bond, step_size=step_size, locations=bond_locations)
-            update_keyframe_rotations(target=bond, step_size=step_size, normals=bond_normals)
+            update_keyframe_rotations_quaternion(target=bond, step_size=step_size, normals=bond_normals)
     else:
         print("there are no bonds of type", bond_type)    
         return

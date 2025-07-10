@@ -409,7 +409,6 @@ if __name__ == "__main__":
                                    params_data["forced_bonds_list"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
-    #print(main_body_instance.connect_with_symbols)
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()

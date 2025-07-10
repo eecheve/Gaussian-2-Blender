@@ -1,8 +1,8 @@
-.xyz
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/trajectories
-carbon_dioxide_symmetric_vibration.xyz
+.com
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/animations/DA_ciclopentadiene
+cyclopentadiene-ethene-(05).com
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-carbon_dioxide_symmetric_vibration
+cyclopentadiene-ethene-(05)
 Ball-and-Stick
 .fbx
 0
@@ -11,4 +11,4 @@ Ball-and-Stick
 1
 
 
-C01=O02; C01=O03
+
