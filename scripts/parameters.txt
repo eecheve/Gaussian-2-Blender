@@ -4,7 +4,7 @@ water_frame1.com
 C:\Users\User\G2B\Gaussian-2-Blender\output\
 water_frame1
 Ball-and-Stick
-.glb
+.fbx
 0
 0
 ---

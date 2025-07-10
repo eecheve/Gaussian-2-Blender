@@ -335,7 +335,61 @@ def build_animations(anim_data, bond_list, bond_types, step_size, extra_frames, 
                                    bond_type=type,
                                    step_size=step_size)
     
-def bake_all_animations(element_list, bond_list, end_frame=40):
+def bake_for_fbx(element_list, bond_list, end_frame):
+    print("12: Starting baking fbx animations...")
+    total_objects = len(element_list) + len(bond_list)
+    print(f"12.1: Total objects to bake: {total_objects}")
+    for obj in element_list + bond_list:
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        print(f"12.2: Baking animation for object: {obj.name}")
+        bpy.ops.nla.bake(
+            frame_start=0, frame_end=end_frame,
+            step=1, only_selected=True, visual_keying=True,
+            clear_constraints=False, clear_parents=False,
+            bake_types={'OBJECT'}
+        )
+    print("12.3: Baking complete!")
+
+def force_nla_tracks_for_glb(objects):
+    """
+    Ensures that each object has its baked action pushed to an NLA track,
+    which is required for GLB export to include animations.
+    
+    :param objects: List of objects to process
+    """
+    for obj in objects:
+        if not obj.animation_data:
+            obj.animation_data_create()
+        
+        action = obj.animation_data.action
+        if action:
+            # Create a new NLA track and push the action into it
+            track = obj.animation_data.nla_tracks.new()
+            track.name = f"{obj.name}_NLA"
+            #strip = track.strips.new(action.name, action.frame_range[0], action)
+            track.strips.new(action.name, int(action.frame_range[0]), action)
+            print(f"Pushed action '{action.name}' to NLA track for object '{obj.name}'")
+        else:
+            print(f"No action found for object '{obj.name}'")
+
+
+def bake_for_glb(element_list, bond_list, end_frame):
+    print("12: Starting baking glb animations...")
+    bpy.ops.object.select_all(action='DESELECT')
+    for obj in element_list + bond_list:
+        obj.select_set(True)
+    bpy.context.view_layer.objects.active = element_list[0] if element_list else bond_list[0]
+    bpy.ops.nla.bake(
+        frame_start=0, frame_end=end_frame,
+        step=1, only_selected=True, visual_keying=True,
+        clear_constraints=False, clear_parents=False,
+        bake_types={'OBJECT'}
+    )
+    print("12.1: Baking complete!")
+
+def bake_all_animations(element_list, bond_list, end_frame=40, mode=".fbx"):
     """
     Bakes all the animations in the scene.
     
@@ -343,42 +397,15 @@ def bake_all_animations(element_list, bond_list, end_frame=40):
     :param bond_list: (List[bpy.data.object]) The list of bonds present in the scene
     :param end_frame: (int) Optional. Determines the length of the animation
     """
-    print("12: Starting baking animations...")
-    
-    total_objects = len(element_list) + len(bond_list)
-    print(f"12.1: Total objects to bake: {total_objects}")
-    
-    # Bake elements
-    for element in element_list:
-        bpy.context.view_layer.objects.active = element
-        bpy.ops.object.select_all(action='DESELECT')
-        element.select_set(True)
-        print(f"12.2: Baking animation for element: {element.name}")
-        bpy.ops.nla.bake(
-            frame_start=0, frame_end=end_frame,
-            step=1, only_selected=True, visual_keying=True, 
-            clear_constraints=False, clear_parents=False,  
-            bake_types={'OBJECT'}
-        )
-    
-    # Bake bonds
-    for bond in bond_list:
-        bpy.context.view_layer.objects.active = bond
-        bpy.ops.object.select_all(action='DESELECT')
-        bond.select_set(True)
-        print(f"12.3: Baking animation for bond: {bond.name}")
-        bpy.ops.nla.bake(
-            frame_start=0, frame_end=end_frame,
-            step=1, only_selected=True, visual_keying=True, 
-            clear_constraints=False, clear_parents=False,  
-            bake_types={'OBJECT'}
-        )
-    
-    print("12.4: Baking complete!")
-
-
-                     
-def animate(anim_frames_path, step_size=20):
+    if mode==".fbx":
+        bake_for_fbx(element_list, bond_list, end_frame)
+    elif mode==".glb":
+        bake_for_glb(element_list, bond_list, end_frame)
+        force_nla_tracks_for_glb(element_list + bond_list)
+    else:
+        raise ValueError(f"Unsupported mode '{mode}'. Only '.fbx' and '.glb' are allowed.")
+                    
+def animate(anim_frames_path, mode=".fbx", step_size=20):
     """
     Orchestrates animation of molecular elements and bonds.
     
@@ -399,36 +426,59 @@ def animate(anim_frames_path, step_size=20):
     end_frame = int((number_of_frames - 1)*step_size)
     print("9: the end frame is assigned to: ", end_frame)
     build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
-    #bake_all_animations(end_frame)
-    bake_all_animations(element_list, bond_list, end_frame)
+    bake_all_animations(element_list, bond_list, end_frame, mode=mode)
 
 def export_animation(filepath):
     """
-    Exports the animation to the given filepath.
+    Exports the current Blender scene as an animation to the specified file path.
+    Supports .fbx and .glb formats.
 
-    :param filepath: (str) Path to save the exported file.
+    :param filepath: (str) Full path (including extension) where the animation will be saved.
     """
-    print("13: the export path is", filepath)
+    print("Exporting animation to:", filepath)
+    ext = os.path.splitext(filepath)[1].lower()
+
     try:
-        bpy.ops.export_scene.fbx(filepath=filepath, 
-                                 check_existing=True, 
-                                 filter_glob="*.fbx", 
-                                 use_selection=False, 
-                                 global_scale=1.0, 
-                                 apply_unit_scale=True, 
-                                 bake_anim=True, 
-                                 bake_anim_use_all_bones=False, 
-                                 bake_anim_use_nla_strips=False, 
-                                 bake_anim_use_all_actions=False, 
-                                 bake_anim_force_startend_keying=True, 
-                                 bake_anim_step=1.0, 
-                                 bake_anim_simplify_factor=0.0, 
-                                 use_mesh_modifiers=True)
-        print(f"Animation exported to {filepath}")
+        if ext == ".fbx":
+            bpy.ops.export_scene.fbx(
+                filepath=filepath,
+                check_existing=True,
+                use_selection=False,
+                global_scale=1.0,
+                apply_unit_scale=True,
+                bake_anim=True,
+                bake_anim_use_all_bones=False,
+                bake_anim_use_nla_strips=False,
+                bake_anim_use_all_actions=False,
+                bake_anim_force_startend_keying=True,
+                bake_anim_step=1.0,
+                bake_anim_simplify_factor=0.0,
+                use_mesh_modifiers=True,
+                embed_textures=True
+            )
+
+        elif ext == ".glb":
+            bpy.ops.export_scene.gltf(
+                filepath=filepath,
+                export_format='GLB',
+                use_selection=False,
+                export_animations=True,
+                export_materials='EXPORT',
+                export_apply=True,
+                export_force_sampling=True
+            )
+
+        else:
+            print(f"Unsupported animation export format: {ext}")
+            return
+
+        print(f"Animation successfully exported to {filepath}")
+
     except PermissionError as e:
         print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
     except Exception as e:
         print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
+
 
 
     

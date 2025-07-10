@@ -27,9 +27,6 @@ from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
 
-# TO DO TOMORROW: There is a problem with the animation coordinates.combine_animation_frames
-# The animation_frames.txt is not being updated by the function.
-
 class TheorChem2BlenderTabSystem:
     def __init__(self):
         #utility
@@ -97,7 +94,6 @@ class TheorChem2BlenderTabSystem:
         # Tab 1: User Input
         self.input_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.input_tab, text="Input")
-        #self.input_info = Information(self.input_tab, instructions=Instructions.get("input"), title="Input Instructions")
         self.initialize_input_region(self.input_tab)
         self.initialize_blender_region(self.input_tab)
         self.place(self.input_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
@@ -381,7 +377,6 @@ class TheorChem2BlenderTabSystem:
             if not os.path.exists(anim_frames):
                 raise FileNotFoundError(f"Cannot find 'parameters.txt' at {anim_frames}")
             if len(self.input_region.lst_InputPaths) > 1: #at least two input files to be read
-                print(self.input_region.lst_InputPaths, "Input paths list is: ")
                 frames_list = self.coordinates.combine_animation_frames(self.input_region.lst_InputPaths)
             frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
             Utility.append_lines_to_file(anim_frames, frames_list_strings)

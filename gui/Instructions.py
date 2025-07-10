@@ -50,7 +50,11 @@ class Instructions:
             ("About the output\n", "bold"),
             (" 9. Select the output path for the 3D object to be rendered\n", "normal"),
             ("10. Select the file type for the 3D object\n", "normal"),
-            ("    10.1 If you chose 'is animation' in the input tab, you can only render as '.fbx' or '.glb'\n", "italic")
+            ("    10.1. If you chose 'is animation' in the input tab, you can only render as '.fbx' or '.glb'\n", "italic"),
+            ("    10.2. ", "italic"),
+            ("known issue: ", "bold"),
+            ("at the moment if you export as glb, each bond and atom will have a separate animation instead of all animations meing merged as one. If you want to avoid this, export as fbx\n", "italic"),
+            ("    10.3. If you want to export as glb, you would have to use g-LTF transform (a separate tool, not included in TheorChem2Blender) to merge the animations", "italic")
         ],
         "actions": [
             ("Actions you can do:\n", "bold"),

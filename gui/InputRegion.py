@@ -141,44 +141,6 @@ class InputRegion(object):
         self.drp_modelTypes.grid(row=3, column=1, sticky="w")
         self.chk_isAnimation.grid(row=4, column=0)
  
-    # def updateAnimationState(self):
-    #     """
-    #     Updates the animation state based on the checkbox for animation files.
-    #     Handles both .com and .xyz file types appropriately.
-    #     """
-    #     if not self.var_isAnimation.get():
-    #         print("The files will not be treated as animation.")
-    #         if self.on_animation_toggle:
-    #             self.on_animation_toggle(False)
-    #         return
-
-    #     file_type = os.path.splitext(self.lst_inputNames[0])[1].lower()
-
-    #     if file_type == ".com":
-    #         if len(self.lst_inputNames) < 2:
-    #             print("Error: There must be more than one .com file to implement animations.")
-    #             self.var_isAnimation.set(False)
-    #             if self.on_animation_toggle:
-    #                 self.on_animation_toggle(False)
-    #             return
-    #         print("At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.")
-    #         return
-
-    #     elif file_type == ".xyz":
-    #         print("Note: Only one .xyz file is required for animation.")
-    #         print("Make sure the .xyz file is a trajectory (contains multiple frames), or the animation will not work.")
-    #         return
-
-    #     else:
-    #         print(f"Unsupported file type: {file_type}, please choose either xyz or com files for animations")
-    #         self.var_isAnimation.set(False)
-    #         if self.on_animation_toggle:
-    #             self.on_animation_toggle(False)
-    #         return
-        
-    #     if self.on_animation_toggle:
-    #             self.on_animation_toggle(True)
-
     def updateAnimationState(self):
         """
         Updates the animation state based on the checkbox for animation files.
@@ -244,7 +206,8 @@ class InputRegion(object):
         file_extension = f"*{input_type}"
         file_types = [(f"{input_type.upper()} files", file_extension), ("All files", "*.*")]
 
-        str_paths = tk.filedialog.askopenfilenames(initialdir=self.initial_dir, filetypes=file_types)
+        input_examples_dir = os.path.join(self.initial_dir, "input_examples")
+        str_paths = tk.filedialog.askopenfilenames(initialdir=input_examples_dir, filetypes=file_types)
     
         if not str_paths:
             return  # No files selected

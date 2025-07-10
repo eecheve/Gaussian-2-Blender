@@ -302,19 +302,7 @@ class Main_Body(object):
         Clear_Transforms.Apply_Bond_Transforms(self.bond_list)
         print("6.2: Applying element transforms")
         Clear_Transforms.Apply_Element_Transforms(self.names_and_pos)
-         
-    def Animate(self):
-        """
-        Animates the molecule.
-
-        Calls:
-        - `Animate` from `Animate` module.
-        :return: None
-        """
-        print("8: Animating molecule ...")
-        Animate = self.get_module("Animate")
-        Animate.Animate(self.o_file_name, self.names_and_pos, self.raw_key_frames, self.connect_with_symbols)
-        
+                
     def Export(self):
         """
         Exports the results to the specified file format.
@@ -381,7 +369,7 @@ class Main_Body(object):
             blend_file_dir = bpy.path.abspath("//")  # Correctly gets the .blend file directory
             anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
             Animate = self.get_module("Animate")
-            Animate.animate(anim_frames_file)
+            Animate.animate(anim_frames_path=anim_frames_file, mode=self.o_file_type)
     
     def Manage_Export(self):
         """
