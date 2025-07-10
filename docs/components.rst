@@ -100,6 +100,7 @@ GUI
 
       IonRegion [fillcolor=lightgreen];
       Utility [fillcolor=lightgreen];
+      ActionsRegion [fillcolor=lightgreen];
       BlenderPath [fillcolor=lightgreen];
       OutputRegion [fillcolor=lightgreen];
       InputRegion [fillcolor=lightgreen];
@@ -111,14 +112,13 @@ GUI
       TheorChem2Blender -> convert_manager;
       TheorChem2Blender -> exceptions_test_passed;
       TheorChem2Blender -> individual_convert;
-      TheorChem2Blender -> initialize_animation_tutorial;
-      TheorChem2Blender -> initialize_single_tutorial;
       TheorChem2Blender -> overwrite_animation_frames;
       TheorChem2Blender -> overwrite_parameters_script;
-      TheorChem2Blender -> reset_to_defaults;
 
       assign_ionic_params -> IonRegion;
 
+      ActionsRegion -> convert;
+      ActionsRegion -> reset_to_defaults;
       convert -> convert_manager;
 
       convert_manager -> exceptions_test_passed;
