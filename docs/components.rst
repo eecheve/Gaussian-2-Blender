@@ -84,10 +84,10 @@ GUI
 
 .. graphviz::
 
-   digraph Gaussian2Blender {
+   digraph TheorChem2Blender {
       node [shape=box, style=filled];
 
-      Gaussian2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+      TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
 
       assign_ionic_params [fillcolor=lightblue];
       convert [fillcolor=lightblue];
@@ -103,7 +103,6 @@ GUI
       reset_to_defaults [fillcolor=lightblue];
 
       IonRegion [fillcolor=lightgreen];
-      Tutorial [fillcolor=lightgreen];
       Utility [fillcolor=lightgreen];
       BlenderPath [fillcolor=lightgreen];
       OutputRegion [fillcolor=lightgreen];
@@ -111,18 +110,16 @@ GUI
       ConsoleRegion [fillcolor=lightgreen];
       Information [fillcolor=lightgreen];
 
-      Gaussian2Blender -> assign_ionic_params;
-      Gaussian2Blender -> convert;
-      Gaussian2Blender -> convert_manager;
-      Gaussian2Blender -> exceptions_test_passed;
-      Gaussian2Blender -> help_animation_convert;
-      Gaussian2Blender -> help_single_convert;
-      Gaussian2Blender -> individual_convert;
-      Gaussian2Blender -> initialize_animation_tutorial;
-      Gaussian2Blender -> initialize_single_tutorial;
-      Gaussian2Blender -> overwrite_animation_frames;
-      Gaussian2Blender -> overwrite_parameters_script;
-      Gaussian2Blender -> reset_to_defaults;
+      TheorChem2Blender -> assign_ionic_params;
+      TheorChem2Blender -> convert;
+      TheorChem2Blender -> convert_manager;
+      TheorChem2Blender -> exceptions_test_passed;
+      TheorChem2Blender -> individual_convert;
+      TheorChem2Blender -> initialize_animation_tutorial;
+      TheorChem2Blender -> initialize_single_tutorial;
+      TheorChem2Blender -> overwrite_animation_frames;
+      TheorChem2Blender -> overwrite_parameters_script;
+      TheorChem2Blender -> reset_to_defaults;
 
       assign_ionic_params -> IonRegion;
 
@@ -136,20 +133,8 @@ GUI
       exceptions_test_passed -> InputRegion;
       exceptions_test_passed -> IonRegion;
 
-      help_animation_convert -> Tutorial;
-
-      help_single_convert -> Tutorial;
-
       individual_convert -> overwrite_animation_frames;
       individual_convert -> overwrite_parameters_script;
-
-      initialize_animation_tutorial -> InputRegion;
-      initialize_animation_tutorial -> OutputRegion;
-      initialize_animation_tutorial -> ActionRegion;
-
-      initialize_single_tutorial -> InputRegion;
-      initialize_single_tutorial -> OutputRegion;
-      initialize_single_tutorial -> ActionRegion;
 
       overwrite_animation_frames -> Utility;
 
