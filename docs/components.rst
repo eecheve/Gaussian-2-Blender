@@ -1,10 +1,55 @@
-UML Components Diagram
+Program Architecture
 ========================
-This page presents two inheritance diagrams: one illustrating the Blender API structure and the other depicting the graphical user interface (GUI).
+TheorChem2Blender is handled by two main python scripts that comunicate with each other by a OS-dependent executable script.
+The API is handled by Main_Body.py, and the GUI by TheorChem2Blender.py. The two scripts are linked by either ReadMolecules.bat 
+(Windows) or ReadMolecules.sh (MacOS). Below are three UML component diagrams illustrating the broad structure of the program.
 
-- The main script is highlighted in gray.
-- The functions it calls are shown in light blue.
+- The main scripts are shown in gray.
+- The principal functions called are shown in light blue.
 - The modules associated with each function are displayed in light green.
+- Data or parameter files are purple.
+
+Program Outline
+----------------
+
+.. graphviz::
+
+   diagraph Outline {
+         rankdir = LR;
+         node [shape=box, style=filled];
+
+         Main_Body [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+         TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+         
+         covalent_radii [fillcolor=lavender];
+         ionic_data [fillcolor=lavender];
+         animation_frames [fillcolor=lavender];
+         parameters [fillcolor=lavender];
+
+         ReadMolecules_bat [fillcolor=lightgreen];
+         ReadMolecules_sh [fillcolor=lightgreen];
+
+         if_windows [shape=box, style=filled, fillcolor=white, color=white];
+         if_mac_os [shape=box, style=filled, fillcolor=white, color=white];
+
+         covalent_radii -> TheorChem2Blender
+         
+         TheorChem2Blender -> animation_frames
+         TheorChem2Blender -> parameters
+
+         animation_frames -> if_windows
+         animation_frames -> if_mac_os
+
+         parameters -> if_windows
+         parameters -> if_mac_os
+
+         if_windows -> ReadMolecules_bat
+         if_mac_os -> ReadMolecules_sh
+
+         ReadMolecules_bat -> Main_Body
+         ReadMolecules_sh -> Main_Body
+         ionic_data -> Main_Body
+   }
 
 Blender API
 ------------------------
@@ -84,7 +129,7 @@ GUI
 
 .. graphviz::
 
-   digraph TheorChem2Blender {
+   digraph GUI {
       node [shape=box, style=filled];
 
       TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
