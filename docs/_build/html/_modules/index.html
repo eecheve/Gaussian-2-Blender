@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Overview: module code &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -44,7 +45,6 @@
 <li><a href="CreateTooltip.html">CreateTooltip</a></li>
 <li><a href="Create_Materials.html">Create_Materials</a></li>
 <li><a href="Export_Data.html">Export_Data</a></li>
-<li><a href="Gaussian2Blender.html">Gaussian2Blender</a></li>
 <li><a href="HighlighterRegion.html">HighlighterRegion</a></li>
 <li><a href="Import_Data.html">Import_Data</a></li>
 <li><a href="Information.html">Information</a></li>
@@ -54,7 +54,7 @@
 <li><a href="IonRegion.html">IonRegion</a></li>
 <li><a href="Ionic.html">Ionic</a></li>
 <li><a href="Ions.html">Ions</a></li>
-<li><a href="Main_Body.html">Main_Body</a></li>
+<li><a href="Mol2Reader.html">Mol2Reader</a></li>
 <li><a href="OutputRegion.html">OutputRegion</a></li>
 <li><a href="Primitives.html">Primitives</a></li>
 <li><a href="Raw_Parameters.html">Raw_Parameters</a></li>
@@ -63,6 +63,7 @@
 <li><a href="Refine_Elements.html">Refine_Elements</a></li>
 <li><a href="SelectedIon.html">SelectedIon</a></li>
 <li><a href="TextRedirector.html">TextRedirector</a></li>
+<li><a href="TheorChem2Blender.html">TheorChem2Blender</a></li>
 <li><a href="Tutorial.html">Tutorial</a></li>
 <li><a href="Utility.html">Utility</a></li>
 <li><a href="WalkthroughRegion.html">WalkthroughRegion</a></li>
@@ -73,7 +74,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -84,15 +85,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -103,16 +115,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -129,8 +131,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

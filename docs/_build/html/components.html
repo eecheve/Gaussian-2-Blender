@@ -3,14 +3,15 @@
 <html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>UML Components Diagram &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <title>Program Architecture &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <script src="_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,18 +34,61 @@
 
           <div class="body" role="main">
             
-  <section id="uml-components-diagram">
-<h1>UML Components Diagram<a class="headerlink" href="#uml-components-diagram" title="Link to this heading">¶</a></h1>
-<p>This page presents two inheritance diagrams: one illustrating the Blender API structure and the other depicting the graphical user interface (GUI).</p>
+  <section id="program-architecture">
+<h1>Program Architecture<a class="headerlink" href="#program-architecture" title="Link to this heading">¶</a></h1>
+<p>TheorChem2Blender is handled by two main python scripts that comunicate with each other by a OS-dependent executable script.
+The API is handled by Main_Body.py, and the GUI by TheorChem2Blender.py. The two scripts are linked by either ReadMolecules.bat
+(Windows) or ReadMolecules.sh (MacOS). Below are three UML component diagrams illustrating the broad structure of the program.</p>
 <ul class="simple">
-<li><p>The main script is highlighted in gray.</p></li>
-<li><p>The functions it calls are shown in light blue.</p></li>
+<li><p>The main scripts are shown in gray.</p></li>
+<li><p>The principal functions called are shown in light blue.</p></li>
 <li><p>The modules associated with each function are displayed in light green.</p></li>
+<li><p>Data or parameter files are purple.</p></li>
 </ul>
+<section id="program-outline">
+<h2>Program Outline<a class="headerlink" href="#program-outline" title="Link to this heading">¶</a></h2>
+diagraph Outline {
+      rankdir = LR;
+      node [shape=box, style=filled];
+
+      Main_Body [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+      TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+
+      covalent_radii [fillcolor=lavender];
+      ionic_radii [fillcolor=lavender];
+      atomic_radii [fillcolor=lavender];
+
+      animation_frames [fillcolor=lavender];
+      parameters [fillcolor=lavender];
+
+      ReadMolecules_bat [fillcolor=lightgreen];
+      ReadMolecules_sh [fillcolor=lightgreen];
+
+      if_windows [shape=box, style=filled, fillcolor=white, color=white];
+      if_mac_os [shape=box, style=filled, fillcolor=white, color=white];
+
+      covalent_radii -&gt; TheorChem2Blender;
+
+      TheorChem2Blender -&gt; animation_frames;
+      TheorChem2Blender -&gt; parameters;
+
+      animation_frames -&gt; if_windows;
+      animation_frames -&gt; if_mac_os;
+
+      parameters -&gt; if_windows;
+      parameters -&gt; if_mac_os;
+
+      if_windows -&gt; ReadMolecules_bat;
+      if_mac_os -&gt; ReadMolecules_sh;
+
+      ReadMolecules_bat -&gt; Main_Body;
+      ReadMolecules_sh -&gt; Main_Body;
+      ionic_radii -&gt; Main_Body;
+      atomic_radii -&gt; Main_Body;
+}</section>
 <section id="blender-api">
 <h2>Blender API<a class="headerlink" href="#blender-api" title="Link to this heading">¶</a></h2>
-<div class="graphviz"><object data="_images/graphviz-55501e181ed6346db4a8dc0d541409bb70740ddd.svg" type="image/svg+xml" class="graphviz">
-<p class="warning">digraph API {
+digraph API {
     node [shape=box, style=filled];
 
     Main_Body [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
@@ -60,9 +104,11 @@
     Manage_Export [fillcolor=lightblue];
     Read_com_File [fillcolor=lightblue];
     Read_xyz_File [fillcolor=lightblue];
+    Read_mol2_File [fillcolor=lightblue];
 
     Raw_Parameters [fillcolor=lightgreen];
     XyzReader [fillcolor=lightgreen];
+    Mol2Reader [fillcolor=lightgreen];
     Refine_Data [fillcolor=lightgreen];
     Refine_Elements [fillcolor=lightgreen];
     Create_Materials [fillcolor=lightgreen];
@@ -84,8 +130,10 @@
 
     Obtain_Coords_Connect -&gt; Read_com_File;
     Obtain_Coords_Connect -&gt; Read_xyz_File;
+    Obtain_Coords_Connect -&gt; Read_mol2_File;
     Read_com_File -&gt; Raw_Parameters;
     Read_xyz_File -&gt; XyzReader;
+    Read_mol2_File -&gt; Mol2Reader;
 
     Manage_Ionic_Information -&gt; Refine_Data;
 
@@ -104,53 +152,44 @@
 
     Manage_Export -&gt; Animate_Module;
     Manage_Export -&gt; Export_Data;
-}</p></object></div>
-</section>
+}</section>
 <section id="gui">
 <h2>GUI<a class="headerlink" href="#gui" title="Link to this heading">¶</a></h2>
-<div class="graphviz"><object data="_images/graphviz-4b92eb452c4706b2a05abe1a16bd21d4a1c33626.svg" type="image/svg+xml" class="graphviz">
-<p class="warning">digraph Gaussian2Blender {
+digraph GUI {
    node [shape=box, style=filled];
 
-   Gaussian2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+   TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
 
    assign_ionic_params [fillcolor=lightblue];
    convert [fillcolor=lightblue];
    convert_manager [fillcolor=lightblue];
    exceptions_test_passed [fillcolor=lightblue];
-   help_animation_convert [fillcolor=lightblue];
-   help_single_convert [fillcolor=lightblue];
    individual_convert [fillcolor=lightblue];
-   initialize_animation_tutorial [fillcolor=lightblue];
-   initialize_single_tutorial [fillcolor=lightblue];
    overwrite_animation_frames [fillcolor=lightblue];
    overwrite_parameters_script [fillcolor=lightblue];
    reset_to_defaults [fillcolor=lightblue];
 
    IonRegion [fillcolor=lightgreen];
-   Tutorial [fillcolor=lightgreen];
    Utility [fillcolor=lightgreen];
+   ActionsRegion [fillcolor=lightgreen];
    BlenderPath [fillcolor=lightgreen];
    OutputRegion [fillcolor=lightgreen];
    InputRegion [fillcolor=lightgreen];
    ConsoleRegion [fillcolor=lightgreen];
    Information [fillcolor=lightgreen];
 
-   Gaussian2Blender -&gt; assign_ionic_params;
-   Gaussian2Blender -&gt; convert;
-   Gaussian2Blender -&gt; convert_manager;
-   Gaussian2Blender -&gt; exceptions_test_passed;
-   Gaussian2Blender -&gt; help_animation_convert;
-   Gaussian2Blender -&gt; help_single_convert;
-   Gaussian2Blender -&gt; individual_convert;
-   Gaussian2Blender -&gt; initialize_animation_tutorial;
-   Gaussian2Blender -&gt; initialize_single_tutorial;
-   Gaussian2Blender -&gt; overwrite_animation_frames;
-   Gaussian2Blender -&gt; overwrite_parameters_script;
-   Gaussian2Blender -&gt; reset_to_defaults;
+   TheorChem2Blender -&gt; assign_ionic_params;
+   TheorChem2Blender -&gt; convert;
+   TheorChem2Blender -&gt; convert_manager;
+   TheorChem2Blender -&gt; exceptions_test_passed;
+   TheorChem2Blender -&gt; individual_convert;
+   TheorChem2Blender -&gt; overwrite_animation_frames;
+   TheorChem2Blender -&gt; overwrite_parameters_script;
 
    assign_ionic_params -&gt; IonRegion;
 
+   ActionsRegion -&gt; convert;
+   ActionsRegion -&gt; reset_to_defaults;
    convert -&gt; convert_manager;
 
    convert_manager -&gt; exceptions_test_passed;
@@ -161,23 +200,10 @@
    exceptions_test_passed -&gt; InputRegion;
    exceptions_test_passed -&gt; IonRegion;
 
-   help_animation_convert -&gt; Tutorial;
-
-   help_single_convert -&gt; Tutorial;
-
    individual_convert -&gt; overwrite_animation_frames;
    individual_convert -&gt; overwrite_parameters_script;
 
-   initialize_animation_tutorial -&gt; InputRegion;
-   initialize_animation_tutorial -&gt; OutputRegion;
-   initialize_animation_tutorial -&gt; ActionRegion;
-
-   initialize_single_tutorial -&gt; InputRegion;
-   initialize_single_tutorial -&gt; OutputRegion;
-   initialize_single_tutorial -&gt; ActionRegion;
-
    overwrite_animation_frames -&gt; Utility;
-
    overwrite_parameters_script -&gt; Utility;
 
    reset_to_defaults -&gt; BlenderPath;
@@ -186,10 +212,7 @@
    reset_to_defaults -&gt; IonRegion;
    reset_to_defaults -&gt; ConsoleRegion;
    reset_to_defaults -&gt; Information;
-   reset_to_defaults -&gt; Tutorial;
-
-}</p></object></div>
-</section>
+}</section>
 </section>
 
 
@@ -197,7 +220,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Gaussian-2-Blender</a></h1>
 
@@ -208,15 +231,27 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Blender API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">UML Components Diagram</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Program Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#program-outline">Program Outline</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#blender-api">Blender API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gui">GUI</a></li>
 </ul>
@@ -233,16 +268,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -259,8 +284,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/components.rst.txt"

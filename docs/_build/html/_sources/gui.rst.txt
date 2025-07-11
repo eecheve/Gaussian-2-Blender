@@ -5,7 +5,7 @@ The GUI was built using Python's ``tkinter`` library.
 
 Main GUI Script
 -----------------
-.. automodule:: Gaussian2Blender
+.. automodule:: TheorChem2Blender
    :members:
    :undoc-members:
    :show-inheritance:

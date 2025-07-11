@@ -14,7 +14,7 @@ Program Outline
 
 .. graphviz::
 
-   diagraph Outline {
+   digraph Outline {
          rankdir = LR;
          node [shape=box, style=filled];
 
@@ -22,7 +22,9 @@ Program Outline
          TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
          
          covalent_radii [fillcolor=lavender];
-         ionic_data [fillcolor=lavender];
+         ionic_radii [fillcolor=lavender];
+         atomic_radii [fillcolor=lavender];
+
          animation_frames [fillcolor=lavender];
          parameters [fillcolor=lavender];
 
@@ -48,7 +50,8 @@ Program Outline
 
          ReadMolecules_bat -> Main_Body;
          ReadMolecules_sh -> Main_Body;
-         ionic_data -> Main_Body;
+         ionic_radii -> Main_Body;
+         atomic_radii -> Main_Body;
    }
 
 

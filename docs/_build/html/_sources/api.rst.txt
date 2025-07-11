@@ -138,3 +138,11 @@ XYZ Reader Module
    :undoc-members:
    :show-inheritance:
    :no-index:
+
+Mol2 Reader Module
+--------------------
+.. automodule:: Mol2Reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:

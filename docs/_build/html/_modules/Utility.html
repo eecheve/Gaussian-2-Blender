@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Utility &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,18 +32,18 @@
           <div class="body" role="main">
             
   <h1>Source code for Utility</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">tkinter</span> <span class="k">as</span> <span class="nn">tk</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tkinter</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tk</span>
 
 <div class="viewcode-block" id="Utility">
 <a class="viewcode-back" href="../gui.html#Utility.Utility">[docs]</a>
-<span class="k">class</span> <span class="nc">Utility</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Utility</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Utility class holding functions used by several classes&quot;&quot;&quot;</span>
     
 <div class="viewcode-block" id="Utility.findFile">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.findFile">[docs]</a>
-    <span class="k">def</span> <span class="nf">findFile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">findFile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        returns true if there is a file with name &lt;name&gt; in &lt;path&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -56,7 +57,7 @@
 
 <div class="viewcode-block" id="Utility.resource_path">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.resource_path">[docs]</a>
-    <span class="k">def</span> <span class="nf">resource_path</span><span class="p">(</span><span class="n">relative_path</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">resource_path</span><span class="p">(</span><span class="n">relative_path</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        This allows using resources from global paths</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -67,19 +68,19 @@
 
 <div class="viewcode-block" id="Utility.clear_file_contents">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.clear_file_contents">[docs]</a>
-    <span class="k">def</span> <span class="nf">clear_file_contents</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">clear_file_contents</span><span class="p">(</span><span class="n">file_name</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 
-    <span class="k">def</span> <span class="nf">append_lines_to_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_lines_to_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
                 <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Utility.append_lines_to_file">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.append_lines_to_file">[docs]</a>
-    <span class="k">def</span> <span class="nf">append_lines_to_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">append_lines_to_file</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">lines</span><span class="p">):</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">:</span>
                 <span class="c1"># Convert boolean to string if line is boolean</span>
@@ -90,14 +91,34 @@
 
 <div class="viewcode-block" id="Utility.customize_widget">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.customize_widget">[docs]</a>
-    <span class="k">def</span> <span class="nf">customize_widget</span><span class="p">(</span><span class="n">tk_object</span><span class="p">,</span> <span class="n">color_string</span><span class="p">):</span>  
+    <span class="k">def</span><span class="w"> </span><span class="nf">customize_widget</span><span class="p">(</span><span class="n">tk_object</span><span class="p">,</span> <span class="n">color_string</span><span class="p">):</span>  
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the background color of the widget&quot;&quot;&quot;</span>
         <span class="n">tk_object</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">bg</span><span class="o">=</span><span class="n">color_string</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Utility.set_bg_color">
+<a class="viewcode-back" href="../gui.html#Utility.Utility.set_bg_color">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_bg_color</span><span class="p">(</span><span class="n">widget</span><span class="p">,</span> <span class="n">bg_color</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursively set the bg color for a widget and all its children</span>
+
+<span class="sd">        :param widget: The parent widget</span>
+<span class="sd">        :param bg_color: the bg color to set</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">widget</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">bg</span><span class="o">=</span><span class="n">bg_color</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">tk</span><span class="o">.</span><span class="n">TclError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">widget</span><span class="o">.</span><span class="n">winfo_children</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">child</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">bg</span><span class="o">=</span><span class="n">bg_color</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">tk</span><span class="o">.</span><span class="n">TclError</span><span class="p">:</span>
+                <span class="k">pass</span></div>
+
+
 <div class="viewcode-block" id="Utility.revert_widget">
 <a class="viewcode-back" href="../gui.html#Utility.Utility.revert_widget">[docs]</a>
-    <span class="k">def</span> <span class="nf">revert_widget</span><span class="p">(</span><span class="n">tk_object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">revert_widget</span><span class="p">(</span><span class="n">tk_object</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reverts a widget&#39;s appearance (background color) to its default state.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -113,7 +134,8 @@
 
         <span class="c1"># Revert the background color for the main widget</span>
         <span class="k">if</span> <span class="n">widget_type</span> <span class="ow">in</span> <span class="n">original_colors</span><span class="p">:</span>
-            <span class="n">tk_object</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">bg</span><span class="o">=</span><span class="n">original_colors</span><span class="p">[</span><span class="n">widget_type</span><span class="p">])</span></div>
+            <span class="n">tk_object</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">bg</span><span class="o">=</span><span class="n">original_colors</span><span class="p">[</span><span class="n">widget_type</span><span class="p">],</span>
+                             <span class="n">fg</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span></div>
 </div>
 
 </pre></div>
@@ -122,7 +144,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -133,15 +155,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -154,16 +187,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -180,8 +203,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ions &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,27 +32,27 @@
           <div class="body" role="main">
             
   <h1>Source code for Ions</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bpy</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">mathutils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mathutils</span>
 
 <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
     
-<span class="kn">import</span> <span class="nn">Atom_Data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Atom_Data</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
 <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">Atom_Data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="CreateIonDataFromInput">
 <a class="viewcode-back" href="../api.html#Ions.CreateIonDataFromInput">[docs]</a>
-<span class="k">def</span> <span class="nf">CreateIonDataFromInput</span><span class="p">(</span><span class="n">ionInputList</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">CreateIonDataFromInput</span><span class="p">(</span><span class="n">ionInputList</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    takes values in each entry of the ionInputList and makes a IonDataDict</span>
 
@@ -69,7 +70,7 @@
 
 <div class="viewcode-block" id="GetIonPositions">
 <a class="viewcode-back" href="../api.html#Ions.GetIonPositions">[docs]</a>
-<span class="k">def</span> <span class="nf">GetIonPositions</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">GetIonPositions</span><span class="p">(</span><span class="n">names_and_pos</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    :param names_and_pos: dict&lt;string, Vector3&gt; dictionary that contains the position of each labelled element present.</span>
 <span class="sd">    :param ion_input: dict&lt;string, Ionic&gt; dict of Ionic class wich contains info with no radius value</span>
@@ -85,7 +86,7 @@
 
 <div class="viewcode-block" id="RemoveNonSpecifiedIons">
 <a class="viewcode-back" href="../api.html#Ions.RemoveNonSpecifiedIons">[docs]</a>
-<span class="k">def</span> <span class="nf">RemoveNonSpecifiedIons</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">RemoveNonSpecifiedIons</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    removes from the ion dictionary the elements that were not specified in input list</span>
 
@@ -112,7 +113,7 @@
 
 <div class="viewcode-block" id="RemoveSpecifiedIonsFromElementDict">
 <a class="viewcode-back" href="../api.html#Ions.RemoveSpecifiedIonsFromElementDict">[docs]</a>
-<span class="k">def</span> <span class="nf">RemoveSpecifiedIonsFromElementDict</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">element_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">RemoveSpecifiedIonsFromElementDict</span><span class="p">(</span><span class="n">ion_dict</span><span class="p">,</span> <span class="n">element_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    removes specified ions from dict of all elements present</span>
 
@@ -132,7 +133,7 @@
 
 <div class="viewcode-block" id="GetIonDataFromInput">
 <a class="viewcode-back" href="../api.html#Ions.GetIonDataFromInput">[docs]</a>
-<span class="k">def</span> <span class="nf">GetIonDataFromInput</span><span class="p">(</span><span class="n">ion_data_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">GetIonDataFromInput</span><span class="p">(</span><span class="n">ion_data_dict</span><span class="p">,</span> <span class="n">ion_input</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    gets the correct ionic radii data set from the ionInputList for each element in ion_dict</span>
 
@@ -162,7 +163,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -173,15 +174,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -194,16 +206,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -220,8 +222,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

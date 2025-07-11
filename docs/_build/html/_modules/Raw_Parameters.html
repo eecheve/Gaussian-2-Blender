@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Raw_Parameters &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,22 +32,22 @@
           <div class="body" role="main">
             
   <h1>Source code for Raw_Parameters</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bpy</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 <span class="nb">dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">bpy</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
 <span class="k">if</span> <span class="ow">not</span> <span class="nb">dir</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">Import_Data</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Import_Data</span>
 
-<span class="kn">import</span> <span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span> <span class="c1">#&lt;-- for end user in case they want to add functionality. </span>
 <span class="n">importlib</span><span class="o">.</span><span class="n">reload</span><span class="p">(</span><span class="n">Import_Data</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Set_Raw_Parameters">
 <a class="viewcode-back" href="../api.html#Raw_Parameters.Set_Raw_Parameters">[docs]</a>
-<span class="k">def</span> <span class="nf">Set_Raw_Parameters</span><span class="p">(</span><span class="n">i_folder_path</span><span class="p">,</span> <span class="n">i_file_name</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Set_Raw_Parameters</span><span class="p">(</span><span class="n">i_folder_path</span><span class="p">,</span> <span class="n">i_file_name</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extracts raw coordinates and connectivity information from a .com file.</span>
 
@@ -66,7 +67,7 @@
         
 <div class="viewcode-block" id="split_coord_frames">
 <a class="viewcode-back" href="../api.html#Raw_Parameters.split_coord_frames">[docs]</a>
-<span class="k">def</span> <span class="nf">split_coord_frames</span><span class="p">(</span><span class="n">raw_coord_frames</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">split_coord_frames</span><span class="p">(</span><span class="n">raw_coord_frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Splits raw coordinate frames into individual frames for each element.</span>
 
@@ -94,7 +95,7 @@
         
 <div class="viewcode-block" id="count_animation_frames">
 <a class="viewcode-back" href="../api.html#Raw_Parameters.count_animation_frames">[docs]</a>
-<span class="k">def</span> <span class="nf">count_animation_frames</span><span class="p">(</span><span class="n">raw_coord_frames</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">count_animation_frames</span><span class="p">(</span><span class="n">raw_coord_frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Counts the number of animation frames in the raw coordinate frames.</span>
 
@@ -111,7 +112,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -122,15 +123,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -143,16 +155,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -169,8 +171,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

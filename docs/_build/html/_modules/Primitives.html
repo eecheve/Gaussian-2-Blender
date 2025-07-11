@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Primitives &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,16 +32,16 @@
           <div class="body" role="main">
             
   <h1>Source code for Primitives</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bpy</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
 
-<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">mathutils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mathutils</span>
 
 <div class="viewcode-block" id="InstantiateElementsFromDictionary">
 <a class="viewcode-back" href="../api.html#Primitives.InstantiateElementsFromDictionary">[docs]</a>
-<span class="k">def</span> <span class="nf">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">van_der_waals</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">InstantiateElementsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">element_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">,</span> <span class="n">van_der_waals</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    instantiates spheres of different radii &amp; materials at the allocated Vector3 positions.</span>
 
@@ -68,7 +69,7 @@
             
 <div class="viewcode-block" id="InstantiateIonsFromDictionary">
 <a class="viewcode-back" href="../api.html#Primitives.InstantiateIonsFromDictionary">[docs]</a>
-<span class="k">def</span> <span class="nf">InstantiateIonsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">InstantiateIonsFromDictionary</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">ion_data</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Instantiates spheres for ions at the allocated Vector3 positions.</span>
 
@@ -94,7 +95,7 @@
                     
 <div class="viewcode-block" id="ModifyNamesAndMaterials">
 <a class="viewcode-back" href="../api.html#Primitives.ModifyNamesAndMaterials">[docs]</a>
-<span class="k">def</span> <span class="nf">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">e_symbol</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ModifyNamesAndMaterials</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">e_symbol</span><span class="p">,</span> <span class="n">materials_dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    names of the active object and appends to it the required material.</span>
 
@@ -114,7 +115,7 @@
     
 <div class="viewcode-block" id="InstantiateBondsFromConnectivity">
 <a class="viewcode-back" href="../api.html#Primitives.InstantiateBondsFromConnectivity">[docs]</a>
-<span class="k">def</span> <span class="nf">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">connect_list</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">InstantiateBondsFromConnectivity</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">connect_list</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Instantiates bonds based on connectivity information.</span>
 
@@ -125,12 +126,12 @@
 <span class="sd">    :return: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1">#helper functions to be stored in a dictionary, which wich will depend on the bond_type</span>
-    <span class="k">def</span> <span class="nf">handle_single_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_single_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
         <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
         <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
         <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">)</span>
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_double_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_double_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
         <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
         <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;=&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
         <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;=&#39;</span><span class="p">)</span>
@@ -142,7 +143,7 @@
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">)</span>
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span><span class="p">,</span> <span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_triple_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_triple_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
         <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
         <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;#&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
         <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span><span class="p">)</span>
@@ -157,12 +158,12 @@
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">,</span> <span class="n">bond_label2</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">)</span>
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.002&quot;</span><span class="p">)</span>
         <span class="n">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">bond_label</span> <span class="o">+</span> <span class="s2">&quot;.001&quot;</span><span class="p">,</span> <span class="n">bond_label2</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_hydrogen_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_hydrogen_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">unit_cell</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
             <span class="n">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="n">h_bonding</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="n">unit_cell</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">handle_resonance_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handle_resonance_bond</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
         <span class="n">bond_label</span> <span class="o">=</span> <span class="n">atom1</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">atom2</span>
         <span class="n">bond_label2</span> <span class="o">=</span> <span class="n">atom2</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="n">atom1</span>
         <span class="n">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="s1">&#39;%&#39;</span><span class="p">)</span>
@@ -178,6 +179,7 @@
         <span class="s1">&#39;=&#39;</span><span class="p">:</span> <span class="n">handle_double_bond</span><span class="p">,</span>
         <span class="s1">&#39;#&#39;</span><span class="p">:</span> <span class="n">handle_triple_bond</span><span class="p">,</span>
         <span class="s1">&#39;res1&#39;</span><span class="p">:</span> <span class="n">handle_resonance_bond</span><span class="p">,</span>
+        <span class="s1">&#39;%&#39;</span><span class="p">:</span> <span class="n">handle_resonance_bond</span> <span class="c1">#function stored twice because xyz and com files manage aromatic bonds differently</span>
     <span class="p">}</span>
 
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">connect_list</span><span class="p">:</span>
@@ -195,7 +197,7 @@
             
 <div class="viewcode-block" id="CreateAndJoinTrantientBond">
 <a class="viewcode-back" href="../api.html#Primitives.CreateAndJoinTrantientBond">[docs]</a>
-<span class="k">def</span> <span class="nf">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">dash_len</span><span class="p">,</span> <span class="n">bond_radius</span><span class="p">,</span> <span class="n">h_bonding</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> 
+<span class="k">def</span><span class="w"> </span><span class="nf">CreateAndJoinTrantientBond</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">key1</span><span class="p">,</span> <span class="n">key2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">dash_len</span><span class="p">,</span> <span class="n">bond_radius</span><span class="p">,</span> <span class="n">h_bonding</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates and joins transient bonds between two atoms.</span>
 
@@ -256,7 +258,7 @@
 
 <div class="viewcode-block" id="CreateFragmentedBonds">
 <a class="viewcode-back" href="../api.html#Primitives.CreateFragmentedBonds">[docs]</a>
-<span class="k">def</span> <span class="nf">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">CreateFragmentedBonds</span><span class="p">(</span><span class="n">pos_dict</span><span class="p">,</span> <span class="n">mat_dict</span><span class="p">,</span> <span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">unit_cell</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Instantiates bonds from atoms to the middle-point and joins them.</span>
 
@@ -293,7 +295,7 @@
         
 <div class="viewcode-block" id="MoveObjectOnLocalAxis">
 <a class="viewcode-back" href="../api.html#Primitives.MoveObjectOnLocalAxis">[docs]</a>
-<span class="k">def</span> <span class="nf">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">MoveObjectOnLocalAxis</span><span class="p">(</span><span class="n">obj_name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Moves an object along its local axis.</span>
 
@@ -311,7 +313,7 @@
     
 <div class="viewcode-block" id="InstantiateBondBetweenTwoPoints">
 <a class="viewcode-back" href="../api.html#Primitives.InstantiateBondBetweenTwoPoints">[docs]</a>
-<span class="k">def</span> <span class="nf">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.06</span><span class="p">):</span> <span class="c1">#p1 and p2 are the origin and end points</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">InstantiateBondBetweenTwoPoints</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mf">0.06</span><span class="p">):</span> <span class="c1">#p1 and p2 are the origin and end points</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Instantiates a bond between two points.</span>
 
@@ -338,7 +340,7 @@
     
 <div class="viewcode-block" id="SelectTwoMeshesAndJoin">
 <a class="viewcode-back" href="../api.html#Primitives.SelectTwoMeshesAndJoin">[docs]</a>
-<span class="k">def</span> <span class="nf">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">SelectTwoMeshesAndJoin</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Selects two mesh objects and joins them.</span>
 
@@ -366,7 +368,7 @@
     
 <div class="viewcode-block" id="JoinMeshesFromObjectList">
 <a class="viewcode-back" href="../api.html#Primitives.JoinMeshesFromObjectList">[docs]</a>
-<span class="k">def</span> <span class="nf">JoinMeshesFromObjectList</span><span class="p">(</span><span class="n">obj_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">JoinMeshesFromObjectList</span><span class="p">(</span><span class="n">obj_list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Joins a list of mesh objects.</span>
 
@@ -390,7 +392,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -401,15 +403,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -422,16 +435,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -448,8 +451,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

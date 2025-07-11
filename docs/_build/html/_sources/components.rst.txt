@@ -1,10 +1,60 @@
-UML Components Diagram
+Program Architecture
 ========================
-This page presents two inheritance diagrams: one illustrating the Blender API structure and the other depicting the graphical user interface (GUI).
+TheorChem2Blender is handled by two main python scripts that comunicate with each other by a OS-dependent executable script.
+The API is handled by Main_Body.py, and the GUI by TheorChem2Blender.py. The two scripts are linked by either ReadMolecules.bat 
+(Windows) or ReadMolecules.sh (MacOS). Below are three UML component diagrams illustrating the broad structure of the program.
 
-- The main script is highlighted in gray.
-- The functions it calls are shown in light blue.
+- The main scripts are shown in gray.
+- The principal functions called are shown in light blue.
 - The modules associated with each function are displayed in light green.
+- Data or parameter files are purple.
+
+Program Outline
+----------------
+
+.. graphviz::
+
+   diagraph Outline {
+         rankdir = LR;
+         node [shape=box, style=filled];
+
+         Main_Body [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+         TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+         
+         covalent_radii [fillcolor=lavender];
+         ionic_radii [fillcolor=lavender];
+         atomic_radii [fillcolor=lavender];
+
+         animation_frames [fillcolor=lavender];
+         parameters [fillcolor=lavender];
+
+         ReadMolecules_bat [fillcolor=lightgreen];
+         ReadMolecules_sh [fillcolor=lightgreen];
+
+         if_windows [shape=box, style=filled, fillcolor=white, color=white];
+         if_mac_os [shape=box, style=filled, fillcolor=white, color=white];
+
+         covalent_radii -> TheorChem2Blender;
+         
+         TheorChem2Blender -> animation_frames;
+         TheorChem2Blender -> parameters;
+
+         animation_frames -> if_windows;
+         animation_frames -> if_mac_os;
+
+         parameters -> if_windows;
+         parameters -> if_mac_os;
+
+         if_windows -> ReadMolecules_bat;
+         if_mac_os -> ReadMolecules_sh;
+
+         ReadMolecules_bat -> Main_Body;
+         ReadMolecules_sh -> Main_Body;
+         ionic_radii -> Main_Body;
+         atomic_radii -> Main_Body;
+   }
+
+
 
 Blender API
 ------------------------
@@ -27,9 +77,11 @@ Blender API
        Manage_Export [fillcolor=lightblue];
        Read_com_File [fillcolor=lightblue];
        Read_xyz_File [fillcolor=lightblue];
+       Read_mol2_File [fillcolor=lightblue];
 
        Raw_Parameters [fillcolor=lightgreen];
        XyzReader [fillcolor=lightgreen];
+       Mol2Reader [fillcolor=lightgreen];
        Refine_Data [fillcolor=lightgreen];
        Refine_Elements [fillcolor=lightgreen];
        Create_Materials [fillcolor=lightgreen];
@@ -51,8 +103,10 @@ Blender API
 
        Obtain_Coords_Connect -> Read_com_File;
        Obtain_Coords_Connect -> Read_xyz_File;
+       Obtain_Coords_Connect -> Read_mol2_File;
        Read_com_File -> Raw_Parameters;
        Read_xyz_File -> XyzReader;
+       Read_mol2_File -> Mol2Reader;
 
        Manage_Ionic_Information -> Refine_Data;
 
@@ -80,48 +134,41 @@ GUI
 
 .. graphviz::
 
-   digraph Gaussian2Blender {
+   digraph GUI {
       node [shape=box, style=filled];
 
-      Gaussian2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
+      TheorChem2Blender [fillcolor=gray, fontcolor=white, color=black, style=filled, shape=box];
 
       assign_ionic_params [fillcolor=lightblue];
       convert [fillcolor=lightblue];
       convert_manager [fillcolor=lightblue];
       exceptions_test_passed [fillcolor=lightblue];
-      help_animation_convert [fillcolor=lightblue];
-      help_single_convert [fillcolor=lightblue];
       individual_convert [fillcolor=lightblue];
-      initialize_animation_tutorial [fillcolor=lightblue];
-      initialize_single_tutorial [fillcolor=lightblue];
       overwrite_animation_frames [fillcolor=lightblue];
       overwrite_parameters_script [fillcolor=lightblue];
       reset_to_defaults [fillcolor=lightblue];
 
       IonRegion [fillcolor=lightgreen];
-      Tutorial [fillcolor=lightgreen];
       Utility [fillcolor=lightgreen];
+      ActionsRegion [fillcolor=lightgreen];
       BlenderPath [fillcolor=lightgreen];
       OutputRegion [fillcolor=lightgreen];
       InputRegion [fillcolor=lightgreen];
       ConsoleRegion [fillcolor=lightgreen];
       Information [fillcolor=lightgreen];
 
-      Gaussian2Blender -> assign_ionic_params;
-      Gaussian2Blender -> convert;
-      Gaussian2Blender -> convert_manager;
-      Gaussian2Blender -> exceptions_test_passed;
-      Gaussian2Blender -> help_animation_convert;
-      Gaussian2Blender -> help_single_convert;
-      Gaussian2Blender -> individual_convert;
-      Gaussian2Blender -> initialize_animation_tutorial;
-      Gaussian2Blender -> initialize_single_tutorial;
-      Gaussian2Blender -> overwrite_animation_frames;
-      Gaussian2Blender -> overwrite_parameters_script;
-      Gaussian2Blender -> reset_to_defaults;
+      TheorChem2Blender -> assign_ionic_params;
+      TheorChem2Blender -> convert;
+      TheorChem2Blender -> convert_manager;
+      TheorChem2Blender -> exceptions_test_passed;
+      TheorChem2Blender -> individual_convert;
+      TheorChem2Blender -> overwrite_animation_frames;
+      TheorChem2Blender -> overwrite_parameters_script;
 
       assign_ionic_params -> IonRegion;
 
+      ActionsRegion -> convert;
+      ActionsRegion -> reset_to_defaults;
       convert -> convert_manager;
 
       convert_manager -> exceptions_test_passed;
@@ -132,23 +179,10 @@ GUI
       exceptions_test_passed -> InputRegion;
       exceptions_test_passed -> IonRegion;
 
-      help_animation_convert -> Tutorial;
-
-      help_single_convert -> Tutorial;
-
       individual_convert -> overwrite_animation_frames;
       individual_convert -> overwrite_parameters_script;
 
-      initialize_animation_tutorial -> InputRegion;
-      initialize_animation_tutorial -> OutputRegion;
-      initialize_animation_tutorial -> ActionRegion;
-
-      initialize_single_tutorial -> InputRegion;
-      initialize_single_tutorial -> OutputRegion;
-      initialize_single_tutorial -> ActionRegion;
-
       overwrite_animation_frames -> Utility;
-
       overwrite_parameters_script -> Utility;
 
       reset_to_defaults -> BlenderPath;
@@ -157,8 +191,6 @@ GUI
       reset_to_defaults -> IonRegion;
       reset_to_defaults -> ConsoleRegion;
       reset_to_defaults -> Information;
-      reset_to_defaults -> Tutorial;
-
    }
 
 

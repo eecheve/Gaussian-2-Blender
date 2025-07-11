@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Refine_Data &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,17 +32,17 @@
           <div class="body" role="main">
             
   <h1>Source code for Refine_Data</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bpy</span>
-<span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">bpy</span> <span class="kn">import</span> <span class="n">context</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">import</span> <span class="nn">mathutils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">context</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">math</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mathutils</span>
 
 <div class="viewcode-block" id="RefineCoordList">
 <a class="viewcode-back" href="../api.html#Refine_Data.RefineCoordList">[docs]</a>
-<span class="k">def</span> <span class="nf">RefineCoordList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">RefineCoordList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts string coordinates to floats for each entry in the list.</span>
 
@@ -62,7 +63,7 @@
 
 <div class="viewcode-block" id="RefineConnectivity">
 <a class="viewcode-back" href="../api.html#Refine_Data.RefineConnectivity">[docs]</a>
-<span class="k">def</span> <span class="nf">RefineConnectivity</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">RefineConnectivity</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Refines the connectivity list to ensure each item has at least three elements.</span>
 
@@ -100,7 +101,7 @@
 
 <div class="viewcode-block" id="ConvertStringToIndexInList">
 <a class="viewcode-back" href="../api.html#Refine_Data.ConvertStringToIndexInList">[docs]</a>
-<span class="k">def</span> <span class="nf">ConvertStringToIndexInList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ConvertStringToIndexInList</span><span class="p">(</span><span class="nb">list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Modifies entry list. If an enty inside the list is a string of an int, it becomes an int.</span>
 
@@ -121,7 +122,7 @@
 
 <div class="viewcode-block" id="AddElementSymbolsToConnecrivityList">
 <a class="viewcode-back" href="../api.html#Refine_Data.AddElementSymbolsToConnecrivityList">[docs]</a>
-<span class="k">def</span> <span class="nf">AddElementSymbolsToConnecrivityList</span><span class="p">(</span><span class="n">connect</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">number_of_elements</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">AddElementSymbolsToConnecrivityList</span><span class="p">(</span><span class="n">connect</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="n">number_of_elements</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds element symbols to the connectivity list.</span>
 
@@ -174,7 +175,7 @@
 
 <div class="viewcode-block" id="rebuild_list">
 <a class="viewcode-back" href="../api.html#Refine_Data.rebuild_list">[docs]</a>
-<span class="k">def</span> <span class="nf">rebuild_list</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rebuild_list</span><span class="p">(</span><span class="n">str_list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a string representation of a list into an actual list of strings.</span>
 
@@ -196,7 +197,7 @@
 
 <div class="viewcode-block" id="make_tuple">
 <a class="viewcode-back" href="../api.html#Refine_Data.make_tuple">[docs]</a>
-<span class="k">def</span> <span class="nf">make_tuple</span><span class="p">(</span><span class="n">str_in</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_tuple</span><span class="p">(</span><span class="n">str_in</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a string representation of a tuple into an actual tuple.</span>
 
@@ -210,7 +211,7 @@
 
 <div class="viewcode-block" id="make_tuple_in_list">
 <a class="viewcode-back" href="../api.html#Refine_Data.make_tuple_in_list">[docs]</a>
-<span class="k">def</span> <span class="nf">make_tuple_in_list</span><span class="p">(</span><span class="n">a_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_tuple_in_list</span><span class="p">(</span><span class="n">a_list</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a list of string representations of tuples into a list of actual tuples.</span>
 
@@ -226,7 +227,7 @@
 
 <div class="viewcode-block" id="refine_key_frames">
 <a class="viewcode-back" href="../api.html#Refine_Data.refine_key_frames">[docs]</a>
-<span class="k">def</span> <span class="nf">refine_key_frames</span><span class="p">(</span><span class="n">raw_key_frames</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">refine_key_frames</span><span class="p">(</span><span class="n">raw_key_frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Refines raw key frames by converting coordinates to vectors.</span>
 
@@ -251,7 +252,7 @@
 
 <div class="viewcode-block" id="create_frames_dict">
 <a class="viewcode-back" href="../api.html#Refine_Data.create_frames_dict">[docs]</a>
-<span class="k">def</span> <span class="nf">create_frames_dict</span><span class="p">(</span><span class="n">key_frames</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_frames_dict</span><span class="p">(</span><span class="n">key_frames</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a dictionary of key frames with element names as keys and vectors as values.</span>
 
@@ -294,7 +295,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -305,15 +306,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -326,16 +338,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -352,8 +354,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

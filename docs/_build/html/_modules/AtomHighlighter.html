@@ -5,11 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AtomHighlighter &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <script src="../_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,12 +32,12 @@
           <div class="body" role="main">
             
   <h1>Source code for AtomHighlighter</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">bpy</span>
-<span class="kn">import</span> <span class="nn">math</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">bpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <div class="viewcode-block" id="hex_to_rgba">
 <a class="viewcode-back" href="../api.html#AtomHighlighter.hex_to_rgba">[docs]</a>
-<span class="k">def</span> <span class="nf">hex_to_rgba</span><span class="p">(</span><span class="n">hex_color</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">hex_to_rgba</span><span class="p">(</span><span class="n">hex_color</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Converts a hex color string to an RGBA list, supporting optional alpha.</span>
 
@@ -55,7 +56,7 @@
 
 <div class="viewcode-block" id="find_bond_object">
 <a class="viewcode-back" href="../api.html#AtomHighlighter.find_bond_object">[docs]</a>
-<span class="k">def</span> <span class="nf">find_bond_object</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">find_bond_object</span><span class="p">(</span><span class="n">atom1</span><span class="p">,</span> <span class="n">atom2</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the bond object in the scene that contains atom1 and atom2 in its name.</span>
 
@@ -74,7 +75,7 @@
 
 <div class="viewcode-block" id="highlight_atom">
 <a class="viewcode-back" href="../api.html#AtomHighlighter.highlight_atom">[docs]</a>
-<span class="k">def</span> <span class="nf">highlight_atom</span><span class="p">(</span><span class="n">atom_name</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae333&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">highlight_atom</span><span class="p">(</span><span class="n">atom_name</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae333&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Highlights an atom by creating a highlight sphere around it.</span>
 
@@ -108,7 +109,7 @@
     
 <div class="viewcode-block" id="create_highlight_material">
 <a class="viewcode-back" href="../api.html#AtomHighlighter.create_highlight_material">[docs]</a>
-<span class="k">def</span> <span class="nf">create_highlight_material</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_highlight_material</span><span class="p">(</span><span class="n">object_name</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates a highlight material with the specified transparency and outline color.</span>
 
@@ -151,7 +152,7 @@
     
 <div class="viewcode-block" id="highlight_bond">
 <a class="viewcode-back" href="../api.html#AtomHighlighter.highlight_bond">[docs]</a>
-<span class="k">def</span> <span class="nf">highlight_bond</span><span class="p">(</span><span class="n">atom_1</span><span class="p">,</span> <span class="n">atom_2</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">highlight_bond</span><span class="p">(</span><span class="n">atom_1</span><span class="p">,</span> <span class="n">atom_2</span><span class="p">,</span> <span class="n">outline_size</span><span class="o">=</span><span class="mf">0.33</span><span class="p">,</span> <span class="n">transparency_value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">outline_color</span><span class="o">=</span><span class="s2">&quot;#15eae3&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Highlights a bond by creating a highlight cylinder around it.</span>
 
@@ -219,7 +220,7 @@
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">Gaussian-2-Blender</a></h1>
 
@@ -230,15 +231,26 @@
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gui.html">GUI</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../api.html">Blender API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../cite.html">Cite this program</a></li>
 </ul>
 
@@ -251,16 +263,6 @@
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="../search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -277,8 +279,8 @@
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
     </div>
 

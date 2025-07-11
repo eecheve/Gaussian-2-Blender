@@ -3,18 +3,19 @@
 <html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Blender API &#8212; Gaussian-2-Blender 2025.2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=61cd365c" />
-    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=12dfc556" />
-    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=fd3f3429" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
     <script src="_static/documentation_options.js?v=9da58f5d"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="UML Components Diagram" href="components.html" />
+    <link rel="next" title="Program Architecture" href="components.html" />
     <link rel="prev" title="GUI" href="gui.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -39,190 +40,6 @@
 <code class="docutils literal notranslate"><span class="pre">.com</span></code> and <code class="docutils literal notranslate"><span class="pre">.xyz</span></code> and convert them to <code class="docutils literal notranslate"><span class="pre">.fbx</span></code>, <code class="docutils literal notranslate"><span class="pre">.obj</span></code>, <code class="docutils literal notranslate"><span class="pre">.glb</span></code>, or <code class="docutils literal notranslate"><span class="pre">.stl</span></code> formats</p>
 <section id="main-body-script">
 <h2>Main Body script<a class="headerlink" href="#main-body-script" title="Link to this heading">¶</a></h2>
-<dl class="py class">
-<dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Main_Body.</span></span><span class="sig-name descname"><span class="pre">Main_Body</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_file_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_folder_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_file_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">represent_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">o_file_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_ionic_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_ion_input_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">str_is_animation</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atom_hl_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_hl_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Main class for managing molecule processing in Blender. Handles reading, refining,
-and exporting molecular structures while managing parent-child relations and animations.</p>
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Animate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Animate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Animates the molecule if animation is enabled.</p>
-<p>Calls:
-- <cite>animate</cite> from <cite>Animate</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Build_Molecule</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Build_Molecule"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Builds the molecule by instantiating elements and bonds.</p>
-<p>Calls:
-- <cite>Instantiate</cite> from <cite>Instantiate_Molecules</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Export"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Exports the results to the specified file format.</p>
-<p>Calls:
-- <cite>ExportSceneAs</cite> from <cite>Export_Data</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Highlight_Atoms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Highlight_Atoms"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Highlights specified atoms in the molecule.</p>
-<p>Calls:
-- <cite>highlight_atom</cite> from <cite>AtomHighlighter</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Highlight_Bonds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Highlight_Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Highlights specified bonds in the molecule.</p>
-<p>Calls:
-- <cite>highlight_bond</cite> from <cite>AtomHighlighter</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Manage_Export</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Manage_Export"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Manages the export process based on whether animation is enabled.</p>
-<p>Calls:
-- <cite>Export</cite> or <cite>export_animation</cite> from <cite>Animate</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Manage_Ionic_Information</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Manage_Ionic_Information"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Manages ionic information for the molecule.</p>
-<p>Calls:
-- <cite>rebuild_list</cite> and <cite>make_tuple_in_list</cite> from <cite>Refine_Data</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Manage_Parent_Relations</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Manage_Parent_Relations"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Manages parent-child relationships for the molecule.</p>
-<p>Calls:
-- <cite>Manage_Parent_Relations</cite> from <cite>Parent_Relations</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Obtain_Coords_Connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i_file_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Obtain_Coords_Connect"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Gets list of coordinates as a string with the atomic symbol and floats for each cartesian
-coordinate, as well as the connectivity list with numerical inidices associated with each atom
-as well as the char specifying the atom type between connected pairs</p>
-<dl class="simple">
-<dt>Calls:</dt><dd><ul class="simple">
-<li><p><cite>Read_com_File</cite> and <cite>Refine_com_File</cite> if the input file type is .com.</p></li>
-<li><p><cite>Read_xyz_File</cite> if the input file type is .xyz.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>i_file_type</strong> – (str) Type of input file (.xyz or .com).</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Prepare_Atoms_and_Bonds</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Prepare_Atoms_and_Bonds"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Prepares atoms and bonds for the molecule.</p>
-<p>Calls:
-- <cite>CreateDictionaryWithNamesAndPositions</cite>, <cite>GetElementsPresentInMolecule</cite>, and <cite>GetDataForExistingElements</cite> from <cite>Refine_Elements</cite> module.
-- <cite>CreateAndAssignMaterials</cite> from <cite>Create_Materials</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Prepare_Ions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Prepare_Ions"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Prepares ions for the molecule.</p>
-<p>Calls:
-- <cite>GetDataForExistingElements</cite> from <cite>Refine_Elements</cite> module.
-- <cite>CreateIonDataFromInput</cite> from <cite>Ions</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Read_com_File</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Read_com_File"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reads atomic data from a .com file.</p>
-<p>Calls:
-- <cite>Set_Raw_Parameters</cite> from <cite>Raw_Parameters</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Read_xyz_File</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Read_xyz_File"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Reads atomic data from an .xyz file.</p>
-<p>Calls:
-- <cite>extract_coords_from_xyz_file</cite> and <cite>obtain_all_bond_orders</cite> from <cite>XyzReader</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Refine_com_File</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Refine_com_File"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Refines extracted data from a .com file.</p>
-<p>Calls:
-- <cite>RefineCoordList</cite>, <cite>RefineConnectivity</cite>, and <cite>AddElementSymbolsToConnecrivityList</cite> from <cite>Refine_Data</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">Reset_Transforms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.Reset_Transforms"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Resets transforms for bonds and elements.</p>
-<p>Calls:
-- <cite>get_bond_obj_list</cite>, <cite>Apply_Bond_Transforms</cite>, and <cite>Apply_Element_Transforms</cite> from <cite>Clear_Transforms</cite> module.
-:return: None</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">get_module</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.get_module"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Retrieve and reload a module to apply the latest changes.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>module_name</strong> – (str) Name of the module to retrieve.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>(module) The imported module.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py">
-<span class="sig-name descname"><span class="pre">load_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/Main_Body.html#Main_Body.load_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Dynamically imports all required modules and stores them in self.imported_modules.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="animate-module">
 <h2>Animate Module<a class="headerlink" href="#animate-module" title="Link to this heading">¶</a></h2>
@@ -242,7 +59,7 @@ as well as the char specifying the atom type between connected pairs</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">animate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anim_frames_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#animate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">animate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">anim_frames_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.fbx'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#animate"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Orchestrates animation of molecular elements and bonds.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -288,7 +105,7 @@ as well as the char specifying the atom type between connected pairs</p>
 
 <dl class="py function">
 <dt class="sig sig-object py">
-<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">bake_all_animations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#bake_all_animations"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">bake_all_animations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.fbx'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#bake_all_animations"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bakes all the animations in the scene.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -300,6 +117,16 @@ as well as the char specifying the atom type between connected pairs</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">bake_for_fbx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#bake_for_fbx"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">bake_for_glb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#bake_for_glb"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py">
@@ -361,10 +188,11 @@ as well as the char specifying the atom type between connected pairs</p>
 <dl class="py function">
 <dt class="sig sig-object py">
 <span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">export_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#export_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Exports the animation to the given filepath.</p>
+<dd><p>Exports the current Blender scene as an animation to the specified file path.
+Supports .fbx and .glb formats.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>filepath</strong> – (str) Path to save the exported file.</p>
+<dd class="field-odd"><p><strong>filepath</strong> – (str) Full path (including extension) where the animation will be saved.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -382,6 +210,18 @@ as well as the char specifying the atom type between connected pairs</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>tuple[list, list, list, list, list]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">force_nla_tracks_for_glb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#force_nla_tracks_for_glb"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Ensures that each object has its baked action pushed to an NLA track,
+which is required for GLB export to include animations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>objects</strong> – List of objects to process</p>
 </dd>
 </dl>
 </dd></dl>
@@ -503,6 +343,21 @@ as well as the char specifying the atom type between connected pairs</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">update_keyframe_rotations_quaternion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normals</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#update_keyframe_rotations_quaternion"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Updates keyframe rotations for a target object using quaternion rotations based on normal vectors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>bpy.types.Object</em>) – Object to update.</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Interval between frames.</p></li>
+<li><p><strong>normals</strong> (<em>list</em><em>[</em><em>mathutils.Vector</em><em>]</em>) – List of normal vectors for each frame.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="atom-highlighter-module">
 <h2>Atom Highlighter Module<a class="headerlink" href="#atom-highlighter-module" title="Link to this heading">¶</a></h2>
@@ -602,7 +457,7 @@ as well as the char specifying the atom type between connected pairs</p>
 <h2>Atom Data Module<a class="headerlink" href="#atom-data-module" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Atom_Data.</span></span><span class="sig-name descname"><span class="pre">Atom_Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">radius:</span> <span class="pre">float,</span> <span class="pre">vanDerWaals=0.0,</span> <span class="pre">color=(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">1),</span> <span class="pre">ionicData=[&lt;Atom_Data.Ionic</span> <span class="pre">object&gt;]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Atom_Data.html#Atom_Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Atom_Data.</span></span><span class="sig-name descname"><span class="pre">Atom_Data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">radius:</span> <span class="pre">float,</span> <span class="pre">vanDerWaals=0.0,</span> <span class="pre">color=(0.5,</span> <span class="pre">0.5,</span> <span class="pre">0.5,</span> <span class="pre">1),</span> <span class="pre">ionicData=[&lt;Atom_Data.Ionic</span> <span class="pre">object&gt;]</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Atom_Data.html#Atom_Data"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Stores atomic data including covalent radius, van der Waals radius, RGBA color values, and ionic data.</p>
 <dl class="field-list simple">
@@ -666,7 +521,7 @@ as well as the char specifying the atom type between connected pairs</p>
 
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Atom_Data.</span></span><span class="sig-name descname"><span class="pre">Ionic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Atom_Data.html#Ionic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Atom_Data.</span></span><span class="sig-name descname"><span class="pre">Ionic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">charge</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Atom_Data.html#Ionic"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents an ionic radius with charge, coordination, and radius.</p>
 <dl class="field-list simple">
@@ -696,7 +551,7 @@ as well as the char specifying the atom type between connected pairs</p>
 <h2>Bond Order Calculator Module<a class="headerlink" href="#bond-order-calculator-module" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BondOrderCalculator.</span></span><span class="sig-name descname"><span class="pre">BondOrderCalculator</span></span><a class="reference internal" href="_modules/BondOrderCalculator.html#BondOrderCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">BondOrderCalculator.</span></span><span class="sig-name descname"><span class="pre">BondOrderCalculator</span></span><a class="reference internal" href="_modules/BondOrderCalculator.html#BondOrderCalculator"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -1543,7 +1398,7 @@ script’s location.</p>
 <h2>XYZ Reader Module<a class="headerlink" href="#xyz-reader-module" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">XyzReader.</span></span><span class="sig-name descname"><span class="pre">XyzReader</span></span><a class="reference internal" href="_modules/XyzReader.html#XyzReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">XyzReader.</span></span><span class="sig-name descname"><span class="pre">XyzReader</span></span><a class="reference internal" href="_modules/XyzReader.html#XyzReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py">
@@ -1562,14 +1417,14 @@ script’s location.</p>
 <dl class="py method">
 <dt class="sig sig-object py">
 <span class="sig-name descname"><span class="pre">extract_coords_from_xyz_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xyz_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/XyzReader.html#XyzReader.extract_coords_from_xyz_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Extracts atomic data from an XYZ file. Reads the file and returns lines with exactly four elements
-(atom symbol and three coordinates).</p>
+<dd><p>Extracts the first set of atomic coordinates from an XYZ file, whether it’s a single-molecule
+or a trajectory file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>xyz_file_path</strong> – (str) Path to the XYZ file.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A list of lines with atom symbol and (x, y, z) coordinates.</p>
+<dd class="field-even"><p>A list of [atom, x, y, z] entries for the first set of coordinates.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1591,6 +1446,74 @@ script’s location.</p>
 </dd></dl>
 
 </section>
+<section id="mol2-reader-module">
+<h2>Mol2 Reader Module<a class="headerlink" href="#mol2-reader-module" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py">
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Mol2Reader.</span></span><span class="sig-name descname"><span class="pre">Mol2Reader</span></span><a class="reference internal" href="_modules/Mol2Reader.html#Mol2Reader"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">assign_indices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_coords</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Mol2Reader.html#Mol2Reader.assign_indices"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Assigns unique two-digit indices to atomic symbols.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_coords</strong> – (list) List of raw coordinates.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) A list of lists with atomic symbols assigned a unique two-digit index.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">extract_coords_from_mol2_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mol2_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Mol2Reader.html#Mol2Reader.extract_coords_from_mol2_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts atomic symbols and 3D coordinates from the &#64;&lt;TRIPOS&gt;ATOM section of a .mol2 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>mol2_file_path</strong> – (str) Path to the .mol2 file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) A list of lists, each containing an atom symbol and its x, y, z coordinates.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">obtain_all_bond_orders</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_coordinates</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mol2_file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Mol2Reader.html#Mol2Reader.obtain_all_bond_orders"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extracts bond connections and bond orders from the &#64;&lt;TRIPOS&gt;BOND section of a .mol2 file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>raw_coordinates</strong> – (list) List of atoms with their coordinates.</p></li>
+<li><p><strong>mol2_file_path</strong> – (str) Path to the .mol2 file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) A list of tuples with atom pairs and their bond order symbol (e.g., ‘-’, ‘=’, ‘#’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">obtain_all_bond_orders2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_coordinates</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Mol2Reader.html#Mol2Reader.obtain_all_bond_orders2"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Computes bond orders between all unique atom pairs using their coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>raw_coordinates</strong> – (list) List of atoms with their coordinates.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(list) A list of tuples with atom pairs and their bond order symbol (i.e., ‘-’, ‘=’, ‘#’).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -1598,7 +1521,7 @@ script’s location.</p>
           
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="index.html">Gaussian-2-Blender</a></h1>
 
@@ -1609,10 +1532,21 @@ script’s location.</p>
 
 
 
-<h3>Navigation</h3>
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html#instructions">Instructions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="results.html">Visualizing Results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html#file-structure">File structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gui.html">GUI</a></li>
@@ -1634,9 +1568,10 @@ script’s location.</p>
 <li class="toctree-l2"><a class="reference internal" href="#refine-data-module">Refine Data Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#refine-elements-module">Refine Elements Module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#xyz-reader-module">XYZ Reader Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mol2-reader-module">Mol2 Reader Module</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="components.html">UML Components Diagram</a></li>
+<li class="toctree-l1"><a class="reference internal" href="components.html">Program Architecture</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cite.html">Cite this program</a></li>
 </ul>
 
@@ -1645,20 +1580,10 @@ script’s location.</p>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="gui.html" title="previous chapter">GUI</a></li>
-      <li>Next: <a href="components.html" title="next chapter">UML Components Diagram</a></li>
+      <li>Next: <a href="components.html" title="next chapter">Program Architecture</a></li>
   </ul></li>
 </ul>
 </div>
-<search id="searchbox" style="display: none" role="search">
-  <h3 id="searchlabel">Quick search</h3>
-    <div class="searchformwrapper">
-    <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
-      <input type="submit" value="Go" />
-    </form>
-    </div>
-</search>
-<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -1675,8 +1600,8 @@ script’s location.</p>
       &#169;2025, Emmanuel Echeverri-Jimenez.
       
       |
-      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 7.3.7</a>
-      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 0.7.16</a>
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
       <a href="_sources/api.rst.txt"
