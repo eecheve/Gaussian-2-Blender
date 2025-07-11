@@ -13,6 +13,9 @@ class BondConventions(object):
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
 
+        self.lbl_dashedBond = tk.Label(master=self.frame, text="dashed bond", fg="gray", bg="#e0e0e0")
+        self.lbl_d_code = tk.Label(master=self.frame, text="_ ", fg="black", bg="#e0e0e0")
+        
         self.lbl_singleBond = tk.Label(master=self.frame, text="single bond", fg="gray", bg="#e0e0e0")
         self.lbl_sb_code = tk.Label(master=self.frame, text="- ", fg="black", bg="#e0e0e0")
 
@@ -26,11 +29,13 @@ class BondConventions(object):
         self.lbl_aromaticBond = tk.Label(master=self.frame, text="delocalized bond", fg="gray", bg="#e0e0e0")
         self.lbl_ab_code = tk.Label(master=self.frame, text="% ", fg="black", bg="#e0e0e0")
 
-        self.lbl_singleBond.grid(row=0, column=1)
-        self.lbl_sb_code.grid(row=0, column=0)
-        self.lbl_doubleBond.grid(row=1, column=1)
-        self.lbl_db_code.grid(row=1, column=0)
-        self.lbl_aromaticBond.grid(row=2, column=1)
-        self.lbl_ab_code.grid(row=2, column=0)
-        self.lbl_tripleBond.grid(row=3, column=1)
-        self.lbl_tb_code.grid(row=3, column=0)
+        self.lbl_dashedBond.grid(row=0, column=1)
+        self.lbl_d_code.grid(row=0, column=0)
+        self.lbl_singleBond.grid(row=1, column=1)
+        self.lbl_sb_code.grid(row=1, column=0)
+        self.lbl_doubleBond.grid(row=2, column=1)
+        self.lbl_db_code.grid(row=2, column=0)
+        self.lbl_aromaticBond.grid(row=3, column=1)
+        self.lbl_ab_code.grid(row=3, column=0)
+        self.lbl_tripleBond.grid(row=4, column=1)
+        self.lbl_tb_code.grid(row=4, column=0)

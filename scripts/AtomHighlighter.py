@@ -99,7 +99,8 @@ def create_highlight_material(object_name, transparency_value=0.5, outline_color
 
     # Set transparency settings for proper viewport display
     mat.blend_method = 'BLEND'
-    mat.shadow_method = 'NONE'
+    mat.use_transparent_shadow = False
+    #mat.shadow_method = 'NONE' #<-- shadow_method was removed in Blender 4.2
     mat.use_backface_culling = True
 
     return mat

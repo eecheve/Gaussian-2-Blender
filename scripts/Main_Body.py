@@ -331,6 +331,7 @@ class Main_Body(object):
         AtomHighlighter = self.get_module("AtomHighlighter")
         atom_list = self.atom_hl_list.replace(" ", "").split(",")
         for atom in atom_list:
+            print(f"7.1: highlighting {atom} atom")
             AtomHighlighter.highlight_atom(atom)
             
     def Highlight_Bonds(self):
@@ -341,7 +342,7 @@ class Main_Body(object):
         - `highlight_bond` from `AtomHighlighter` module.
         :return: None
         """
-        separators = ['-', '=', '#', '%']
+        separators = ['_', '-', '=', '#', '%']
         print("7: highlighting bonds if info is present")
         if not self.bond_hl_list.strip():
             print("7.2: No bonds to highlight, skipping function.")
@@ -351,6 +352,7 @@ class Main_Body(object):
         for bond in bond_list:
             for sep in separators:
                 if sep in bond:
+                    print(f"7.2: Highlighteing {bond} bond")
                     atom1, atom2 = bond.split(sep)
                     AtomHighlighter.highlight_bond(atom1, atom2)
                     break  

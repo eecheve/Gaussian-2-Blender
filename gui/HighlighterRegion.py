@@ -114,7 +114,7 @@ class HighlighterRegion(object):
         CreateTooltip(self.ent_hlAtomList, "Separate each atom by a comma. E.g. C01, H02, H03, etc")
         
         #-----------------------------------------------------------------------------
-        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
+        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight bonds", bg="#e0e0e0", fg='black',
                                                  variable=self.var_highlightBonds, command=self.toggleBondHighlighter)
         CreateTooltip(self.chk_highlightBonds, "Check if you want to highlight one or more bonds in your 3D structure")
 
@@ -344,7 +344,7 @@ class HighlighterRegion(object):
             bool: True if the bond entry follows the correct syntax, False otherwise.
         """
         # Define the bond separators
-        separators = ["-", "=", "#", "%"]
+        separators = ["_","-", "=", "#", "%"]
     
         # Check if the entry contains exactly one separator
         if sum(entry.count(sep) for sep in separators) != 1:

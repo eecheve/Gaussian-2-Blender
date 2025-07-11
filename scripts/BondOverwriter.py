@@ -61,7 +61,6 @@ def overwrite_connectivity(connect_list_string, connect_with_symbols, coords):
         return connect_with_symbols
 
     atom_identity_map = build_atom_identity_map(coords)
-    print("BondOverwriter.overwrite_connectivity() atom_identity:", atom_identity_map)
     existing_connections = build_connection_lookup(connect_with_symbols)
 
     for conn in new_connections:

@@ -1,14 +1,14 @@
-.com
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic
-acrylonitrile.com
+.mol2
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/mol2_files
+two_waters.mol2
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-acrylonitrile
+two_waters
 Ball-and-Stick
 .glb
 0
 0
 ---
 0
-
-
-
+O02, H04
+O02_H04
+O02_H04
