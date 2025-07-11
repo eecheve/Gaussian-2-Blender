@@ -32,24 +32,26 @@ Program Outline
          if_windows [shape=box, style=filled, fillcolor=white, color=white];
          if_mac_os [shape=box, style=filled, fillcolor=white, color=white];
 
-         covalent_radii -> TheorChem2Blender
+         covalent_radii -> TheorChem2Blender;
          
-         TheorChem2Blender -> animation_frames
-         TheorChem2Blender -> parameters
+         TheorChem2Blender -> animation_frames;
+         TheorChem2Blender -> parameters;
 
-         animation_frames -> if_windows
-         animation_frames -> if_mac_os
+         animation_frames -> if_windows;
+         animation_frames -> if_mac_os;
 
-         parameters -> if_windows
-         parameters -> if_mac_os
+         parameters -> if_windows;
+         parameters -> if_mac_os;
 
-         if_windows -> ReadMolecules_bat
-         if_mac_os -> ReadMolecules_sh
+         if_windows -> ReadMolecules_bat;
+         if_mac_os -> ReadMolecules_sh;
 
-         ReadMolecules_bat -> Main_Body
-         ReadMolecules_sh -> Main_Body
-         ionic_data -> Main_Body
+         ReadMolecules_bat -> Main_Body;
+         ReadMolecules_sh -> Main_Body;
+         ionic_data -> Main_Body;
    }
+
+
 
 Blender API
 ------------------------

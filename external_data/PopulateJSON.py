@@ -3,7 +3,7 @@ import json
 
 # Load the existing bond lengths from the JSON file
 with open('C://Documents//Gaussian-2-Blender//external_data//covalent_radii.json', 'r') as json_file:
-    bond_lengths = json.load(json_file)
+    bond_lengths = json.load(json_file) #path might have changed since the last time I used this
 
 # Load the Excel file
 excel_file = pd.read_excel('C://Documents//Gaussian-2-Blender//external_data//covalent_bond_radii.xlsx', 
