@@ -436,6 +436,7 @@ class TheorChem2BlenderTabSystem:
     
     def handle_animation_toggle(self, is_animation):
         self.output_region.restrict_output_types_for_animation(is_animation)
+        self.input_region.restrict_input_types_for_animation(is_animation) #<-----
 
     def extract_all_frames(self, xyz_file_path):
         """

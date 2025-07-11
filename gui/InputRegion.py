@@ -272,6 +272,31 @@ class InputRegion(object):
         self.canvas.configure(scrollregion=self.canvas.bbox("all"),
                               width=325, height=200)
 
+    def restrict_input_types_for_animation(self, is_animation):
+        """
+        Updates the list of selectable input file types based on whether animation is enabled.
+
+        Parameters:
+            is_animation (bool): Indicates whether the animation mode is active.
+
+        Behavior:
+            - Clears the current dropdown menu options.
+            - Populates the menu with the appropriate list of file types.
+            - Resets the selected input type if the current selection is no longer valid.
+        """
+        if is_animation:
+            allowed = [".com", ".xyz"]
+        else:
+            allowed = [".com", ".xyz", ".mol2"]
+
+        menu = self.drp_inputTypes["menu"]
+        menu.delete(0, "end")
+        for opt in allowed:
+            menu.add_command(label=opt, command=lambda value=opt: self.var_inputTypes.set(value))
+
+        if self.var_inputTypes.get() not in allowed:
+            self.var_inputTypes.set(allowed[0])
+    
     def dropdown_callout(self, event):
         """
         Prints a message when the dropdown selection is changed.

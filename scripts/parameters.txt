@@ -1,14 +1,14 @@
-.mol2
-C:/Users/User/G2B/Gaussian-2-Blender/input_examples/mol2_files
-two_waters.mol2
+.com
+C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/minerals
+fluorite.com
 C:\Users\User\G2B\Gaussian-2-Blender\output\
-two_waters
+fluorite
 Ball-and-Stick
 .glb
+1
+1
+(Ca_2_VIII)_(F_-1_IV)
 0
-0
----
-0
-O02, H04
-O02_H04
-O02_H04
+
+
+

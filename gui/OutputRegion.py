@@ -6,7 +6,6 @@ from gui.CreateTooltip import CreateTooltip
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
     def __init__(self, parent, initial_dir):
-        #self.def_outputPath = initial_dir + "\\output\\"
         self.def_outputPath = os.path.join(initial_dir, "output", "")
         self.initial_dir = initial_dir
         
