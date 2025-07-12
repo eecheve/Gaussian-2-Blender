@@ -168,6 +168,47 @@ def update_keyframe_rotations(target, step_size, normals):
         target.rotation_euler[1] = theta
         target.rotation_euler[2] = phi
         target.keyframe_insert(data_path="rotation_euler", frame=i * step_size)
+
+def update_keyframe_scale(target, bond_name, anim_data, bond_type, step_size):
+    """
+    Updates keyframe scales for a target object based on the distance between two atoms.
+
+    :param target: Object to update.
+    :type target: bpy.types.Object
+    :param bond_name: Name of the bond
+    :type bond_name: str
+    :param anim_data: Animation data containing atom positions.
+    :type anim_data: List[List[mathutils.Vector]]
+    :param bond_type: Character separating the two atoms in the bond name.
+    :type bond_type: str
+    :param step_size: Interval between frames.
+    :type step_size: int
+    """
+    components = bond_name.split(bond_type)
+    r1 = None
+    r2 = None
+
+    for data_point in anim_data:
+        if data_point[0] == components[0]:
+            r1 = [v for v in data_point[1:]]
+        elif data_point[0] == components[1]:
+            r2 = [v for v in data_point[1:]]
+        if r1 is not None and r2 is not None:
+            break
+
+    if r1 is None or r2 is None:
+        raise ValueError("Bond components not found in the animation data.")
+
+    initial_distance = (r2[0] - r1[0]).length
+    if initial_distance == 0:
+        raise ValueError("Initial distance between atoms is zero.")
+
+    for i in range(len(r1)):
+        current_distance = (r2[i] - r1[i]).length
+        scale_factor = current_distance / initial_distance
+        target.scale.z = scale_factor
+        target.keyframe_insert(data_path="scale", frame=i * step_size)
+
         
 def ExtractDataFromFile(path):
     """
@@ -308,6 +349,7 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
             bond_normals = get_bond_normals(bond.name, anim_data, bond_type)
             update_keyframe_locations(target=bond, step_size=step_size, locations=bond_locations)
             update_keyframe_rotations_quaternion(target=bond, step_size=step_size, normals=bond_normals)
+            update_keyframe_scale(target=bond, bond_name=bond.name, anim_data=anim_data, bond_type=bond_type, step_size=step_size)
     else:
         print("there are no bonds of type", bond_type)    
         return
