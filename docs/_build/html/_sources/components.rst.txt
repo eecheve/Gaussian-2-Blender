@@ -14,7 +14,7 @@ Program Outline
 
 .. graphviz::
 
-   diagraph Outline {
+   digraph Outline {
          rankdir = LR;
          node [shape=box, style=filled];
 

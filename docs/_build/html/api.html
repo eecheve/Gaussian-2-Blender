@@ -358,6 +358,23 @@ which is required for GLB export to include animations.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py">
+<span class="sig-prename descclassname"><span class="pre">Animate.</span></span><span class="sig-name descname"><span class="pre">update_keyframe_scale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anim_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bond_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Animate.html#update_keyframe_scale"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Updates keyframe scales for a target object based on the distance between two atoms.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<em>bpy.types.Object</em>) – Object to update.</p></li>
+<li><p><strong>bond_name</strong> (<em>str</em>) – Name of the bond</p></li>
+<li><p><strong>anim_data</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>mathutils.Vector</em><em>]</em><em>]</em>) – Animation data containing atom positions.</p></li>
+<li><p><strong>bond_type</strong> (<em>str</em>) – Character separating the two atoms in the bond name.</p></li>
+<li><p><strong>step_size</strong> (<em>int</em>) – Interval between frames.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="atom-highlighter-module">
 <h2>Atom Highlighter Module<a class="headerlink" href="#atom-highlighter-module" title="Link to this heading">¶</a></h2>

@@ -226,6 +226,50 @@
         <span class="n">target</span><span class="o">.</span><span class="n">rotation_euler</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">phi</span>
         <span class="n">target</span><span class="o">.</span><span class="n">keyframe_insert</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;rotation_euler&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">i</span> <span class="o">*</span> <span class="n">step_size</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="update_keyframe_scale">
+<a class="viewcode-back" href="../api.html#Animate.update_keyframe_scale">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">update_keyframe_scale</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">bond_name</span><span class="p">,</span> <span class="n">anim_data</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">,</span> <span class="n">step_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Updates keyframe scales for a target object based on the distance between two atoms.</span>
+
+<span class="sd">    :param target: Object to update.</span>
+<span class="sd">    :type target: bpy.types.Object</span>
+<span class="sd">    :param bond_name: Name of the bond</span>
+<span class="sd">    :type bond_name: str</span>
+<span class="sd">    :param anim_data: Animation data containing atom positions.</span>
+<span class="sd">    :type anim_data: List[List[mathutils.Vector]]</span>
+<span class="sd">    :param bond_type: Character separating the two atoms in the bond name.</span>
+<span class="sd">    :type bond_type: str</span>
+<span class="sd">    :param step_size: Interval between frames.</span>
+<span class="sd">    :type step_size: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">components</span> <span class="o">=</span> <span class="n">bond_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">bond_type</span><span class="p">)</span>
+    <span class="n">r1</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">for</span> <span class="n">data_point</span> <span class="ow">in</span> <span class="n">anim_data</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">data_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">r1</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_point</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="k">elif</span> <span class="n">data_point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">components</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">r2</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_point</span><span class="p">[</span><span class="mi">1</span><span class="p">:]]</span>
+        <span class="k">if</span> <span class="n">r1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">r1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">r2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Bond components not found in the animation data.&quot;</span><span class="p">)</span>
+
+    <span class="n">initial_distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">r2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">r1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">length</span>
+    <span class="k">if</span> <span class="n">initial_distance</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Initial distance between atoms is zero.&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r1</span><span class="p">)):</span>
+        <span class="n">current_distance</span> <span class="o">=</span> <span class="p">(</span><span class="n">r2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">r1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">.</span><span class="n">length</span>
+        <span class="n">scale_factor</span> <span class="o">=</span> <span class="n">current_distance</span> <span class="o">/</span> <span class="n">initial_distance</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">scale</span><span class="o">.</span><span class="n">z</span> <span class="o">=</span> <span class="n">scale_factor</span>
+        <span class="n">target</span><span class="o">.</span><span class="n">keyframe_insert</span><span class="p">(</span><span class="n">data_path</span><span class="o">=</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">i</span> <span class="o">*</span> <span class="n">step_size</span><span class="p">)</span></div>
+
+
         
 <div class="viewcode-block" id="ExtractDataFromFile">
 <a class="viewcode-back" href="../api.html#Animate.ExtractDataFromFile">[docs]</a>
@@ -383,6 +427,7 @@
             <span class="n">bond_normals</span> <span class="o">=</span> <span class="n">get_bond_normals</span><span class="p">(</span><span class="n">bond</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">anim_data</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">)</span>
             <span class="n">update_keyframe_locations</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">bond</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span> <span class="n">locations</span><span class="o">=</span><span class="n">bond_locations</span><span class="p">)</span>
             <span class="n">update_keyframe_rotations_quaternion</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">bond</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">,</span> <span class="n">normals</span><span class="o">=</span><span class="n">bond_normals</span><span class="p">)</span>
+            <span class="n">update_keyframe_scale</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">bond</span><span class="p">,</span> <span class="n">bond_name</span><span class="o">=</span><span class="n">bond</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">anim_data</span><span class="o">=</span><span class="n">anim_data</span><span class="p">,</span> <span class="n">bond_type</span><span class="o">=</span><span class="n">bond_type</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="n">step_size</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;there are no bonds of type&quot;</span><span class="p">,</span> <span class="n">bond_type</span><span class="p">)</span>    
         <span class="k">return</span></div>

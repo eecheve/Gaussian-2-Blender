@@ -851,6 +851,25 @@ If the checkbox is checked, the bond list entry is enabled. If unchecked, it is 
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="InputRegion.InputRegion.restrict_input_types_for_animation">
+<span class="sig-name descname"><span class="pre">restrict_input_types_for_animation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">is_animation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/InputRegion.html#InputRegion.restrict_input_types_for_animation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#InputRegion.InputRegion.restrict_input_types_for_animation" title="Link to this definition">¶</a></dt>
+<dd><p>Updates the list of selectable input file types based on whether animation is enabled.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>is_animation</strong> (<em>bool</em>) – Indicates whether the animation mode is active.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Behavior:</dt><dd><ul class="simple">
+<li><p>Clears the current dropdown menu options.</p></li>
+<li><p>Populates the menu with the appropriate list of file types.</p></li>
+<li><p>Resets the selected input type if the current selection is no longer valid.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="InputRegion.InputRegion.setInputName">
 <span class="sig-name descname"><span class="pre">setInputName</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/InputRegion.html#InputRegion.setInputName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#InputRegion.InputRegion.setInputName" title="Link to this definition">¶</a></dt>
 <dd><p>Opens a file dialog to select files and updates the input names list.

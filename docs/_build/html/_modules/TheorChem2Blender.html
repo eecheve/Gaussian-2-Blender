@@ -521,7 +521,8 @@
 <div class="viewcode-block" id="TheorChem2BlenderTabSystem.handle_animation_toggle">
 <a class="viewcode-back" href="../gui.html#TheorChem2Blender.TheorChem2BlenderTabSystem.handle_animation_toggle">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">handle_animation_toggle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_animation</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_region</span><span class="o">.</span><span class="n">restrict_output_types_for_animation</span><span class="p">(</span><span class="n">is_animation</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_region</span><span class="o">.</span><span class="n">restrict_output_types_for_animation</span><span class="p">(</span><span class="n">is_animation</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_region</span><span class="o">.</span><span class="n">restrict_input_types_for_animation</span><span class="p">(</span><span class="n">is_animation</span><span class="p">)</span> <span class="c1">#&lt;-----</span></div>
 
 
 <div class="viewcode-block" id="TheorChem2BlenderTabSystem.extract_all_frames">

@@ -347,6 +347,34 @@
                               <span class="n">width</span><span class="o">=</span><span class="mi">325</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="InputRegion.restrict_input_types_for_animation">
+<a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.restrict_input_types_for_animation">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">restrict_input_types_for_animation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">is_animation</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Updates the list of selectable input file types based on whether animation is enabled.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            is_animation (bool): Indicates whether the animation mode is active.</span>
+
+<span class="sd">        Behavior:</span>
+<span class="sd">            - Clears the current dropdown menu options.</span>
+<span class="sd">            - Populates the menu with the appropriate list of file types.</span>
+<span class="sd">            - Resets the selected input type if the current selection is no longer valid.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">is_animation</span><span class="p">:</span>
+            <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;.com&quot;</span><span class="p">,</span> <span class="s2">&quot;.xyz&quot;</span><span class="p">,</span> <span class="s2">&quot;.mol2&quot;</span><span class="p">]</span>
+
+        <span class="n">menu</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">drp_inputTypes</span><span class="p">[</span><span class="s2">&quot;menu&quot;</span><span class="p">]</span>
+        <span class="n">menu</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;end&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">opt</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">:</span>
+            <span class="n">menu</span><span class="o">.</span><span class="n">add_command</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">opt</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span> <span class="n">value</span><span class="o">=</span><span class="n">opt</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">get</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">allowed</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var_inputTypes</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">allowed</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+    
 <div class="viewcode-block" id="InputRegion.dropdown_callout">
 <a class="viewcode-back" href="../gui.html#InputRegion.InputRegion.dropdown_callout">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">dropdown_callout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>

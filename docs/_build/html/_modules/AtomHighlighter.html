@@ -144,7 +144,8 @@
 
     <span class="c1"># Set transparency settings for proper viewport display</span>
     <span class="n">mat</span><span class="o">.</span><span class="n">blend_method</span> <span class="o">=</span> <span class="s1">&#39;BLEND&#39;</span>
-    <span class="n">mat</span><span class="o">.</span><span class="n">shadow_method</span> <span class="o">=</span> <span class="s1">&#39;NONE&#39;</span>
+    <span class="n">mat</span><span class="o">.</span><span class="n">use_transparent_shadow</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="c1">#mat.shadow_method = &#39;NONE&#39; #&lt;-- shadow_method was removed in Blender 4.2</span>
     <span class="n">mat</span><span class="o">.</span><span class="n">use_backface_culling</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">return</span> <span class="n">mat</span></div>

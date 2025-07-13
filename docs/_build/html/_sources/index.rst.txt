@@ -29,7 +29,7 @@ Contents
 .. note::
 	**Gaussian-2-Blender** *V.2022.6* was published at the *Journal of Chemical Education*. The program is currently
 	undergoing updates to implement changes suggested by users. The objective of the current changes is to submit
-	the updated version to the *Journal of Cheminformatics*.  This documentation is for **TheorChem2Blender** *V.2025.2*, 
+	the updated version to the *Journal of Cheminformatics*.  This documentation is for **TheorChem2Blender** *V.2025.7*, 
    which is the next step in the life cycle of the program. I decided to implement more input files than only _Gaussian_.
 
 
