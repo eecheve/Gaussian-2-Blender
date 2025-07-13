@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>3. TheorChem2Blender - Basic use &#8212; Gaussian-2-Blender 2025.2 documentation</title>
+    <title>7. TheorChem2Blender - Animating .xyz input &#8212; Gaussian-2-Blender 2025.2 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
@@ -15,8 +15,8 @@
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="4. TheorChem2Blender - Highlighting atoms and bonds" href="tutorial_customization.html" />
-    <link rel="prev" title="2. From Molecular Dynamics to Blender (General)" href="tutorial_from_md.html" />
+    <link rel="next" title="For Developers" href="developers.html" />
+    <link rel="prev" title="6. TheorChem2Blender - Animating .com input" href="tutorial_animation_com.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -34,58 +34,67 @@
 
           <div class="body" role="main">
             
-  <section id="theorchem2blender-basic-use">
-<span id="tutorial-basic-use"></span><h1>3. TheorChem2Blender - Basic use<a class="headerlink" href="#theorchem2blender-basic-use" title="Link to this heading">¶</a></h1>
+  <section id="theorchem2blender-animating-xyz-input">
+<span id="tutorial-animation-xyz"></span><h1>7. TheorChem2Blender - Animating .xyz input<a class="headerlink" href="#theorchem2blender-animating-xyz-input" title="Link to this heading">¶</a></h1>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>TheorChem2Blender is a program that has 5 tabs. Which tabs to modify depend on the type of 3D file the user wants to create. For the simplest use of the program, you only need to specify the input, and convert it as output. The default output format is <cite>glb</cite>.
-Below is an example using the <cite>input_examples/</cite> folder that comes with the program on how to convert a <cite>com</cite> input file to a <cite>glb</cite> 3D file.</p>
+Below is a continuation on how to use <strong>TheorChem2Blender</strong>, focused animating <cite>.com</cite> input. Refer to <a class="reference internal" href="tutorial_basic_use.html#tutorial-basic-use"><span class="std std-ref">(3) basic use</span></a> for information about how to choose <cite>com</cite> input files to convert, <a class="reference internal" href="tutorial_customization.html#tutorial-customization"><span class="std std-ref">(4) highlighting bonds</span></a> for how to highlight atoms and bonds, <a class="reference internal" href="tutorial_ions.html#tutorial-ions"><span class="std std-ref">(5) specifying ions</span></a> for ionic compounds, and <a class="reference internal" href="tutorial_animation_com.html#tutorial-animation-com"><span class="std std-ref">(6) animating com files</span></a> for animating com files.</p>
 </section>
 <section id="input-tab">
 <h2>Input tab<a class="headerlink" href="#input-tab" title="Link to this heading">¶</a></h2>
 <ol class="arabic simple">
-<li><p>Leave <cite>.com</cite> as the input file</p></li>
+<li><p>Change the input to <cite>.xyz</cite></p></li>
 <li><p>Click on <cite>set</cite> to select the input name</p></li>
+<li><p>Go to <cite>inpuut_examples/xyz_files/trajectories/</cite></p></li>
+<li><p>Select the <cite>carbon_dioxide_symmetric_vibration.xyz</cite> file</p></li>
+<li><p>Select <cite>is animation</cite></p></li>
+<li><p>Go to the <cite>Customization</cite> tab</p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step1.png"><img alt="Selecting .com input, steps 1 and 2" src="_images/tutorial3_step1.png" style="width: 500px;" />
+<a class="reference internal image-reference" href="_images/tutorial7_step1.png"><img alt="Highlighting an atom or bond, step 1" src="_images/tutorial7_step1.png" style="width: 500px;" />
 </a>
-<ol class="arabic simple" start="3">
-<li><p>The <cite>input_examples/</cite> folder was opened by default. Select <cite>com_files/</cite></p></li>
+</section>
+<section id="customization-tab">
+<h2>Customization tab<a class="headerlink" href="#customization-tab" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple" start="7">
+<li><p>Because for this example, the bond length of the input is larger than a C-O bond, click on <cite>force bonds</cite></p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step2.png"><img alt="Selecting .com input, step 3" src="_images/tutorial3_step2.png" style="width: 500px;" />
+<a class="reference internal image-reference" href="_images/tutorial7_step2.png"><img alt="Highlighting an atom or bond, step 1" src="_images/tutorial7_step2.png" style="width: 500px;" />
 </a>
-<ol class="arabic simple" start="4">
-<li><p>Among the available folder options choose <cite>organic/</cite></p></li>
+<ol class="arabic simple" start="8">
+<li><p>Type the following on the <cite>Forced bonds list</cite> box: (If you type C01=O03 instead, the bond will be inverted)
+When forcing a bond, if the colors are inverted, try changing the order of the atoms as is this case.</p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step3.png"><img alt="Selecting .com input, step 4" src="_images/tutorial3_step3.png" style="width: 500px;" />
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">C01</span><span class="o">=</span><span class="n">O02</span><span class="p">;</span> <span class="n">O03</span><span class="o">=</span><span class="n">C01</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/tutorial7_step3.png"><img alt="Highlighting an atom or bond, step 1" src="_images/tutorial7_step3.png" style="width: 500px;" />
 </a>
-<ol class="arabic simple" start="5">
-<li><p>Choose <cite>dimethyl_dithionate.com</cite> to follow this example</p></li>
+<ol class="arabic simple" start="9">
+<li><p>Click on the <cite>Output</cite> tab</p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step4.png"><img alt="Selecting .com input, step 5" src="_images/tutorial3_step4.png" style="width: 500px;" />
-</a>
-<ol class="arabic simple" start="6">
-<li><p>Notice how the name is now stored in the <cite>Input name(s)</cite> space</p></li>
+</section>
+<section id="output-tab">
+<h2>Output tab<a class="headerlink" href="#output-tab" title="Link to this heading">¶</a></h2>
+<ol class="arabic simple" start="10">
+<li><p>Select <cite>fbx</cite> as the output format</p></li>
 <li><p>Click on the <cite>Convert!</cite> tab</p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step5.png"><img alt="Selecting .com input, step 5" src="_images/tutorial3_step5.png" style="width: 500px;" />
-</a>
 </section>
 <section id="convert-tab">
 <h2>Convert! tab<a class="headerlink" href="#convert-tab" title="Link to this heading">¶</a></h2>
-<ol class="arabic simple" start="8">
-<li><p>Click on <cite>Convert!</cite></p></li>
+<ol class="arabic simple" start="9">
+<li><p>Convert the input</p></li>
 <li><p>Your file will appear by default in the <cite>output/</cite> folder.</p></li>
 </ol>
-<a class="reference internal image-reference" href="_images/tutorial3_step6.png"><img alt="Selecting .com input, step 6" src="_images/tutorial3_step6.png" style="width: 500px;" />
-</a>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>🎥 To see a video recording of this walkthrough, visit the following link:
-<a class="reference external" href="https://youtu.be/XUTL1noQ8Y0">Watch on YouTube</a></p>
+<a class="reference external" href="https://youtu.be/V0ARxJZNfy8">Watch on YouTube</a></p>
+<p>🎥 To see a video recording of of another animation, customizing and highlighting bonds, visit this link:
+<a class="reference external" href="https://youtu.be/Ee8SqCKStUw">Watch on YouTube</a></p>
 </div>
-<p><a class="reference internal" href="tutorial_from_md.html#tutorial-from-md"><span class="std std-ref">Previous: (2) From Molecular Dynamics to Blender (General)</span></a>
-<a class="reference internal" href="tutorial_customization.html#tutorial-customization"><span class="std std-ref">Next: (4) Highlighting atoms and bonds</span></a></p>
+<p><a class="reference internal" href="tutorial_animation_com.html#tutorial-animation-com"><span class="std std-ref">Previous: (6) animating com files</span></a></p>
 <hr class="docutils" />
 <p><a class="reference internal" href="tutorial.html"><span class="doc">← Back to Tutorials Home</span></a></p>
 </section>
@@ -124,8 +133,12 @@ Below is an example using the <cite>input_examples/</cite> folder that comes wit
 <li class="toctree-l1 current"><a class="reference internal" href="tutorial.html">Tutorial</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="tutorial_from_marvin.html">1. From MarvinSketch to Blender</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial_from_md.html">2. From Molecular Dynamics to Blender (General)</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">3. TheorChem2Blender - Basic use</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_basic_use.html">3. TheorChem2Blender - Basic use</a></li>
 <li class="toctree-l2"><a class="reference internal" href="tutorial_customization.html">4. TheorChem2Blender - Highlighting atoms and bonds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_ions.html">5. TheorChem2Blender - Specifying ionic radii</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_animation_com.html">6. TheorChem2Blender - Animating .com input</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">7. TheorChem2Blender - Animating .xyz input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial.html#video-walkthroughs">Video walkthroughs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="developers.html">For Developers</a></li>
@@ -141,8 +154,8 @@ Below is an example using the <cite>input_examples/</cite> folder that comes wit
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
   <li><a href="tutorial.html">Tutorial</a><ul>
-      <li>Previous: <a href="tutorial_from_md.html" title="previous chapter">2. From Molecular Dynamics to Blender (General)</a></li>
-      <li>Next: <a href="tutorial_customization.html" title="next chapter">4. TheorChem2Blender - Highlighting atoms and bonds</a></li>
+      <li>Previous: <a href="tutorial_animation_com.html" title="previous chapter">6. TheorChem2Blender - Animating .com input</a></li>
+      <li>Next: <a href="developers.html" title="next chapter">For Developers</a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -167,7 +180,7 @@ Below is an example using the <cite>input_examples/</cite> folder that comes wit
       &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
       
       |
-      <a href="_sources/tutorial_basic_use.rst.txt"
+      <a href="_sources/tutorial_animation_xyz.rst.txt"
           rel="nofollow">Page source</a>
     </div>
 

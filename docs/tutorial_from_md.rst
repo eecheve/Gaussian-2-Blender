@@ -10,7 +10,7 @@
 
 
 :ref:`Previous: (1) From MarvinSketch to Blender <tutorial_from_marvin>`
-:ref:`Next: (3) TheorChem2Blender - Basic use <tutorial_basic_use>`
+:ref:`Next: (3) Basic use <tutorial_basic_use>`
 
 
 ----

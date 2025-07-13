@@ -42,6 +42,9 @@ Input tab
     :alt: Selecting .com input, step 5
     :width: 500px
 
+Convert! tab
+-------------
+
 8. Click on `Convert!`
 9. Your file will appear by default in the `output/` folder.
 
@@ -56,7 +59,7 @@ Input tab
 
 
 :ref:`Previous: (2) From Molecular Dynamics to Blender (General) <tutorial_from_md>`
-
+:ref:`Next: (4) Highlighting atoms and bonds <tutorial_customization>`
 
 ----
 
