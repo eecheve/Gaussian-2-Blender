@@ -20,7 +20,7 @@ class Main_Body(object):
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation,
-                 atom_hl_list, bond_hl_list, forced_bonds_list):
+                 atom_hl_list, bond_hl_list, forced_bonds_list, animation_frames):
         """
         Initializes the Main_Body class with input and output parameters.
         
@@ -37,6 +37,7 @@ class Main_Body(object):
         :param atom_hl_list: List of atoms to highlight.
         :param bond_hl_list: List of bonds to highlight.
         :param forced_bonds_list: List of bonds to overwrite.
+        :param animation_frames: string list of all the atoms and cartesian coordinates for every frame.
         """
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
@@ -51,6 +52,7 @@ class Main_Body(object):
         self.atom_hl_list = atom_hl_list
         self.bond_hl_list = bond_hl_list
         self.forced_bonds_list = forced_bonds_list
+        self.animation_frames = animation_frames
         
         self.coords = []
         self.number_of_elements = 0
@@ -369,10 +371,11 @@ class Main_Body(object):
             return
         else:
             #blend_file_dir = os.path.dirname(__file__)  # Ensure this variable is defined
-            blend_file_dir = bpy.path.abspath("//")  # Correctly gets the .blend file directory
-            anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
+            #blend_file_dir = bpy.path.abspath("//")  # Correctly gets the .blend file directory
+            #anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
             Animate = self.get_module("Animate")
-            Animate.animate(anim_frames_path=anim_frames_file, mode=self.o_file_type)
+            #Animate.animate(anim_frames_path=anim_frames_file, mode=self.o_file_type)
+            Animate.animate(anim_frames=self.animation_frames, mode=self.o_file_type)
     
     def Manage_Export(self):
         """
@@ -390,12 +393,12 @@ class Main_Body(object):
             Animate.export_animation(export_path)
     
 if __name__ == "__main__":
-    params_file_path = os.path.join(blend_file_dir, "parameters.txt")
+    json_config_path = os.path.join(blend_file_dir, "t2b_config.json")
     
-    if not os.path.isfile(params_file_path):
-        raise FileNotFoundError(f"Error: The file 'parameters.txt' was not found at {params_file_path}")
+    if not os.path.isfile(json_config_path):
+        raise FileNotFoundError(f"Error: The file 't2b_config.json' was not found at {json_config_path}")
     
-    params_data = Receive_Parameters.get_parameters_data(params_file_path)
+    params_data = Receive_Parameters.get_parameters_data(json_config_path)
     main_body_instance = Main_Body(params_data["i_file_type"],
                                    params_data["i_folder_path"],
                                    params_data["i_file_name"],
@@ -408,7 +411,8 @@ if __name__ == "__main__":
                                    params_data["str_is_animation"],
                                    params_data["atom_hl_list"],
                                    params_data["bond_hl_list"],
-                                   params_data["forced_bonds_list"])
+                                   params_data["forced_bonds_list"],
+                                   params_data["animation_frames"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Manage_Ionic_Information()

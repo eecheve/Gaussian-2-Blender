@@ -7,7 +7,7 @@
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
         "name": "water_frame1",
-        "type": ".glb"
+        "type": ".fbx"
     },
     "model": {
         "type": "Ball-and-Stick"

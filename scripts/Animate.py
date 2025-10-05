@@ -22,22 +22,41 @@ def clear_all_animations():
     for action in all_actions:
         bpy.data.actions.remove(action)
         
-def calculate_number_of_frames(anim_frames_path):
-    """
-    Determines the number of animation frames based on an input file.
+# def calculate_number_of_frames2(anim_frames_path):
+#     """
+#     Determines the number of animation frames based on an input file.
     
-    :param anim_frames_path: Path to the animation frames data file.
-    :type anim_frames_path: str
+#     :param anim_frames_path: Path to the animation frames data file.
+#     :type anim_frames_path: str
+#     :return: Number of frames in the animation.
+#     :rtype: int
+#     """
+#     with open(anim_frames_path, 'r') as file:
+#         first_line = file.readline().strip()  # Read the first line
+#         parts = first_line.split() # Split the line into parts
+#         coordinates = parts[1:] # Remove the element identifier
+#         # The number of frames is the total number of coordinates divided by 3 (since each frame has 3 coordinates per element)
+#         num_frames = len(coordinates) / 3        
+#     return int(num_frames)
+
+def calculate_number_of_frames(animation_frames):
+    """
+    Determines the number of animation frames based on the JSON 'animation_frames' list.
+
+    :param animation_frames: List of strings, each representing an atom's animation data.
     :return: Number of frames in the animation.
     :rtype: int
     """
-    with open(anim_frames_path, 'r') as file:
-        first_line = file.readline().strip()  # Read the first line
-        parts = first_line.split() # Split the line into parts
-        coordinates = parts[1:] # Remove the element identifier
-        # The number of frames is the total number of coordinates divided by 3 (since each frame has 3 coordinates per element)
-        num_frames = len(coordinates) / 3        
-    return int(num_frames)
+    if not animation_frames:
+        return 0
+
+    # Use the first atom's frame data to determine the number of frames
+    first_line = animation_frames[0].strip()
+    parts = first_line.split()
+    coordinates = parts[1:] # Remove the atom identifier (e.g., "C01")
+    num_frames = len(coordinates) // 3 # Each frame has 3 coordinates (x, y, z)
+
+    return num_frames
 
 def separate_elements_from_bonds():
     """
@@ -228,26 +247,53 @@ def ExtractDataFromFile(path):
 def refine_anim_data(raw_anim_data):
     """
     Converts raw animation data into numerical vectors.
-    
-    :param raw_anim_data: Raw animation data.
-    :type raw_anim_data: list[list[str]]
+
+    :param raw_anim_data: List of strings, each representing an atom's animation data.
     :return: Refined animation data with numerical vectors.
     :rtype: list[list]
     """
     refined_data = []
-    for data_point in raw_anim_data:
-        element_identifier = data_point[0]
+    for line in raw_anim_data:
+        tokens = line.strip().split()
+        element_identifier = tokens[0]
         vectors = []
-        # Loop through the coordinate sets
-        for i in range(1, len(data_point), 3):
-            x = float(data_point[i])
-            y = float(data_point[i + 1])
-            z = float(data_point[i + 2])
-            vector = mathutils.Vector((x, y, z))
-            vectors.append(vector)
+        for i in range(1, len(tokens), 3):
+            try:
+                x = float(tokens[i])
+                y = float(tokens[i + 1])
+                z = float(tokens[i + 2])
+                vector = mathutils.Vector((x, y, z))
+                vectors.append(vector)
+            except (IndexError, ValueError) as e:
+                print(f"Error parsing coordinates for {element_identifier}: {e}")
+                continue
         refined_data.append([element_identifier] + vectors)
     print("8.2: The animation data was refined into numerical vectors")
     return refined_data
+
+# def refine_anim_data(raw_anim_data):
+#     """
+#     Converts raw animation data into numerical vectors.
+    
+#     :param raw_anim_data: Raw animation data.
+#     :type raw_anim_data: list[list[str]]
+#     :return: Refined animation data with numerical vectors.
+#     :rtype: list[list]
+#     """
+#     refined_data = []
+#     for data_point in raw_anim_data:
+#         element_identifier = data_point[0]
+#         vectors = []
+#         # Loop through the coordinate sets
+#         for i in range(1, len(data_point), 3):
+#             x = float(data_point[i])
+#             y = float(data_point[i + 1])
+#             z = float(data_point[i + 2])
+#             vector = mathutils.Vector((x, y, z))
+#             vectors.append(vector)
+#         refined_data.append([element_identifier] + vectors)
+#     print("8.2: The animation data was refined into numerical vectors")
+#     return refined_data
 
 def get_bond_locations(bond_name, anim_data, type):
     """
@@ -472,19 +518,19 @@ def bake_all_animations(element_list, bond_list, end_frame=40, mode=".fbx"):
     else:
         raise ValueError(f"Unsupported mode '{mode}'. Only '.fbx' and '.glb' are allowed.")
                     
-def animate(anim_frames_path, mode=".fbx", step_size=20):
+def animate(anim_frames, mode=".fbx", step_size=20):
     """
     Orchestrates animation of molecular elements and bonds.
     
-    :param anim_frames_path: Filepath of the animation data.
-    :type anim_frames_path: str
+    :param anim_frames: data of animation frames for every atom involved
+    :type anim_frames: str
     :param step_size: Frame interval between keyframes.
     :type step_size: int, optional
     """
     print("8: animation function is called")
-    raw_anim_data = ExtractDataFromFile(anim_frames_path)
-    anim_data = refine_anim_data(raw_anim_data)
-    number_of_frames = calculate_number_of_frames(anim_frames_path)
+    #raw_anim_data = ExtractDataFromFile(anim_frames_path)
+    anim_data = refine_anim_data(anim_frames)
+    number_of_frames = calculate_number_of_frames(anim_frames)
     print("9: the number of frames is: ", number_of_frames)
     element_list = separate_elements_from_bonds()[0]
     bond_list = separate_elements_from_bonds()[1]
