@@ -19,7 +19,7 @@ class Main_Body(object):
     and exporting molecular structures while managing parent-child relations and animations.
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
-                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, str_is_animation,
+                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, is_animation,
                  atom_hl_list, bond_hl_list, forced_bonds_list, animation_frames):
         """
         Initializes the Main_Body class with input and output parameters.
@@ -33,7 +33,7 @@ class Main_Body(object):
         :param o_file_type: Output file format.
         :param str_ionic_cell: String representation of ionic cell data.
         :param str_ion_input_list: String representation of ion input list.
-        :param str_is_animation: Determines if animation should be applied.
+        :param is_animation: Determines if animation should be applied.
         :param atom_hl_list: List of atoms to highlight.
         :param bond_hl_list: List of bonds to highlight.
         :param forced_bonds_list: List of bonds to overwrite.
@@ -48,7 +48,7 @@ class Main_Body(object):
         self.o_file_type = o_file_type
         self.str_ionic_cell = str_ionic_cell
         self.str_ion_input_list = str_ion_input_list
-        self.str_is_animation = str_is_animation
+        self.is_animation = is_animation
         self.atom_hl_list = atom_hl_list
         self.bond_hl_list = bond_hl_list
         self.forced_bonds_list = forced_bonds_list
@@ -367,14 +367,10 @@ class Main_Body(object):
         - `animate` from `Animate` module.
         :return: None
         """
-        if self.str_is_animation == "0":
+        if self.is_animation == False:
             return
         else:
-            #blend_file_dir = os.path.dirname(__file__)  # Ensure this variable is defined
-            #blend_file_dir = bpy.path.abspath("//")  # Correctly gets the .blend file directory
-            #anim_frames_file = os.path.join(blend_file_dir, "animation_frames.txt")
             Animate = self.get_module("Animate")
-            #Animate.animate(anim_frames_path=anim_frames_file, mode=self.o_file_type)
             Animate.animate(anim_frames=self.animation_frames, mode=self.o_file_type)
     
     def Manage_Export(self):
@@ -385,7 +381,7 @@ class Main_Body(object):
         - `Export` or `export_animation` from `Animate` module.
         :return: None
         """
-        if self.str_is_animation == "0":
+        if self.is_animation == "false":
             self.Export()
         else:
             Animate = self.get_module("Animate")
@@ -408,7 +404,7 @@ if __name__ == "__main__":
                                    params_data["o_file_type"],
                                    params_data["str_ionic_cell"],
                                    params_data["str_ion_input_list"],
-                                   params_data["str_is_animation"],
+                                   params_data["is_animation"],
                                    params_data["atom_hl_list"],
                                    params_data["bond_hl_list"],
                                    params_data["forced_bonds_list"],

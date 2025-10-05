@@ -42,7 +42,7 @@ def get_parameters_data(json_path):
         "str_is_ionic": str(config["flags"]["is_ionic"]),
         "str_unit_cell": str(config["flags"]["unit_cell"]),
         "str_ion_input_list": config["ions"],
-        "str_is_animation": str(config["flags"]["is_anim"]),
+        "is_animation": config["flags"]["is_anim"],
         "str_ionic_cell": f"({config['flags']['is_ionic']}_{config['flags']['unit_cell']})",
         "atom_hl_list": config["highlight"]["atoms"],
         "bond_hl_list": config["highlight"]["bonds"],
