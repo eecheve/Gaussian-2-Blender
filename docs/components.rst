@@ -37,9 +37,6 @@ Program Outline
          
          TheorChem2Blender -> t2b_config;
 
-         animation_frames -> if_windows;
-         animation_frames -> if_mac_os;
-
          t2b_config -> if_windows;
          t2b_config -> if_mac_os;
 
@@ -165,8 +162,10 @@ GUI
 
       assign_ionic_params -> IonRegion;
 
-      ActionsRegion -> convert;
-      ActionsRegion -> reset_to_defaults;
+      convert -> ActionsRegion;
+      reset_to_defaults -> ActionsRegion;
+      individual_convert -> ActionsRegion;
+
       convert -> convert_manager;
 
       convert_manager -> exceptions_test_passed;
