@@ -25,8 +25,7 @@ Program Outline
          ionic_radii [fillcolor=lavender];
          atomic_radii [fillcolor=lavender];
 
-         animation_frames [fillcolor=lavender];
-         parameters [fillcolor=lavender];
+         t2b_config [fillcolor=lavender];
 
          ReadMolecules_bat [fillcolor=lightgreen];
          ReadMolecules_sh [fillcolor=lightgreen];
@@ -36,14 +35,13 @@ Program Outline
 
          covalent_radii -> TheorChem2Blender;
          
-         TheorChem2Blender -> animation_frames;
-         TheorChem2Blender -> parameters;
+         TheorChem2Blender -> t2b_config;
 
          animation_frames -> if_windows;
          animation_frames -> if_mac_os;
 
-         parameters -> if_windows;
-         parameters -> if_mac_os;
+         t2b_config -> if_windows;
+         t2b_config -> if_mac_os;
 
          if_windows -> ReadMolecules_bat;
          if_mac_os -> ReadMolecules_sh;

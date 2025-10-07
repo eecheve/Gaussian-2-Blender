@@ -1,0 +1,31 @@
+{
+    "input": {
+        "type": ".xyz",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/trajectories",
+        "names": "carbon_dioxide_symmetric_vibration.xyz"
+    },
+    "output": {
+        "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
+        "name": "carbon_dioxide_symmetric_vibration",
+        "type": ".fbx"
+    },
+    "model": {
+        "type": "Ball-and-Stick"
+    },
+    "flags": {
+        "is_ionic": "0",
+        "unit_cell": "0",
+        "is_anim": true
+    },
+    "ions": "---",
+    "highlight": {
+        "atoms": "",
+        "bonds": ""
+    },
+    "forced_bonds": "C01=O02; C01=O03",
+    "animation_frames": [
+        "C01 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0",
+        "O02 0.0 0.0 1.514076 0.0 0.0 1.4665151 0.0 0.0 1.3365763 0.0 0.0 1.1590765 0.0 0.0 0.9815765 0.0 0.0 0.8516374 0.0 0.0 0.804076 0.0 0.0 0.8516364 0.0 0.0 0.9815749 0.0 0.0 1.1590746 0.0 0.0 1.3365746 0.0 0.0 1.4665142",
+        "O03 0.0 0.0 -1.514076 0.0 0.0 -1.4665151 0.0 0.0 -1.3365763 0.0 0.0 -1.1590765 0.0 0.0 -0.9815765 0.0 0.0 -0.8516374 0.0 0.0 -0.804076 0.0 0.0 -0.8516364 0.0 0.0 -0.9815749 0.0 0.0 -1.1590746 0.0 0.0 -1.3365746 0.0 0.0 -1.4665142"
+    ]
+}

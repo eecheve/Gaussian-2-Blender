@@ -1,6 +1,7 @@
 import os
 import sys
 import stat
+import json
 import platform
 import subprocess
 
@@ -65,6 +66,7 @@ class TheorChem2BlenderTabSystem:
     
     def _initialize_scripts_path(self):
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
+        self.jsonConfigPath = os.path.join(self.def_scriptsPath, "t2b_config.json")
     
     def _configure_root(self):
         """
@@ -367,11 +369,81 @@ class TheorChem2BlenderTabSystem:
         :param str_ion_list: list of strings containing all the ions within the input
         :param is_anim: boolean determining if input list is to be treated as animation
         """
-        self.overwrite_animation_frames(is_anim, i_type) #only does this if is_anim is True
-        self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+        #self.overwrite_animation_frames(is_anim, i_type) #only does this if is_anim is True
+        #self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+        #                            is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+        self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
         subprocess.call([exec_loc, b_path])
 
+    def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
+                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+        """
+        Collects GUI input and writes it to a structured JSON file for Blender processing.
+
+        :param json_path: Path to save the JSON configuration file
+        """
+        json_path = self.jsonConfigPath
+        config = {
+            "input": {
+                "type": i_type,
+                "paths": i_path,
+                "names": i_name
+            },
+            "output": {
+                "path": o_path,
+                "name": o_name,
+                "type": o_type
+            },
+            "model": {
+                "type": model_type
+            },
+            "flags": {
+                "is_ionic": is_ionic,
+                "unit_cell": unit_cell,
+                "is_anim": is_anim
+            },
+            "ions": str_ion_list,
+            "highlight": {
+                "atoms": hl_atoms,
+                "bonds": hl_bonds
+            },
+            "forced_bonds": forced_bonds,
+            "animation_frames": []
+        }
+
+        # Add animation frames if applicable
+        if is_anim:
+            config["animation_frames"] = self.populate_animation_frames(i_type, self.input_region.lst_InputPaths)
+
+        # Write to JSON file
+        with open(json_path, 'w') as f:
+            json.dump(config, f, indent=4)
+
+    def populate_animation_frames(self, i_type, input_paths):
+        """
+        Generates animation frame data based on input type and paths.
+
+        :param i_type: File type (.com or .xyz)
+        :param input_paths: List of input file paths
+        :return: List of frame strings
+        """
+        if i_type == ".com":
+            if len(input_paths) > 1:
+                frames_list = self.coordinates.combine_animation_frames(input_paths)
+                return [' '.join(map(str, frame)) for frame in frames_list]
+            else:
+                raise ValueError("At least two .com files are required for animation.")
+        elif i_type == ".xyz":
+            if len(input_paths) != 1:
+                raise ValueError("Only one .xyz file should be provided for animation input.")
+            xyz_path = input_paths[0]
+            frames = self.extract_all_frames(xyz_path)
+            combined = self.combine_xyz_animation_frames(frames)
+            return [' '.join(map(str, frame)) for frame in combined]
+        else:
+            raise ValueError(f"Animations with {i_type} files are not supported at the moment.")
+    
     def overwrite_animation_frames(self, is_anim, input_type):
         """
         If the input represents an animation, prepares animation frame data for conversion.
