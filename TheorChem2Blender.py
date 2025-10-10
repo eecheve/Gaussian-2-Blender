@@ -2,6 +2,8 @@ import os
 import sys
 import stat
 import json
+import time
+import psutil
 import platform
 import subprocess
 
@@ -366,9 +368,24 @@ class TheorChem2BlenderTabSystem:
         :param str_ion_list: list of strings containing all the ions within the input
         :param is_anim: boolean determining if input list is to be treated as animation
         """
+        #BENCHMARKING
+        process = psutil.Process(os.getpid())  # Get current process
+
+        start_time = time.time()  # Start timing
+        start_mem = process.memory_info().rss / (1024 ** 2)  # Memory in MB
+
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
         subprocess.call([exec_loc, b_path])
+        
+        end_time = time.time()
+        end_mem = process.memory_info().rss / (1024 ** 2)  # Memory in MB
+        memory_used = end_mem - start_mem
+
+        elapsed_time = end_time - start_time
+        print(f"Blender conversion completed in {elapsed_time:.2f} seconds")
+        print(f"Approximate memory used: {memory_used:.2f} MB")
+
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
                     is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):

@@ -1,13 +1,13 @@
 {
     "input": {
         "type": ".com",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/animations/water",
-        "names": "water_frame1.com"
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
+        "names": "acrylonitrile.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "water_frame1",
-        "type": ".fbx"
+        "name": "acrylonitrile",
+        "type": ".glb"
     },
     "model": {
         "type": "Ball-and-Stick"
@@ -15,7 +15,7 @@
     "flags": {
         "is_ionic": "0",
         "unit_cell": "0",
-        "is_anim": true
+        "is_anim": false
     },
     "ions": "---",
     "highlight": {
@@ -23,9 +23,5 @@
         "bonds": ""
     },
     "forced_bonds": "",
-    "animation_frames": [
-        "O01 0.00000000 0.00000000 0.10946300 0.00000000 0.00000000 0.11646300 0.00000000 0.00000000 0.12346300 0.00000000 0.00000000 0.11646300 0.00000000 0.00000000 0.10946300",
-        "H02 0.00000000 0.81357700 -0.40985200 0.00000000 0.77057700 -0.46585200 0.00000000 0.72757700 -0.52185200 0.00000000 0.77057700 -0.46585200 0.00000000 0.81357700 -0.40985200",
-        "H03 0.00000000 -0.81357700 -0.40985200 0.00000000 -0.77057700 -0.46585200 0.00000000 -0.72757700 -0.52185200 0.00000000 -0.77057700 -0.46585200 0.00000000 -0.81357700 -0.40985200"
-    ]
+    "animation_frames": []
 }
