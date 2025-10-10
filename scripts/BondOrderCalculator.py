@@ -1,6 +1,7 @@
 import os
 import json
 import numpy as np
+from typing import List
 
 class BondOrderCalculator():
     def __init__(self):
@@ -55,7 +56,17 @@ class BondOrderCalculator():
         v = r2 - r1
         return np.linalg.norm(v)
 
-    def get_bond_order_from_coordinates(self, atom1, atom2, pos1, pos2, threshold=0.1):
+    def calculate_bond_order_threshold(distance:float, references: List[float]) -> float:
+        """
+        Checks the possible bond distances available for single, double, and triple bonds between two specified bonds
+
+        :param references: (List[float]) The three bond length values (can be NA values if a bond is not found)
+
+        :return: (List[float]) The three threshold values (20%) for single, double, and triple bonds
+        """
+        return [r * 0.2 for r in references]
+    
+    def get_bond_order_from_coordinates(self, atom1, atom2, pos1, pos2):
         """
         Determine the bond order based on the distance between two atoms and their covalent radii.
 
@@ -69,22 +80,16 @@ class BondOrderCalculator():
         """
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
-
-        
-        # Check for intermediate bond order (1.5)
-        if references[0] is not None and references[1] is not None: #if each atoms has info for single and double bonds
-            avg_1_2 = (references[0] + references[1]) / 2 #getting the average between single and double
-            if abs(distance - avg_1_2) < threshold: #if the average +- distance is smaller than threshold
-                return 1.5 #assign aromatic bond order
+        thresholds = self.calculate_bond_order_threshold(references)
 
         # Check for other bond orders
         for i, ref in enumerate(references):
-            if ref is not None and abs(ref - distance) < threshold:
+            if ref is not None and abs(ref - distance) < thresholds[i]:
                 return i + 1  # Return the bond order (1 for single, 2 for double, 3 for triple)
 
         print(f"get_bond_order_from_coordinates error: the distance between {atom1} and {atom2} is too long to render a bond in between")
         return None  # Return None if no bond order is found
-
+    
     #TO DEBUG
     #def run(self):
     #    bond_order = self.get_bond_order_from_coordinates(atom1="C", atom2="H", pos1=[0,0,0], pos2=[0.00000,0.00000,1.08900])

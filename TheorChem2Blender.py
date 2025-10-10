@@ -352,10 +352,7 @@ class TheorChem2BlenderTabSystem:
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """ 
         Function to execute bat file that communicates with blender's python API 
-
-        Calls:
-        - `self.overwrite_animation_frames` and `self.overwrite_parameters_script`.
-    
+   
         :param excec_loc: path to the ReadMolecules.bat file which communicates with python
         :param b_path: location of the blender executable
         :param i_path: list of input specifications
@@ -369,9 +366,6 @@ class TheorChem2BlenderTabSystem:
         :param str_ion_list: list of strings containing all the ions within the input
         :param is_anim: boolean determining if input list is to be treated as animation
         """
-        #self.overwrite_animation_frames(is_anim, i_type) #only does this if is_anim is True
-        #self.overwrite_parameters_script(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-        #                            is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
         subprocess.call([exec_loc, b_path])
