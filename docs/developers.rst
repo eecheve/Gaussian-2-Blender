@@ -1,9 +1,19 @@
 For Developers
 ==============
 
+Debugging
+---------
+For debugging it is adviced to run the program from the console:
+  
+  .. code-block:: bash
+    
+     python3 TheorChem2Blender.py
+
+This way, the print statements from the ``MainBody.py`` file are exposed to the user.
+
 GUI overview:
 -------------
-The ``GaussianToBlender.py`` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing ``tkinter``, manages different regions and functionalities, including input, output, console, and ion management.
+The ``TheorChem2Blender.py`` application provides a graphical user interface (GUI) for converting Gaussian input files into 3D object files using Blender's API. The main script, utilizing ``tkinter``, manages different regions and functionalities, including input, output, console, and ion management.
 
 Key GUI Modules:
 ----------------

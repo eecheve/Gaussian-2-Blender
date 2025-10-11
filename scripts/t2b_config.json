@@ -2,11 +2,11 @@
     "input": {
         "type": ".com",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
-        "names": "acrylonitrile.com"
+        "names": "dicyanomethanide.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "acrylonitrile",
+        "name": "dicyanomethanide",
         "type": ".glb"
     },
     "model": {

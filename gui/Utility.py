@@ -1,9 +1,36 @@
-import sys
 import os
+import sys
+import time
+import psutil
 import tkinter as tk
+from functools import wraps
 
 class Utility(object):
     """Utility class holding functions used by several classes"""
+    @staticmethod
+    def benchmark(func):
+        """
+        Decorator to measure and print the execution time and memory usage of a function.
+        """
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            process = psutil.Process(os.getpid())
+            start_time = time.time()
+            start_mem = process.memory_info().rss / (1024 ** 2)  # MB
+
+            result = func(*args, **kwargs)
+
+            end_time = time.time()
+            end_mem = process.memory_info().rss / (1024 ** 2)
+            memory_used = end_mem - start_mem
+            elapsed_time = end_time - start_time
+
+            print(f"Function '{func.__name__}' completed in {elapsed_time:.2f} seconds")
+            print(f"Approximate memory used: {memory_used:.2f} MB")
+
+            return result
+        return wrapper
+
     
     def findFile(name, path):
         """

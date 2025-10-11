@@ -38,5 +38,3 @@ class ConsoleRegion(object):
         self.text.configure(state="normal")
         self.text.delete("1.0", "end")
         self.text.configure(state="disabled")
-
-
