@@ -80,7 +80,10 @@ class BondOrderCalculator():
         """
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
-        thresholds = self.calculate_bond_order_threshold(references)
+        try:
+            thresholds = self.calculate_bond_order_threshold(references)
+        except:
+            thresholds = [0.1,0.1,0.1] #in some cases calculate_bond_order_threshold fails, so I forced an arbitrary set of numbers by trial and error
 
         # Check for other bond orders
         for i, ref in enumerate(references):

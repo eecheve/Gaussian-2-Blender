@@ -1,0 +1,97 @@
+####################################################################### 
+# 
+# This file contains crystal structure data downloaded from the 
+# Cambridge Structural Database (CSD) hosted by the Cambridge 
+# Crystallographic Data Centre (CCDC) in cooperation with FIZ Karlsruhe.
+# 
+# Please note that these data are only for research purposes or private use.
+# For detailed information please see under Terms & Conditions.
+# Full information about CCDC and FIZ Karlsruhe data access policies and 
+# citation guidelines are available at http://www.ccdc.cam.ac.uk/access/V1
+# 
+# Audit and citation data items may have been added by FIZ Karlsruhe. 
+# Please retain this information to preserve the provenance of 
+# this file and to allow appropriate attribution of the data. 
+# 
+#######################################################################
+@<TRIPOS>MOLECULE
+NECRAR
+    27    40     1     0     0
+SMALL
+NO_CHARGES
+****
+Generated from the CSD
+
+@<TRIPOS>ATOM
+     1 Mn       0.0000   0.0000   3.0401   Mn        1 RES1   0.0000
+     2 Te       0.0000   0.0000   0.0000   Te        1 RES1   0.0000
+     3 O1       1.3838   1.3838   0.0000   O.3       1 RES1   0.0000
+     4 O2       0.8751  -0.8751  -1.4656   O.3       1 RES1   0.0000
+     5 O1      -1.3838  -1.3838   0.0000   O.3       1 RES1   0.0000
+     6 O2      -0.8751   0.8751  -1.4656   O.3       1 RES1   0.0000
+     7 O2      -0.8751   0.8751   1.4656   O.3       1 RES1   0.0000
+     8 O2       0.8751  -0.8751   1.4656   O.3       1 RES1   0.0000
+     9 Mn       0.0000   0.0000  -3.0401   Mn        1 RES1   0.0000
+    10 Mn       0.0000   0.0000  -6.0349   Mn        1 RES1   0.0000
+    11 Mn      -2.3210  -2.3210  -1.4974   Mn        1 RES1   0.0000
+    12 Mn      -2.3210   2.3210  -1.4974   Mn        1 RES1   0.0000
+    13 Mn       2.3210  -2.3210  -1.4974   Mn        1 RES1   0.0000
+    14 Mn       2.3210   2.3210  -1.4974   Mn        1 RES1   0.0000
+    15 Mn       0.0000   0.0000   6.0349   Mn        1 RES1   0.0000
+    16 Mn      -2.3210  -2.3210   1.4974   Mn        1 RES1   0.0000
+    17 Mn      -2.3210   2.3210   1.4974   Mn        1 RES1   0.0000
+    18 Mn       2.3210  -2.3210   1.4974   Mn        1 RES1   0.0000
+    19 Mn       2.3210   2.3210   1.4974   Mn        1 RES1   0.0000
+    20 O1       0.9372  -0.9372  -4.5375   O.3       1 RES1   0.0000
+    21 O1       0.9372  -0.9372   4.5375   O.3       1 RES1   0.0000
+    22 O1      -0.9372   0.9372  -4.5375   O.3       1 RES1   0.0000
+    23 O1      -0.9372   0.9372   4.5375   O.3       1 RES1   0.0000
+    24 O2      -1.4460  -1.4460   3.0719   O.3       1 RES1   0.0000
+    25 O2       1.4460   1.4460   3.0719   O.3       1 RES1   0.0000
+    26 O2       1.4460   1.4460  -3.0719   O.3       1 RES1   0.0000
+    27 O2      -1.4460  -1.4460  -3.0719   O.3       1 RES1   0.0000
+@<TRIPOS>BOND
+     1     1     7    1
+     2     1     8    1
+     3     1    15    1
+     4     1    21    1
+     5     1    23    1
+     6     1    24    1
+     7     1    25    1
+     8     2     3    1
+     9     2     4    1
+    10     2     5    1
+    11     2     6    1
+    12     2     7    1
+    13     2     8    1
+    14     3    14    1
+    15     3    19    1
+    16     4     9    1
+    17     4    13    1
+    18     5    11    1
+    19     5    16    1
+    20     6     9    1
+    21     6    12    1
+    22     7    17    1
+    23     8    18    1
+    24     9    10    1
+    25     9    20    1
+    26     9    22    1
+    27     9    26    1
+    28     9    27    1
+    29    10    20    1
+    30    10    22    1
+    31    11    16    1
+    32    11    27    1
+    33    12    17    1
+    34    13    18    1
+    35    14    19    1
+    36    14    26    1
+    37    15    21    1
+    38    15    23    1
+    39    16    24    1
+    40    19    25    1
+@<TRIPOS>SUBSTRUCTURE
+     1 RES1        1 GROUP             0 ****  ****    0  
+@<TRIPOS>CRYSIN
+    4.6421    4.6421    9.0750   90.0000   90.0000   90.0000   136     1
