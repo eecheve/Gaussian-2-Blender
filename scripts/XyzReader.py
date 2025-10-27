@@ -74,10 +74,15 @@ class XyzReader():
                     bond_order_char = bond_order_map.get(bond_order)
                     bond_orders.append((atom1, atom2, bond_order_char))
         return bond_orders
-    
-#if __name__ == "__main__":
+
+###
+#  TESTING
+###    
+# if __name__ == "__main__":
 #     test = XyzReader()
 #     raw_coords = test.extract_coords_from_xyz_file(
-#         "C:\\Documents\\Gaussian-2-Blender\\input_examples\\xyz_files\\2-cyano-2-aminoaceticacid.xyz")
+#         "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\input_examples\\xyz_files\\static\\organic\\2-cyano-2-aminoaceticacid.xyz")
 #     all_bo = test.obtain_all_bond_orders(raw_coords)
 #     print(all_bo)
+
+    
