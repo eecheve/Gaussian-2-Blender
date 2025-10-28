@@ -1,12 +1,12 @@
 {
     "input": {
-        "type": ".xyz",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/static/organic",
-        "names": "pyridine.xyz"
+        "type": ".com",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/nano",
+        "names": "Rebek-Molecular-Tennis-Ball.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "pyridine",
+        "name": "Rebek-Molecular-Tennis-Ball",
         "type": ".glb"
     },
     "model": {

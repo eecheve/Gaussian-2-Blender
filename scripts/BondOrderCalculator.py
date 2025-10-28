@@ -63,70 +63,44 @@ class BondOrderCalculator():
 
         :param references: (List[float]) The three bond length values (can be NA values if a bond is not found)
 
-        :return: (List[float]) The three threshold values: distance + 20% distance for single bond, and midpoints for double an triple bonds if they exist
+        :return: (List[float]) The three threshold values: distance + 10% distance for single bond, and midpoints for double an triple bonds if they exist
         """
         t1 = None
         t2 = None
         t3 = None
         if references[0] is not None:
-            t1 = (references[0] + references[0]*0.2) #first entry is a 20% leeway for single bond distance
+            t1 = (references[0] * 1.15) #first entry is a 15% leeway for single bond distance
         if references[1] is not None:
             t2 = (references[0] + references[1])/2 #second entry is the midpoint between single and double bond
         if references[2] is not None:
             t3 = (references[1] + references[2])/2 #third entry is the midpoint between triple and double bond
         return [t1, t2, t3]
     
-    def compare_distance_to_thresholds(self, distance:float, thresholds: List[float]) -> int:
+    def compare_distance_to_thresholds(self, distance:float, thresholds: List[float]) -> float:
         """
         Classify bond order based on distance and thresholds
 
-        :return: (int) bond order (0 means no bond)
+        :return: (int) bond order (None means no bond)
         """
         t_single, t_double, t_triple = thresholds
 
         if t_triple is not None and distance < t_triple: # Triple bond
             return 3
-
-        if t_double is not None and distance < t_double: # Double bond
+        
+        if t_double is not None and distance < t_double * 0.97: # Double bond 
             return 2
+        
+        if t_double is not None and t_single is not None:
+            arom_lower = t_double * 0.97
+            arom_upper = t_double * 1.03
+            if arom_lower <= distance < arom_upper:
+                return 1.5
 
         if t_single is not None and distance <= t_single: # Single bond
             return 1
 
-        return 0 # No bond
-            
-    def get_bond_order_from_coordinates2(self, atom1, atom2, pos1, pos2):
-        """
-        Determine the bond order based on the distance between two atoms and their covalent radii.
-
-        :param atom1: (str) The atomic symbol for the first atom.
-        :param atom2: (str) The atomic symbol for the second atom.
-        :param pos1: (tuple or list) The (x, y, z) coordinates of the first atom.
-        :param pos2: (tuple or list) The (x, y, z) coordinates of the second atom.
-        :param threshold: (float) The threshold value to determine the bond order.
-
-        :return: (int) The bond order (1 for single, 2 for double, 3 for triple) or None if no bond order is found.
-        """
-        distance = self.get_bond_length_from_coordinates(pos1, pos2)
-        references = self.get_covalent_lengths_for_atoms(atom1, atom2)
-        thresholds = self.calculate_bond_order_threshold(references)
-        print("distance is", distance)
-        print("references are", references)
-        print("thresholds are:",thresholds)
-        # try:
-        #     thresholds = self.calculate_bond_order_threshold(references)
-        # except:
-        #     thresholds = [0.1,0.1,0.1] #in some cases calculate_bond_order_threshold fails, so I forced an arbitrary set of numbers by trial and error
-
-        # Check for other bond orders
-        for i, ref in enumerate(references):
-            if ref is not None and abs(ref - distance) < thresholds[i]:
-                print("distance minus threshold is:", abs(ref - distance))
-                return i + 1  # Return the bond order (1 for single, 2 for double, 3 for triple)
-
-        print(f"get_bond_order_from_coordinates error: the distance between {atom1} and {atom2} is too long to render a bond in between")
-        return None  # Return None if no bond order is found
-    
+        return None # No bond
+              
     def get_bond_order_from_coordinates(self, atom1:str, atom2:str, pos1:Sequence[float], pos2:Sequence[float]):
         """
         Determine the bond order based on the distance between two atoms and their covalent radii.
@@ -142,6 +116,8 @@ class BondOrderCalculator():
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
         thresholds = self.calculate_bond_order_threshold(references)
         bo = self.compare_distance_to_thresholds(distance, thresholds)
+        if bo is None:
+            print(f"the distance between {atom1} and {atom2} is too long to render a bond in between")
         return bo
 
     #TO DEBUG

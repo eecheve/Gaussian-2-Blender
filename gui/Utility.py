@@ -4,32 +4,83 @@ import time
 import psutil
 import tkinter as tk
 from functools import wraps
+from inspect import signature
 
 class Utility(object):
     """Utility class holding functions used by several classes"""
     @staticmethod
-    def benchmark(func):
+    def redirect_print_to_log(logfile='output.log', mode='a'):
         """
-        Decorator to measure and print the execution time and memory usage of a function.
+        A decorator that redirects all print() statements within a function
+        to a specified log file.
+        """
+        def decorator(func):
+            @wraps(func)
+            def wrapper(*args, **kwargs):
+                original_stdout = sys.stdout  # Save current stdout
+                with open(logfile, mode) as f:
+                    sys.stdout = f  # Redirect prints
+                    try:
+                        result = func(*args, **kwargs)
+                    finally:
+                        sys.stdout = original_stdout  # Restore stdout
+                return result
+            return wrapper
+        return decorator
+
+    @staticmethod
+    def measure_memory(func):
+        """
+        Decorator to measure ant print the memory usage of a function
         """
         @wraps(func)
         def wrapper(*args, **kwargs):
             process = psutil.Process(os.getpid())
-            start_time = time.time()
-            start_mem = process.memory_info().rss / (1024 ** 2)  # MB
-
+            start_mem = process.memory_info().rss / (1024 ** 2)  # MB before
             result = func(*args, **kwargs)
-
-            end_time = time.time()
-            end_mem = process.memory_info().rss / (1024 ** 2)
+            end_mem = process.memory_info().rss / (1024 ** 2)    # MB after
             memory_used = end_mem - start_mem
-            elapsed_time = end_time - start_time
-
-            print(f"Function '{func.__name__}' completed in {elapsed_time:.2f} seconds")
             print(f"Approximate memory used: {memory_used:.2f} MB")
-
             return result
         return wrapper
+    
+    @staticmethod
+    def time_function(func):
+        """
+        Decorator to measure and print the execution time usage of a function.
+        """
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            start_time = time.time()
+            result = func(*args, **kwargs)
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            print(f"Function '{func.__name__}' completed in {elapsed_time:.2f} seconds")
+            return result
+        return wrapper
+    
+    @staticmethod
+    def announce_conversion(func):
+        """
+        Decorator to print which molecule or file is currently being converted.
+        It assumes the wrapped function has a parameter named 'i_name'.
+        """
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Try to extract 'i_name' from either kwargs or positional args
+            sig = signature(func)
+            bound = sig.bind_partial(*args, **kwargs)
+            bound.apply_defaults()
+            i_name = bound.arguments.get("i_name", None)
+
+            if i_name is not None:
+                print(f"Currently converting {i_name}...")
+            else:
+                print("Currently converting: (unknown input)")
+
+            return func(*args, **kwargs)
+        return wrapper
+
 
     
     def findFile(name, path):

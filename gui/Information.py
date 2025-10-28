@@ -33,34 +33,6 @@ class Information(object):
             )
         self.url = "https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515"
                
-    # def _initialize_popup(self, popup):
-
-    #     self.about_info = tk.Label(master=popup,
-    #                                text=self.about_text,
-    #                                bg="#e0e0e0",
-    #                                fg='black')
-    #     self.lbl_ver = tk.Label(master=popup,
-    #                                 text="version: ",
-    #                                 bg="#e0e0e0",
-    #                                 fg="black")
-    #     self.lbl_version = tk.Label(master=popup,
-    #                                 text="2025.7.0",
-    #                                 bg="#e0e0e0",
-    #                                 fg="gray")
-        
-    #     self.lbl_auth = tk.Label(master=popup,
-    #                              text="cer3D-Cayey Group",
-    #                              bg="#e0e0e0",
-    #                              fg="gray")
-
-    #     self.about_info.grid(row=0, column=0, columnspan=2)
-    #     self.lbl_ver.grid(row=1, column=0)
-    #     self.lbl_version.grid(row=1, column=1)
-    #     self.lbl_auth.grid(row=2, column=0, columnspan=2)
-
-    #     self.btn_close = tk.Button(popup, text="Close", command=popup.destroy)
-    #     self.btn_close.grid(row=3, column=0, pady=10)
-
     def _initialize_popup(self, popup):
         text_widget = tk.Text(popup, bg="#e0e0e0", fg="black", wrap="word", height=6, width=100, borderwidth=0)
         text_widget.insert("end", self.about_text)
@@ -71,7 +43,7 @@ class Information(object):
         text_widget.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
         self.lbl_ver = tk.Label(popup, text="version: ", bg="#e0e0e0", fg="black")
-        self.lbl_version = tk.Label(popup, text="2025.7.0", bg="#e0e0e0", fg="gray")
+        self.lbl_version = tk.Label(popup, text="2025.11.0", bg="#e0e0e0", fg="gray")
         self.lbl_auth = tk.Label(popup, text="cer3D-Cayey Group", bg="#e0e0e0", fg="gray")
 
         self.lbl_ver.grid(row=1, column=0, sticky="e")

@@ -2,10 +2,9 @@ import os
 import sys
 import stat
 import json
-import time
-import psutil
 import platform
 import subprocess
+import memory_profiler
 
 import tkinter as tk
 from tkinter import filedialog
@@ -14,7 +13,6 @@ from tkinter import ttk
 #utility modules
 from gui.Utility import Utility
 from gui.Coordinates import Coordinates
-from gui.Tutorial import Tutorial
 
 #gui modules
 from gui.Instructions import Instructions
@@ -22,7 +20,6 @@ from gui.Information import Information
 from gui.BlenderPath import BlenderPath
 from gui.InputRegion import InputRegion
 from gui.HighlighterRegion import HighlighterRegion
-from gui.WalkthroughRegion import WalkthroughRegion
 from gui.OutputRegion import OutputRegion
 from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
@@ -348,8 +345,11 @@ class TheorChem2BlenderTabSystem:
         else:
             str_ionList = "---"
         return is_ionic, unit_cell, ion_list, str_ionList
-    
-    @Utility.benchmark
+
+    #@Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+    #@Utility.announce_conversion # to specify which molecule is being converted
+    #@Utility.time_function # to measure how much time this function runs
+    #@memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """ 
