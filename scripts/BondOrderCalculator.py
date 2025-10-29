@@ -116,8 +116,8 @@ class BondOrderCalculator():
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
         thresholds = self.calculate_bond_order_threshold(references)
         bo = self.compare_distance_to_thresholds(distance, thresholds)
-        if bo is None:
-            print(f"the distance between {atom1} and {atom2} is too long to render a bond in between")
+        #if bo is None:
+        #    print(f"the distance between {atom1} and {atom2} is too long to render a bond in between")
         return bo
 
     #TO DEBUG

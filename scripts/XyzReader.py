@@ -1,3 +1,4 @@
+import re
 from BondOrderCalculator import BondOrderCalculator
 
 class XyzReader():
@@ -45,10 +46,14 @@ class XyzReader():
         :param raw_coords: (list) List of raw coordinates.
         :return: (list) A list of lists with atomic symbols assigned a unique two-digit index.
         """
+        num_atoms = len(raw_coords)
+        digits = 3 if num_atoms >= 100 else 2
+        print(f"number of atoms are {num_atoms}")
         indexed_coords = []
         for index, entry in enumerate(raw_coords, start=1):
             new_entry = entry.copy()  # Copy the original entry to avoid modifying it
-            new_entry[0] = f"{entry[0]}{index:02d}"
+            #new_entry[0] = f"{entry[0]}{index:02d}"
+            new_entry[0] = f"{entry[0]}{index:0{digits}d}" #to account for molecules between 100 and 999 atoms
             indexed_coords.append(new_entry)
         return indexed_coords
     
@@ -67,8 +72,10 @@ class XyzReader():
             atom1, x1, y1, z1 = coords_with_indices[i]
             for j in range(i + 1, num_atoms):
                 atom2, x2, y2, z2 = coords_with_indices[j]
+                elem1 = re.match(r"([A-Za-z]+)", atom1).group(1) #regular expression to remove numerical indices from atom name
+                elem2 = re.match(r"([A-Za-z]+)", atom2).group(1) #regular expression to remove numerical indices from atom name
                 bond_order = self.calculator.get_bond_order_from_coordinates(
-                    atom1[:-2], atom2[:-2], (float(x1), float(y1), float(z1)), (float(x2), float(y2), float(z2))
+                    elem1, elem2, (float(x1), float(y1), float(z1)), (float(x2), float(y2), float(z2))
                 )
                 if bond_order is not None:
                     bond_order_char = bond_order_map.get(bond_order)
