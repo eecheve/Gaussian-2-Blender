@@ -1,12 +1,12 @@
 {
     "input": {
-        "type": ".com",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/nano",
-        "names": "Rebek-Molecular-Tennis-Ball.com"
+        "type": ".xyz",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/static/organic",
+        "names": "tetrakis_triphenilphosphino_niquel(II).xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "Rebek-Molecular-Tennis-Ball",
+        "name": "tetrakis_triphenilphosphino_niquel(II)",
         "type": ".glb"
     },
     "model": {

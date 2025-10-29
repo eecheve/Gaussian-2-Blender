@@ -1,0 +1,132 @@
+Currently converting tetrakis_triphenilphosphino_niquel(II).xyz...
+Filename: c:\Users\User\G2B\Gaussian-2-Blender\TheorChem2Blender.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   349    113.8 MiB    113.8 MiB           1       @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+   350                                             @Utility.announce_conversion # to specify which molecule is being converted
+   351                                             @Utility.time_function # to measure how much time this function runs
+   352                                             @memory_profiler.profile # to measure memory usage
+   353                                             def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
+   354                                                                o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+   355                                                 """ 
+   356                                                 Function to execute bat file that communicates with blender's python API 
+   357                                            
+   358                                                 :param excec_loc: path to the ReadMolecules.bat file which communicates with python
+   359                                                 :param b_path: location of the blender executable
+   360                                                 :param i_path: list of input specifications
+   361                                                 :param i_name: list of input names to be converted into 3D objects
+   362                                                 :param model_type: type of model to export
+   363                                                 :param o_path: output path
+   364                                                 :param o_name: output names
+   365                                                 :param o_type: output type
+   366                                                 :param is_ionic: boolean specifyig wether the input is ionic
+   367                                                 :param unit_cell: boolean specifying whether the input contains a unit cell
+   368                                                 :param str_ion_list: list of strings containing all the ions within the input
+   369                                                 :param is_anim: boolean determining if input list is to be treated as animation
+   370                                                 """
+   371    113.8 MiB      0.0 MiB           2           self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+   372    113.8 MiB      0.0 MiB           1                                       is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+   373    113.8 MiB     -0.0 MiB           1           subprocess.call([exec_loc, b_path])
+
+
+Function 'individual_convert' completed in 2.90 seconds
+Currently converting tetrakis_triphenilphosphino_niquel(II).xyz...
+Filename: c:\Users\User\G2B\Gaussian-2-Blender\TheorChem2Blender.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   349    114.5 MiB    114.5 MiB           1       @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+   350                                             @Utility.announce_conversion # to specify which molecule is being converted
+   351                                             @Utility.time_function # to measure how much time this function runs
+   352                                             @memory_profiler.profile # to measure memory usage
+   353                                             def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
+   354                                                                o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+   355                                                 """ 
+   356                                                 Function to execute bat file that communicates with blender's python API 
+   357                                            
+   358                                                 :param excec_loc: path to the ReadMolecules.bat file which communicates with python
+   359                                                 :param b_path: location of the blender executable
+   360                                                 :param i_path: list of input specifications
+   361                                                 :param i_name: list of input names to be converted into 3D objects
+   362                                                 :param model_type: type of model to export
+   363                                                 :param o_path: output path
+   364                                                 :param o_name: output names
+   365                                                 :param o_type: output type
+   366                                                 :param is_ionic: boolean specifyig wether the input is ionic
+   367                                                 :param unit_cell: boolean specifying whether the input contains a unit cell
+   368                                                 :param str_ion_list: list of strings containing all the ions within the input
+   369                                                 :param is_anim: boolean determining if input list is to be treated as animation
+   370                                                 """
+   371    114.6 MiB      0.0 MiB           2           self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+   372    114.5 MiB      0.0 MiB           1                                       is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+   373    114.6 MiB      0.1 MiB           1           subprocess.call([exec_loc, b_path])
+
+
+Function 'individual_convert' completed in 2.35 seconds
+Currently converting tetrakis_triphenilphosphino_niquel(II).xyz...
+Filename: c:\Users\User\G2B\Gaussian-2-Blender\TheorChem2Blender.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   349    113.2 MiB    113.2 MiB           1       @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+   350                                             @Utility.announce_conversion # to specify which molecule is being converted
+   351                                             @Utility.time_function # to measure how much time this function runs
+   352                                             @memory_profiler.profile # to measure memory usage
+   353                                             def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
+   354                                                                o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+   355                                                 """ 
+   356                                                 Function to execute bat file that communicates with blender's python API 
+   357                                            
+   358                                                 :param excec_loc: path to the ReadMolecules.bat file which communicates with python
+   359                                                 :param b_path: location of the blender executable
+   360                                                 :param i_path: list of input specifications
+   361                                                 :param i_name: list of input names to be converted into 3D objects
+   362                                                 :param model_type: type of model to export
+   363                                                 :param o_path: output path
+   364                                                 :param o_name: output names
+   365                                                 :param o_type: output type
+   366                                                 :param is_ionic: boolean specifyig wether the input is ionic
+   367                                                 :param unit_cell: boolean specifying whether the input contains a unit cell
+   368                                                 :param str_ion_list: list of strings containing all the ions within the input
+   369                                                 :param is_anim: boolean determining if input list is to be treated as animation
+   370                                                 """
+   371    113.2 MiB      0.0 MiB           2           self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+   372    113.2 MiB      0.0 MiB           1                                       is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+   373    113.2 MiB      0.0 MiB           1           subprocess.call([exec_loc, b_path])
+
+
+Function 'individual_convert' completed in 2.11 seconds
+Currently converting tetrakis_triphenilphosphino_niquel(II).xyz...
+Filename: c:\Users\User\G2B\Gaussian-2-Blender\TheorChem2Blender.py
+
+Line #    Mem usage    Increment  Occurrences   Line Contents
+=============================================================
+   349    112.9 MiB    112.9 MiB           1       @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+   350                                             @Utility.announce_conversion # to specify which molecule is being converted
+   351                                             @Utility.time_function # to measure how much time this function runs
+   352                                             @memory_profiler.profile # to measure memory usage
+   353                                             def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
+   354                                                                o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+   355                                                 """ 
+   356                                                 Function to execute bat file that communicates with blender's python API 
+   357                                            
+   358                                                 :param excec_loc: path to the ReadMolecules.bat file which communicates with python
+   359                                                 :param b_path: location of the blender executable
+   360                                                 :param i_path: list of input specifications
+   361                                                 :param i_name: list of input names to be converted into 3D objects
+   362                                                 :param model_type: type of model to export
+   363                                                 :param o_path: output path
+   364                                                 :param o_name: output names
+   365                                                 :param o_type: output type
+   366                                                 :param is_ionic: boolean specifyig wether the input is ionic
+   367                                                 :param unit_cell: boolean specifying whether the input contains a unit cell
+   368                                                 :param str_ion_list: list of strings containing all the ions within the input
+   369                                                 :param is_anim: boolean determining if input list is to be treated as animation
+   370                                                 """
+   371    113.0 MiB      0.0 MiB           2           self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
+   372    112.9 MiB      0.0 MiB           1                                       is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+   373    113.0 MiB      0.0 MiB           1           subprocess.call([exec_loc, b_path])
+
+
+Function 'individual_convert' completed in 2.08 seconds

@@ -223,6 +223,7 @@ def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell
     name1 = atom1 + bond_type + atom2
     name2 = atom2 + bond_type + atom1
     #spawn positions for elements and their middle point
+    print(f"atoms to bond are {atom1}, {atom2}, which should exist in {pos_dict}")
     v1 = pos_dict.get(atom1)
     v3 = pos_dict.get(atom2)
     v2 = (v1+v3)/2
