@@ -2,11 +2,11 @@
     "input": {
         "type": ".xyz",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/xyz_files/static/organic",
-        "names": "tetrakis_triphenilphosphino_niquel(II).xyz"
+        "names": "adamantane_3x3.xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "tetrakis_triphenilphosphino_niquel(II)",
+        "name": "adamantane_3x3",
         "type": ".glb"
     },
     "model": {

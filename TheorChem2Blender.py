@@ -346,10 +346,10 @@ class TheorChem2BlenderTabSystem:
             str_ionList = "---"
         return is_ionic, unit_cell, ion_list, str_ionList
 
-    @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
-    @Utility.announce_conversion # to specify which molecule is being converted
-    @Utility.time_function # to measure how much time this function runs
-    @memory_profiler.profile # to measure memory usage
+    #@Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+    #@Utility.announce_conversion # to specify which molecule is being converted
+    #@Utility.time_function # to measure how much time this function runs
+    #@memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
         """ 
