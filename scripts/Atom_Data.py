@@ -65,7 +65,7 @@ class Atom_Data:
     def get_ionicData(self):
         return self.ionicData
     
-IonicRadii = { #element symbols, their covalent radii & their RGBA color values
+IonicRadii = { #element symbols, their ionic radii & their RGBA color values
     "Ac": [Ionic(3,"VI",1.12)],
     "Al": [Ionic(3,"IV",0.39),Ionic(3,"V",0.48),Ionic(3,"VI",0.535)],
     "Am": [Ionic(2,"VII",1.21),Ionic(2,"VIII",1.26),Ionic(2,"IX",1.31),Ionic(3,"VI",0.975),Ionic(3,"VIII",1.09),

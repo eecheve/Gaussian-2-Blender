@@ -2,11 +2,11 @@
     "input": {
         "type": ".xyz",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/benchmarking2",
-        "names": "glu-glu-glu.xyz"
+        "names": "zeaxanthin.xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "glu-glu-glu",
+        "name": "zeaxanthin",
         "type": ".glb"
     },
     "model": {
