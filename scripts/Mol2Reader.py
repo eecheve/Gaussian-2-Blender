@@ -25,7 +25,9 @@ class Mol2Reader():
                 if atom_section:
                     parts = line.split()
                     if len(parts) >= 6:
-                        atom = parts[1]
+                        #atom = parts[1]
+                        raw_atom = parts[1] # Remove digits from atom name
+                        atom = re.sub(r"\d+", "", raw_atom)
                         x, y, z = map(float, parts[2:5])
                         coords.append([atom, x, y, z])
         return coords
