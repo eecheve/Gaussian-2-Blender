@@ -49,22 +49,24 @@ def write_xyz_file(atom_list: List[str], xyz_file_path: str, comment:str ="Gener
             f.write(f"{atom:2s}  {x: .6f}  {y: .6f}  {z: .6f}\n")
 
 
-molecules_to_add = [
-    "taxol", "geosmin", "absicic-acid", "cholesterol", "retinol", "testosterone", "estradiol", "cortisone", 
-    "progesterone", "vitamin-b1", "vitamin-d2", "vitamin-d3", "b-carotene", "squalene", "zeaxanthin", "phytol", 
-    "geranylgeraniol", "lanosterol", "stearidonic-acid", "Eicosatetraenoic-acid", "Eicosapentaenoic-acid",
-    "riboflavin", "fad", "folic-acid", "tribenzylamine"
-]
+# molecules_to_add = [
+#     "taxol", "geosmin", "absicic-acid", "cholesterol", "retinol", "testosterone", "estradiol", "cortisone", 
+#     "progesterone", "vitamin-b1", "vitamin-d2", "vitamin-d3", "b-carotene", "squalene", "zeaxanthin", "phytol", 
+#     "geranylgeraniol", "lanosterol", "stearidonic-acid", "Eicosatetraenoic-acid", "Eicosapentaenoic-acid",
+#     "riboflavin", "fad", "folic-acid", "tribenzylamine"
+# ]
+
 benchmark_path = "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\input_examples\\benchmarking2\\"
 
-# input_path = "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\input_examples\\benchmarking2\\cholesterol.mol2"
-# output_path = "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\input_examples\\benchmarking2\\cholesterol.xyz"
-# mol2_file = readMol2Input(input_path)
-# xyz_file = write_xyz_file(mol2_file, output_path)
+molecule_name = "propionitrile"
+input_path = benchmark_path + molecule_name + ".mol2"
+output_path = benchmark_path + molecule_name + ".xyz"
+mol2_file = readMol2Input(input_path)
+xyz_file = write_xyz_file(mol2_file, output_path)
 
-for molecule in molecules_to_add:
-    i = benchmark_path + molecule + ".mol2"
-    o = benchmark_path + molecule + ".xyz"
-    f = readMol2Input(i)
-    x = write_xyz_file(f, o)
+# for molecule in molecules_to_add:
+#     i = benchmark_path + molecule + ".mol2"
+#     o = benchmark_path + molecule + ".xyz"
+#     f = readMol2Input(i)
+#     x = write_xyz_file(f, o)
 

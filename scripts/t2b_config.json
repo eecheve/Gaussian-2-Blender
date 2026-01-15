@@ -2,11 +2,11 @@
     "input": {
         "type": ".xyz",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/benchmarking2",
-        "names": "zeaxanthin.xyz"
+        "names": "propionitrile.xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "zeaxanthin",
+        "name": "propionitrile",
         "type": ".glb"
     },
     "model": {

@@ -271,30 +271,6 @@ def refine_anim_data(raw_anim_data):
     print("8.2: The animation data was refined into numerical vectors")
     return refined_data
 
-# def refine_anim_data(raw_anim_data):
-#     """
-#     Converts raw animation data into numerical vectors.
-    
-#     :param raw_anim_data: Raw animation data.
-#     :type raw_anim_data: list[list[str]]
-#     :return: Refined animation data with numerical vectors.
-#     :rtype: list[list]
-#     """
-#     refined_data = []
-#     for data_point in raw_anim_data:
-#         element_identifier = data_point[0]
-#         vectors = []
-#         # Loop through the coordinate sets
-#         for i in range(1, len(data_point), 3):
-#             x = float(data_point[i])
-#             y = float(data_point[i + 1])
-#             z = float(data_point[i + 2])
-#             vector = mathutils.Vector((x, y, z))
-#             vectors.append(vector)
-#         refined_data.append([element_identifier] + vectors)
-#     print("8.2: The animation data was refined into numerical vectors")
-#     return refined_data
-
 def get_bond_locations(bond_name, anim_data, type):
     """
     Calculates the center of mass for each bond location.
