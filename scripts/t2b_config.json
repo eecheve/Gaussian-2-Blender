@@ -1,12 +1,12 @@
 {
     "input": {
-        "type": ".com",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
-        "names": "acrylonitrile.com"
+        "type": ".xyz",
+        "paths": "C:/Users/User/Downloads",
+        "names": "VOOH_try1.xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "acrylonitrile",
+        "name": "VOOH_try1",
         "type": ".glb"
     },
     "model": {
@@ -27,11 +27,11 @@
     "custom_bond_thresholds": [
         {
             "atom_pair": [
-                "C",
-                "C"
+                "Fe",
+                "O"
             ],
             "bond_order": 1,
-            "threshold": 0.5
+            "threshold": 2.2
         }
     ]
 }
