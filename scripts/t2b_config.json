@@ -1,12 +1,12 @@
 {
     "input": {
         "type": ".xyz",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/benchmarking2",
-        "names": "propionitrile.xyz"
+        "paths": "C:/Users/User/Downloads",
+        "names": "VOOH_try1.xyz"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "propionitrile",
+        "name": "VOOH_try1",
         "type": ".glb"
     },
     "model": {
@@ -22,6 +22,6 @@
         "atoms": "",
         "bonds": ""
     },
-    "forced_bonds": "",
+    "forced_bonds": "Fe04-O16; Fe04-O17",
     "animation_frames": []
 }
