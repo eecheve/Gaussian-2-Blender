@@ -7,6 +7,7 @@ from typing import Sequence
 class BondOrderCalculator():
     def __init__(self):
         self.covalent_radii_json = self.initialize_covalent_radii()
+        self.custom_thresholds = {}
 
     def initialize_covalent_radii(self):
         """
@@ -101,6 +102,35 @@ class BondOrderCalculator():
 
         return None # No bond
               
+    
+    def set_custom_thresholds(self, rules):
+        """
+        Accepts a list of dicts, each like:
+            {"atom_pair": ["C", "O"], "bond_order": 2, "threshold": 1.23}
+        Builds an internal lookup for quick matching.
+        """
+        mapping = {}
+        for rule in (rules or []):
+            pair = rule.get("atom_pair", [])
+            if not isinstance(pair, (list, tuple)) or len(pair) != 2:
+                continue
+            a, b = str(pair[0]).strip(), str(pair[1]).strip()
+            try:
+                order = int(rule.get("bond_order"))
+                thr = float(rule.get("threshold"))
+            except Exception:
+                continue
+            if order not in (1, 2, 3) or thr <= 0:
+                continue
+            key = frozenset((a, b))
+            mapping.setdefault(key, []).append((order, thr))
+
+        # Prefer stronger bonds first (3 > 2 > 1), and for equal order, smaller thresholds first
+        for key, lst in mapping.items():
+            lst.sort(key=lambda t: (-t[0], t[1]))
+        self.custom_thresholds = mapping
+
+    
     def get_bond_order_from_coordinates(self, atom1:str, atom2:str, pos1:Sequence[float], pos2:Sequence[float]):
         """
         Determine the bond order based on the distance between two atoms and their covalent radii.
@@ -112,13 +142,34 @@ class BondOrderCalculator():
 
         :return: (int) The bond order (1 for single, 2 for double, 3 for triple) or None if no bond order is found.
         """
+        # OLD VERSION
+        # distance = self.get_bond_length_from_coordinates(pos1, pos2)
+        # references = self.get_covalent_lengths_for_atoms(atom1, atom2)
+        # thresholds = self.calculate_bond_order_threshold(references)
+        # bo = self.compare_distance_to_thresholds(distance, thresholds)
+        # return bo
+        # <--- ENDS OLD VERSION
+        
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
         thresholds = self.calculate_bond_order_threshold(references)
         bo = self.compare_distance_to_thresholds(distance, thresholds)
-        #if bo is None:
-        #    print(f"the distance between {atom1} and {atom2} is too long to render a bond in between")
+        distance = self.get_bond_length_from_coordinates(pos1, pos2)
+
+        # 1) CUSTOM RULES (if any) — coordinate-based inference only.
+        rules = self.custom_thresholds.get(frozenset((atom1, atom2)))
+        if rules:
+            for order, thr in rules:
+                if distance <= thr:
+                    return order
+            # If distance is larger than all custom thresholds, fall back to default logic.
+
+        # 2) DEFAULT HEURISTIC (unchanged)
+        references = self.get_covalent_lengths_for_atoms(atom1, atom2)
+        thresholds = self.calculate_bond_order_threshold(references)
+        bo = self.compare_distance_to_thresholds(distance, thresholds)
         return bo
+
 
     #TO DEBUG
     # def run(self):

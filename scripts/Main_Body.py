@@ -20,7 +20,7 @@ class Main_Body(object):
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, is_animation,
-                 atom_hl_list, bond_hl_list, forced_bonds_list, animation_frames):
+                 atom_hl_list, bond_hl_list, forced_bonds_list, custom_bond_thresholds, animation_frames):
         """
         Initializes the Main_Body class with input and output parameters.
         
@@ -52,6 +52,7 @@ class Main_Body(object):
         self.atom_hl_list = atom_hl_list
         self.bond_hl_list = bond_hl_list
         self.forced_bonds_list = forced_bonds_list
+        self.custom_bond_thresholds = custom_bond_thresholds
         self.animation_frames = animation_frames
         
         self.coords = []
@@ -170,6 +171,15 @@ class Main_Body(object):
         print("1: Reading .xyz file ...")
         XyzReader = self.get_module("XyzReader")
         xyzReader = XyzReader.XyzReader()
+
+        try: # tries to get custom bond orders from user input
+                if self.custom_bond_thresholds:
+                    xyzReader.calculator.set_custom_thresholds(self.custom_bond_thresholds)
+        except AttributeError:
+            # If the running BondOrderCalculator doesn't yet have the setter
+            print("BondOrderCalculator lacks set_custom_thresholds(); custom thresholds ignored.")
+
+
         file_path = os.path.join(self.i_folder_path, self.i_file_name)
         self.coords = xyzReader.extract_coords_from_xyz_file(file_path)
         self.number_of_elements = len(self.coords)
@@ -408,6 +418,7 @@ if __name__ == "__main__":
                                    params_data["atom_hl_list"],
                                    params_data["bond_hl_list"],
                                    params_data["forced_bonds_list"],
+                                   params_data["custom_bond_thresholds"],
                                    params_data["animation_frames"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()

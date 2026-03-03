@@ -2,6 +2,7 @@ import os
 import re
 
 import tkinter as tk
+from tkinter import ttk
 from gui.CreateTooltip import CreateTooltip
 
 ELEMENTS = { #dictionary containing the atomic symbol of all 118 elements in the periodic table
@@ -39,6 +40,13 @@ class HighlighterRegion(object):
         self.var_forceBonds = tk.BooleanVar(value=False)
         self.var_highlightAtoms = tk.BooleanVar(value=False)
         self.var_highlightBonds = tk.BooleanVar(value=False)
+        self.var_customThreshold = tk.BooleanVar(value=False)
+        
+        # to be able to add or remove customizable bond thresolds
+        self.elements_list = sorted(ELEMENTS)
+        self.bond_orders = [1, 2, 3]
+        self.threshold_rows = []
+
 
     def clear_variables(self):
         """
@@ -50,6 +58,7 @@ class HighlighterRegion(object):
         self.var_forceBonds.set(False)
         self.var_highlightAtoms.set(False)
         self.var_highlightBonds.set(False)
+        self.var_customThreshold.set(False)
 
     def reset_highlighter_options(self):
         """
@@ -132,6 +141,20 @@ class HighlighterRegion(object):
                                  self.on_enable_editing(event, self.ent_hlBondList, self.var_highlightBonds))
         CreateTooltip(self.ent_hlBondList, "Separate each bond by a semicolon. E.g. C01-C02; C03=C04; C01#C09; O08%C06 etc")
 
+        #-----------------------------------------------------------------------------
+        self.chk_customizeBondThreshold = tk.Checkbutton(master=self.frame, text="custom threshold", bg="#e0e0e0", fg='black',
+                                                         variable=self.var_customThreshold, command=self.toggleCustomThreshold)
+        CreateTooltip(self.chk_customizeBondThreshold, "Check if you want to customize a bond pair, If the distance is smaller than the threshold, then the atom pair will have the specified bond order")
+
+        self.lbl_customThreshold = tk.Label(text="Custom threshold")
+        self.btn_addCustomThreshold = tk.Button(text="add", master=self.frame,
+                                    command=self.addThreshold, state=tk.DISABLED)
+        CreateTooltip(self.btn_addCustomThreshold, "Click here to add another atom pair whose minimum distance counts as a bond")
+        self.btn_removeCustomThreshold = tk.Button(master=self.frame, text="remove",
+                                       command=self.removeThreshold, state=tk.DISABLED)
+        CreateTooltip(self.btn_removeCustomThreshold, "Click here to remove the last atom pair bond threshold")
+        self.threshold_container = tk.Frame(master=self.frame, bg="#e0e0e0")
+
     def position_widgets(self):
         """
         Positions the widgets inside the frame using grid layout.
@@ -145,6 +168,10 @@ class HighlighterRegion(object):
         self.chk_highlightBonds.grid(row=4, column=0)
         self.lbl_highlightedBonds.grid(row=5, column=0)
         self.ent_hlBondList.grid(row=5, column=1)
+        self.chk_customizeBondThreshold.grid(row=6)
+        self.btn_addCustomThreshold.grid(row=7, column=0)
+        self.btn_removeCustomThreshold.grid(row=7, column=1)
+        self.threshold_container.grid(row=8, column=0, columnspan=2, sticky="w")
 
     def toggleBondForcer(self):
         """
@@ -190,6 +217,161 @@ class HighlighterRegion(object):
             self.lbl_highlightedBonds['state'] = tk.DISABLED
             self.ent_hlBondList['state'] = tk.DISABLED
             self.var_hlBondList.set("")
+
+    def toggleCustomThreshold(self):
+        """
+        Toggles the ability to customize the threshold between two atoms and make it a type of bond.
+        """
+        if self.var_customThreshold.get() == True:
+            self.btn_removeCustomThreshold['state'] = tk.NORMAL
+            self.btn_addCustomThreshold['state'] = tk.NORMAL
+        else:
+            self.btn_removeCustomThreshold['state'] = tk.DISABLED
+            self.btn_addCustomThreshold['state'] = tk.DISABLED
+            while self.threshold_rows: #remove any custom threshold rows there are (if any)
+                self.removeThreshold()
+
+
+    def addThreshold(self):
+        print("here I will add a bond threshold")
+        #TODO: Add a new row right after the add button. the row must contain:
+        #TODO (continued 1): tk.Label "Atom 1", and a drop down menu with any of the atoms stored in the ELEMENTS dict
+        #TODO (continued 2): tk.Label "Atom 2", and from down menu with any of the atoms in the ELEMENTS dict
+        #TODO (continued 3): tk.Label "Bond order", and a choice between [1,2,3]
+        #TODO (continued 4): tk.Label "Threshold", and tk.Entry to specify the bond order threshold
+        """
+        Create a new row with read-only dropdowns for Atom 1, Atom 2, Bond order,
+        and an entry for the numeric threshold.
+        """
+        if not self.var_customThreshold.get():
+            print("Enable 'custom threshold' first to add rules.")
+            return
+
+        row_index = len(self.threshold_rows)
+        row_frame = tk.Frame(master=self.threshold_container, bg="#e0e0e0")
+
+        # Variables
+        var_a1 = tk.StringVar(value="C")
+        var_a2 = tk.StringVar(value="C")
+        var_order = tk.StringVar(value="1")  # use string for ttk.Combobox consistency
+        var_thr = tk.StringVar(value="")     # numeric entry as string
+
+        # Labels
+        lbl_a1 = tk.Label(row_frame, text="Atom 1", bg="#e0e0e0", fg='black')
+        lbl_a2 = tk.Label(row_frame, text="Atom 2", bg="#e0e0e0", fg='black')
+        lbl_order = tk.Label(row_frame, text="Bond order", bg="#e0e0e0", fg='black')
+        lbl_thr = tk.Label(row_frame, text="Threshold (Å)", bg="#e0e0e0", fg='black')
+
+        # Read-only dropdowns (Combobox)
+        cb_a1 = ttk.Combobox(row_frame, textvariable=var_a1, values=self.elements_list, width=6, state="readonly")
+        cb_a2 = ttk.Combobox(row_frame, textvariable=var_a2, values=self.elements_list, width=6, state="readonly")
+        cb_order = ttk.Combobox(row_frame, textvariable=var_order, values=[str(x) for x in self.bond_orders],
+                                width=3, state="readonly")
+
+        # Threshold as entry (user types a float)
+        ent_thr = tk.Entry(row_frame, width=8, bg="#e0e0e0", fg='black', textvariable=var_thr)
+
+        # Tooltips
+        CreateTooltip(cb_a1, "Select the first element symbol")
+        CreateTooltip(cb_a2, "Select the second element symbol")
+        CreateTooltip(cb_order, "Bond order to assign when the distance is below the threshold")
+        CreateTooltip(ent_thr, "Enter a positive distance threshold (Å). Example: 1.54")
+
+        # Layout
+        lbl_a1.grid(row=0, column=0, padx=(2, 2), pady=2, sticky="w")
+        cb_a1.grid(row=0, column=1, padx=(2, 8), pady=2, sticky="w")
+        lbl_a2.grid(row=0, column=2, padx=(2, 2), pady=2, sticky="w")
+        cb_a2.grid(row=0, column=3, padx=(2, 8), pady=2, sticky="w")
+        lbl_order.grid(row=0, column=4, padx=(2, 2), pady=2, sticky="w")
+        cb_order.grid(row=0, column=5, padx=(2, 8), pady=2, sticky="w")
+        lbl_thr.grid(row=0, column=6, padx=(2, 2), pady=2, sticky="w")
+        ent_thr.grid(row=0, column=7, padx=(2, 2), pady=2, sticky="w")
+
+        # Validation: threshold must be positive float on focus-out / Enter
+        def _on_thr_validate(event=None):
+            txt = var_thr.get().strip()
+            if txt == "":
+                return  # allow empty while editing
+            try:
+                val = float(txt)
+                if val <= 0:
+                    raise ValueError
+            except ValueError:
+                print(f"Invalid threshold '{txt}'. Enter a positive number (e.g., 1.54).")
+                var_thr.set("")
+                ent_thr.focus_set()
+
+        ent_thr.bind("<FocusOut>", _on_thr_validate)
+        ent_thr.bind("<Return>", _on_thr_validate)
+
+        # Show row
+        row_frame.grid(row=row_index, column=0, sticky="w")
+
+        # Track row for later enable/disable/remove/retrieve
+        self.threshold_rows.append({
+            "frame": row_frame,
+            "var_a1": var_a1,
+            "var_a2": var_a2,
+            "var_order": var_order,  # string "1" | "2" | "3"
+            "var_thr": var_thr,
+            "widgets": {
+                "lbl_a1": lbl_a1, "cb_a1": cb_a1,
+                "lbl_a2": lbl_a2, "cb_a2": cb_a2,
+                "lbl_order": lbl_order, "cb_order": cb_order,
+                "lbl_thr": lbl_thr, "ent_thr": ent_thr
+            }
+        })
+
+        print("Added custom threshold row.")
+
+    def removeThreshold(self):
+        """
+        Remove the most recently added custom threshold row (if any).
+        """
+        if not self.threshold_rows:
+            print("No custom threshold rows to remove.")
+            return
+
+        row = self.threshold_rows.pop()
+        try: # Destroy the widgets/frame for that row
+            row["frame"].destroy()
+        except Exception:
+            pass
+
+        print("Removed last custom threshold row.")
+
+    def get_custom_thresholds(self):
+        """
+        Returns a list of dicts:
+            {
+                "atom_pair": ("Atom1Symbol", "Atom2Symbol"),  # canonicalized (sorted)
+                "bond_order": int,                            # 1, 2, or 3
+                "threshold": float                            # Å
+            }
+        Skips incomplete/invalid rows.
+        """
+        result = []
+        for row in self.threshold_rows:
+            a1 = row["var_a1"].get().strip()
+            a2 = row["var_a2"].get().strip()
+            order_txt = row["var_order"].get().strip()
+            thr_txt = row["var_thr"].get().strip()
+
+            if not a1 or not a2 or not order_txt or not thr_txt:
+                continue
+            try:
+                order = int(order_txt)
+                thr = float(thr_txt)
+                if order not in (1, 2, 3) or thr <= 0:
+                    continue
+            except ValueError:
+                continue
+
+            pair = tuple(sorted((a1, a2)))
+            result.append({"atom_pair": pair, "bond_order": order, "threshold": thr})
+
+        return result
+
 
     def check_for_atom_syntax(self, entry: str) -> bool:
         """

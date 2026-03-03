@@ -22,6 +22,16 @@
         "atoms": "",
         "bonds": ""
     },
-    "forced_bonds": "Fe04-O16; Fe04-O17",
-    "animation_frames": []
+    "forced_bonds": "",
+    "animation_frames": [],
+    "custom_bond_thresholds": [
+        {
+            "atom_pair": [
+                "Fe",
+                "O"
+            ],
+            "bond_order": 1,
+            "threshold": 2.2
+        }
+    ]
 }
