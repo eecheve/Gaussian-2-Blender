@@ -251,6 +251,7 @@ class TheorChem2BlenderTabSystem:
         hl_atoms = self.highlight_region.var_hlAtomList.get() #list of atoms to highlight
         hl_bonds = self.highlight_region.var_hlBondList.get() #list of bonds to highlight
         forced_bonds = self.highlight_region.var_forcedBondList.get() #list of bonds to enforce/overwrite
+        custom_thresholds = self.highlight_region.get_custom_thresholds()  # list of dicts of custom bonds
         o_path = self.output_region.ent_outputPath.get() #output path
         o_type = self.output_region.var_outputTypes.get() #output type
         if self.exceptions_test_passed(i_names, o_path): 
@@ -264,14 +265,14 @@ class TheorChem2BlenderTabSystem:
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds) 
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds)   
+                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds)   
         else:
             print("Cannot convert input to animation, check console for errors")
 
@@ -351,7 +352,8 @@ class TheorChem2BlenderTabSystem:
     @Utility.time_function # to measure how much time this function runs
     @memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
+                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds):
         """ 
         Function to execute bat file that communicates with blender's python API 
    
@@ -369,17 +371,32 @@ class TheorChem2BlenderTabSystem:
         :param is_anim: boolean determining if input list is to be treated as animation
         """
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds)
+                                    is_ionic, unit_cell, str_ion_list, is_anim, 
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds)
         subprocess.call([exec_loc, b_path])
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
-                    is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
+                    is_ionic, unit_cell, str_ion_list, is_anim, 
+                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds):
         """
         Collects GUI input and writes it to a structured JSON file for Blender processing.
 
         :param json_path: Path to save the JSON configuration file
         """
         json_path = self.jsonConfigPath
+        
+        # customizable bond thresholds are a list of atom pairs, bond orders and bond thresholds
+        thresholds_json = []
+        if custom_thresholds:
+            for item in custom_thresholds:
+                pair = list(item["atom_pair"])  # ensure JSON serializable
+                thresholds_json.append({
+                    "atom_pair": pair,
+                    "bond_order": int(item["bond_order"]),
+                    "threshold": float(item["threshold"])
+                })
+        # <-- here the bond threshold info stops
+
         config = {
             "input": {
                 "type": i_type,
@@ -407,6 +424,11 @@ class TheorChem2BlenderTabSystem:
             "forced_bonds": forced_bonds,
             "animation_frames": []
         }
+
+        # Add custom bond thresholds if there is any
+        if thresholds_json:
+                config["custom_bond_thresholds"] = thresholds_json
+
 
         # Add animation frames if applicable
         if is_anim:

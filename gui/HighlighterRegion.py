@@ -340,6 +340,38 @@ class HighlighterRegion(object):
 
         print("Removed last custom threshold row.")
 
+    def get_custom_thresholds(self):
+        """
+        Returns a list of dicts:
+            {
+                "atom_pair": ("Atom1Symbol", "Atom2Symbol"),  # canonicalized (sorted)
+                "bond_order": int,                            # 1, 2, or 3
+                "threshold": float                            # Å
+            }
+        Skips incomplete/invalid rows.
+        """
+        result = []
+        for row in self.threshold_rows:
+            a1 = row["var_a1"].get().strip()
+            a2 = row["var_a2"].get().strip()
+            order_txt = row["var_order"].get().strip()
+            thr_txt = row["var_thr"].get().strip()
+
+            if not a1 or not a2 or not order_txt or not thr_txt:
+                continue
+            try:
+                order = int(order_txt)
+                thr = float(thr_txt)
+                if order not in (1, 2, 3) or thr <= 0:
+                    continue
+            except ValueError:
+                continue
+
+            pair = tuple(sorted((a1, a2)))
+            result.append({"atom_pair": pair, "bond_order": order, "threshold": thr})
+
+        return result
+
 
     def check_for_atom_syntax(self, entry: str) -> bool:
         """
