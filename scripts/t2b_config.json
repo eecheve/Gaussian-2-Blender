@@ -1,13 +1,13 @@
 {
     "input": {
-        "type": ".com",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
-        "names": "acrylonitrile.com"
+        "type": ".vasp",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
+        "names": "Na3VO4_cart.vasp"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "acrylonitrile",
-        "type": ".usdz"
+        "name": "Na3VO4_cart",
+        "type": ".glb"
     },
     "model": {
         "type": "Ball-and-Stick"

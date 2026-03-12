@@ -92,7 +92,7 @@ class InputRegion(object):
         
         self.lbl_fileType = tk.Label(text="Input type", bg="#e0e0e0", fg='black', master=self.frm_inside)
         CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
-        self.lst_inputTypes = [".com", ".xyz", ".mol2"] #planning on reading .mol files in the future as well.
+        self.lst_inputTypes = [".com", ".xyz", ".mol2", ".vasp"]
         self.drp_inputTypes = tk.OptionMenu(self.frm_inside, 
                                         self.var_inputTypes, 
                                         *self.lst_inputTypes,
@@ -190,7 +190,7 @@ class InputRegion(object):
         Returns:
             bool: True if all files have the same valid extension, False otherwise.
         """
-        valid_extensions = {".com", ".xyz", ".mol2"}
+        valid_extensions = {".com", ".xyz", ".mol2", ".vasp"}
         extensions = {os.path.splitext(path)[1].lower() for path in file_paths}
     
         if len(extensions) == 1 and extensions.pop() in valid_extensions:
@@ -224,7 +224,17 @@ class InputRegion(object):
             print(f"Not all selected files have the '{input_type}' extension. Please select files with the '{input_type}' extension.")
 
                 
+    
     def isValidExtension(self, file_path):
+        """
+        Check if file has a valid extension.
+        """
+        valid_exts = {".com", ".xyz", ".mol2", ".vasp"}
+        _, file_ext = os.path.splitext(file_path)
+        return file_ext.lower() in valid_exts
+
+    
+    def isValidExtension2(self, file_path):
         """
         Checks if the file has a valid extension.
 
@@ -239,7 +249,9 @@ class InputRegion(object):
             return True
         elif file_ext.lower() == ".xyz":
             return True
-        elif file_ext.lower() == ".mol2": #currently in the making
+        elif file_ext.lower() == ".mol2":
+            return True
+        elif file_ext.lower() == ".vasp":
             return True
         return False
                 

@@ -3,6 +3,7 @@ import sys
 import os
 from bpy import context, data
 from math import radians, degrees
+from typing import Callable, Dict, Optional
 
 import importlib
 
@@ -39,6 +40,13 @@ class Main_Body(object):
         :param forced_bonds_list: List of bonds to overwrite.
         :param animation_frames: string list of all the atoms and cartesian coordinates for every frame.
         """
+        self._readers: Dict[str, Callable[[], None]] = {
+                    ".com":  lambda: (self.Read_com_File(), self.Refine_com_File()),
+                    ".xyz":  self.Read_xyz_File,
+                    ".mol2": self.Read_mol2_File,
+                    ".vasp": self.Read_vasp_File
+                }
+        
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
@@ -135,13 +143,35 @@ class Main_Body(object):
         :param i_file_type: (str) Type of input file (.xyz or .com).
         :return: None
         """
-        if i_file_type == ".com":
-            self.Read_com_File()
-            self.Refine_com_File()
-        elif i_file_type == ".xyz":
-            self.Read_xyz_File()
-        elif i_file_type == ".mol2":
-            self.Read_mol2_File()
+        handler = self._readers.get(i_file_type)
+        if handler is None:
+            supported = ", ".join(sorted(self._readers.keys()))
+            raise ValueError(f"Unsupported input type '{i_file_type}'. Supported: {supported}")
+        handler()
+
+        # if i_file_type == ".com":
+        #     self.Read_com_File()
+        #     self.Refine_com_File()
+        # elif i_file_type == ".xyz":
+        #     self.Read_xyz_File()
+        # elif i_file_type == ".mol2":
+        #     self.Read_mol2_File()
+    
+    def Read_vasp_File(self):
+        """
+        Reads atomic data from a .vasp file.
+
+        Calls:
+        - `extract_coords_from_vasp_file` and `obtain_all_bond_orders` from `VaspReader` module.
+        :return: None
+        """
+        print("1: Reading .vasp file ...")
+        VaspReader = self.get_module("VaspReader")
+        vaspReader = VaspReader.VaspReader()
+        file_path = os.path.join(self.i_folder_path, self.i_file_name)
+        self.coords = vaspReader.extract_coords_from_vasp_file(file_path)
+        self.number_of_elements = len(self.coords)
+        self.connect_with_symbols = vaspReader.obtain_all_bond_orders(self.coords)
     
     def Read_mol2_File(self):
         """
@@ -158,7 +188,6 @@ class Main_Body(object):
         self.coords = mol2Reader.extract_coords_from_mol2_file(file_path)
         self.number_of_elements = len(self.coords)
         self.connect_with_symbols = mol2Reader.obtain_all_bond_orders(self.coords, file_path)
-
     
     def Read_xyz_File(self):
         """
