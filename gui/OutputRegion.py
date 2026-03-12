@@ -50,7 +50,7 @@ class OutputRegion(object):
         self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")
 
-        self.lst_outputTypes = [".fbx", ".obj", ".dae", ".glb", ".stl"]
+        self.lst_outputTypes = [".fbx", ".obj", ".dae", ".glb", ".stl", ".usdz"]
         self.var_outputTypes = tk.StringVar()
         self.var_outputTypes.set(".glb")
         self.drp_outputTypes = tk.OptionMenu(self.frame, 
@@ -89,7 +89,7 @@ class OutputRegion(object):
             - Resets the selected output type if the current selection is no longer valid.
         """
         if is_animation:
-            allowed = [".fbx", ".glb"]
+            allowed = [".fbx", ".glb", ".usdz"]
         else:
             allowed = [".fbx", ".obj", ".dae", ".glb", ".stl"]
 

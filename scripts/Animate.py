@@ -22,23 +22,6 @@ def clear_all_animations():
     for action in all_actions:
         bpy.data.actions.remove(action)
         
-# def calculate_number_of_frames2(anim_frames_path):
-#     """
-#     Determines the number of animation frames based on an input file.
-    
-#     :param anim_frames_path: Path to the animation frames data file.
-#     :type anim_frames_path: str
-#     :return: Number of frames in the animation.
-#     :rtype: int
-#     """
-#     with open(anim_frames_path, 'r') as file:
-#         first_line = file.readline().strip()  # Read the first line
-#         parts = first_line.split() # Split the line into parts
-#         coordinates = parts[1:] # Remove the element identifier
-#         # The number of frames is the total number of coordinates divided by 3 (since each frame has 3 coordinates per element)
-#         num_frames = len(coordinates) / 3        
-#     return int(num_frames)
-
 def calculate_number_of_frames(animation_frames):
     """
     Determines the number of animation frames based on the JSON 'animation_frames' list.
@@ -517,56 +500,121 @@ def animate(anim_frames, mode=".fbx", step_size=20):
     build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
     bake_all_animations(element_list, bond_list, end_frame, mode=mode)
 
+
 def export_animation(filepath):
     """
     Exports the current Blender scene as an animation to the specified file path.
-    Supports .fbx and .glb formats.
+    Supports .fbx, .glb, .usd and .usdz formats.
 
     :param filepath: (str) Full path (including extension) where the animation will be saved.
     """
     print("Exporting animation to:", filepath)
     ext = os.path.splitext(filepath)[1].lower()
 
+    # Use a dispatch table so adding formats is a one-liner.
+    exporters = {
+        ".fbx": lambda: bpy.ops.export_scene.fbx(
+            filepath=filepath,
+            check_existing=True,
+            use_selection=False,
+            global_scale=1.0,
+            apply_unit_scale=True,
+            bake_anim=True,
+            bake_anim_use_all_bones=False,
+            bake_anim_use_nla_strips=False,
+            bake_anim_use_all_actions=False,
+            bake_anim_force_startend_keying=True,
+            bake_anim_step=1.0,
+            bake_anim_simplify_factor=0.0,
+            use_mesh_modifiers=True,
+            embed_textures=True
+        ),
+
+        ".glb": lambda: bpy.ops.export_scene.gltf(
+            filepath=filepath,
+            export_format='GLB',
+            use_selection=False,
+            export_animations=True,
+            export_materials='EXPORT',
+            export_apply=True,
+            export_force_sampling=True
+        ),
+        
+        ".usdz": lambda: bpy.ops.wm.usd_export(
+            filepath=filepath,
+            selected_objects_only=False,
+            export_animation=True
+        ),
+    }
+
     try:
-        if ext == ".fbx":
-            bpy.ops.export_scene.fbx(
-                filepath=filepath,
-                check_existing=True,
-                use_selection=False,
-                global_scale=1.0,
-                apply_unit_scale=True,
-                bake_anim=True,
-                bake_anim_use_all_bones=False,
-                bake_anim_use_nla_strips=False,
-                bake_anim_use_all_actions=False,
-                bake_anim_force_startend_keying=True,
-                bake_anim_step=1.0,
-                bake_anim_simplify_factor=0.0,
-                use_mesh_modifiers=True,
-                embed_textures=True
-            )
-
-        elif ext == ".glb":
-            bpy.ops.export_scene.gltf(
-                filepath=filepath,
-                export_format='GLB',
-                use_selection=False,
-                export_animations=True,
-                export_materials='EXPORT',
-                export_apply=True,
-                export_force_sampling=True
-            )
-
-        else:
+        export_fn = exporters.get(ext)
+        if export_fn is None:
             print(f"Unsupported animation export format: {ext}")
             return
 
-        print(f"Animation successfully exported to {filepath}")
+        result = export_fn()  # returns {'FINISHED'} | {'CANCELLED'}
+        if {'FINISHED'} in (result if isinstance(result, set) else {result}):
+            print(f"Animation successfully exported to {filepath}")
+        else:
+            print(f"Export operator returned {result} for {filepath}")
 
     except PermissionError as e:
         print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
     except Exception as e:
         print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
+
+
+# def export_animation(filepath):
+#     """
+#     Exports the current Blender scene as an animation to the specified file path.
+#     Supports .fbx and .glb formats.
+
+#     :param filepath: (str) Full path (including extension) where the animation will be saved.
+#     """
+#     print("Exporting animation to:", filepath)
+#     ext = os.path.splitext(filepath)[1].lower()
+
+#     try:
+#         if ext == ".fbx":
+#             bpy.ops.export_scene.fbx(
+#                 filepath=filepath,
+#                 check_existing=True,
+#                 use_selection=False,
+#                 global_scale=1.0,
+#                 apply_unit_scale=True,
+#                 bake_anim=True,
+#                 bake_anim_use_all_bones=False,
+#                 bake_anim_use_nla_strips=False,
+#                 bake_anim_use_all_actions=False,
+#                 bake_anim_force_startend_keying=True,
+#                 bake_anim_step=1.0,
+#                 bake_anim_simplify_factor=0.0,
+#                 use_mesh_modifiers=True,
+#                 embed_textures=True
+#             )
+
+#         elif ext == ".glb":
+#             bpy.ops.export_scene.gltf(
+#                 filepath=filepath,
+#                 export_format='GLB',
+#                 use_selection=False,
+#                 export_animations=True,
+#                 export_materials='EXPORT',
+#                 export_apply=True,
+#                 export_force_sampling=True
+#             )
+
+#         else:
+#             print(f"Unsupported animation export format: {ext}")
+#             return
+
+#         print(f"Animation successfully exported to {filepath}")
+
+#     except PermissionError as e:
+#         print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
+#     except Exception as e:
+#         print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
 
 
 

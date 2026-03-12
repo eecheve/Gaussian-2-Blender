@@ -21,7 +21,8 @@ def ExportSceneAs(folder_path, file_name, file_type):
         ".dae": lambda: bpy.ops.wm.collada_export(filepath=file_path, filter_collada=True, apply_modifiers=True, 
                                                    selected=True, use_blender_profile=True, use_texture_copies=True),
         ".obj": lambda: bpy.ops.wm.obj_export(filepath=file_path, export_selected_objects=True, export_materials=True),
-        ".stl": lambda: bpy.ops.wm.stl_export(filepath=file_path, export_selected_objects=True)
+        ".stl": lambda: bpy.ops.wm.stl_export(filepath=file_path, export_selected_objects=True),
+        ".usdz": lambda: bpy.ops.wm.usd_export(filepath=file_path, selected_objects_only=True, export_animation=False)
     }
     
     if file_type in export_functions:

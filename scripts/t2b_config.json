@@ -1,13 +1,13 @@
 {
     "input": {
-        "type": ".xyz",
-        "paths": "C:/Users/User/Downloads",
-        "names": "VOOH_try1.xyz"
+        "type": ".com",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
+        "names": "acrylonitrile.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "VOOH_try1",
-        "type": ".glb"
+        "name": "acrylonitrile",
+        "type": ".usdz"
     },
     "model": {
         "type": "Ball-and-Stick"
@@ -23,15 +23,5 @@
         "bonds": ""
     },
     "forced_bonds": "",
-    "animation_frames": [],
-    "custom_bond_thresholds": [
-        {
-            "atom_pair": [
-                "Fe",
-                "O"
-            ],
-            "bond_order": 1,
-            "threshold": 2.2
-        }
-    ]
+    "animation_frames": []
 }
