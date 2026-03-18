@@ -28,7 +28,7 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             bpy.ops.object.shade_smooth()
             print("6: Instantiating element: ", key)
         else:
-            print("AddElement(): invalid element name")
+            print("AddElement(): invalid element name", key)
             
 def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
     """
@@ -51,7 +51,7 @@ def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
             bpy.ops.object.shade_smooth()
             print("6: Instantiating ion: ", key)
         else:
-            print("AddElement(): invalid element name")
+            print("AddElement(): invalid element name", key)
                     
 def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     """

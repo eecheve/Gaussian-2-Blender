@@ -66,6 +66,7 @@ class Main_Body(object):
         self.coords = []
         self.number_of_elements = 0
         self.is_ionic=""
+        self.unit_cell_points = []
         self.unit_cell = []
         self.ion_input_list = []
         self.raw_coords = []
@@ -95,7 +96,8 @@ class Main_Body(object):
             "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
             "Create_Materials", "Primitives", "Export_Data", "Ions", 
             "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
-            "XyzReader", "AtomHighlighter", "BondOverwriter"
+            "XyzReader", "AtomHighlighter", "BondOverwriter", "VaspReader", "Mol2Reader",
+            "BoundBoxBuilder"
         ]
 
         blend_file_dir = os.path.dirname(bpy.data.filepath)
@@ -148,14 +150,6 @@ class Main_Body(object):
             supported = ", ".join(sorted(self._readers.keys()))
             raise ValueError(f"Unsupported input type '{i_file_type}'. Supported: {supported}")
         handler()
-
-        # if i_file_type == ".com":
-        #     self.Read_com_File()
-        #     self.Refine_com_File()
-        # elif i_file_type == ".xyz":
-        #     self.Read_xyz_File()
-        # elif i_file_type == ".mol2":
-        #     self.Read_mol2_File()
     
     def Read_vasp_File(self):
         """
@@ -172,6 +166,7 @@ class Main_Body(object):
         self.coords = vaspReader.extract_coords_from_vasp_file(file_path)
         self.number_of_elements = len(self.coords)
         self.connect_with_symbols = vaspReader.obtain_all_bond_orders(self.coords)
+        self.unit_cell_points = vaspReader.get_unit_cell_points(file_path)
     
     def Read_mol2_File(self):
         """
@@ -318,6 +313,25 @@ class Main_Body(object):
         Instantiate_Molecules.Instantiate(self.is_ionic, self.represent_type, self.names_and_pos, 
                                           self.materials_dict, self.connect_with_symbols, self.element_data, 
                                           self.ion_data, self.ion_input, self.unit_cell)
+        
+    def Build_Unit_Cell(self):
+        if self.unit_cell == "1":
+            print("User has specified the input has a unit cell")
+            if self.unit_cell_points:
+                print("The input is a .vasp file containing three lattice vectors")
+                BoundBoxBuilder = self.get_module("BoundBoxBuilder")
+                BoundBoxBuilder.InstantiateBoundingBox(self.unit_cell_points, self.materials_dict)
+                #for point in self.unit_cell_points:
+                #    print("point is", point)
+            else:
+                print("The input is NOT a .vasp file containing three lattice vectors")
+                print("No unit cell boundaries will be rendered")
+                return
+            #boxPoints = VaspReader.get
+            #BoundBoxBuilder = self.get_module("BoundBoxBuilder")
+            #print("USER INPUT SPECIFIES THE NEED FOR A UNIT CELL")
+        else:
+            return
                                           
     def Manage_Parent_Relations(self):
         """
@@ -455,6 +469,7 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
+    main_body_instance.Build_Unit_Cell()
     main_body_instance.Highlight_Atoms()
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()

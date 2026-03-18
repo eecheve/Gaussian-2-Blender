@@ -116,7 +116,7 @@ def Instantiate(is_ionic, represent_type, names_and_pos, materials_dict, connect
     """
     print("5: Instantiating geometries")
 
-    if is_ionic == "0":
+    if is_ionic == "0" or not ion_input: #defaults to rendering covalent when no ions are specified but the flag is true
         handle_non_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data)
     else:
         handle_ionic(represent_type, names_and_pos, materials_dict, connect_with_symbols, element_data, ion_data, ion_input, unit_cell)

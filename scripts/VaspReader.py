@@ -1,4 +1,5 @@
 import re
+import numpy as np
 from BondOrderCalculator import BondOrderCalculator
 
 class VaspReader():
@@ -76,6 +77,42 @@ class VaspReader():
                     raise ValueError(f"Non-numeric coordinate encountered: {tokens}") from e
             return x, y, z
 
+    def get_scaling_factor_from_file_list(self, file_as_list):
+        try:
+            return float(file_as_list[1][0])
+        except (IndexError, ValueError):
+            raise ValueError("Invalid or missing scaling factor in POSCAR file.")
+
+    
+    def get_lattice_vectors(self, file_as_list):
+        v1_string = file_as_list[2]
+        v2_string = file_as_list[3]
+        v3_string = file_as_list[4]
+        v1 = self.parse_xyz(v1_string)
+        v2 = self.parse_xyz(v2_string)
+        v3 = self.parse_xyz(v3_string)
+        return v1, v2, v3
+    
+    def get_unit_cell_points(self, file_path):
+        file_as_list = self.get_file_info_as_list(file_path)
+        lattice_vectors = self.get_lattice_vectors(file_as_list)
+        scale_factor = self.get_scaling_factor_from_file_list(file_as_list)
+        v1, v2, v3 = (scale_factor * np.asarray(v) for v in lattice_vectors)
+        v0 = np.zeros(3)
+        return [v0, v1, v2, v3, v1 + v2, v1 + v3, v2 + v3, v1 + v2 + v3]
+    
+    def multiply_coords_by_scaling_factor(self, file_as_list, coords_list):
+        scale_factor = self.get_scaling_factor_from_file_list(file_as_list)
+        scaled_coords = []
+        for row in coords_list:
+            x, y, z = self.parse_xyz(row)
+            scaled_coords.append([
+                x * scale_factor,
+                y * scale_factor,
+                z * scale_factor
+            ])
+        return scaled_coords
+    
     def extract_coords_from_vasp_file(self, file_path):
         """
         Extract atomic symbols and 3D coordinates from a VASP POSCAR/CONTCAR-like file.
@@ -84,7 +121,8 @@ class VaspReader():
         file_as_list = self.get_file_info_as_list(file_path)
         atoms_in_file = self.get_atoms_in_file(file_as_list)
         coords_list = self.get_coordinate_lines(atoms_in_file, file_as_list)
-        coords_with_symbols = self.merge_atoms_and_coordinates(atoms_in_file, coords_list)
+        coords_scaled = self.multiply_coords_by_scaling_factor(file_as_list, coords_list)
+        coords_with_symbols = self.merge_atoms_and_coordinates(atoms_in_file, coords_scaled)
         return coords_with_symbols
     
     
