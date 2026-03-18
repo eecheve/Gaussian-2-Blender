@@ -183,6 +183,12 @@ class IonRegion(object):
             self.spn_uc_x['state'] = tk.DISABLED
             self.spn_uc_y['state'] = tk.DISABLED
             self.spn_uc_z['state'] = tk.DISABLED
+
+    def get_unit_cell_repeats(self):
+        if self.spn_uc_x['state'] == tk.DISABLED:
+            return None
+        else:
+            return self.int_uc_x.get(), self.int_uc_y.get(), self.int_uc_z.get()
          
     def disable_ionic_buttons(self):
         """Disable all ionic input buttons and remove existing ion entries."""

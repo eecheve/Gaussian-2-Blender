@@ -13,7 +13,7 @@
         "type": "Ball-and-Stick"
     },
     "flags": {
-        "is_ionic": "1",
+        "is_ionic": "0",
         "unit_cell": 1,
         "is_anim": false
     },
@@ -23,5 +23,10 @@
         "bonds": ""
     },
     "forced_bonds": "",
-    "animation_frames": []
+    "animation_frames": [],
+    "unit_cell_repeats": [
+        2,
+        2,
+        2
+    ]
 }

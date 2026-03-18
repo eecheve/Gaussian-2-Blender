@@ -241,7 +241,6 @@ class TheorChem2BlenderTabSystem:
         4. If validation fails, outputs relevant error messages to the console.
 
         """
-        anim_frames_path = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
         b_path = self.blender_path_region.var_blenderPath.get() #blender path
         i_type = self.input_region.var_inputTypes.get() #input file type
         i_path = self.input_region.var_inputPath.get() #input specifications.
@@ -254,6 +253,7 @@ class TheorChem2BlenderTabSystem:
         custom_thresholds = self.highlight_region.get_custom_thresholds()  # list of dicts of custom bonds
         o_path = self.output_region.ent_outputPath.get() #output path
         o_type = self.output_region.var_outputTypes.get() #output type
+        unit_cell_repeats = self.ion_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
         if self.exceptions_test_passed(i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -265,14 +265,14 @@ class TheorChem2BlenderTabSystem:
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds) 
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds)   
+                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats)   
         else:
             print("Cannot convert input to animation, check console for errors")
 
@@ -347,13 +347,13 @@ class TheorChem2BlenderTabSystem:
             str_ionList = "---"
         return is_ionic, unit_cell, ion_list, str_ionList
 
-    @Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
+    #@Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
     @Utility.announce_conversion # to specify which molecule is being converted
     @Utility.time_function # to measure how much time this function runs
     @memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
-                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds):
+                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats):
         """ 
         Function to execute bat file that communicates with blender's python API 
    
@@ -372,12 +372,12 @@ class TheorChem2BlenderTabSystem:
         """
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds)
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats)
         subprocess.call([exec_loc, b_path])
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds):
+                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats):
         """
         Collects GUI input and writes it to a structured JSON file for Blender processing.
 
@@ -395,8 +395,7 @@ class TheorChem2BlenderTabSystem:
                     "bond_order": int(item["bond_order"]),
                     "threshold": float(item["threshold"])
                 })
-        # <-- here the bond threshold info stops
-
+        
         config = {
             "input": {
                 "type": i_type,
@@ -422,22 +421,37 @@ class TheorChem2BlenderTabSystem:
                 "bonds": hl_bonds
             },
             "forced_bonds": forced_bonds,
-            "animation_frames": []
+            "animation_frames": [],
+            "unit_cell_repeats": {"x": 1, "y": 1, "z": 1}
         }
 
         # Add custom bond thresholds if there is any
         if thresholds_json:
                 config["custom_bond_thresholds"] = thresholds_json
 
-
         # Add animation frames if applicable
         if is_anim:
             config["animation_frames"] = self.populate_animation_frames(i_type, self.input_region.lst_InputPaths)
+
+        if unit_cell_repeats:
+            repeats = self.populate_unit_cell_repeats(i_type, unit_cell_repeats)
+            if repeats:
+                config["unit_cell_repeats"] = repeats
+
 
         # Write to JSON file
         with open(json_path, 'w') as f:
             json.dump(config, f, indent=4)
 
+    def populate_unit_cell_repeats(self, i_type, unit_cell_repeats):
+        if i_type != ".vasp":
+            print("Unit cell repeats currently only allows cell duplication for .vasp files")
+            print("This input will be ignored in the rendering")
+            return None
+        else:
+            return unit_cell_repeats[0], unit_cell_repeats[1], unit_cell_repeats[2]
+
+    
     def populate_animation_frames(self, i_type, input_paths):
         """
         Generates animation frame data based on input type and paths.

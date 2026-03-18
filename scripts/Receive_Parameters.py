@@ -48,7 +48,8 @@ def get_parameters_data(json_path):
         "bond_hl_list": config["highlight"]["bonds"],
         "forced_bonds_list": config["forced_bonds"],
         "animation_frames": config["animation_frames"],
-        "custom_bond_thresholds": config.get("custom_bond_thresholds", [])
+        "custom_bond_thresholds": config.get("custom_bond_thresholds", []),
+        "unit_cell_repeats": config["unit_cell_repeats"]
     }
 
     return parameters_dict

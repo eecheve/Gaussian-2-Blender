@@ -21,7 +21,8 @@ class Main_Body(object):
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, is_animation,
-                 atom_hl_list, bond_hl_list, forced_bonds_list, custom_bond_thresholds, animation_frames):
+                 atom_hl_list, bond_hl_list, forced_bonds_list, custom_bond_thresholds, animation_frames,
+                 unit_cell_repeats):
         """
         Initializes the Main_Body class with input and output parameters.
         
@@ -68,6 +69,7 @@ class Main_Body(object):
         self.is_ionic=""
         self.unit_cell_points = []
         self.unit_cell = []
+        self.unit_cell_repeats = unit_cell_repeats
         self.ion_input_list = []
         self.raw_coords = []
         self.raw_connect = []
@@ -321,15 +323,10 @@ class Main_Body(object):
                 print("The input is a .vasp file containing three lattice vectors")
                 BoundBoxBuilder = self.get_module("BoundBoxBuilder")
                 BoundBoxBuilder.InstantiateBoundingBox(self.unit_cell_points, self.materials_dict)
-                #for point in self.unit_cell_points:
-                #    print("point is", point)
             else:
                 print("The input is NOT a .vasp file containing three lattice vectors")
                 print("No unit cell boundaries will be rendered")
                 return
-            #boxPoints = VaspReader.get
-            #BoundBoxBuilder = self.get_module("BoundBoxBuilder")
-            #print("USER INPUT SPECIFIES THE NEED FOR A UNIT CELL")
         else:
             return
                                           
@@ -462,7 +459,8 @@ if __name__ == "__main__":
                                    params_data["bond_hl_list"],
                                    params_data["forced_bonds_list"],
                                    params_data["custom_bond_thresholds"],
-                                   params_data["animation_frames"])
+                                   params_data["animation_frames"],
+                                   params_data["unit_cell_repeats"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Manage_Ionic_Information()
