@@ -233,12 +233,6 @@ class HighlighterRegion(object):
 
 
     def addThreshold(self):
-        print("here I will add a bond threshold")
-        #TODO: Add a new row right after the add button. the row must contain:
-        #TODO (continued 1): tk.Label "Atom 1", and a drop down menu with any of the atoms stored in the ELEMENTS dict
-        #TODO (continued 2): tk.Label "Atom 2", and from down menu with any of the atoms in the ELEMENTS dict
-        #TODO (continued 3): tk.Label "Bond order", and a choice between [1,2,3]
-        #TODO (continued 4): tk.Label "Threshold", and tk.Entry to specify the bond order threshold
         """
         Create a new row with read-only dropdowns for Atom 1, Atom 2, Bond order,
         and an entry for the numeric threshold.

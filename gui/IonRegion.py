@@ -17,8 +17,13 @@ class IonRegion(object):
         self.var_ionNames = tk.StringVar()
         self.int_hasIons = tk.IntVar()
         self.int_unitCell = tk.IntVar()
+        
+        self.int_uc_x = tk.IntVar(value=1)
+        self.int_uc_y = tk.IntVar(value=1)
+        self.int_uc_z = tk.IntVar(value=1)
 
-    def clear_variables(self):
+
+    def clear_radii_variables(self):
         """Reset all variables and remove existing ions from the section."""
         self.removeAllIons()
         self.disable_ionic_buttons()
@@ -34,7 +39,14 @@ class IonRegion(object):
         """
         self.frame = tk.LabelFrame(master=parent,
                                    padx=5,
-                                   text="Ion information",
+                                   text="Ionic radii details",
+                                   fg="blue",
+                                   bg="#e0e0e0",
+                                   relief=tk.GROOVE,
+                                   borderwidth=2)
+        self.unit_cell_frame = tk.LabelFrame(master=parent,
+                                   padx=5,
+                                   text="Unit cell details",
                                    fg="blue",
                                    bg="#e0e0e0",
                                    relief=tk.GROOVE,
@@ -53,13 +65,13 @@ class IonRegion(object):
 
         self.chk_hasIons = tk.Checkbutton(master=self.frm_inside, text="check for ionic radii",
                                           fg='black', bg="#e0e0e0",
-                                          variable=self.int_hasIons, command=self.activator)
+                                          variable=self.int_hasIons, command=self.ionic_radii_activator)
         CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 
-        self.chk_unitCell = tk.Checkbutton(master=self.frm_inside, text="unit cell boundaries",
-                                           fg='black', bg="#e0e0e0",
-                                           variable=self.int_unitCell, state=tk.DISABLED)
-        CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
+        # self.chk_unitCell = tk.Checkbutton(master=self.frm_inside, text="unit cell boundaries",
+        #                                    fg='black', bg="#e0e0e0",
+        #                                    variable=self.int_unitCell, state=tk.NORMAL)
+        # CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
 
         self.btn_addIon = tk.Button(text="add", master=self.frm_inside,
                                     command=self.addIon, state=tk.DISABLED)
@@ -68,14 +80,59 @@ class IonRegion(object):
                                        command=self.removeIon, state=tk.DISABLED)
         CreateTooltip(self.btn_removeIon, "Click here to remove the last added ion")
 
+        #<------------------  Unit cell region
+        self.chk_unitCell = tk.Checkbutton(master=self.unit_cell_frame, text="unit cell boundaries",
+                                           fg='black', bg="#e0e0e0",
+                                           variable=self.int_unitCell, command=self.unit_cell_activator)
+        CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
+
+        self.lbl_unit_cell_growth = tk.Label(master=self.unit_cell_frame, 
+                                             text="Choose unit cell growth", bg="#e0e0e0", fg='black')
+        CreateTooltip(self.lbl_unit_cell_growth, "specify the number of repeating units per local axis")
+        
+        
+        self.frm_uc_growth = tk.Frame(
+            master=self.unit_cell_frame,
+            bg="#e0e0e0"
+        )
+        
+        self.lbl_uc_x = tk.Label(self.frm_uc_growth, text="x:", bg="#e0e0e0")
+        self.lbl_uc_y = tk.Label(self.frm_uc_growth, text="y:", bg="#e0e0e0")
+        self.lbl_uc_z = tk.Label(self.frm_uc_growth, text="z:", bg="#e0e0e0")
+
+        self.spn_uc_x = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
+                                   textvariable=self.int_uc_x, state=tk.DISABLED)
+        self.spn_uc_y = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
+                                   textvariable=self.int_uc_y, state=tk.DISABLED)
+        self.spn_uc_z = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
+                                   textvariable=self.int_uc_z, state=tk.DISABLED)
+        
     def setup_layout(self):
         """Arrange the widgets and frames in the grid layout."""
         self.scrl_frame.pack(side="right", fill="y")
         self.canvas.pack(side="left")
         self.chk_hasIons.grid(row=0, column=0)
-        self.chk_unitCell.grid(row=0, column=1)
+        #self.chk_unitCell.grid(row=0, column=1)
         self.btn_addIon.grid(row=1, column=0)
         self.btn_removeIon.grid(row=1, column=1)
+        
+        #<---------------- Changes about the unit cell
+        self.unit_cell_frame.grid(row=3, column=0, sticky="w")
+
+        self.chk_unitCell.grid(row=0, column=0, sticky="w")
+        self.lbl_unit_cell_growth.grid(row=1, column=0, sticky="w")
+
+        self.frm_uc_growth.grid(row=2, column=0, sticky="w", padx=5)
+
+        self.lbl_uc_x.grid(row=0, column=0, padx=(0, 2))
+        self.spn_uc_x.grid(row=0, column=1, padx=(0, 10))
+
+        self.lbl_uc_y.grid(row=0, column=2, padx=(0, 2))
+        self.spn_uc_y.grid(row=0, column=3, padx=(0, 10))
+
+        self.lbl_uc_z.grid(row=0, column=4, padx=(0, 2))
+        self.spn_uc_z.grid(row=0, column=5)
+
 
     def addIon(self):
         """Add a new ion entry to the ion list."""
@@ -100,25 +157,38 @@ class IonRegion(object):
         self.lst_ions.clear()
         self.ionCount = 0
 
-    def activator(self):
+    def ionic_radii_activator(self):
         """Enable or disable ionic input options based on the checkbox state."""
         if self.btn_addIon['state'] == tk.DISABLED:
             self.btn_addIon['state'] = tk.NORMAL
             self.btn_removeIon['state'] = tk.NORMAL
-            self.chk_unitCell['state'] = tk.NORMAL
+            #self.chk_unitCell['state'] = tk.NORMAL
             print("##### ACTIVATING IONS INFORMATION INPUT ####")
         else:
             self.btn_addIon['state'] = tk.DISABLED
             self.btn_removeIon['state'] = tk.DISABLED
-            self.chk_unitCell['state'] = tk.DISABLED
+            #self.chk_unitCell['state'] = tk.DISABLED
             self.removeAllIons()
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
+
+    def unit_cell_activator(self):
+        if self.spn_uc_x['state'] == tk.DISABLED:
+            self.spn_uc_x['state'] = tk.NORMAL
+            self.spn_uc_y['state'] = tk.NORMAL
+            self.spn_uc_z['state'] = tk.NORMAL
+        else:
+            self.int_uc_x.set(1)
+            self.int_uc_y.set(1)
+            self.int_uc_z.set(1)
+            self.spn_uc_x['state'] = tk.DISABLED
+            self.spn_uc_y['state'] = tk.DISABLED
+            self.spn_uc_z['state'] = tk.DISABLED
          
     def disable_ionic_buttons(self):
         """Disable all ionic input buttons and remove existing ion entries."""
         self.btn_addIon['state'] = tk.DISABLED
         self.btn_removeIon['state'] = tk.DISABLED
-        self.chk_unitCell['state'] = tk.DISABLED
+        #self.chk_unitCell['state'] = tk.DISABLED
         self.removeAllIons()
 
     def canvasConfig(self, event):

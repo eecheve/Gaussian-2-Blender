@@ -196,7 +196,7 @@ class TheorChem2BlenderTabSystem:
         self.input_region.clear_variables()
         self.highlight_region.reset_highlighter_options()
         self.input_region.reset_widget_bg_colors()
-        self.ion_region.clear_variables()
+        self.ion_region.clear_radii_variables()
 
     def convert(self):
         """
