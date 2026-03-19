@@ -3,6 +3,7 @@ import sys
 import os
 from bpy import context, data
 from math import radians, degrees
+from mathutils import Vector
 from typing import Callable, Dict, Optional
 
 import importlib
@@ -99,7 +100,7 @@ class Main_Body(object):
             "Create_Materials", "Primitives", "Export_Data", "Ions", 
             "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
             "XyzReader", "AtomHighlighter", "BondOverwriter", "VaspReader", "Mol2Reader",
-            "BoundBoxBuilder"
+            "BoundBoxBuilder", "UnitCellReplicator"
         ]
 
         blend_file_dir = os.path.dirname(bpy.data.filepath)
@@ -329,6 +330,81 @@ class Main_Body(object):
                 return
         else:
             return
+        
+    def Replicate_Unit_Cell(self) -> None:
+        """
+        Replicates the fully built and decorated unit cell into an
+        nx, ny, nz supercell by duplicating and translating the
+        unit-cell root Empty.
+        """
+
+        # Guard: no replication requested
+        if self.unit_cell_repeats == (1, 1, 1):
+            return
+
+        print("Duplicating unit cell the specified number of times")
+
+        UnitCellReplicator = self.get_module("UnitCellReplicator")
+
+        # 1. Compute lattice translation vectors (Cartesian)
+        p0 = self.unit_cell_points[0]
+        x_direction = Vector(self.unit_cell_points[1])
+        y_direction = Vector(self.unit_cell_points[2])
+        z_direction = Vector(self.unit_cell_points[3])
+        nx, ny, nz = self.unit_cell_repeats
+
+        # 2. Collect all scene objects except cameras and lights
+        scene_objects = [
+            obj for obj in bpy.context.scene.objects
+            if obj.type not in {"CAMERA", "LIGHT"}
+        ]
+
+        # 3. Parent everything to a single unit-cell root Empty
+        cell_root = UnitCellReplicator.parent_atoms_and_bonds_to_empty_object(
+            scene_objects
+        )
+
+        # 4. Replicate along x, then y, then z (grid expansion)
+        roots = [cell_root]
+
+        for _ in range(1, nx):
+            roots += [
+                UnitCellReplicator.replicate_and_translate_cell(root, x_direction)
+                for root in roots
+            ]
+        for _ in range(1, ny):
+            roots += [
+                UnitCellReplicator.replicate_and_translate_cell(root, y_direction)
+                for root in roots
+            ]
+        for _ in range(1, nz):
+            roots += [
+                UnitCellReplicator.replicate_and_translate_cell(root, z_direction)
+                for root in roots
+            ]
+        print(f"Supercell generated with {len(roots)} unit-cell instances")
+    
+    # def Replicate_Unit_Cell(self):
+    #     if self.unit_cell_repeats != (1,1,1):
+    #         print("duplicating unit cell the specified number of times")
+    #         UnitCellReplicator = self.get_module("UnitCellReplicator")
+
+    #         # Lattice translation vectors
+    #         x_direction = self.unit_cell_points[1]
+    #         y_direction = self.unit_cell_points[2]
+    #         z_direction = self.unit_cell_points[3]
+    #         nx, ny, nz = self.unit_cell_repeats
+
+    #         #all objects in scene that are not cameras or light
+    #         scene_objects = [
+    #             obj for obj in bpy.context.scene.objects
+    #             if obj.type not in {'CAMERA', 'LIGHT'}
+    #         ]
+
+    #         cell_root = UnitCellReplicator.parent_atoms_and_bonds_to_empty_object(scene_objects)
+    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(cell_root, x_direction)
+    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(duplicated_cell, y_direction)
+    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(duplicated_cell, z_direction)
                                           
     def Manage_Parent_Relations(self):
         """
@@ -471,4 +547,5 @@ if __name__ == "__main__":
     main_body_instance.Highlight_Atoms()
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()
+    main_body_instance.Replicate_Unit_Cell()
     main_body_instance.Manage_Export()
