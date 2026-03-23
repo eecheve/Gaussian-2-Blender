@@ -339,15 +339,14 @@ class Main_Body(object):
         """
 
         # Guard: no replication requested
-        if self.unit_cell_repeats == (1, 1, 1):
+        if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
             return
 
-        print("Duplicating unit cell the specified number of times")
+        print("Duplicating unit cell according to", self.unit_cell_repeats)
 
         UnitCellReplicator = self.get_module("UnitCellReplicator")
 
         # 1. Compute lattice translation vectors (Cartesian)
-        p0 = self.unit_cell_points[0]
         x_direction = Vector(self.unit_cell_points[1])
         y_direction = Vector(self.unit_cell_points[2])
         z_direction = Vector(self.unit_cell_points[3])
