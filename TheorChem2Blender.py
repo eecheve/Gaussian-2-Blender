@@ -4,7 +4,7 @@ import stat
 import json
 import platform
 import subprocess
-import memory_profiler
+#import memory_profiler #<-- uncomment this line for benchmarking
 
 import tkinter as tk
 from tkinter import filedialog
@@ -31,7 +31,6 @@ class TheorChem2BlenderTabSystem:
     def __init__(self):
         #utility
         self.coordinates = Coordinates() # To use the coordinates module
-        #self.xyzReader = XyzReader()
         
         #system vatiables and paths
         self.current_os = platform.system()
@@ -348,9 +347,9 @@ class TheorChem2BlenderTabSystem:
         return is_ionic, unit_cell, ion_list, str_ionList
 
     #@Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
-    @Utility.announce_conversion # to specify which molecule is being converted
-    @Utility.time_function # to measure how much time this function runs
-    @memory_profiler.profile # to measure memory usage
+    #@Utility.announce_conversion # to specify which molecule is being converted
+    #@Utility.time_function # to measure how much time this function runs
+    #@memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats):
