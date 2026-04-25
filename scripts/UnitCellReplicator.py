@@ -55,3 +55,22 @@ def replicate_and_translate_cell(cell: Object, direction: Vector) -> Object:
     new_cell.location += direction
 
     return new_cell
+
+def flatten_scene_hierarchy() -> None:
+    """
+    Clears all parent relationships in the scene while preserving
+    world-space transforms, leaving a flat hierarchy of mesh objects.
+    """
+    bpy.ops.object.select_all(action='DESELECT')
+    
+    meshes = [obj for obj in bpy.context.scene.objects if obj.type == 'MESH']
+    
+    for obj in meshes:
+        obj.select_set(True)
+    
+    if not meshes:
+        return
+    
+    bpy.context.view_layer.objects.active = meshes[0]
+    bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
+    bpy.ops.object.select_all(action='DESELECT')

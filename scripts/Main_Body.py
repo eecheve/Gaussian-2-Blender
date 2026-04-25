@@ -381,30 +381,39 @@ class Main_Body(object):
                 UnitCellReplicator.replicate_and_translate_cell(root, z_direction)
                 for root in roots
             ]
+        UnitCellReplicator.flatten_scene_hierarchy()
         print(f"Supercell generated with {len(roots)} unit-cell instances")
-    
-    # def Replicate_Unit_Cell(self):
-    #     if self.unit_cell_repeats != (1,1,1):
-    #         print("duplicating unit cell the specified number of times")
-    #         UnitCellReplicator = self.get_module("UnitCellReplicator")
 
-    #         # Lattice translation vectors
-    #         x_direction = self.unit_cell_points[1]
-    #         y_direction = self.unit_cell_points[2]
-    #         z_direction = self.unit_cell_points[3]
-    #         nx, ny, nz = self.unit_cell_repeats
+    def Link_Unit_Cells(self):
+        if isinstance(self.unit_cell_repeats, (list, tuple)):
+            if list(self.unit_cell_repeats) == [1, 1, 1]:
+                return
+        else:
+            if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
+                return
 
-    #         #all objects in scene that are not cameras or light
-    #         scene_objects = [
-    #             obj for obj in bpy.context.scene.objects
-    #             if obj.type not in {'CAMERA', 'LIGHT'}
-    #         ]
+        UnitCellLinker = self.get_module("UnitCellLinker")
+        result = UnitCellLinker.replicate_primitive_bonds(
+            connect_with_symbols=self.connect_with_symbols
+            # primitive_positions no longer needed — linker reads live scene positions
+        )
+        atoms_in_scene = result.get("atoms_in_scene", {})
+        replicated_bonds = result.get("replicated_bonds", [])
+        if not replicated_bonds:
+            print("Link_Unit_Cells: No replicated bonds detected")
+            return
 
-    #         cell_root = UnitCellReplicator.parent_atoms_and_bonds_to_empty_object(scene_objects)
-    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(cell_root, x_direction)
-    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(duplicated_cell, y_direction)
-    #         duplicated_cell = UnitCellReplicator.replicate_and_translate_cell(duplicated_cell, z_direction)
-                                          
+        Primitives = self.get_module("Primitives")
+        Primitives.InstantiateBondsFromConnectivity(
+            atoms_in_scene,
+            self.materials_dict,
+            replicated_bonds,
+            self.unit_cell
+        )
+
+        self.connect_with_symbols.extend(replicated_bonds)
+        print(f"Link_Unit_Cells: Instantiated and linked {len(replicated_bonds)} replicated bonds")
+                                             
     def Manage_Parent_Relations(self):
         """
         Manages parent-child relationships for the molecule.
@@ -547,4 +556,5 @@ if __name__ == "__main__":
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()
     main_body_instance.Replicate_Unit_Cell()
+    main_body_instance.Link_Unit_Cells()
     main_body_instance.Manage_Export()

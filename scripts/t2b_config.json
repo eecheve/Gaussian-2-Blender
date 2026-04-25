@@ -13,11 +13,11 @@
         "type": "Ball-and-Stick"
     },
     "flags": {
-        "is_ionic": "1",
+        "is_ionic": "0",
         "unit_cell": 1,
         "is_anim": false
     },
-    "ions": "(Fe_3_VI-ls)",
+    "ions": "---",
     "highlight": {
         "atoms": "",
         "bonds": ""
@@ -27,6 +27,6 @@
     "unit_cell_repeats": [
         2,
         2,
-        2
+        1
     ]
 }

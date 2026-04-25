@@ -609,7 +609,6 @@ class TheorChem2BlenderTabSystem:
         indexed_coords = []
         for index, entry in enumerate(raw_coords, start=1):
             new_entry = entry.copy()  # Copy the original entry to avoid modifying it
-            #new_entry[0] = f"{entry[0]}{index:02d}"
             new_entry[0] = f"{entry[0]}{index:0{digits}d}" #to account for molecules between 100 and 999 atoms
             indexed_coords.append(new_entry)
         return indexed_coords
