@@ -68,11 +68,6 @@ class IonRegion(object):
                                           variable=self.int_hasIons, command=self.ionic_radii_activator)
         CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 
-        # self.chk_unitCell = tk.Checkbutton(master=self.frm_inside, text="unit cell boundaries",
-        #                                    fg='black', bg="#e0e0e0",
-        #                                    variable=self.int_unitCell, state=tk.NORMAL)
-        # CreateTooltip(self.chk_unitCell, "Check to replace dashed bonds with solid lines")
-
         self.btn_addIon = tk.Button(text="add", master=self.frm_inside,
                                     command=self.addIon, state=tk.DISABLED)
         CreateTooltip(self.btn_addIon, "Click here to add another ion to specify")
@@ -101,11 +96,11 @@ class IonRegion(object):
         self.lbl_uc_z = tk.Label(self.frm_uc_growth, text="z:", bg="#e0e0e0")
 
         self.spn_uc_x = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
-                                   textvariable=self.int_uc_x, state=tk.DISABLED)
+                                   textvariable=self.int_uc_x, state=tk.NORMAL)
         self.spn_uc_y = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
-                                   textvariable=self.int_uc_y, state=tk.DISABLED)
+                                   textvariable=self.int_uc_y, state=tk.NORMAL)
         self.spn_uc_z = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
-                                   textvariable=self.int_uc_z, state=tk.DISABLED)
+                                   textvariable=self.int_uc_z, state=tk.NORMAL)
         
     def setup_layout(self):
         """Arrange the widgets and frames in the grid layout."""
@@ -172,17 +167,19 @@ class IonRegion(object):
             print("#### DEACTIVATING ION INFORMATION INPUT ####")
 
     def unit_cell_activator(self):
-        if self.spn_uc_x['state'] == tk.DISABLED:
-            self.spn_uc_x['state'] = tk.NORMAL
-            self.spn_uc_y['state'] = tk.NORMAL
-            self.spn_uc_z['state'] = tk.NORMAL
-        else:
-            self.int_uc_x.set(1)
-            self.int_uc_y.set(1)
-            self.int_uc_z.set(1)
-            self.spn_uc_x['state'] = tk.DISABLED
-            self.spn_uc_y['state'] = tk.DISABLED
-            self.spn_uc_z['state'] = tk.DISABLED
+        #some logic can go here when user selects the boundaries
+        # if self.spn_uc_x['state'] == tk.DISABLED:
+        #     self.spn_uc_x['state'] = tk.NORMAL
+        #     self.spn_uc_y['state'] = tk.NORMAL
+        #     self.spn_uc_z['state'] = tk.NORMAL
+        # else:
+        #     self.int_uc_x.set(1)
+        #     self.int_uc_y.set(1)
+        #     self.int_uc_z.set(1)
+        #     self.spn_uc_x['state'] = tk.DISABLED
+        #     self.spn_uc_y['state'] = tk.DISABLED
+        #     self.spn_uc_z['state'] = tk.DISABLED
+        pass
 
     def get_unit_cell_repeats(self):
         if self.spn_uc_x['state'] == tk.DISABLED:

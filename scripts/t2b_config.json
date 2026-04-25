@@ -14,7 +14,7 @@
     },
     "flags": {
         "is_ionic": "0",
-        "unit_cell": 1,
+        "unit_cell": "0",
         "is_anim": false
     },
     "ions": "---",
