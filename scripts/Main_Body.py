@@ -335,14 +335,48 @@ class Main_Body(object):
     def Build_Miller_Plane(self):
         if not self.unit_cell_points:
             return
+
         h = self.miller_indices.get("h", 0)
         k = self.miller_indices.get("k", 0)
         l = self.miller_indices.get("l", 0)
+
         if h == k == l == 0:
             return
+
+        # Compute supercell bounding box points
+        # unit_cell_points: [origin, a1_end, a2_end, a3_end, ...]
+        origin = Vector(self.unit_cell_points[0])
+        a1 = Vector(self.unit_cell_points[1]) - origin
+        a2 = Vector(self.unit_cell_points[2]) - origin
+        a3 = Vector(self.unit_cell_points[3]) - origin
+
+        # Scale lattice vectors by repeat counts
+        if isinstance(self.unit_cell_repeats, (list, tuple)):
+            nx, ny, nz = int(self.unit_cell_repeats[0]), int(self.unit_cell_repeats[1]), int(self.unit_cell_repeats[2])
+        else:
+            nx = self.unit_cell_repeats.get('x', 1)
+            ny = self.unit_cell_repeats.get('y', 1)
+            nz = self.unit_cell_repeats.get('z', 1)
+
+        a1_super = a1 * nx
+        a2_super = a2 * ny
+        a3_super = a3 * nz
+
+        # Reconstruct supercell bound_box_points in the same format BoundBoxBuilder expects
+        supercell_points = [
+            origin,
+            origin + a1_super,
+            origin + a2_super,
+            origin + a3_super,
+            origin + a1_super + a2_super,
+            origin + a1_super + a3_super,
+            origin + a2_super + a3_super,
+            origin + a1_super + a2_super + a3_super,
+        ]
+
         MillerPlaneBuilder = self.get_module("MillerPlaneBuilder")
         MillerPlaneBuilder.InstantiateMillerPlane(
-            self.unit_cell_points, h, k, l, self.materials_dict
+            supercell_points, h, k, l, self.materials_dict
         )
         
     def Replicate_Unit_Cell(self) -> None:
@@ -567,10 +601,10 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
     main_body_instance.Build_Unit_Cell()
-    main_body_instance.Build_Miller_Plane()
     main_body_instance.Highlight_Atoms()
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()
     main_body_instance.Replicate_Unit_Cell()
     main_body_instance.Link_Unit_Cells()
+    main_body_instance.Build_Miller_Plane()
     main_body_instance.Manage_Export()
