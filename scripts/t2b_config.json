@@ -14,7 +14,7 @@
     },
     "flags": {
         "is_ionic": "0",
-        "unit_cell": "0",
+        "unit_cell": 1,
         "is_anim": false
     },
     "ions": "---",
@@ -30,8 +30,8 @@
         1
     ],
     "miller_indices": {
-        "h": 8,
+        "h": 0,
         "k": 1,
-        "l": 1
+        "l": 0
     }
 }

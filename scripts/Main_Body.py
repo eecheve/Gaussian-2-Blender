@@ -332,6 +332,19 @@ class Main_Body(object):
         else:
             return
         
+    def Build_Miller_Plane(self):
+        if not self.unit_cell_points:
+            return
+        h = self.miller_indices.get("h", 0)
+        k = self.miller_indices.get("k", 0)
+        l = self.miller_indices.get("l", 0)
+        if h == k == l == 0:
+            return
+        MillerPlaneBuilder = self.get_module("MillerPlaneBuilder")
+        MillerPlaneBuilder.InstantiateMillerPlane(
+            self.unit_cell_points, h, k, l, self.materials_dict
+        )
+        
     def Replicate_Unit_Cell(self) -> None:
         """
         Replicates the fully built and decorated unit cell into an
@@ -554,6 +567,7 @@ if __name__ == "__main__":
     main_body_instance.Prepare_Ions()
     main_body_instance.Build_Molecule()
     main_body_instance.Build_Unit_Cell()
+    main_body_instance.Build_Miller_Plane()
     main_body_instance.Highlight_Atoms()
     main_body_instance.Highlight_Bonds()
     main_body_instance.Animate()

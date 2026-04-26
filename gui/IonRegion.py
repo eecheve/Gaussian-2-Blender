@@ -121,11 +121,11 @@ class IonRegion(object):
         self.lbl_uc_h = tk.Label(self.frm_uc_planes, text="h:", bg="#e0e0e0")
         self.lbl_uc_k = tk.Label(self.frm_uc_planes, text="k:", bg="#e0e0e0")
         self.lbl_uc_l = tk.Label(self.frm_uc_planes, text="l:", bg="#e0e0e0")
-        self.spn_uc_h = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+        self.spn_uc_h = tk.Spinbox(self.frm_uc_planes, from_=0, to=9, width=5, 
                                    textvariable=self.int_plane_h, state=tk.NORMAL)
-        self.spn_uc_k = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+        self.spn_uc_k = tk.Spinbox(self.frm_uc_planes, from_=0, to=9, width=5, 
                                    textvariable=self.int_plane_k, state=tk.NORMAL)
-        self.spn_uc_l = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+        self.spn_uc_l = tk.Spinbox(self.frm_uc_planes, from_=0, to=9, width=5, 
                                    textvariable=self.int_plane_l, state=tk.NORMAL)
         
     def setup_layout(self):
