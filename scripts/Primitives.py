@@ -14,7 +14,7 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
     :param materials_dict: Dictionary<string, bpy.Material> materials that can be accessed with present elements' symbols
     """
     for key in pos_dict:
-        e_symbol = ''.join(i for i in key if not i.isdigit()) #remove numbers from name
+        e_symbol = ''.join(i for i in key.split('.')[0] if not i.isdigit()) #remove numbers from name
         if e_symbol in element_data:
             if van_der_waals == False:
                  r = element_data.get(e_symbol).get_radius() / 2
@@ -40,7 +40,7 @@ def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
     :return: None
     """
     for key in pos_dict:
-        i_symbol = ''.join(i for i in key if not i.isdigit()) #remove numbers from name
+        i_symbol = ''.join(i for i in key.split('.')[0] if not i.isdigit()) #remove numbers from name
         if i_symbol in ion_data:
             r = ion_data[i_symbol].radius /2
             x = pos_dict[key].x
@@ -176,8 +176,8 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
     dash_nmbr = int(distance/dash_len) #number of times dash_len fits in distance.
     ref_nmbr = int(dash_nmbr/2) #middle point in the number of dashes
     #elements taken from names by removing numerical part
-    type1 = ''.join(i for i in key1 if not i.isdigit())
-    type2 = ''.join(i for i in key2 if not i.isdigit())
+    type1 = ''.join(i for i in key1.split('.')[0] if not i.isdigit())
+    type2 = ''.join(i for i in key2.split('.')[0] if not i.isdigit())
     bpy.ops.object.mode_set(mode="OBJECT")     #ensure program is in object mode
     #instantiating dashes between spawn points and mid point
     for i in range(dash_nmbr):
@@ -227,8 +227,9 @@ def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell
     v3 = pos_dict.get(atom2)
     v2 = (v1+v3)/2
     #elements taken from names by removing numerical part
-    element1 = ''.join(i for i in atom1 if not i.isdigit())
-    element2 = ''.join(i for i in atom2 if not i.isdigit())
+    element1 = ''.join(i for i in atom1.split('.')[0] if not i.isdigit())
+    element2 = ''.join(i for i in atom2.split('.')[0] if not i.isdigit())
+
     #instantiating bonds and assigning materials and names
     if unit_cell == "0":
         InstantiateBondBetweenTwoPoints(v1, v2)
