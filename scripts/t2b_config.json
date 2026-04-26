@@ -25,8 +25,13 @@
     "forced_bonds": "",
     "animation_frames": [],
     "unit_cell_repeats": [
-        2,
-        2,
-        2
-    ]
+        1,
+        1,
+        1
+    ],
+    "miller_indices": {
+        "h": 8,
+        "k": 1,
+        "l": 1
+    }
 }

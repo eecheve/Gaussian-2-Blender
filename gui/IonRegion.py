@@ -22,6 +22,10 @@ class IonRegion(object):
         self.int_uc_y = tk.IntVar(value=1)
         self.int_uc_z = tk.IntVar(value=1)
 
+        self.int_plane_h = tk.IntVar(value=0)
+        self.int_plane_k = tk.IntVar(value=0)
+        self.int_plane_l = tk.IntVar(value=0)
+
 
     def clear_radii_variables(self):
         """Reset all variables and remove existing ions from the section."""
@@ -30,6 +34,12 @@ class IonRegion(object):
         self.var_ionNames.set("")
         self.int_hasIons.set(0)
         self.int_unitCell.set(0)
+        self.int_uc_x.set(1)
+        self.int_uc_y.set(1)
+        self.int_uc_z.set(1)
+        self.int_plane_h.set(0)
+        self.int_plane_k.set(0)
+        self.int_plane_l.set(0)
 
     def create_widgets(self, parent):
         """Create all widgets and frames for the ion information section.
@@ -75,7 +85,7 @@ class IonRegion(object):
                                        command=self.removeIon, state=tk.DISABLED)
         CreateTooltip(self.btn_removeIon, "Click here to remove the last added ion")
 
-        #<------------------  Unit cell region
+        #------------------  Unit cell region
         self.chk_unitCell = tk.Checkbutton(master=self.unit_cell_frame, text="unit cell boundaries",
                                            fg='black', bg="#e0e0e0",
                                            variable=self.int_unitCell, command=self.unit_cell_activator)
@@ -83,8 +93,7 @@ class IonRegion(object):
 
         self.lbl_unit_cell_growth = tk.Label(master=self.unit_cell_frame, 
                                              text="Choose unit cell growth", bg="#e0e0e0", fg='black')
-        CreateTooltip(self.lbl_unit_cell_growth, "specify the number of repeating units per local axis")
-        
+        CreateTooltip(self.lbl_unit_cell_growth, "specify the number of repeating units per local axis")  
         
         self.frm_uc_growth = tk.Frame(
             master=self.unit_cell_frame,
@@ -102,12 +111,28 @@ class IonRegion(object):
         self.spn_uc_z = tk.Spinbox(self.frm_uc_growth, from_=1, to=5, width=5, 
                                    textvariable=self.int_uc_z, state=tk.NORMAL)
         
+        self.frm_uc_planes = tk.Frame(
+            master=self.unit_cell_frame,
+            bg="#e0e0e0"
+        )
+        self.lbl_uc_planes = tk.Label(master=self.frm_uc_planes, 
+                                             text="Miller indices", bg="#e0e0e0", fg='black')
+        CreateTooltip(self.lbl_uc_planes, "specify the the Miller numbers to render a plane")
+        self.lbl_uc_h = tk.Label(self.frm_uc_planes, text="h:", bg="#e0e0e0")
+        self.lbl_uc_k = tk.Label(self.frm_uc_planes, text="k:", bg="#e0e0e0")
+        self.lbl_uc_l = tk.Label(self.frm_uc_planes, text="l:", bg="#e0e0e0")
+        self.spn_uc_h = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+                                   textvariable=self.int_plane_h, state=tk.NORMAL)
+        self.spn_uc_k = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+                                   textvariable=self.int_plane_k, state=tk.NORMAL)
+        self.spn_uc_l = tk.Spinbox(self.frm_uc_planes, from_=1, to=9, width=5, 
+                                   textvariable=self.int_plane_l, state=tk.NORMAL)
+        
     def setup_layout(self):
         """Arrange the widgets and frames in the grid layout."""
         self.scrl_frame.pack(side="right", fill="y")
         self.canvas.pack(side="left")
         self.chk_hasIons.grid(row=0, column=0)
-        #self.chk_unitCell.grid(row=0, column=1)
         self.btn_addIon.grid(row=1, column=0)
         self.btn_removeIon.grid(row=1, column=1)
         
@@ -127,6 +152,17 @@ class IonRegion(object):
 
         self.lbl_uc_z.grid(row=0, column=4, padx=(0, 2))
         self.spn_uc_z.grid(row=0, column=5)
+        
+        #------------------ Changes about Miller indices
+        self.frm_uc_planes.grid(row=3, column=0, sticky="w", padx=5)
+        
+        self.lbl_uc_planes.grid(row=0, column=0, columnspan=6, sticky="w")
+        self.lbl_uc_h.grid(row=1, column=0, padx=(0, 2))
+        self.spn_uc_h.grid(row=1, column=1, padx=(0, 10))
+        self.lbl_uc_k.grid(row=1, column=2, padx=(0, 2))
+        self.spn_uc_k.grid(row=1, column=3, padx=(0, 10))
+        self.lbl_uc_l.grid(row=1, column=4, padx=(0, 2))
+        self.spn_uc_l.grid(row=1, column=5)
 
 
     def addIon(self):
@@ -186,6 +222,9 @@ class IonRegion(object):
             return None
         else:
             return self.int_uc_x.get(), self.int_uc_y.get(), self.int_uc_z.get()
+        
+    def get_miller_indices(self):
+        return self.int_plane_h.get(), self.int_plane_k.get(), self.int_plane_l.get()
          
     def disable_ionic_buttons(self):
         """Disable all ionic input buttons and remove existing ion entries."""

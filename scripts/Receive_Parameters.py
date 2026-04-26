@@ -49,7 +49,8 @@ def get_parameters_data(json_path):
         "forced_bonds_list": config["forced_bonds"],
         "animation_frames": config["animation_frames"],
         "custom_bond_thresholds": config.get("custom_bond_thresholds", []),
-        "unit_cell_repeats": config["unit_cell_repeats"]
+        "unit_cell_repeats": config["unit_cell_repeats"],
+        "miller_indices": config["miller_indices"]
     }
 
     return parameters_dict

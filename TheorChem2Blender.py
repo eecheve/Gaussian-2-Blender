@@ -253,6 +253,7 @@ class TheorChem2BlenderTabSystem:
         o_path = self.output_region.ent_outputPath.get() #output path
         o_type = self.output_region.var_outputTypes.get() #output type
         unit_cell_repeats = self.ion_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
+        miller_indices = self.ion_region.get_miller_indices() #gets the miller indices specified by the user
         if self.exceptions_test_passed(i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -264,14 +265,14 @@ class TheorChem2BlenderTabSystem:
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats) 
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats)   
+                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices)   
         else:
             print("Cannot convert input to animation, check console for errors")
 
@@ -352,7 +353,7 @@ class TheorChem2BlenderTabSystem:
     #@memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
-                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats):
+                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices):
         """ 
         Function to execute bat file that communicates with blender's python API 
    
@@ -371,12 +372,12 @@ class TheorChem2BlenderTabSystem:
         """
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats)
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices)
         subprocess.call([exec_loc, b_path])
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats):
+                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices):
         """
         Collects GUI input and writes it to a structured JSON file for Blender processing.
 
@@ -421,7 +422,8 @@ class TheorChem2BlenderTabSystem:
             },
             "forced_bonds": forced_bonds,
             "animation_frames": [],
-            "unit_cell_repeats": {"x": 1, "y": 1, "z": 1}
+            "unit_cell_repeats": {"x": 1, "y": 1, "z": 1},
+            "miller_indices": {"h": 0, "k": 0, "l": 0}
         }
 
         # Add custom bond thresholds if there is any
@@ -437,6 +439,9 @@ class TheorChem2BlenderTabSystem:
             if repeats:
                 config["unit_cell_repeats"] = repeats
 
+        m_indices = self.populate_miller_indices(i_type, miller_indices)
+        if m_indices:
+            config["miller_indices"] = m_indices
 
         # Write to JSON file
         with open(json_path, 'w') as f:
@@ -448,7 +453,15 @@ class TheorChem2BlenderTabSystem:
             print("This input will be ignored in the rendering")
             return None
         else:
-            return unit_cell_repeats[0], unit_cell_repeats[1], unit_cell_repeats[2]
+            return unit_cell_repeats[0], unit_cell_repeats[1], unit_cell_repeats[2] 
+        
+    def populate_miller_indices(self, i_type, miller_indices):
+        if i_type != ".vasp":
+            print("Unit cell repeats currently only allows cell duplication for .vasp files")
+            print("This input will be ignored in the rendering")
+            return None
+        else:
+            return {"h": miller_indices[0], "k": miller_indices[1], "l": miller_indices[2]}
 
     
     def populate_animation_frames(self, i_type, input_paths):
