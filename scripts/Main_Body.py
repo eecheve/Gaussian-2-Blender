@@ -430,37 +430,9 @@ class Main_Body(object):
                 for root in roots
             ]
         UnitCellReplicator.flatten_scene_hierarchy()
+        UnitCellReplicator.delete_unit_cell_roots()
         print(f"Supercell generated with {len(roots)} unit-cell instances")
 
-    # def Link_Unit_Cells(self):
-    #     if isinstance(self.unit_cell_repeats, (list, tuple)):
-    #         if list(self.unit_cell_repeats) == [1, 1, 1]:
-    #             return
-    #     else:
-    #         if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
-    #             return
-
-    #     UnitCellLinker = self.get_module("UnitCellLinker")
-    #     result = UnitCellLinker.replicate_primitive_bonds(
-    #         connect_with_symbols=self.connect_with_symbols
-    #         # primitive_positions no longer needed — linker reads live scene positions
-    #     )
-    #     atoms_in_scene = result.get("atoms_in_scene", {})
-    #     replicated_bonds = result.get("replicated_bonds", [])
-    #     if not replicated_bonds:
-    #         print("Link_Unit_Cells: No replicated bonds detected")
-    #         return
-
-    #     Primitives = self.get_module("Primitives")
-    #     Primitives.InstantiateBondsFromConnectivity(
-    #         atoms_in_scene,
-    #         self.materials_dict,
-    #         replicated_bonds,
-    #         self.unit_cell
-    #     )
-
-    #     self.connect_with_symbols.extend(replicated_bonds)
-    #     print(f"Link_Unit_Cells: Instantiated and linked {len(replicated_bonds)} replicated bonds")
     def Link_Unit_Cells(self):
         if isinstance(self.unit_cell_repeats, (list, tuple)):
             if list(self.unit_cell_repeats) == [1, 1, 1]:
@@ -493,6 +465,11 @@ class Main_Body(object):
 
         self.connect_with_symbols.extend(replicated_bonds)
         print(f"Link_Unit_Cells: Instantiated and linked {len(replicated_bonds)} replicated bonds")
+
+    def Parent_Bounding_Box(self):
+        """Parents all unit cell wireframe edges to a single Empty at the origin."""
+        BoundBoxBuilder = self.get_module("BoundBoxBuilder")
+        BoundBoxBuilder.ParentBoundingBoxToEmpty()
 
     def Delete_Forbidden_Bonds(self):
         bo = self.get_module("BondOverwriter")
@@ -644,4 +621,5 @@ if __name__ == "__main__":
     main_body_instance.Link_Unit_Cells()
     main_body_instance.Delete_Forbidden_Bonds()
     main_body_instance.Build_Miller_Plane()
+    main_body_instance.Parent_Bounding_Box()
     main_body_instance.Manage_Export()

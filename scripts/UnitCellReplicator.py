@@ -56,6 +56,25 @@ def replicate_and_translate_cell(cell: Object, direction: Vector) -> Object:
 
     return new_cell
 
+def delete_unit_cell_roots() -> int:
+    """
+    Removes all Empty objects created as unit-cell replication roots
+    (named 'UnitCell_Root' and Blender-suffixed copies thereof).
+    Should be called after flatten_scene_hierarchy, once parenting is no longer needed.
+
+    :return: (int) Number of Empty objects removed.
+    """
+    roots = [
+        obj for obj in bpy.context.scene.objects
+        if obj.type == 'EMPTY' and obj.name.split('.')[0] == 'UnitCell_Root'
+    ]
+
+    for obj in roots:
+        bpy.data.objects.remove(obj, do_unlink=True)
+
+    print(f"delete_unit_cell_roots: removed {len(roots)} empty root(s)")
+    return len(roots)
+
 def flatten_scene_hierarchy() -> None:
     """
     Clears all parent relationships in the scene while preserving
