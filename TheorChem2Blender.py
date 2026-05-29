@@ -124,6 +124,7 @@ class TheorChem2BlenderTabSystem:
         self.initialize_unit_cell_region(self.unit_cell_tab)
         self.place(self.unit_cell_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
         self.place(self.unit_cell_region, row=1, column=0, padx=2, pady=2, sticky="W")
+        self.notebook.tab(self.unit_cell_tab, state="disabled")
 
         # Tab 5: Output
         self.output_tab = ttk.Frame(self.notebook)
@@ -158,7 +159,8 @@ class TheorChem2BlenderTabSystem:
         self.input_info = Information(parent, instructions=Instructions.get("input"), 
                                       title="Input Instructions", button_name="Input Help")
         self.input_region = InputRegion(parent, self.g2b_path, 
-                                        on_animation_toggle=self.handle_animation_toggle) # Input Region
+                                        on_animation_toggle=self.handle_animation_toggle,
+                                        on_input_type_change=self.handle_input_type_change) # Input Region
 
     def initialize_customization_region(self, parent):
         self.custom_info = Information(parent, instructions=Instructions.get("customization"),
@@ -565,7 +567,13 @@ class TheorChem2BlenderTabSystem:
     
     def handle_animation_toggle(self, is_animation):
         self.output_region.restrict_output_types_for_animation(is_animation)
-        self.input_region.restrict_input_types_for_animation(is_animation) #<-----
+        self.input_region.restrict_input_types_for_animation(is_animation)
+
+    def handle_input_type_change(self, input_type):
+        state = "normal" if input_type == ".vasp" else "disabled"
+        self.notebook.tab(self.unit_cell_tab, state=state)
+        if state == "disabled" and self.notebook.select() == str(self.unit_cell_tab):
+            self.notebook.select(0) 
 
     def extract_all_frames(self, xyz_file_path):
         """

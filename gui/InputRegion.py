@@ -8,7 +8,7 @@ from gui.Utility import Utility
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
-    def __init__(self, parent, initial_dir, on_animation_toggle=None):
+    def __init__(self, parent, initial_dir, on_animation_toggle=None, on_input_type_change=None):
         """
         Initializes the InputRegion by setting up variables, frame, canvas, and widgets.
 
@@ -17,6 +17,7 @@ class InputRegion(object):
             initial_dir (str): The initial directory path for file dialogs.
         """
         self.on_animation_toggle = on_animation_toggle #function to handle animation changes in the gui
+        self.on_input_type_change = on_input_type_change #funtion to activate unit cell only for vasp input
         self.initialize_variables(initial_dir)
         self.setup_frame(parent)
         self.setup_canvas()
@@ -47,6 +48,10 @@ class InputRegion(object):
         """
         Clears all variables related to the input fields and resets default values.
         """
+        self.var_inputTypes.set(".com")
+        if self.on_input_type_change:
+            self.on_input_type_change(".com")
+        
         self.var_inputPaths.set("")
         self.var_inputNames.set("")
         self.var_modelTypes.set("")
@@ -178,8 +183,6 @@ class InputRegion(object):
         if self.on_animation_toggle:
             self.on_animation_toggle(valid)
 
-
-        
     def allFilesHaveSameValidExtension(self, file_paths):
         """
         Checks if all files in the list have the same valid extension.
@@ -316,4 +319,5 @@ class InputRegion(object):
         Parameters:
             event (tk.Event): The event triggered by the dropdown selection.
         """
-        print("#### REPRESENTATIONAL MODEL UPDATED ####")
+        if event in self.lst_inputTypes and self.on_input_type_change:
+            self.on_input_type_change(event)
