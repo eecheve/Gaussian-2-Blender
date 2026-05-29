@@ -46,6 +46,10 @@ class Instructions:
             ("    7.2. If there is more than one ion, click on add ion again\n","italic"),
             ("8. If you defined cell boundaries using a bond order of 0.5, check its corresponding box", "normal")
         ],
+        "unit_cell": [
+            ("Thigs you can do in the unit cell tab"),
+            ("placeholder text")
+        ],
         "output": [
             ("About the output\n", "bold"),
             (" 9. Select the output path for the 3D object to be rendered\n", "normal"),

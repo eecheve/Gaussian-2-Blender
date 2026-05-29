@@ -23,6 +23,7 @@ from gui.HighlighterRegion import HighlighterRegion
 from gui.OutputRegion import OutputRegion
 from gui.ConsoleRegion import ConsoleRegion
 from gui.IonRegion import IonRegion
+from gui.UnitCellRegion import UnitCellRegion
 from gui.IonConventions import IonConventions
 from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
@@ -117,14 +118,21 @@ class TheorChem2BlenderTabSystem:
         self.place(self.ion_region, row=1, column=0, padx=2, pady=2, sticky="W")
         self.place(self.ion_conventions, row=2, column=0, padx=2, pady=2)
 
-        # Tab 4: Output
+        # Tab 4: Unit cell
+        self.unit_cell_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.unit_cell_tab, text="Unit Cells")
+        self.initialize_unit_cell_region(self.unit_cell_tab)
+        self.place(self.unit_cell_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
+        self.place(self.unit_cell_region, row=1, column=0, padx=2, pady=2, sticky="W")
+
+        # Tab 5: Output
         self.output_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.output_tab, text="Output")
         self.initialize_output_region(self.output_tab)
         self.place(self.output_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
         self.place(self.output_region, row=1, column=0, padx=2, pady=2, sticky="W")
 
-        # Tab 5: Actions
+        # Tab 6: Actions
         self.actions_tab = ttk.Frame(self.notebook)
         self.actions_tab.grid_rowconfigure(0, weight=0) # actions_info
         self.actions_tab.grid_rowconfigure(1, weight=1) # spacer
@@ -163,6 +171,11 @@ class TheorChem2BlenderTabSystem:
                                         title="Ion Instructions", button_name="Ions Help")
         self.ion_region = IonRegion(parent)
         self.ion_conventions = IonConventions(parent)
+
+    def initialize_unit_cell_region(self, parent):
+        self.unit_cell_info = Information(parent, instructions=Instructions.get("unit_cell"),
+                                          title="Unit Cell Instructions", button_name="Unit Cell Help")
+        self.unit_cell_region = UnitCellRegion(parent)
 
     def initialize_output_region(self, parent):
         self.output_info = Information(parent, instructions=Instructions.get("output"),
@@ -252,8 +265,8 @@ class TheorChem2BlenderTabSystem:
         custom_thresholds = self.highlight_region.get_custom_thresholds()  # list of dicts of custom bonds
         o_path = self.output_region.ent_outputPath.get() #output path
         o_type = self.output_region.var_outputTypes.get() #output type
-        unit_cell_repeats = self.ion_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
-        miller_indices = self.ion_region.get_miller_indices() #gets the miller indices specified by the user
+        unit_cell_repeats = self.unit_cell_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
+        miller_indices = self.unit_cell_region.get_miller_indices() #gets the miller indices specified by the user
         if self.exceptions_test_passed(i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -319,7 +332,7 @@ class TheorChem2BlenderTabSystem:
         if not is_ionic:
             is_ionic = "0"
             str_ionList = "---"
-        unit_cell = self.ion_region.int_unitCell.get()
+        unit_cell = self.unit_cell_region.int_unitCell.get()
         if not unit_cell:
             unit_cell = "0"
         ion_list = self.ion_region.lst_ions
