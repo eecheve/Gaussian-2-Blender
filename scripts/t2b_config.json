@@ -14,7 +14,7 @@
     },
     "flags": {
         "is_ionic": "0",
-        "unit_cell": 1,
+        "unit_cell": "0",
         "is_anim": false
     },
     "ions": "---",
@@ -34,6 +34,9 @@
         "k": 0,
         "l": 0
     },
+    "polyhedra_centers": [
+        "V"
+    ],
     "custom_bond_thresholds": [
         {
             "atom_pair": [

@@ -269,6 +269,7 @@ class TheorChem2BlenderTabSystem:
         o_type = self.output_region.var_outputTypes.get() #output type
         unit_cell_repeats = self.unit_cell_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
         miller_indices = self.unit_cell_region.get_miller_indices() #gets the miller indices specified by the user
+        polyhedra_centers = self.unit_cell_region.get_polyhedra_centers()
         if self.exceptions_test_passed(i_names, o_path): 
             params = self.assign_ionic_params()
             is_ionic = params[0]
@@ -280,14 +281,16 @@ class TheorChem2BlenderTabSystem:
                 self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
                                     o_path, i_names[0].split(".")[0], o_type, is_ionic,
                                     unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices) 
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                                    unit_cell_repeats, miller_indices, polyhedra_centers) 
             else:
                 for i in range(len(i_names)):
                     print("Batch converting", i+1, "of", len(i_names))
                     self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
                                         o_path, i_names[i].split(".")[0], o_type, is_ionic,
                                         unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices)   
+                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                                        unit_cell_repeats, miller_indices, polyhedra_centers)   
         else:
             print("Conversion aborted: input validation failed. Check the console for details.")
 
@@ -368,7 +371,8 @@ class TheorChem2BlenderTabSystem:
     #@memory_profiler.profile # to measure memory usage
     def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
                        o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
-                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices):
+                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                       unit_cell_repeats, miller_indices, polyhedra_centers):
         """ 
         Function to execute bat file that communicates with blender's python API 
    
@@ -387,12 +391,14 @@ class TheorChem2BlenderTabSystem:
         """
         self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
                                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices)
+                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                                    unit_cell_repeats, miller_indices, polyhedra_centers)
         subprocess.call([exec_loc, b_path])
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
                     is_ionic, unit_cell, str_ion_list, is_anim, 
-                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices):
+                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                    unit_cell_repeats, miller_indices, polyhedra_centers):
         """
         Collects GUI input and writes it to a structured JSON file for Blender processing.
 
@@ -438,7 +444,8 @@ class TheorChem2BlenderTabSystem:
             "forced_bonds": forced_bonds,
             "animation_frames": [],
             "unit_cell_repeats": {"x": 1, "y": 1, "z": 1},
-            "miller_indices": {"h": 0, "k": 0, "l": 0}
+            "miller_indices": {"h": 0, "k": 0, "l": 0},
+            "polyhedra_centers": polyhedra_centers if polyhedra_centers else []
         }
 
         # Add custom bond thresholds if there is any

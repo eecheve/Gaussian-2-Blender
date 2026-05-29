@@ -175,3 +175,35 @@ def delete_forbidden_bonds_from_scene(custom_bond_thresholds):
 
     print(f"delete_forbidden_bonds_from_scene: removed {count} bond object(s)")
     return count
+
+def get_forbidden_type_pairs(custom_bond_thresholds):
+    """
+    Extracts element type pairs designated as bond order 0 from the
+    custom threshold rules.
+
+    :param custom_bond_thresholds: (list) Rules from get_custom_thresholds(),
+                                   each a dict with 'atom_pair' and 'bond_order'.
+    :return: (set) Frozensets of element symbol pairs, e.g. {frozenset({'V', 'V'})}.
+    """
+    return {
+        frozenset(rule["atom_pair"])
+        for rule in (custom_bond_thresholds or [])
+        if rule.get("bond_order") == 0
+    }
+
+def remove_forbidden_bonds_from_connectivity(connect_with_symbols, forbidden_type_pairs):
+    """
+    Filters connect_with_symbols, removing any entry whose atom type pair
+    is in forbidden_type_pairs.
+
+    :param connect_with_symbols: (list) Connectivity list of (atomA, atomB, bond_char) tuples.
+    :param forbidden_type_pairs: (set) Output of get_forbidden_type_pairs.
+    :return: (list) Filtered connectivity list.
+    """
+    filtered = []
+    for atomA, atomB, bond_char in connect_with_symbols:
+        elem1 = re.match(r"([A-Za-z]+)", atomA.split('.')[0]).group(1)
+        elem2 = re.match(r"([A-Za-z]+)", atomB.split('.')[0]).group(1)
+        if frozenset((elem1, elem2)) not in forbidden_type_pairs:
+            filtered.append((atomA, atomB, bond_char))
+    return filtered

@@ -23,7 +23,7 @@ class Main_Body(object):
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
                  represent_type, o_file_type, str_ionic_cell, str_ion_input_list, is_animation,
                  atom_hl_list, bond_hl_list, forced_bonds_list, custom_bond_thresholds, animation_frames,
-                 unit_cell_repeats, miller_indices):
+                 unit_cell_repeats, miller_indices, polyhedra_centers):
         """
         Initializes the Main_Body class with input and output parameters.
         
@@ -66,6 +66,7 @@ class Main_Body(object):
         self.animation_frames = animation_frames
         self.unit_cell_repeats = unit_cell_repeats
         self.miller_indices = miller_indices
+        self.polyhedra_centers = polyhedra_centers
         
         self.coords = []
         self.number_of_elements = 0
@@ -471,9 +472,45 @@ class Main_Body(object):
         BoundBoxBuilder = self.get_module("BoundBoxBuilder")
         BoundBoxBuilder.ParentBoundingBoxToEmpty()
 
+    # def Delete_Forbidden_Bonds(self):
+    #     bo = self.get_module("BondOverwriter")
+    #     bo.delete_forbidden_bonds_from_scene(self.custom_bond_thresholds)
+
     def Delete_Forbidden_Bonds(self):
+        """
+        Deletes forbidden bond objects from the scene and removes the
+        corresponding entries from connect_with_symbols so downstream
+        steps (e.g. Build_Polyhedra) are not affected.
+        """
+        if not self.custom_bond_thresholds:
+            return
+
         bo = self.get_module("BondOverwriter")
+        forbidden_pairs = bo.get_forbidden_type_pairs(self.custom_bond_thresholds)
+        if not forbidden_pairs:
+            return
+
         bo.delete_forbidden_bonds_from_scene(self.custom_bond_thresholds)
+        self.connect_with_symbols = bo.remove_forbidden_bonds_from_connectivity(
+            self.connect_with_symbols, forbidden_pairs
+        )
+
+    def Build_Polyhedra(self):
+        """
+        Builds coordination polyhedra around all instances of each specified
+        center element type. Does nothing if no centers are specified.
+        Called after Link_Unit_Cells and Delete_Forbidden_Bonds so that
+        inter-cell bonds are included in the neighbor search.
+        """
+        if not self.polyhedra_centers:
+            return
+
+        PolyhedronBuilder = self.get_module("PolyhedronBuilder")
+        PolyhedronBuilder.BuildPolyhedra(
+            self.polyhedra_centers,
+            self.connect_with_symbols,
+            self.materials_dict
+        )
                                              
     def Manage_Parent_Relations(self):
         """
@@ -606,7 +643,8 @@ if __name__ == "__main__":
                                    params_data["custom_bond_thresholds"],
                                    params_data["animation_frames"],
                                    params_data["unit_cell_repeats"],
-                                   params_data["miller_indices"])
+                                   params_data["miller_indices"],
+                                   params_data["polyhedra_centers"])
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Manage_Ionic_Information()
@@ -620,6 +658,7 @@ if __name__ == "__main__":
     main_body_instance.Replicate_Unit_Cell()
     main_body_instance.Link_Unit_Cells()
     main_body_instance.Delete_Forbidden_Bonds()
+    main_body_instance.Build_Polyhedra() 
     main_body_instance.Build_Miller_Plane()
     main_body_instance.Parent_Bounding_Box()
     main_body_instance.Manage_Export()

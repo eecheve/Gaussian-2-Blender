@@ -50,7 +50,9 @@ def get_parameters_data(json_path):
         "animation_frames": config["animation_frames"],
         "custom_bond_thresholds": config.get("custom_bond_thresholds", []),
         "unit_cell_repeats": config["unit_cell_repeats"],
-        "miller_indices": config["miller_indices"]
+        "miller_indices": config["miller_indices"],
+        "polyhedra_centers": config["polyhedra_centers"]
+        #"polyhedra_centers": config.get("polyhedra_centers", [])
     }
 
     return parameters_dict
