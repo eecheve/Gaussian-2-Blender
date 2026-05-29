@@ -259,7 +259,7 @@ class HighlighterRegion(object):
         # Read-only dropdowns (Combobox)
         cb_a1 = ttk.Combobox(row_frame, textvariable=var_a1, values=self.elements_list, width=6, state="readonly")
         cb_a2 = ttk.Combobox(row_frame, textvariable=var_a2, values=self.elements_list, width=6, state="readonly")
-        cb_order = ttk.Combobox(row_frame, textvariable=var_order, values=[str(x) for x in self.bond_orders],
+        cb_order = ttk.Combobox(row_frame, textvariable=var_order, values=["0"]+[str(x) for x in self.bond_orders],
                                 width=3, state="readonly")
 
         # Threshold as entry (user types a float)
@@ -295,6 +295,15 @@ class HighlighterRegion(object):
                 var_thr.set("")
                 ent_thr.focus_set()
 
+        def _on_order_change(*_):
+            if var_order.get() == "0":
+                ent_thr.config(state="disabled")
+                var_thr.set("")
+            else:
+                ent_thr.config(state="normal")
+
+        var_order.trace_add("write", _on_order_change)
+        
         ent_thr.bind("<FocusOut>", _on_thr_validate)
         ent_thr.bind("<Return>", _on_thr_validate)
 
@@ -355,9 +364,14 @@ class HighlighterRegion(object):
                 continue
             try:
                 order = int(order_txt)
-                thr = float(thr_txt)
-                if order not in (1, 2, 3) or thr <= 0:
+                if order not in (0, 1, 2, 3):
                     continue
+                if order == 0:
+                    thr = 999
+                else:
+                    thr = float(thr_txt)
+                    if thr <= 0:
+                        continue
             except ValueError:
                 continue
 

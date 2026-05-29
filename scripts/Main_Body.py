@@ -493,6 +493,10 @@ class Main_Body(object):
 
         self.connect_with_symbols.extend(replicated_bonds)
         print(f"Link_Unit_Cells: Instantiated and linked {len(replicated_bonds)} replicated bonds")
+
+    def Delete_Forbidden_Bonds(self):
+        bo = self.get_module("BondOverwriter")
+        bo.delete_forbidden_bonds_from_scene(self.forced_bonds_list)
                                              
     def Manage_Parent_Relations(self):
         """
@@ -638,5 +642,6 @@ if __name__ == "__main__":
     main_body_instance.Animate()
     main_body_instance.Replicate_Unit_Cell()
     main_body_instance.Link_Unit_Cells()
+    main_body_instance.Delete_Forbidden_Bonds()
     main_body_instance.Build_Miller_Plane()
     main_body_instance.Manage_Export()

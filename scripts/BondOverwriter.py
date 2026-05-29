@@ -1,3 +1,4 @@
+import re
 import bpy
 
 def parse_connection_string(connect_list_string):
@@ -73,3 +74,60 @@ def overwrite_connectivity(connect_list_string, connect_with_symbols, coords):
 
     print("optional step: overwriting conectivity list")
     return list(existing_connections.values())
+
+def delete_forbidden_bonds_from_scene(connect_list_string):
+    """
+    Parses the connection override string for no-bond entries (bond character '~'),
+    resolves each entry to its bare element pair by stripping numeric indices and
+    Blender instance suffixes, then deletes every matching bond object from the scene.
+
+    Works for both type-level ('Fe~Fe') and instance-level ('Fe07~Fe12') entries —
+    both are resolved to element pairs, so deletion is always type-wide.
+
+    :param connect_list_string: (str) Semicolon-separated connection rules, e.g. "Fe~Fe; C07~N03".
+    :return: (int) Number of bond objects removed from the scene.
+    """
+    BOND_NAME_CHARS = {'_', '-', '=', '#', '%'}
+
+    def bare_element(atom_label):
+        """Strip Blender suffix (.001) and numeric index, leaving only the element symbol."""
+        base = atom_label.split('.')[0]          # drop .001, .002, etc.
+        match = re.match(r"([A-Za-z]+)", base)
+        return match.group(1) if match else None
+
+    # Collect forbidden element pairs from '~' entries
+    forbidden_pairs = set()
+    for conn in parse_connection_string(connect_list_string):
+        try:
+            atom1, bond, atom2 = parse_connection_entry(conn)
+        except ValueError:
+            continue
+        if bond != '~':
+            continue
+        elem1 = bare_element(atom1)
+        elem2 = bare_element(atom2)
+        if elem1 and elem2:
+            forbidden_pairs.add(frozenset((elem1, elem2)))
+
+    if not forbidden_pairs:
+        return 0
+
+    # Delete every bond object whose endpoint elements form a forbidden pair
+    count = 0
+    for obj in list(bpy.context.scene.objects):
+        if obj.type != 'MESH':
+            continue
+        bond_char = next((c for c in BOND_NAME_CHARS if c in obj.name), None)
+        if bond_char is None:
+            continue
+        parts = obj.name.split(bond_char, 1)
+        if len(parts) != 2:
+            continue
+        elem1 = bare_element(parts[0])
+        elem2 = bare_element(parts[1])
+        if elem1 and elem2 and frozenset((elem1, elem2)) in forbidden_pairs:
+            bpy.data.objects.remove(obj, do_unlink=True)
+            count += 1
+
+    print(f"delete_forbidden_bonds_from_scene: removed {count} bond object(s)")
+    return count
