@@ -30,8 +30,18 @@
         1
     ],
     "miller_indices": {
-        "h": 1,
+        "h": 0,
         "k": 0,
         "l": 0
-    }
+    },
+    "custom_bond_thresholds": [
+        {
+            "atom_pair": [
+                "V",
+                "V"
+            ],
+            "bond_order": 0,
+            "threshold": 999.0
+        }
+    ]
 }

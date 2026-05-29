@@ -44,7 +44,7 @@ class HighlighterRegion(object):
         
         # to be able to add or remove customizable bond thresolds
         self.elements_list = sorted(ELEMENTS)
-        self.bond_orders = [1, 2, 3]
+        self.bond_orders = [0, 1, 2, 3]
         self.threshold_rows = []
 
 
@@ -259,7 +259,7 @@ class HighlighterRegion(object):
         # Read-only dropdowns (Combobox)
         cb_a1 = ttk.Combobox(row_frame, textvariable=var_a1, values=self.elements_list, width=6, state="readonly")
         cb_a2 = ttk.Combobox(row_frame, textvariable=var_a2, values=self.elements_list, width=6, state="readonly")
-        cb_order = ttk.Combobox(row_frame, textvariable=var_order, values=["0"]+[str(x) for x in self.bond_orders],
+        cb_order = ttk.Combobox(row_frame, textvariable=var_order, values=[str(x) for x in self.bond_orders],
                                 width=3, state="readonly")
 
         # Threshold as entry (user types a float)
@@ -360,7 +360,7 @@ class HighlighterRegion(object):
             order_txt = row["var_order"].get().strip()
             thr_txt = row["var_thr"].get().strip()
 
-            if not a1 or not a2 or not order_txt or not thr_txt:
+            if not a1 or not a2 or not order_txt:
                 continue
             try:
                 order = int(order_txt)

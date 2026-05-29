@@ -473,7 +473,7 @@ class Main_Body(object):
 
     def Delete_Forbidden_Bonds(self):
         bo = self.get_module("BondOverwriter")
-        bo.delete_forbidden_bonds_from_scene(self.forced_bonds_list)
+        bo.delete_forbidden_bonds_from_scene(self.custom_bond_thresholds)
                                              
     def Manage_Parent_Relations(self):
         """

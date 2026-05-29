@@ -289,7 +289,7 @@ class TheorChem2BlenderTabSystem:
                                         unit_cell, str_ion_list, is_anim,
                                         hl_atoms, hl_bonds, forced_bonds, custom_thresholds, unit_cell_repeats, miller_indices)   
         else:
-            print("Cannot convert input to animation, check console for errors")
+            print("Conversion aborted: input validation failed. Check the console for details.")
 
     def exceptions_test_passed(self, i_names, o_path):
         """
