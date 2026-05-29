@@ -432,6 +432,35 @@ class Main_Body(object):
         UnitCellReplicator.flatten_scene_hierarchy()
         print(f"Supercell generated with {len(roots)} unit-cell instances")
 
+    # def Link_Unit_Cells(self):
+    #     if isinstance(self.unit_cell_repeats, (list, tuple)):
+    #         if list(self.unit_cell_repeats) == [1, 1, 1]:
+    #             return
+    #     else:
+    #         if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
+    #             return
+
+    #     UnitCellLinker = self.get_module("UnitCellLinker")
+    #     result = UnitCellLinker.replicate_primitive_bonds(
+    #         connect_with_symbols=self.connect_with_symbols
+    #         # primitive_positions no longer needed — linker reads live scene positions
+    #     )
+    #     atoms_in_scene = result.get("atoms_in_scene", {})
+    #     replicated_bonds = result.get("replicated_bonds", [])
+    #     if not replicated_bonds:
+    #         print("Link_Unit_Cells: No replicated bonds detected")
+    #         return
+
+    #     Primitives = self.get_module("Primitives")
+    #     Primitives.InstantiateBondsFromConnectivity(
+    #         atoms_in_scene,
+    #         self.materials_dict,
+    #         replicated_bonds,
+    #         self.unit_cell
+    #     )
+
+    #     self.connect_with_symbols.extend(replicated_bonds)
+    #     print(f"Link_Unit_Cells: Instantiated and linked {len(replicated_bonds)} replicated bonds")
     def Link_Unit_Cells(self):
         if isinstance(self.unit_cell_repeats, (list, tuple)):
             if list(self.unit_cell_repeats) == [1, 1, 1]:
@@ -442,8 +471,11 @@ class Main_Body(object):
 
         UnitCellLinker = self.get_module("UnitCellLinker")
         result = UnitCellLinker.replicate_primitive_bonds(
-            connect_with_symbols=self.connect_with_symbols
-            # primitive_positions no longer needed — linker reads live scene positions
+            lattice_vectors=(
+                self.unit_cell_points[1],
+                self.unit_cell_points[2],
+                self.unit_cell_points[3]
+            )
         )
         atoms_in_scene = result.get("atoms_in_scene", {})
         replicated_bonds = result.get("replicated_bonds", [])

@@ -58,7 +58,8 @@ class BondOrderCalculator():
         v = r2 - r1
         return np.linalg.norm(v)
 
-    def calculate_bond_order_threshold(distance:float, references: List[float]) -> List[float]:
+    #<-- self was not there before, chech for bugs !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    def calculate_bond_order_threshold(distance:float, references: List[float]) -> List[float]: 
         """
         Checks the possible bond distances available for single, double, and triple bonds between two specified bonds
 
@@ -141,20 +142,12 @@ class BondOrderCalculator():
         :param pos2: (tuple or list) The (x, y, z) coordinates of the second atom.
 
         :return: (int) The bond order (1 for single, 2 for double, 3 for triple) or None if no bond order is found.
-        """
-        # OLD VERSION
-        # distance = self.get_bond_length_from_coordinates(pos1, pos2)
-        # references = self.get_covalent_lengths_for_atoms(atom1, atom2)
-        # thresholds = self.calculate_bond_order_threshold(references)
-        # bo = self.compare_distance_to_thresholds(distance, thresholds)
-        # return bo
-        # <--- ENDS OLD VERSION
-        
+        """      
         distance = self.get_bond_length_from_coordinates(pos1, pos2)
         references = self.get_covalent_lengths_for_atoms(atom1, atom2)
         thresholds = self.calculate_bond_order_threshold(references)
         bo = self.compare_distance_to_thresholds(distance, thresholds)
-        distance = self.get_bond_length_from_coordinates(pos1, pos2)
+        #distance = self.get_bond_length_from_coordinates(pos1, pos2)
 
         # 1) CUSTOM RULES (if any) — coordinate-based inference only.
         rules = self.custom_thresholds.get(frozenset((atom1, atom2)))
