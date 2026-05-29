@@ -127,26 +127,38 @@ def build_convex_hull_mesh(vertices, name):
     return obj
 
 
-def assign_material(obj, element, mat_dict):
+def assign_material(obj, element, mat_dict, alpha=0.3):
     """
-    Assigns the material corresponding to the center element to the
-    polyhedron mesh. Falls back to a warning if the material is missing.
+    Creates a node-based transparent material derived from the center element's
+    diffuse color and assigns it to the polyhedron object.
 
     :param obj: (bpy.types.Object) The polyhedron mesh object.
     :param element: (str) Element symbol of the center atom.
     :param mat_dict: (dict) Materials dictionary keyed by element symbol.
+    :param alpha: (float) Transparency — 0.0 fully transparent, 1.0 opaque.
     :return: None
     """
-    mat = mat_dict.get(element)
-    if mat:
-        obj.data.materials.append(mat)
-    else:
+    original = mat_dict.get(element)
+    if not original:
         print(f"PolyhedronBuilder: no material found for '{element}' in mat_dict.")
+        return
 
+    mat_name = f"{element}_polyhedron_mat"
+    poly_mat = bpy.data.materials.get(mat_name)
 
-# --------------------------------------------------------------------------- #
-#  Entry point                                                                 #
-# --------------------------------------------------------------------------- #
+    if poly_mat is None:
+        poly_mat = bpy.data.materials.new(name=mat_name)
+        poly_mat.use_nodes = True
+        poly_mat.blend_method = 'BLEND'
+
+        r, g, b, _ = original.diffuse_color
+        bsdf = poly_mat.node_tree.nodes.get("Principled BSDF")
+        if bsdf:
+            bsdf.inputs["Base Color"].default_value = (r, g, b, 1.0)
+            bsdf.inputs["Alpha"].default_value = alpha
+
+    obj.data.materials.append(poly_mat)
+
 
 def BuildPolyhedra(polyhedra_centers, connect_with_symbols, mat_dict):
     """
