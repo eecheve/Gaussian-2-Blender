@@ -380,6 +380,60 @@ class Main_Body(object):
             supercell_points, h, k, l, self.materials_dict
         )
         
+    # def Replicate_Unit_Cell(self) -> None:
+    #     """
+    #     Replicates the fully built and decorated unit cell into an
+    #     nx, ny, nz supercell by duplicating and translating the
+    #     unit-cell root Empty.
+    #     """
+
+    #     # Guard: no replication requested
+    #     if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
+    #         return
+
+    #     print("Duplicating unit cell according to", self.unit_cell_repeats)
+
+    #     UnitCellReplicator = self.get_module("UnitCellReplicator")
+
+    #     # 1. Compute lattice translation vectors (Cartesian)
+    #     x_direction = Vector(self.unit_cell_points[1])
+    #     y_direction = Vector(self.unit_cell_points[2])
+    #     z_direction = Vector(self.unit_cell_points[3])
+    #     nx, ny, nz = self.unit_cell_repeats
+
+    #     # 2. Collect all scene objects except cameras and lights
+    #     scene_objects = [
+    #         obj for obj in bpy.context.scene.objects
+    #         if obj.type not in {"CAMERA", "LIGHT"}
+    #     ]
+
+    #     # 3. Parent everything to a single unit-cell root Empty
+    #     cell_root = UnitCellReplicator.parent_atoms_and_bonds_to_empty_object(
+    #         scene_objects
+    #     )
+
+    #     # 4. Replicate along x, then y, then z (grid expansion)
+    #     roots = [cell_root]
+
+    #     for _ in range(1, nx):
+    #         roots += [
+    #             UnitCellReplicator.replicate_and_translate_cell(root, x_direction)
+    #             for root in roots
+    #         ]
+    #     for _ in range(1, ny):
+    #         roots += [
+    #             UnitCellReplicator.replicate_and_translate_cell(root, y_direction)
+    #             for root in roots
+    #         ]
+    #     for _ in range(1, nz):
+    #         roots += [
+    #             UnitCellReplicator.replicate_and_translate_cell(root, z_direction)
+    #             for root in roots
+    #         ]
+    #     UnitCellReplicator.flatten_scene_hierarchy()
+    #     UnitCellReplicator.delete_unit_cell_roots()
+    #     print(f"Supercell generated with {len(roots)} unit-cell instances")
+
     def Replicate_Unit_Cell(self) -> None:
         """
         Replicates the fully built and decorated unit cell into an
@@ -414,22 +468,11 @@ class Main_Body(object):
 
         # 4. Replicate along x, then y, then z (grid expansion)
         roots = [cell_root]
+        UnitCellReplicator._expand_along_axis(roots, list(roots), nx, x_direction)
+        UnitCellReplicator._expand_along_axis(roots, list(roots), ny, y_direction)
+        UnitCellReplicator._expand_along_axis(roots, list(roots), nz, z_direction)
 
-        for _ in range(1, nx):
-            roots += [
-                UnitCellReplicator.replicate_and_translate_cell(root, x_direction)
-                for root in roots
-            ]
-        for _ in range(1, ny):
-            roots += [
-                UnitCellReplicator.replicate_and_translate_cell(root, y_direction)
-                for root in roots
-            ]
-        for _ in range(1, nz):
-            roots += [
-                UnitCellReplicator.replicate_and_translate_cell(root, z_direction)
-                for root in roots
-            ]
+        # 5. Flatten hierarchy and remove Empty roots
         UnitCellReplicator.flatten_scene_hierarchy()
         UnitCellReplicator.delete_unit_cell_roots()
         print(f"Supercell generated with {len(roots)} unit-cell instances")

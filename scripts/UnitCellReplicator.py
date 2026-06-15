@@ -93,3 +93,22 @@ def flatten_scene_hierarchy() -> None:
     bpy.context.view_layer.objects.active = meshes[0]
     bpy.ops.object.parent_clear(type='CLEAR_KEEP_TRANSFORM')
     bpy.ops.object.select_all(action='DESELECT')
+
+def _expand_along_axis(roots, frontier, n, direction):
+    """
+    Expands a list of unit-cell roots by n-1 additional layers along one
+    lattice direction. Each iteration replicates only the most recently
+    placed layer (the frontier), so cells are never duplicated regardless
+    of n.
+
+    :param roots:    (list) Accumulator of all root Empties; mutated in place.
+    :param frontier: (list) The layer of roots to replicate from first.
+    :param n:        (int)  Total number of cells along this axis (including the seed).
+    :param direction:(Vector) Cartesian translation vector for one lattice step.
+    :return:         (list) The final frontier after all layers are placed.
+    """
+    for _ in range(1, n):
+        batch = [replicate_and_translate_cell(r, direction) for r in frontier]
+        roots += batch
+        frontier = batch
+    return frontier
