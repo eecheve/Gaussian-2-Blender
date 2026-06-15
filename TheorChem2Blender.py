@@ -4,7 +4,7 @@ import stat
 import json
 import platform
 import subprocess
-#import memory_profiler #<-- uncomment this line for benchmarking
+#import memory_profiler #<-- !!! uncomment this line for benchmarking
 
 import tkinter as tk
 from tkinter import filedialog
@@ -71,6 +71,7 @@ class TheorChem2BlenderTabSystem:
         Configures the root tkinter window with title, dimensions, and resizability settings.
         """
         self.root = tk.Tk()
+        #self.root.iconbitmap("icon.ico") #<---- for when I design a better Icon, 6/15/26; icon empty for now
         self.root.title("TheorChem2Blender")
         self.root.geometry("800x600")
         self.root.configure(bg="#e0e0e0")

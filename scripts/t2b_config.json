@@ -2,11 +2,11 @@
     "input": {
         "type": ".vasp",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
-        "names": "VHO2_3_cart.vasp"
+        "names": "VHO2_1_conventional.vasp"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "VHO2_3_cart",
+        "name": "VHO2_1_conventional",
         "type": ".glb"
     },
     "model": {
@@ -25,8 +25,8 @@
     "forced_bonds": "",
     "animation_frames": [],
     "unit_cell_repeats": [
-        2,
-        2,
+        3,
+        3,
         3
     ],
     "miller_indices": {
@@ -34,5 +34,15 @@
         "k": 0,
         "l": 0
     },
-    "polyhedra_centers": []
+    "polyhedra_centers": [],
+    "custom_bond_thresholds": [
+        {
+            "atom_pair": [
+                "V",
+                "V"
+            ],
+            "bond_order": 0,
+            "threshold": 999.0
+        }
+    ]
 }

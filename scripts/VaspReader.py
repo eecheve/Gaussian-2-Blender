@@ -121,7 +121,20 @@ class VaspReader():
         file_as_list = self.get_file_info_as_list(file_path)
         atoms_in_file = self.get_atoms_in_file(file_as_list)
         coords_list = self.get_coordinate_lines(atoms_in_file, file_as_list)
-        coords_scaled = self.multiply_coords_by_scaling_factor(file_as_list, coords_list)
+        #coords_scaled = self.multiply_coords_by_scaling_factor(file_as_list, coords_list)
+        #--------------------------------------------------------------------------------------
+        coord_type, _ = self.detect_coordinate_section(file_as_list)
+
+        if coord_type.lower() == 'cartesian':
+            coords_scaled = self.multiply_coords_by_scaling_factor(file_as_list, coords_list)
+        elif coord_type.lower() == 'direct':  
+            lattice_vectors = self.get_lattice_vectors(file_as_list)
+            scale = self.get_scaling_factor_from_file_list(file_as_list)
+            scaled_vectors = tuple(scale * np.array(v) for v in lattice_vectors)
+            coords_scaled = self.direct_to_cartesian(coords_list, scaled_vectors)
+        else:
+            raise ValueError(f"Unrecognized coordinate type: '{coord_type}'. Expected 'Direct' or 'Cartesian'.")
+        #-------------------------------------------------------------------------------------
         coords_with_symbols = self.merge_atoms_and_coordinates(atoms_in_file, coords_scaled)
         return coords_with_symbols
     
@@ -195,3 +208,20 @@ class VaspReader():
                     bond_order_char = bond_order_map.get(bond_order)
                     bond_orders.append((atom1, atom2, bond_order_char))
         return bond_orders
+    
+    def direct_to_cartesian(self, direct_coords, lattice_vectors):
+        """
+        Converts fractional (direct) coordinates to Cartesian.
+        R = x1*a1 + x2*a2 + x3*a3
+
+        :param direct_coords: (list) Rows of [x1, x2, x3] fractional values.
+        :param lattice_vectors: (tuple) Three lattice vectors (a1, a2, a3), already scaled.
+        :return: (list) Rows of [x, y, z] in Cartesian Ångströms.
+        """
+        a1, a2, a3 = [np.array(v) for v in lattice_vectors]
+        cartesian = []
+        for row in direct_coords:
+            x1, y1, z1 = self.parse_xyz(row)
+            R = x1 * a1 + y1 * a2 + z1 * a3
+            cartesian.append(list(R))
+        return cartesian
