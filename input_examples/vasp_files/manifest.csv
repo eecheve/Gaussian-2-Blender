@@ -1,0 +1,30 @@
+name,formula,prototype,spacegroup_number,material_id,energy_above_hull_eV_atom,file
+NaCl_rocksalt,NaCl,Rocksalt (halite) — the canonical AB rocksalt,225,mp-22862,0.0,NaCl_rocksalt.vasp
+MgO_rocksalt,MgO,Rocksalt oxide (periclase),225,mp-1265,0.0,MgO_rocksalt.vasp
+PbS_rocksalt,PbS,Galena — rocksalt sulfide,225,mp-21276,0.0,PbS_rocksalt.vasp
+CsCl_cesium-chloride,CsCl,CsCl structure — simple-cubic AB,221,mp-22865,0.0,CsCl_cesium-chloride.vasp
+ZnS_zincblende,ZnS,Zincblende (sphalerite),216,mp-10695,0.00014624571428500002,ZnS_zincblende.vasp
+GaAs_zincblende,GaAs,Zincblende III-V semiconductor,216,mp-2534,0.0,GaAs_zincblende.vasp
+BN_zincblende,BN,Cubic boron nitride (zincblende),216,mp-1639,0.07735396750000001,BN_zincblende.vasp
+ZnS_wurtzite,ZnS,Wurtzite polymorph of ZnS,186,mp-561286,0.00011004546428500001,ZnS_wurtzite.vasp
+CdS_wurtzite,CdS,Wurtzite (greenockite),186,mp-672,0.0,CdS_wurtzite.vasp
+BN_hexagonal,BN,Hexagonal boron nitride (graphite-like),194,mp-629015,0.0017454250000010002,BN_hexagonal.vasp
+C_diamond,C,Diamond cubic,227,mp-66,0.11226490000000101,C_diamond.vasp
+Si_diamond,Si,"Silicon, diamond structure",227,mp-149,0.0,Si_diamond.vasp
+C_graphite,C,Graphite (layered),194,mp-48,0.003121854999999,C_graphite.vasp
+CaF2_fluorite,CaF2,Fluorite — AB2,225,mp-2741,0.0,CaF2_fluorite.vasp
+Li2O_antifluorite,Li2O,Antifluorite — A2B,225,mp-1960,0.0,Li2O_antifluorite.vasp
+TiO2_rutile,TiO2,Rutile (P4_2/mnm),136,mp-2657,0.043638704166665,TiO2_rutile.vasp
+TiO2_anatase,TiO2,Anatase (I4_1/amd),141,mp-390,0.0,TiO2_anatase.vasp
+TiO2_brookite,TiO2,Brookite (Pbca),61,mp-1840,0.0030413275,TiO2_brookite.vasp
+SrTiO3_perovskite,SrTiO3,Cubic perovskite ABO3,221,mp-5229,0.00047005399999900006,SrTiO3_perovskite.vasp
+Al2O3_corundum,Al2O3,Corundum (sapphire),167,mp-1143,0.0,Al2O3_corundum.vasp
+Fe2O3_hematite,Fe2O3,Hematite — corundum-type,167,mp-19770,0.0,Fe2O3_hematite.vasp
+MgAl2O4_spinel,MgAl2O4,Spinel AB2O4,227,mp-3536,0.0,MgAl2O4_spinel.vasp
+NiAs_nickeline,NiAs,Nickeline (NiAs type),194,mp-590,0.007765813125001001,NiAs_nickeline.vasp
+ReO3_structure,ReO3,ReO3 framework (corner-sharing octahedra),221,mp-190,0.0,ReO3_structure.vasp
+FeS2_pyrite,FeS2,Pyrite (Pa-3),205,mp-226,0.010058665833334,FeS2_pyrite.vasp
+Cu_FCC,Cu,Face-centred-cubic metal,225,mp-30,0.0,Cu_FCC.vasp
+Fe_BCC,Fe,Body-centred-cubic metal,229,mp-13,0.0,Fe_BCC.vasp
+W_BCC,W,Body-centred-cubic metal (tungsten),229,mp-91,0.0,W_BCC.vasp
+Mg_HCP,Mg,Hexagonal-close-packed metal,194,mp-153,0.0,Mg_HCP.vasp

@@ -2,11 +2,11 @@
     "input": {
         "type": ".vasp",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
-        "names": "VHO2_1_conventional.vasp"
+        "names": "ZnS_wurtzite.vasp"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "VHO2_1_conventional",
+        "name": "ZnS_wurtzite",
         "type": ".glb"
     },
     "model": {
@@ -25,9 +25,9 @@
     "forced_bonds": "",
     "animation_frames": [],
     "unit_cell_repeats": [
-        3,
-        3,
-        3
+        1,
+        1,
+        1
     ],
     "miller_indices": {
         "h": 0,
@@ -38,8 +38,8 @@
     "custom_bond_thresholds": [
         {
             "atom_pair": [
-                "V",
-                "V"
+                "Ca",
+                "Ca"
             ],
             "bond_order": 0,
             "threshold": 999.0
