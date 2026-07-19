@@ -1,7 +1,8 @@
 Blender API
 ============
 All the scripts and modules tasked to read computational chemistry files in the formats
-``.com`` and ``.xyz`` and convert them to ``.fbx``, ``.obj``, ``.glb``, or ``.stl`` formats
+``.com``, ``.xyz``, ``.mol2``, or ``.vasp`` and convert them to ``.fbx``, ``.obj``, ``.dae``,
+``.glb``, ``.stl``, or ``.usdz`` formats
 
 Main Body script
 -----------------
@@ -142,6 +143,70 @@ XYZ Reader Module
 Mol2 Reader Module
 --------------------
 .. automodule:: Mol2Reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+VASP Reader Module
+--------------------
+.. automodule:: VaspReader
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Bond Overwriter Module
+------------------------
+.. automodule:: BondOverwriter
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Bound Box Builder Module
+--------------------------
+.. automodule:: BoundBoxBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Unit Cell Linker Module
+--------------------------
+.. automodule:: UnitCellLinker
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Unit Cell Replicator Module
+------------------------------
+.. automodule:: UnitCellReplicator
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Miller Plane Builder Module
+------------------------------
+.. automodule:: MillerPlaneBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Polyhedron Builder Module
+----------------------------
+.. automodule:: PolyhedronBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+Scene Cleaner Module
+----------------------
+.. automodule:: SceneCleaner
    :members:
    :undoc-members:
    :show-inheritance:

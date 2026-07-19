@@ -14,6 +14,7 @@ This section contains step-by-step tutorials for using TheorChem2Blender in diff
    tutorial_ions
    tutorial_animation_com
    tutorial_animation_xyz
+   tutorial_unit_cell
 
 Video walkthroughs
 -------------------
@@ -25,4 +26,5 @@ If you prefer to see the videos instead of following the text instructions go to
 5. `Specifying ionic radii <https://youtu.be/elOb1yUuWVY>`_
 6. `Animating .com input <https://youtu.be/aVRtrc7SL8Q>`_
 7. `Animating .xyz input <https://youtu.be/V0ARxJZNfy8>`_
-8. BONUS: `Animating a transition state customizing and highlighting bonds <https://youtu.be/Ee8SqCKStUw>`_ 
+8. BONUS: `Animating a transition state customizing and highlighting bonds <https://youtu.be/Ee8SqCKStUw>`_
+9. Unit cells, growth, Miller planes, and polyhedra [video coming soon]

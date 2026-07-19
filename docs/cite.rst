@@ -6,7 +6,7 @@ To cite this program, refer to the paper in the *Journal of Chemical Education* 
 Program development
 --------------------
 - `[Seminal paper] <https://pubs.acs.org/doi/10.1021/acs.jchemed.1c00515>`_
-- ``[Usability and animations]`` Placeholder for the *Journal of Cheminformatics* publication
+- `[Usability and animations]<https://link.springer.com/article/10.1186/s13321-026-01162-0>`_
 
 Program applications
 ---------------------

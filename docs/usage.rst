@@ -23,36 +23,41 @@ Instructions
 
 Running the Executable from Windows
 -----------------------------------
-1. Double-click on the ``TheorChem2Blender_Windows.exe`` file.
-2. Select one or more ``.com``, ``.xyz``, ``.mol2`` files from the same folder.
-3. Select ``Is Animation`` to export as an animated ``fbx`` object.
+1. Double-click on the ``TheorChem2Blender.exe`` file.
+2. Select one or more ``.com``, ``.xyz``, ``.mol2``, or ``.vasp`` files from the same folder.
+3. Select ``Is Animation`` to export as an animated ``fbx``, ``glb``, or ``usdz`` object (only ``.com`` and ``.xyz`` inputs support animation).
 4. If you plan to render an animation, make sure all the ``.com`` or ``.xyz`` files have the exact same atoms in the exact same order.
 5. To render using ionic radii, select the ``Check for Ionic Radii`` option.
 6. Add each ion and select their charge, coordination, and spin multiplicity (when available).
-7. Click on ``Convert!`` to convert the ``.com`` or ``.xyz`` input into the desired output type.
-8. Click on ``Reset`` to reset everything to their default values.
+7. If your input is a ``.vasp`` file, a ``Unit Cells`` tab becomes available, where you can render unit cell boundaries, grow supercells, draw Miller planes, and build coordination polyhedra. See :doc:`the Unit Cell tutorial <tutorial_unit_cell>` for details.
+8. Click on ``Convert!`` to convert the input into the desired output type.
+9. Click on ``Reset`` to reset everything to their default values.
 
 Running the Executable from macOS
 ---------------------------------
-1. Open a terminal in the source folder, and execute the following command:
-  .. code-block:: bash
-    
-     python3 TheorChem2Blender.py
+1. Open a terminal in the project's root folder, and execute the following command:
+
+.. code-block:: bash
+
+   python3 TheorChem2Blender.py
 
 2. Follow the same steps as in the Windows section to select files, configure options, and convert.
 
-Running Chem2Blender from the Console
--------------------------------------
-To run the ``TheorChem2Blender.py`` Python script from the console:
-1. Copy the ``TheorChem2Blender.py`` file to the ``gui`` folder.
-2. Open a terminal in the ``Blender-Gaussian-Bridge/`` folder and run:
+Running TheorChem2Blender from the Console
+-------------------------------------------
+To run the ``TheorChem2Blender.py`` Python script directly from the console instead of using the executable:
+
+1. Open a terminal in the project's root folder (the one containing ``TheorChem2Blender.py``, alongside the ``gui/`` and ``scripts/`` folders).
+2. Run:
 
 .. code-block:: console
 
    $ python TheorChem2Blender.py
 
+3. Follow the same steps as in the Windows section to select files, configure options, and convert.
+
 Example Files
 -------------
-- Example ``.com`` and ``.xyz`` files are inside the ``input_examples`` folder, separated by categories.
+- Example ``.com``, ``.xyz``, ``.mol2``, and ``.vasp`` files are inside the ``input_examples`` folder, separated by categories.
 - For example, the file ``Ice.com`` is located in the ``input_examples\\com_files\\inorganic\\`` folder.
 - The ``output`` folder starts empty and is the default location for 3D renderings from the tool.

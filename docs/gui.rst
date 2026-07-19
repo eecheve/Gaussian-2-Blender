@@ -74,6 +74,13 @@ Input Region Module
    :undoc-members:
    :show-inheritance:
 
+Instructions Module
+--------------------
+.. automodule:: Instructions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Ion Conventions Module
 -----------------------
 .. automodule:: IonConventions
@@ -96,9 +103,37 @@ Ion Region Module
    :undoc-members:
    :show-inheritance:
 
+Labeled Combo Row Module
+--------------------------
+.. automodule:: LabeledComboRow
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Output Region Module
 --------------------
 .. automodule:: OutputRegion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Proportional Container Module
+--------------------------------
+.. automodule:: ProportionalContainer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Repeatable Row Group Module
+------------------------------
+.. automodule:: RepeatableRowGroup
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Screen Size Manager Module
+-----------------------------
+.. automodule:: ScreenSizeManager
    :members:
    :undoc-members:
    :show-inheritance:
@@ -117,9 +152,9 @@ Text Redirector Module
    :undoc-members:
    :show-inheritance:
 
-Tutorial Module
-----------------
-.. automodule:: Tutorial
+Unit Cell Region Module
+--------------------------
+.. automodule:: UnitCellRegion
    :members:
    :undoc-members:
    :show-inheritance:
@@ -127,13 +162,6 @@ Tutorial Module
 Utility Module
 ----------------
 .. automodule:: Utility
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Walkthrough Region Module
---------------------------
-.. automodule:: WalkthroughRegion
    :members:
    :undoc-members:
    :show-inheritance:

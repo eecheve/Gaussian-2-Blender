@@ -64,6 +64,7 @@ Convert! tab
 
 
 :ref:`Previous: (6) animating com files <tutorial_animation_com>`
+:ref:`Next: (8) Unit cells, growth, Miller planes, and polyhedra <tutorial_unit_cell>`
 
 
 ----

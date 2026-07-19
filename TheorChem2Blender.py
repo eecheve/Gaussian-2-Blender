@@ -317,8 +317,11 @@ class TheorChem2BlenderTabSystem:
         Resets the GUI components to their default states, clearing paths, input selections, and highlights.
 
         Calls:
-        - `clear` functions from the following modules:
-        `BlenderPath`, `OutputRegion`, `InputRegion`, `IonRegion`, `ConsoleRegion`, `Information`, `Tutorial`
+        - `blender_path_region`: resets the Blender path back to the auto-detected default.
+        - `output_region`: resets the output path back to the default `output/` folder.
+        - `input_region`: clears the selected input file(s) and reverts widget background colors.
+        - `highlight_region`: clears and disables the atom/bond highlighting options.
+        - `ion_region`: clears the ionic radii selections.
         """
         self.blender_path_region.var_blenderPath.set(self.str_blenderPath)
         self.output_region.var_outputPath.set(self.output_region.def_outputPath)

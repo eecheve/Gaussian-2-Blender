@@ -23,7 +23,7 @@ class BpyMock(MagicMock):
                 return MagicMock(filepath="C:/Documents/Gaussian-2-Blender/dummy.blend")  # Return valid path
         return MagicMock()
 
-MOCK_MODULES = ['bpy', 'bpy.types', 'bpy.props', 'bpy.utils', 'bpy.data', 'mathutils']
+MOCK_MODULES = ['bpy', 'bpy.types', 'bpy.props', 'bpy.utils', 'bpy.data', 'mathutils', 'bmesh']
 sys.modules.update((mod_name, BpyMock()) for mod_name in MOCK_MODULES)
 #-------------------------------------------------------------------------------------
 
