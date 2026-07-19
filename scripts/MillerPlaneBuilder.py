@@ -175,9 +175,6 @@ def InstantiateMillerPlane(bound_box_points, h, k, l, mat_dict):
     anchor             = compute_plane_anchor(h, k, l, origin, a1, a2, a3)
     corners            = compute_unit_cell_corners(origin, a1, a2, a3)
 
-    print(f"  normal: {normal}")
-    print(f"  anchor: {anchor}")
-
     intersection_points = intersect_plane_with_edges(corners, normal, anchor)
 
     if len(intersection_points) < 3:

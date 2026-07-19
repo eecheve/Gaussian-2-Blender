@@ -186,6 +186,7 @@ def BuildPolyhedra(polyhedra_centers, connect_with_symbols, mat_dict):
     atoms_in_scene = collect_atoms_from_scene()
 
     built = 0
+    skipped_too_few_neighbors = 0
     for atom_name, atom_pos in atoms_in_scene.items():
         element = get_element(atom_name)
         if element not in center_set:
@@ -197,8 +198,7 @@ def BuildPolyhedra(polyhedra_centers, connect_with_symbols, mat_dict):
         ]
 
         if len(neighbor_positions) < 3:
-            print(f"PolyhedronBuilder: '{atom_name}' has {len(neighbor_positions)} "
-                  f"neighbor(s) in scene — skipping.")
+            skipped_too_few_neighbors += 1
             continue
 
         poly_name = f"{atom_name}_polyhedron"
@@ -206,7 +206,6 @@ def BuildPolyhedra(polyhedra_centers, connect_with_symbols, mat_dict):
         if obj:
             assign_material(obj, element, mat_dict)
             built += 1
-            print(f"PolyhedronBuilder: built '{poly_name}' "
-                  f"({len(neighbor_positions)} vertices).")
 
-    print(f"PolyhedronBuilder: {built} polyhedron/a instantiated.")
+    print(f"PolyhedronBuilder: {built} polyhedron/a instantiated "
+          f"({skipped_too_few_neighbors} center atom(s) skipped for having fewer than 3 neighbors).")

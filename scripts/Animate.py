@@ -267,7 +267,6 @@ def get_bond_locations(bond_name, anim_data, type):
     :return: The list of center locations for each bond.
     :rtype: List[mathutils.Vector]
     """
-    print("Get bond locations is being called")
     l = []  # List to store center locations
     components = bond_name.split(type)  # Splitting bond_name to get the two atoms involved
     r1 = None
@@ -288,7 +287,6 @@ def get_bond_locations(bond_name, anim_data, type):
     for i in range(len(r1)):  # Assuming r1 and r2 have the same number of vectors
         v_i = (r1[i] + r2[i]) / 2  # Calculate the center of mass
         l.append(v_i)  # Append the center of mass to the list
-    print("bond locations are:", l)
     return l
 
 def get_bond_normals(bond_name, anim_data, type):
@@ -301,7 +299,6 @@ def get_bond_normals(bond_name, anim_data, type):
     :return: The list of normal vectors for the bond.
     :rtype: List[Mathutils.Vector]
     """
-    print("get bond normals is being called")
     n = []
     r1 = None
     r2 = None
@@ -349,14 +346,14 @@ def animate_bonds_by_type_list(bond_type_list, anim_data, bond_type, step_size=1
     print("11: bonds are being animated")
     if len(bond_type_list) != 0:
         for bond in bond_type_list:
-            print("animate_bonds_by_type: currently in bond: ", bond)
             bond_locations = get_bond_locations(bond.name, anim_data, bond_type)
             bond_normals = get_bond_normals(bond.name, anim_data, bond_type)
             update_keyframe_locations(target=bond, step_size=step_size, locations=bond_locations)
             update_keyframe_rotations_quaternion(target=bond, step_size=step_size, normals=bond_normals)
             update_keyframe_scale(target=bond, bond_name=bond.name, anim_data=anim_data, bond_type=bond_type, step_size=step_size)
+        print(f"11: Animated {len(bond_type_list)} bond(s) of type '{bond_type}'")
     else:
-        print("there are no bonds of type", bond_type)    
+        print("there are no bonds of type", bond_type)
         return
     
 def detect_bond_types(bond_list):
@@ -415,7 +412,6 @@ def bake_for_fbx(element_list, bond_list, end_frame):
         bpy.context.view_layer.objects.active = obj
         bpy.ops.object.select_all(action='DESELECT')
         obj.select_set(True)
-        print(f"12.2: Baking animation for object: {obj.name}")
         bpy.ops.nla.bake(
             frame_start=0, frame_end=end_frame,
             step=1, only_selected=True, visual_keying=True,
@@ -431,10 +427,12 @@ def force_nla_tracks_for_glb(objects):
     
     :param objects: List of objects to process
     """
+    pushed_count = 0
+    skipped_count = 0
     for obj in objects:
         if not obj.animation_data:
             obj.animation_data_create()
-        
+
         action = obj.animation_data.action
         if action:
             # Create a new NLA track and push the action into it
@@ -442,9 +440,10 @@ def force_nla_tracks_for_glb(objects):
             track.name = f"{obj.name}_NLA"
             #strip = track.strips.new(action.name, action.frame_range[0], action)
             track.strips.new(action.name, int(action.frame_range[0]), action)
-            print(f"Pushed action '{action.name}' to NLA track for object '{obj.name}'")
+            pushed_count += 1
         else:
-            print(f"No action found for object '{obj.name}'")
+            skipped_count += 1
+    print(f"Pushed {pushed_count} action(s) to NLA tracks ({skipped_count} object(s) had no action)")
 
 
 def bake_for_glb(element_list, bond_list, end_frame):

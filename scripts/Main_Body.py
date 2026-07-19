@@ -123,9 +123,6 @@ class Main_Body(object):
                     importlib.reload(self.imported_modules[module])  # Reload for live coding
                 else:
                     self.imported_modules[module] = importlib.import_module(module)
-
-                print(f"Successfully imported {module}")
-
             except ModuleNotFoundError as e:
                 print(f"Module {module} not found: {e}")
             except Exception as e:

@@ -1,12 +1,12 @@
 {
     "input": {
-        "type": ".vasp",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
-        "names": "VHO2_1_conventional.vasp"
+        "type": ".com",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/organic",
+        "names": "dimethyl_dithionate.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "VHO2_1_conventional",
+        "name": "dimethyl_dithionate",
         "type": ".glb"
     },
     "model": {
@@ -14,7 +14,7 @@
     },
     "flags": {
         "is_ionic": "0",
-        "unit_cell": 1,
+        "unit_cell": "0",
         "is_anim": false
     },
     "ions": "---",
@@ -24,20 +24,7 @@
     },
     "forced_bonds": "",
     "animation_frames": [],
-    "unit_cell_repeats": [
-        {
-            "x": 1,
-            "y": 1,
-            "z": 1
-        },
-        {
-            "x": 1,
-            "y": 2,
-            "z": 2
-        }
-    ],
+    "unit_cell_repeats": [],
     "miller_indices": [],
-    "polyhedra_centers": [
-        "V"
-    ]
+    "polyhedra_centers": []
 }

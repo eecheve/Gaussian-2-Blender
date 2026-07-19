@@ -13,6 +13,7 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
     :param element_data: Dictionary<string, Atom_Data(class)> available data for the present elements
     :param materials_dict: Dictionary<string, bpy.Material> materials that can be accessed with present elements' symbols
     """
+    instantiated_count = 0
     for key in pos_dict:
         e_symbol = ''.join(i for i in key.split('.')[0] if not i.isdigit()) #remove numbers from name
         if e_symbol in element_data:
@@ -26,10 +27,12 @@ def InstantiateElementsFromDictionary(pos_dict, element_data, materials_dict, va
             bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, location=(x, y, z), radius=r)
             ModifyNamesAndMaterials(key, e_symbol, materials_dict)
             bpy.ops.object.shade_smooth()
-            print("6: Instantiating element: ", key)
+            instantiated_count += 1
         else:
             print("AddElement(): invalid element name", key)
-            
+    print(f"6: Instantiated {instantiated_count} element(s)")
+
+
 def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
     """
     Instantiates spheres for ions at the allocated Vector3 positions.
@@ -39,6 +42,7 @@ def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
     :param materials_dict: (dict) Materials that can be accessed with present ions' symbols.
     :return: None
     """
+    instantiated_count = 0
     for key in pos_dict:
         i_symbol = ''.join(i for i in key.split('.')[0] if not i.isdigit()) #remove numbers from name
         if i_symbol in ion_data:
@@ -49,9 +53,10 @@ def InstantiateIonsFromDictionary(pos_dict, ion_data, materials_dict):
             bpy.ops.mesh.primitive_uv_sphere_add(enter_editmode=False, location=(x, y, z), radius=r)
             ModifyNamesAndMaterials(key, i_symbol, materials_dict)
             bpy.ops.object.shade_smooth()
-            print("6: Instantiating ion: ", key)
+            instantiated_count += 1
         else:
             print("AddElement(): invalid element name", key)
+    print(f"6: Instantiated {instantiated_count} ion(s)")
                     
 def ModifyNamesAndMaterials(obj_name, e_symbol, materials_dict):
     """
@@ -137,18 +142,20 @@ def InstantiateBondsFromConnectivity(pos_dict, mat_dict, connect_list, unit_cell
         '%': handle_resonance_bond #function stored twice because xyz and com files manage aromatic bonds differently
     }
 
+    bond_count = 0
     for item in connect_list:
         atom1 = item[0]
         atom2 = item[1]
         bond_type = item[2]
-        print("6: Instantiating bond: ", atom1 + bond_type + atom2)
         action = bond_actions.get(bond_type)
         if action:
             action(atom1, atom2)
+            bond_count += 1
         else:
             print("Error on bond type! @Primitives.InstantiateBondsFromConnectivity")
+    print(f"6: Instantiated {bond_count} bond(s)")
 
-            
+
 def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_len, bond_radius, h_bonding=False): 
     """
     Creates and joins transient bonds between two atoms.
@@ -203,9 +210,9 @@ def CreateAndJoinTrantientBond(pos_dict, mat_dict, key1, key2, bond_type, dash_l
                 ModifyNamesAndMaterials(name1, "Xx", mat_dict) #For trantient or hydrogen bonding
     #getting all the objects with name that starts with name1
     name1_objs = [o for o in scene.objects if o.name.startswith(name1)]
-    print(f"Objects to join: {[o.name for o in name1_objs]}")
+    # No per-call print here: this runs once per transient/hydrogen bond, and
+    # InstantiateBondsFromConnectivity already reports the total bond count.
     JoinMeshesFromObjectList(name1_objs)
-    print(f"Joined meshes for: {name1}")
 
 def CreateFragmentedBonds(pos_dict, mat_dict, atom1, atom2, bond_type, unit_cell="0"):
     """

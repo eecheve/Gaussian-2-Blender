@@ -4,6 +4,7 @@ import stat
 import json
 import platform
 import subprocess
+import threading
 #import memory_profiler #<-- !!! uncomment this line for benchmarking
 
 import tkinter as tk
@@ -31,6 +32,13 @@ from gui.ActionsRegion import ActionsRegion
 from gui.BondConventions import BondConventions
 
 class TheorChem2BlenderTabSystem:
+    # How often (ms) the main thread checks whether the background Blender
+    # conversion has finished, so the next queued file (if any) can start.
+    # Kept separate from ConsoleRegion.LOG_POLL_INTERVAL_MS even though both
+    # are currently 500ms - one paces log display, this one paces queue
+    # progression, and there's no reason they must change together.
+    CONVERSION_THREAD_POLL_MS = 500
+
     def __init__(self):
         #utility
         self.coordinates = Coordinates() # To use the coordinates module
@@ -67,6 +75,7 @@ class TheorChem2BlenderTabSystem:
     def _initialize_scripts_path(self):
         self.def_scriptsPath = os.path.join(self.g2b_path, "scripts")
         self.jsonConfigPath = os.path.join(self.def_scriptsPath, "t2b_config.json")
+        self.output_log_path = os.path.join(self.g2b_path, "output", "output.log")
     
     def _configure_root(self):
         """
@@ -300,7 +309,7 @@ class TheorChem2BlenderTabSystem:
                                        current_os=self.current_os)
         
     def initialize_console_region(self):
-        self.console_region = ConsoleRegion(self.root)
+        self.console_region = ConsoleRegion(self.root, log_path=self.output_log_path)
         
     
     def reset_to_defaults(self):
@@ -347,17 +356,18 @@ class TheorChem2BlenderTabSystem:
         Calls:
         - `self.exceptions_test_passed`.
         - `self.assign_ionic_params`.
-        - `self.individual_convert`.
-
+        - `self._start_conversion_queue`.
 
         :param exec_loc: the path to the executable that will communicate with MainBody.py that handles the Blender part.
 
         The function performs the following steps:
         1. Collects necessary paths and parameters for the conversion process.
         2. Validates the inputs using the `exceptions_test_passed` function.
-        3. If validation succeeds: 
-        3.1. Retrieves ionic parameters
-        3.2. Iterates through the list of input files and calls the `individual_convert` function to process each file.
+        3. If validation succeeds:
+        3.1. Retrieves ionic parameters.
+        3.2. Builds the queue of files to convert and hands it to
+             `_start_conversion_queue`, which runs Blender once per file,
+             sequentially, in the background.
         4. If validation fails, outputs relevant error messages to the console.
 
         """
@@ -376,29 +386,31 @@ class TheorChem2BlenderTabSystem:
         unit_cell_repeats = self.unit_cell_region.get_unit_cell_repeats() #get the x, y, z values of repeating the unit cell
         miller_indices = self.unit_cell_region.get_miller_indices() #gets the miller indices specified by the user
         polyhedra_centers = self.unit_cell_region.get_polyhedra_centers()
-        if self.exceptions_test_passed(i_names, o_path): 
-            params = self.assign_ionic_params()
-            is_ionic = params[0]
-            unit_cell = params[1]
-            ion_list = params[2]
-            str_ion_list = params[3]
-            if is_anim:
-                print("Converting main molecule for animation")
-                self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[0], model_type,
-                                    o_path, i_names[0].split(".")[0], o_type, is_ionic,
-                                    unit_cell, str_ion_list, is_anim,
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
-                                    unit_cell_repeats, miller_indices, polyhedra_centers) 
-            else:
-                for i in range(len(i_names)):
-                    print("Batch converting", i+1, "of", len(i_names))
-                    self.individual_convert(exec_loc, b_path, i_type, i_path, i_names[i], model_type,
-                                        o_path, i_names[i].split(".")[0], o_type, is_ionic,
-                                        unit_cell, str_ion_list, is_anim,
-                                        hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
-                                        unit_cell_repeats, miller_indices, polyhedra_centers)   
-        else:
+
+        if not self.exceptions_test_passed(i_names, o_path):
             print("Conversion aborted: input validation failed. Check the console for details.")
+            return
+
+        is_ionic, unit_cell, ion_list, str_ion_list = self.assign_ionic_params()
+
+        # (i_name, o_name) pairs to convert, one Blender run at a time - see
+        # _run_next_conversion. Animation mode always converts just the
+        # first selected file, since it's the multi-frame trajectory input,
+        # not a batch of separate molecules.
+        if is_anim:
+            print("Converting main molecule for animation")
+            conversion_queue = [(i_names[0], i_names[0].split(".")[0])]
+        else:
+            conversion_queue = [(name, name.split(".")[0]) for name in i_names]
+
+        self._start_conversion_queue(
+            conversion_queue, exec_loc=exec_loc, b_path=b_path, i_type=i_type, i_path=i_path,
+            model_type=model_type, o_path=o_path, o_type=o_type, is_ionic=is_ionic,
+            unit_cell=unit_cell, str_ion_list=str_ion_list, is_anim=is_anim,
+            hl_atoms=hl_atoms, hl_bonds=hl_bonds, forced_bonds=forced_bonds,
+            custom_thresholds=custom_thresholds, unit_cell_repeats=unit_cell_repeats,
+            miller_indices=miller_indices, polyhedra_centers=polyhedra_centers,
+        )
 
     def exceptions_test_passed(self, i_names, o_path):
         """
@@ -471,35 +483,119 @@ class TheorChem2BlenderTabSystem:
             str_ionList = "---"
         return is_ionic, unit_cell, ion_list, str_ionList
 
-    #@Utility.redirect_print_to_log(logfile='C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\output.log') # to save the prints elsewhere
-    #@Utility.announce_conversion # to specify which molecule is being converted
-    #@Utility.time_function # to measure how much time this function runs
-    #@memory_profiler.profile # to measure memory usage
-    def individual_convert(self, exec_loc, b_path, i_type, i_path, i_name, model_type, o_path, 
-                       o_name, o_type, is_ionic, unit_cell, str_ion_list, is_anim, 
-                       hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
-                       unit_cell_repeats, miller_indices, polyhedra_centers):
-        """ 
-        Function to execute bat file that communicates with blender's python API 
-   
-        :param excec_loc: path to the ReadMolecules.bat file which communicates with python
-        :param b_path: location of the blender executable
-        :param i_path: list of input specifications
-        :param i_name: list of input names to be converted into 3D objects
-        :param model_type: type of model to export
-        :param o_path: output path
-        :param o_name: output names
-        :param o_type: output type
-        :param is_ionic: boolean specifyig wether the input is ionic
-        :param unit_cell: boolean specifying whether the input contains a unit cell
-        :param str_ion_list: list of strings containing all the ions within the input
-        :param is_anim: boolean determining if input list is to be treated as animation
+    def _start_conversion_queue(self, conversion_queue, exec_loc, b_path, i_type, i_path,
+                                 model_type, o_path, o_type, is_ionic, unit_cell, str_ion_list,
+                                 is_anim, hl_atoms, hl_bonds, forced_bonds, custom_thresholds,
+                                 unit_cell_repeats, miller_indices, polyhedra_centers):
         """
-        self.input_to_json(i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                                    is_ionic, unit_cell, str_ion_list, is_anim, 
-                                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
-                                    unit_cell_repeats, miller_indices, polyhedra_centers)
-        subprocess.call([exec_loc, b_path])
+        Kicks off a queue of Blender conversions, one file at a time.
+
+        Conversions run sequentially rather than in parallel on purpose: a
+        single Blender instance writes to output.log per run (parallel runs
+        would interleave that output unreadably) and they'd also collide
+        writing the shared t2b_config.json.
+
+        :param conversion_queue: (list) [(i_name, o_name), ...] pairs to convert.
+        :return: None
+        """
+        self._conversion_queue = list(conversion_queue)
+        self._conversion_total = len(self._conversion_queue)
+        # Everything below is identical across every file in this batch -
+        # only i_name/o_name change per queue entry (see _run_next_conversion).
+        self._conversion_args = dict(
+            exec_loc=exec_loc, b_path=b_path, i_type=i_type, i_path=i_path,
+            model_type=model_type, o_path=o_path, o_type=o_type, is_ionic=is_ionic,
+            unit_cell=unit_cell, str_ion_list=str_ion_list, is_anim=is_anim,
+            hl_atoms=hl_atoms, hl_bonds=hl_bonds, forced_bonds=forced_bonds,
+            custom_thresholds=custom_thresholds, unit_cell_repeats=unit_cell_repeats,
+            miller_indices=miller_indices, polyhedra_centers=polyhedra_centers,
+        )
+        self.action_region.btn_convert.config(state=tk.DISABLED)
+        self._run_next_conversion()
+
+    def _run_next_conversion(self):
+        """
+        Writes t2b_config.json for the next queued file and launches its
+        Blender conversion in a background thread, so the GUI - and the
+        console's live output.log tail - stay responsive while Blender
+        runs instead of freezing for the whole batch. Called again by
+        _check_conversion_thread once the current run finishes, until the
+        queue is empty.
+
+        :return: None
+        """
+        if not self._conversion_queue:
+            self.action_region.btn_convert.config(state=tk.NORMAL)
+            print("All conversions complete.")
+            return
+
+        i_name, o_name = self._conversion_queue.pop(0)
+        done_count = self._conversion_total - len(self._conversion_queue)
+        print(f"Batch converting {done_count} of {self._conversion_total}: {i_name}")
+
+        args = self._conversion_args
+        self.input_to_json(
+            args["i_type"], args["i_path"], i_name, args["model_type"],
+            args["o_path"], o_name, args["o_type"], args["is_ionic"],
+            args["unit_cell"], args["str_ion_list"], args["is_anim"],
+            args["hl_atoms"], args["hl_bonds"], args["forced_bonds"],
+            args["custom_thresholds"], args["unit_cell_repeats"],
+            args["miller_indices"], args["polyhedra_centers"],
+        )
+
+        self._conversion_thread = threading.Thread(
+            target=self._run_blender_subprocess,
+            args=(args["exec_loc"], args["b_path"]),
+            daemon=True,
+        )
+        self._conversion_thread.start()
+        self._check_conversion_thread()
+
+    def _run_blender_subprocess(self, exec_loc, b_path):
+        """
+        Runs on a background thread - launches Blender and redirects its
+        stdout/stderr straight into output.log. Blender is a separate OS
+        process, so its print() calls are invisible to the sys.stdout
+        redirect ConsoleRegion sets up; writing them to the same file that
+        ConsoleRegion.poll_log_file() tails is what gets them into the
+        console. PYTHONUNBUFFERED forces Blender's embedded Python to flush
+        each line immediately - once redirected to a file its stdout is no
+        longer a real terminal, so without this it would batch output in
+        chunks instead of writing it as it happens.
+
+        Must not touch any Tkinter widget or variable directly - this runs
+        off the main thread, and Tkinter is not thread-safe.
+
+        :param exec_loc: path to the ReadMolecules.bat/.sh script.
+        :param b_path: path to the Blender installation directory.
+        :return: None
+        """
+        env = os.environ.copy()
+        env["PYTHONUNBUFFERED"] = "1"
+        try:
+            with open(self.output_log_path, "a", encoding="utf-8", newline="") as log_f:
+                subprocess.call([exec_loc, b_path], stdout=log_f, stderr=subprocess.STDOUT, env=env)
+        except Exception as e:
+            # Writing straight to the file (never sys.stdout/print here - see
+            # the docstring above) lets ConsoleRegion's poll pick this up
+            # safely on the main thread instead.
+            with open(self.output_log_path, "a", encoding="utf-8", newline="") as log_f:
+                log_f.write(f"\nERROR: failed to launch Blender conversion: {e}\n")
+
+    def _check_conversion_thread(self):
+        """
+        Polls, on the main thread via root.after, whether the background
+        conversion thread has finished - this is what lets the Tkinter
+        event loop keep running (so the console can keep updating) instead
+        of blocking on the subprocess the way a direct subprocess.call
+        would. Once the thread ends, advances to the next queued file.
+
+        :return: None
+        """
+        if self._conversion_thread.is_alive():
+            self.root.after(self.CONVERSION_THREAD_POLL_MS, self._check_conversion_thread)
+        else:
+            self._run_next_conversion()
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
                     is_ionic, unit_cell, str_ion_list, is_anim, 
