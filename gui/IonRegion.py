@@ -26,7 +26,12 @@ class IonRegion(object):
 
     def create_widgets(self, parent):
         """Create all widgets and frames for the ion information section.
-        
+
+        These all live directly in self.frame - no inner canvas/scrollbar.
+        The tab's own content container (see TheorChem2Blender.py) already
+        provides scrolling if this ever grows taller than the space
+        available, so a second, nested scrollable area here was redundant.
+
         Args:
             parent (tk.Widget): The parent widget that will contain this section.
         """
@@ -38,40 +43,28 @@ class IonRegion(object):
                                    relief=tk.GROOVE,
                                    borderwidth=2)
 
-        self.canvas = tk.Canvas(self.frame, bg="#e0e0e0")
-        self.frm_inside = tk.Frame(self.canvas, bg="#e0e0e0")
-        self.scrl_frame = tk.Scrollbar(master=self.frame,
-                                       orient="vertical",
-                                       command=self.canvas.yview)
-        self.canvas.configure(yscrollcommand=self.scrl_frame.set)
-        self.canvas.create_window((0, 0),
-                                  window=self.frm_inside,
-                                  anchor='nw')
-        self.frm_inside.bind("<Configure>", self.canvasConfig)
-
-        self.chk_hasIons = tk.Checkbutton(master=self.frm_inside, text="check for ionic radii",
+        self.chk_hasIons = tk.Checkbutton(master=self.frame, text="check for ionic radii",
                                           fg='black', bg="#e0e0e0",
                                           variable=self.int_hasIons, command=self.ionic_radii_activator)
         CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 
-        self.btn_addIon = tk.Button(text="add", master=self.frm_inside,
+        self.btn_addIon = tk.Button(text="add", master=self.frame,
                                     command=self.addIon, state=tk.DISABLED)
         CreateTooltip(self.btn_addIon, "Click here to add another ion to specify")
-        self.btn_removeIon = tk.Button(master=self.frm_inside, text="remove",
+        self.btn_removeIon = tk.Button(master=self.frame, text="remove",
                                        command=self.removeIon, state=tk.DISABLED)
         CreateTooltip(self.btn_removeIon, "Click here to remove the last added ion")
-        
+
     def setup_layout(self):
-        """Arrange the widgets and frames in the grid layout."""
-        self.scrl_frame.pack(side="right", fill="y")
-        self.canvas.pack(side="left")
-        self.chk_hasIons.grid(row=0, column=0)
-        self.btn_addIon.grid(row=1, column=0)
-        self.btn_removeIon.grid(row=1, column=1)
-    
+        """Arrange the widgets in the grid layout, matching the spacing
+        rhythm used in UnitCellRegion.py."""
+        self.chk_hasIons.grid(row=0, column=0, columnspan=2, sticky="w", pady=(2, 6))
+        self.btn_addIon.grid(row=1, column=0, padx=(0, 4), pady=2)
+        self.btn_removeIon.grid(row=1, column=1, pady=2)
+
     def addIon(self):
         """Add a new ion entry to the ion list."""
-        ion = SelectedIon(self.frm_inside, self.ionCount + 2, 0)
+        ion = SelectedIon(self.frame, self.ionCount + 2, 0)
         self.lst_ions.append(ion)
         self.ionCount += 1
 
@@ -112,12 +105,3 @@ class IonRegion(object):
         self.btn_addIon['state'] = tk.DISABLED
         self.btn_removeIon['state'] = tk.DISABLED
         self.removeAllIons()
-
-    def canvasConfig(self, event):
-        """Configure the canvas scroll region based on the frame size.
-        
-        Args:
-            event (tk.Event): The event triggered by frame resizing.
-        """
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"),
-                              width=325, height=125)

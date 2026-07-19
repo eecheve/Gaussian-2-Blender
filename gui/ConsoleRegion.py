@@ -16,17 +16,22 @@ class ConsoleRegion(object):
                                       bg="#e0e0e0",
                                       relief=tk.GROOVE, 
                                       borderwidth=2)
-        self.text = tk.Text(master=self.frame, 
+        # height/width here are only the starting size the console asks for -
+        # grid_rowconfigure/grid_columnconfigure below (plus sticky="nsew")
+        # let it stretch to fill whatever space its container actually gives it.
+        self.text = tk.Text(master=self.frame,
                             fg='black', bg="white",
                             height=8,
-                            width=80,
                             wrap="word")
         self.text.tag_configure("stderr", foreground="#b22222")
         self.text.config(state="disabled")
 
         self.scrl_text = ttk.Scrollbar(self.frame,
                                        command=self.text.yview)
-      
+
+        self.frame.grid_rowconfigure(0, weight=1)
+        self.frame.grid_columnconfigure(0, weight=1)
+
         self.text.grid(row=0, column=0, padx=2, pady=2, sticky="nsew")
         self.scrl_text.grid(row=0, column=1, sticky="nsew")
         self.text['yscrollcommand'] = self.scrl_text.set

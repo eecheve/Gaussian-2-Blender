@@ -2,22 +2,22 @@
     "input": {
         "type": ".vasp",
         "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
-        "names": "CaF2_primitive.vasp"
+        "names": "VHO2_1_conventional.vasp"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "CaF2_primitive",
+        "name": "VHO2_1_conventional",
         "type": ".glb"
     },
     "model": {
         "type": "Ball-and-Stick"
     },
     "flags": {
-        "is_ionic": "1",
+        "is_ionic": "0",
         "unit_cell": 1,
         "is_anim": false
     },
-    "ions": "(Ca_2_VIII)_(F_-1_IV)",
+    "ions": "---",
     "highlight": {
         "atoms": "",
         "bonds": ""
@@ -25,26 +25,19 @@
     "forced_bonds": "",
     "animation_frames": [],
     "unit_cell_repeats": [
-        3,
-        3,
-        3
-    ],
-    "miller_indices": {
-        "h": 0,
-        "k": 0,
-        "l": 0
-    },
-    "polyhedra_centers": [
-        "F"
-    ],
-    "custom_bond_thresholds": [
         {
-            "atom_pair": [
-                "Ca",
-                "Ca"
-            ],
-            "bond_order": 0,
-            "threshold": 999.0
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        {
+            "x": 1,
+            "y": 2,
+            "z": 2
         }
+    ],
+    "miller_indices": [],
+    "polyhedra_centers": [
+        "V"
     ]
 }

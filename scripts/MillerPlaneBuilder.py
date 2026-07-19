@@ -193,7 +193,7 @@ def InstantiateMillerPlane(bound_box_points, h, k, l, mat_dict):
     sorted_points = sort_polygon_vertices(unique_points, normal)
     print(f"  polygon vertices: {len(sorted_points)}")
 
-    plane_name = f"MillerPlane_{h}{k}{l}"
+    plane_name = f"MillerPlane_{h}_{k}_{l}"
     obj = build_mesh_from_polygon(sorted_points, plane_name)
     assign_material_to_object(obj, mat_dict)
 

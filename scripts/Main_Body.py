@@ -77,6 +77,13 @@ class Main_Body(object):
         self.raw_coords = []
         self.raw_connect = []
         self.raw_key_frames = []
+
+        # Snapshot of connect_with_symbols taken right after the input file
+        # is parsed (see the __main__ block), before any growth-cell export
+        # mutates or extends it. Each growth-cell export restores from this
+        # snapshot so replicated/forbidden-bond edits from one export never
+        # leak into the next.
+        self.base_connect_with_symbols = []
         
         self.names_and_pos = {}
         self.materials_dict = {}
@@ -102,7 +109,7 @@ class Main_Body(object):
             "Create_Materials", "Primitives", "Export_Data", "Ions", 
             "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
             "XyzReader", "AtomHighlighter", "BondOverwriter", "VaspReader", "Mol2Reader",
-            "BoundBoxBuilder", "UnitCellReplicator"
+            "BoundBoxBuilder", "UnitCellReplicator", "SceneCleaner"
         ]
 
         blend_file_dir = os.path.dirname(bpy.data.filepath)
@@ -333,13 +340,23 @@ class Main_Body(object):
         else:
             return
         
-    def Build_Miller_Plane(self):
+    def Build_Miller_Plane(self, miller_spec, repeats):
+        """
+        Renders a single Miller plane, clipped to the current export's
+        supercell bounding box (or the bare unit cell, for repeats (1,1,1)).
+
+        :param miller_spec: (dict) One entry from self.miller_indices,
+                             e.g. {"h": 1, "k": 0, "l": 0}.
+        :param repeats: (tuple) (nx, ny, nz) repeat counts for the
+                         supercell currently being built.
+        :return: None
+        """
         if not self.unit_cell_points:
             return
 
-        h = self.miller_indices.get("h", 0)
-        k = self.miller_indices.get("k", 0)
-        l = self.miller_indices.get("l", 0)
+        h = miller_spec.get("h", 0)
+        k = miller_spec.get("k", 0)
+        l = miller_spec.get("l", 0)
 
         if h == k == l == 0:
             return
@@ -351,14 +368,8 @@ class Main_Body(object):
         a2 = Vector(self.unit_cell_points[2]) - origin
         a3 = Vector(self.unit_cell_points[3]) - origin
 
-        # Scale lattice vectors by repeat counts
-        if isinstance(self.unit_cell_repeats, (list, tuple)):
-            nx, ny, nz = int(self.unit_cell_repeats[0]), int(self.unit_cell_repeats[1]), int(self.unit_cell_repeats[2])
-        else:
-            nx = self.unit_cell_repeats.get('x', 1)
-            ny = self.unit_cell_repeats.get('y', 1)
-            nz = self.unit_cell_repeats.get('z', 1)
-
+        # Scale lattice vectors by this export's repeat counts
+        nx, ny, nz = repeats
         a1_super = a1 * nx
         a2_super = a2 * ny
         a3_super = a3 * nz
@@ -379,73 +390,37 @@ class Main_Body(object):
         MillerPlaneBuilder.InstantiateMillerPlane(
             supercell_points, h, k, l, self.materials_dict
         )
-        
-    # def Replicate_Unit_Cell(self) -> None:
-    #     """
-    #     Replicates the fully built and decorated unit cell into an
-    #     nx, ny, nz supercell by duplicating and translating the
-    #     unit-cell root Empty.
-    #     """
 
-    #     # Guard: no replication requested
-    #     if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
-    #         return
+    def Build_Miller_Planes(self, repeats):
+        """
+        Renders every Miller plane listed in self.miller_indices onto the
+        current export's supercell, each as its own named object (see
+        MillerPlaneBuilder for the naming pattern). Does nothing if no
+        Miller planes were specified.
 
-    #     print("Duplicating unit cell according to", self.unit_cell_repeats)
+        :param repeats: (tuple) (nx, ny, nz) repeat counts for the
+                         supercell currently being built.
+        :return: None
+        """
+        for miller_spec in self.miller_indices:
+            self.Build_Miller_Plane(miller_spec, repeats)
 
-    #     UnitCellReplicator = self.get_module("UnitCellReplicator")
-
-    #     # 1. Compute lattice translation vectors (Cartesian)
-    #     x_direction = Vector(self.unit_cell_points[1])
-    #     y_direction = Vector(self.unit_cell_points[2])
-    #     z_direction = Vector(self.unit_cell_points[3])
-    #     nx, ny, nz = self.unit_cell_repeats
-
-    #     # 2. Collect all scene objects except cameras and lights
-    #     scene_objects = [
-    #         obj for obj in bpy.context.scene.objects
-    #         if obj.type not in {"CAMERA", "LIGHT"}
-    #     ]
-
-    #     # 3. Parent everything to a single unit-cell root Empty
-    #     cell_root = UnitCellReplicator.parent_atoms_and_bonds_to_empty_object(
-    #         scene_objects
-    #     )
-
-    #     # 4. Replicate along x, then y, then z (grid expansion)
-    #     roots = [cell_root]
-
-    #     for _ in range(1, nx):
-    #         roots += [
-    #             UnitCellReplicator.replicate_and_translate_cell(root, x_direction)
-    #             for root in roots
-    #         ]
-    #     for _ in range(1, ny):
-    #         roots += [
-    #             UnitCellReplicator.replicate_and_translate_cell(root, y_direction)
-    #             for root in roots
-    #         ]
-    #     for _ in range(1, nz):
-    #         roots += [
-    #             UnitCellReplicator.replicate_and_translate_cell(root, z_direction)
-    #             for root in roots
-    #         ]
-    #     UnitCellReplicator.flatten_scene_hierarchy()
-    #     UnitCellReplicator.delete_unit_cell_roots()
-    #     print(f"Supercell generated with {len(roots)} unit-cell instances")
-
-    def Replicate_Unit_Cell(self) -> None:
+    def Replicate_Unit_Cell(self, repeats) -> None:
         """
         Replicates the fully built and decorated unit cell into an
         nx, ny, nz supercell by duplicating and translating the
         unit-cell root Empty.
+
+        :param repeats: (tuple) (nx, ny, nz) repeat counts for this export.
+        :return: None
         """
+        nx, ny, nz = repeats
 
         # Guard: no replication requested
-        if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
+        if (nx, ny, nz) == (1, 1, 1):
             return
 
-        print("Duplicating unit cell according to", self.unit_cell_repeats)
+        print("Duplicating unit cell according to", repeats)
 
         UnitCellReplicator = self.get_module("UnitCellReplicator")
 
@@ -453,7 +428,6 @@ class Main_Body(object):
         x_direction = Vector(self.unit_cell_points[1])
         y_direction = Vector(self.unit_cell_points[2])
         z_direction = Vector(self.unit_cell_points[3])
-        nx, ny, nz = self.unit_cell_repeats
 
         # 2. Collect all scene objects except cameras and lights
         scene_objects = [
@@ -477,13 +451,12 @@ class Main_Body(object):
         UnitCellReplicator.delete_unit_cell_roots()
         print(f"Supercell generated with {len(roots)} unit-cell instances")
 
-    def Link_Unit_Cells(self):
-        if isinstance(self.unit_cell_repeats, (list, tuple)):
-            if list(self.unit_cell_repeats) == [1, 1, 1]:
-                return
-        else:
-            if self.unit_cell_repeats == {'x': 1, 'y': 1, 'z': 1}:
-                return
+    def Link_Unit_Cells(self, repeats):
+        """
+        :param repeats: (tuple) (nx, ny, nz) repeat counts for this export.
+        """
+        if tuple(repeats) == (1, 1, 1):
+            return
 
         UnitCellLinker = self.get_module("UnitCellLinker")
         result = UnitCellLinker.replicate_primitive_bonds(
@@ -581,17 +554,23 @@ class Main_Body(object):
         print("6.2: Applying element transforms")
         Clear_Transforms.Apply_Element_Transforms(self.names_and_pos)
                 
-    def Export(self):
+    def Export(self, file_name_suffix=""):
         """
         Exports the results to the specified file format.
 
         Calls:
         - `ExportSceneAs` from `Export_Data` module.
+
+        :param file_name_suffix: (str) Appended to o_file_name before the
+                                  extension, e.g. "_2x2x2" for a growth-cell
+                                  export. Empty string leaves the name
+                                  unchanged, matching the pre-growth-export
+                                  behavior.
         :return: None
         """
         print("9: Exporting the results ...")
         Export_Data = self.get_module("Export_Data")
-        Export_Data.ExportSceneAs(self.o_folder_path, self.o_file_name, self.o_file_type)
+        Export_Data.ExportSceneAs(self.o_folder_path, self.o_file_name + file_name_suffix, self.o_file_type)
                
     def Highlight_Atoms(self):
         """
@@ -648,21 +627,89 @@ class Main_Body(object):
             Animate = self.get_module("Animate")
             Animate.animate(anim_frames=self.animation_frames, mode=self.o_file_type)
     
-    def Manage_Export(self):
+    def Manage_Export(self, file_name_suffix=""):
         """
         Manages the export process based on whether animation is enabled.
 
         Calls:
         - `Export` or `export_animation` from `Animate` module.
+
+        :param file_name_suffix: (str) Appended to o_file_name before the
+                                  extension, e.g. "_2x2x2" for a growth-cell
+                                  export.
         :return: None
         """
         if self.is_animation == "false":
-            self.Export()
+            self.Export(file_name_suffix)
         else:
             Animate = self.get_module("Animate")
-            export_path = os.path.join(self.o_folder_path, self.o_file_name + self.o_file_type)
+            export_path = os.path.join(self.o_folder_path, self.o_file_name + file_name_suffix + self.o_file_type)
             Animate.export_animation(export_path)
-    
+
+    def Get_Growth_Specs(self):
+        """
+        Builds the list of (nx, ny, nz, file_name_suffix) tuples to export,
+        one per entry in self.unit_cell_repeats.
+
+        If self.unit_cell_repeats is empty - growth cells not in use - this
+        returns a single implicit 1x1x1 spec with no filename suffix, so a
+        plain unit-cell export looks exactly as it did before growth-cell
+        support existed.
+
+        :return: (list) [(nx, ny, nz, file_name_suffix), ...]
+        """
+        if not self.unit_cell_repeats:
+            return [(1, 1, 1, "")]
+
+        specs = []
+        for repeat in self.unit_cell_repeats:
+            nx = int(repeat.get("x", 1))
+            ny = int(repeat.get("y", 1))
+            nz = int(repeat.get("z", 1))
+            file_name_suffix = f"_{nx}x{ny}x{nz}"
+            specs.append((nx, ny, nz, file_name_suffix))
+        return specs
+
+    def Build_And_Export_Growth_Cell(self, nx, ny, nz, file_name_suffix):
+        """
+        Builds one full supercell (or the bare unit cell, for 1x1x1) from a
+        clean scene and exports it. Called once per spec returned by
+        Get_Growth_Specs - so once total when no growth cells are
+        specified, or once per growth cell otherwise.
+
+        The scene is cleared first because several downstream steps
+        (UnitCellLinker, BoundBoxBuilder, UnitCellReplicator) tell primitive
+        atoms/edges apart from replicated ones by Blender's auto-generated
+        name suffixes - leftover objects from a previous export would
+        corrupt that bookkeeping and leak into this export's selection.
+
+        :param nx, ny, nz: (int) Repeat counts along each lattice direction.
+        :param file_name_suffix: (str) Appended to the output filename so
+                                  each growth-cell export gets its own file.
+        :return: None
+        """
+        SceneCleaner = self.get_module("SceneCleaner")
+        SceneCleaner.clear_scene()
+
+        # Restore connect_with_symbols to its freshly-parsed state so bonds
+        # added/removed by the previous growth-cell export don't carry over.
+        self.connect_with_symbols = list(self.base_connect_with_symbols)
+
+        self.Build_Molecule()
+        self.Build_Unit_Cell()
+        self.Highlight_Atoms()
+        self.Highlight_Bonds()
+        self.Animate()
+
+        repeats = (nx, ny, nz)
+        self.Replicate_Unit_Cell(repeats)
+        self.Link_Unit_Cells(repeats)
+        self.Delete_Forbidden_Bonds()
+        self.Build_Polyhedra()
+        self.Build_Miller_Planes(repeats)
+        self.Parent_Bounding_Box()
+        self.Manage_Export(file_name_suffix)
+
 if __name__ == "__main__":
     json_config_path = os.path.join(blend_file_dir, "t2b_config.json")
     
@@ -688,20 +735,18 @@ if __name__ == "__main__":
                                    params_data["unit_cell_repeats"],
                                    params_data["miller_indices"],
                                    params_data["polyhedra_centers"])
+    # Phase 1: parse the input file and resolve ionic/ion data once. None of
+    # this depends on the growth-cell or Miller-plane settings, so it only
+    # needs to run a single time no matter how many exports follow.
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
-    main_body_instance.Build_Molecule()
-    main_body_instance.Build_Unit_Cell()
-    main_body_instance.Highlight_Atoms()
-    main_body_instance.Highlight_Bonds()
-    main_body_instance.Animate()
-    main_body_instance.Replicate_Unit_Cell()
-    main_body_instance.Link_Unit_Cells()
-    main_body_instance.Delete_Forbidden_Bonds()
-    main_body_instance.Build_Polyhedra() 
-    main_body_instance.Build_Miller_Plane()
-    main_body_instance.Parent_Bounding_Box()
-    main_body_instance.Manage_Export()
+    main_body_instance.base_connect_with_symbols = list(main_body_instance.connect_with_symbols)
+
+    # Phase 2: build and export once per growth-cell spec (or once, bare,
+    # if no growth cells were specified). Every Miller plane listed in
+    # miller_indices is rendered onto each supercell.
+    for nx, ny, nz, file_name_suffix in main_body_instance.Get_Growth_Specs():
+        main_body_instance.Build_And_Export_Growth_Cell(nx, ny, nz, file_name_suffix)

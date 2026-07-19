@@ -13,6 +13,8 @@ from tkinter import ttk
 #utility modules
 from gui.Utility import Utility
 from gui.Coordinates import Coordinates
+from gui.ScreenSizeManager import ScreenSizeManager
+from gui.ProportionalContainer import ProportionalContainer
 
 #gui modules
 from gui.Instructions import Instructions
@@ -68,19 +70,55 @@ class TheorChem2BlenderTabSystem:
     
     def _configure_root(self):
         """
-        Configures the root tkinter window with title, dimensions, and resizability settings.
+        Configures the root tkinter window with title and background, and
+        starts it maximized (filling the screen without covering the OS
+        taskbar/dock or hiding the window's minimize/maximize/close controls).
         """
         self.root = tk.Tk()
         #self.root.iconbitmap("icon.ico") #<---- for when I design a better Icon, 6/15/26; icon empty for now
+        ScreenSizeManager.initialize(self.root)
         self.root.title("TheorChem2Blender")
-        self.root.geometry("800x600")
         self.root.configure(bg="#e0e0e0")
-    
+        self.root.minsize(ScreenSizeManager.MIN_WIDTH, ScreenSizeManager.MIN_HEIGHT)
+        self._maximize_window()
+
+    def _maximize_window(self):
+        """
+        Starts the window maximized, in an OS-appropriate way.
+
+        Windows has a native "zoomed" state that fills the screen while
+        correctly leaving the taskbar and the window's own title bar controls
+        (minimize/maximize/close) alone - that's the easy case. macOS doesn't
+        expose an equivalent through Tkinter, so instead we size and position
+        the window to fill the screen ourselves. A small offset at the top
+        leaves room for macOS's own menu bar, which always stays on top and
+        cannot be covered.
+        """
+        if self.current_os == "Windows":
+            self.root.state("zoomed")
+        else:  # macOS
+            screen_width = ScreenSizeManager.get_screen_width()
+            screen_height = ScreenSizeManager.get_screen_height()
+            menu_bar_offset = 25  # leaves room for macOS's top menu bar
+            self.root.geometry(f"{screen_width}x{screen_height - menu_bar_offset}+0+{menu_bar_offset}")
+
     def _configure_style(self):
         style = ttk.Style()
         style.theme_use("clam")
 
     def _initialize_notebook(self):
+        """
+        Lays out the root window as two stacked rows: the notebook (all the
+        tabs) on top, and the shared console below it (added later, in
+        _create_tabs). The row weights below are what keep that split at
+        roughly a fixed ~75%/~25% proportion as the window is resized -
+        see ScreenSizeManager for where those numbers come from.
+        """
+        self.root.grid_columnconfigure(0, weight=1)
+        self.root.grid_rowconfigure(0, weight=ScreenSizeManager.INFO_HEIGHT_WEIGHT
+                                        + ScreenSizeManager.CONTENT_HEIGHT_WEIGHT)
+        self.root.grid_rowconfigure(1, weight=ScreenSizeManager.CONSOLE_HEIGHT_WEIGHT)
+
         self.notebook = ttk.Notebook(self.root)
         self.notebook.grid(row=0, column=0, sticky="nsew")
    
@@ -93,102 +131,169 @@ class TheorChem2BlenderTabSystem:
         """
         region.frame.grid(**kwargs)
     
+    def _build_tab_containers(self, tab, enable_content_scrolling=True):
+        """
+        Every tab is organized the same way: an instructions container fixed
+        at ~5% of the window height, and a content container at ~70% (see
+        ScreenSizeManager for those weights). The console - shared across
+        every tab - lives outside the notebook entirely and takes whatever
+        vertical space is left below it (see _initialize_notebook).
+
+        :param tab: The tab's own ttk.Frame (already added to the notebook).
+        :param enable_content_scrolling: Whether the content container should
+                                          get its own scrollbar once its
+                                          contents grow taller than the 70%
+                                          it's allocated. Leave this on unless
+                                          the tab's content specifically can't
+                                          work inside a scrollable area (see
+                                          the Actions tab below for why).
+        :return: (info_container, content_container) - build the tab's real
+                 widgets inside their .content_frame attributes.
+        """
+        tab.grid_columnconfigure(0, weight=1)
+        info_container = ProportionalContainer(
+            parent=tab, row=0, weight=ScreenSizeManager.INFO_HEIGHT_WEIGHT
+        )
+        content_container = ProportionalContainer(
+            parent=tab, row=1, weight=ScreenSizeManager.CONTENT_HEIGHT_WEIGHT,
+            enable_scrolling=enable_content_scrolling
+        )
+        return info_container, content_container
+
     def _create_tabs(self):
         # Tab 1: User Input
         self.input_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.input_tab, text="Input")
-        self.initialize_input_region(self.input_tab)
-        self.initialize_blender_region(self.input_tab)
-        self.place(self.input_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.blender_path_region, row=1, column=0, padx=10, pady=10, sticky="ew")
-        self.place(self.input_region, row=2, column=0, rowspan=2, padx=2, pady=2, sticky="W")
+        self.input_info_container, self.input_content_container = self._build_tab_containers(self.input_tab)
+        self.initialize_input_region(
+            info_parent=self.input_info_container.content_frame,
+            content_parent=self.input_content_container.content_frame
+        )
+        self.initialize_blender_region(self.input_content_container.content_frame)
+        self.place(self.input_info, row=0, column=0, sticky="nsew")
+        self.place(self.blender_path_region, row=0, column=0, padx=10, pady=10, sticky="ew")
+        self.place(self.input_region, row=1, column=0, padx=2, pady=2, sticky="new")
 
         # Tab 2: Customization
         self.customization_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.customization_tab, text="Customization")
-        self.initialize_customization_region(self.customization_tab)
-        self.place(self.custom_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.highlight_region, row=1, column=0, padx=2, pady=2)
-        self.place(self.bond_conventions, row=2, column=0, padx=2, pady=2)
+        self.customization_info_container, self.customization_content_container = \
+            self._build_tab_containers(self.customization_tab)
+        self.initialize_customization_region(
+            info_parent=self.customization_info_container.content_frame,
+            content_parent=self.customization_content_container.content_frame
+        )
+        self.place(self.custom_info, row=0, column=0, sticky="nsew")
+        self.place(self.highlight_region, row=0, column=0, padx=2, pady=2, sticky="new")
+        self.place(self.bond_conventions, row=1, column=0, padx=2, pady=2, sticky="new")
 
         # Tab 3: Ions
         self.ion_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.ion_tab, text="Ions")
-        self.initialize_ionic_region(self.ion_tab)
-        self.place(self.ion_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.ion_region, row=1, column=0, padx=2, pady=2, sticky="W")
-        self.place(self.ion_conventions, row=2, column=0, padx=2, pady=2)
+        self.ion_info_container, self.ion_content_container = self._build_tab_containers(self.ion_tab)
+        self.initialize_ionic_region(
+            info_parent=self.ion_info_container.content_frame,
+            content_parent=self.ion_content_container.content_frame
+        )
+        self.place(self.ion_info, row=0, column=0, sticky="nsew")
+        self.place(self.ion_region, row=0, column=0, padx=2, pady=2, sticky="new")
+        self.place(self.ion_conventions, row=1, column=0, padx=2, pady=2, sticky="new")
 
         # Tab 4: Unit cell
         self.unit_cell_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.unit_cell_tab, text="Unit Cells")
-        self.initialize_unit_cell_region(self.unit_cell_tab)
-        self.place(self.unit_cell_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.unit_cell_region, row=1, column=0, padx=2, pady=2, sticky="W")
+        self.unit_cell_info_container, self.unit_cell_content_container = \
+            self._build_tab_containers(self.unit_cell_tab)
+        self.initialize_unit_cell_region(
+            info_parent=self.unit_cell_info_container.content_frame,
+            content_parent=self.unit_cell_content_container.content_frame
+        )
+        self.place(self.unit_cell_info, row=0, column=0, sticky="nsew")
+        self.place(self.unit_cell_region, row=0, column=0, sticky="new")
         self.notebook.tab(self.unit_cell_tab, state="disabled")
 
         # Tab 5: Output
         self.output_tab = ttk.Frame(self.notebook)
         self.notebook.add(self.output_tab, text="Output")
-        self.initialize_output_region(self.output_tab)
-        self.place(self.output_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.output_region, row=1, column=0, padx=2, pady=2, sticky="W")
+        self.output_info_container, self.output_content_container = self._build_tab_containers(self.output_tab)
+        self.initialize_output_region(
+            info_parent=self.output_info_container.content_frame,
+            content_parent=self.output_content_container.content_frame
+        )
+        self.place(self.output_info, row=0, column=0, sticky="nsew")
+        self.place(self.output_region, row=0, column=0, padx=2, pady=2, sticky="new")
 
         # Tab 6: Actions
+        # This one's content container is NOT scrollable, on purpose: its
+        # buttons are deliberately anchored to the bottom-right corner using a
+        # spacer row that expands to soak up all the container's leftover
+        # height. That trick only works when the container is directly
+        # grid-managed at a fixed size - inside a scrollable canvas, a
+        # weight=1 spacer row has no fixed height to expand into, so the
+        # anchoring would stop working.
         self.actions_tab = ttk.Frame(self.notebook)
-        self.actions_tab.grid_rowconfigure(0, weight=0) # actions_info
-        self.actions_tab.grid_rowconfigure(1, weight=1) # spacer
-        self.actions_tab.grid_rowconfigure(2, weight=0) # action_region
-        self.actions_tab.grid_columnconfigure(0, weight=1)
-        self.actions_tab.grid_columnconfigure(1, weight=1)
-        self.actions_tab.grid_columnconfigure(2, weight=1)
         self.notebook.add(self.actions_tab, text="Convert!")
-        self.initialize_actions_region(self.actions_tab)
-        self.place(self.actions_info, row=0, column=0, columnspan=3, pady=2, padx=2, sticky="ew")
-        self.place(self.action_region, row=2, column=2, padx=2, pady=2, sticky="se")
+        self.actions_info_container, self.actions_content_container = \
+            self._build_tab_containers(self.actions_tab, enable_content_scrolling=False)
 
-        # In all tabs:
+        actions_content = self.actions_content_container.content_frame
+        actions_content.grid_rowconfigure(0, weight=1)     # spacer - pushes action_region down
+        actions_content.grid_columnconfigure(0, weight=1)  # spacer - pushes action_region right
+        actions_content.grid_columnconfigure(1, weight=1)
+        actions_content.grid_columnconfigure(2, weight=1)
+
+        self.initialize_actions_region(
+            info_parent=self.actions_info_container.content_frame,
+            content_parent=actions_content
+        )
+        self.place(self.actions_info, row=0, column=0, sticky="nsew")
+        self.place(self.action_region, row=0, column=2, padx=2, pady=2, sticky="se")
+
+        # Shared across every tab: the console sits below the notebook (not
+        # inside any one tab), always occupying the full window width and
+        # whatever vertical space the notebook doesn't use (see the row
+        # weights configured in _initialize_notebook).
         self.initialize_console_region()
-        self.place(self.console_region, row=3, column=0, columnspan=3, pady=2, padx=2)
+        self.place(self.console_region, row=1, column=0, sticky="nsew", pady=2, padx=2)
 
     def initialize_blender_region(self, parent):
         self.blender_path_region = BlenderPath(parent)
         self.str_blenderPath = self.blender_path_region.searchBlenderPath()
         self.blender_path_region.setBlenderPath(self.str_blenderPath)
 
-    def initialize_input_region(self, parent):
-        self.input_info = Information(parent, instructions=Instructions.get("input"), 
+    def initialize_input_region(self, info_parent, content_parent):
+        self.input_info = Information(info_parent, instructions=Instructions.get("input"),
                                       title="Input Instructions", button_name="Input Help")
-        self.input_region = InputRegion(parent, self.g2b_path, 
+        self.input_region = InputRegion(content_parent, self.g2b_path,
                                         on_animation_toggle=self.handle_animation_toggle,
                                         on_input_type_change=self.handle_input_type_change) # Input Region
 
-    def initialize_customization_region(self, parent):
-        self.custom_info = Information(parent, instructions=Instructions.get("customization"),
+    def initialize_customization_region(self, info_parent, content_parent):
+        self.custom_info = Information(info_parent, instructions=Instructions.get("customization"),
                                         title="Customization Instructions", button_name="Custom. Help")
-        self.highlight_region = HighlighterRegion(parent) # Highlighter Region
-        self.bond_conventions = BondConventions(parent)
+        self.highlight_region = HighlighterRegion(content_parent) # Highlighter Region
+        self.bond_conventions = BondConventions(content_parent)
 
-    def initialize_ionic_region(self, parent):
-        self.ion_info = Information(parent, instructions=Instructions.get("ions"),
+    def initialize_ionic_region(self, info_parent, content_parent):
+        self.ion_info = Information(info_parent, instructions=Instructions.get("ions"),
                                         title="Ion Instructions", button_name="Ions Help")
-        self.ion_region = IonRegion(parent)
-        self.ion_conventions = IonConventions(parent)
+        self.ion_region = IonRegion(content_parent)
+        self.ion_conventions = IonConventions(content_parent)
 
-    def initialize_unit_cell_region(self, parent):
-        self.unit_cell_info = Information(parent, instructions=Instructions.get("unit_cell"),
+    def initialize_unit_cell_region(self, info_parent, content_parent):
+        self.unit_cell_info = Information(info_parent, instructions=Instructions.get("unit_cell"),
                                           title="Unit Cell Instructions", button_name="Unit Cell Help")
-        self.unit_cell_region = UnitCellRegion(parent)
+        self.unit_cell_region = UnitCellRegion(content_parent)
 
-    def initialize_output_region(self, parent):
-        self.output_info = Information(parent, instructions=Instructions.get("output"),
+    def initialize_output_region(self, info_parent, content_parent):
+        self.output_info = Information(info_parent, instructions=Instructions.get("output"),
                                         title="Output Instructions", button_name="Output Help")
-        self.output_region = OutputRegion(parent, self.g2b_path)
+        self.output_region = OutputRegion(content_parent, self.g2b_path)
 
-    def initialize_actions_region(self, parent):
-        self.actions_info = Information(parent, instructions=Instructions.get("actions"),
+    def initialize_actions_region(self, info_parent, content_parent):
+        self.actions_info = Information(info_parent, instructions=Instructions.get("actions"),
                                         title="Actions Instructions", button_name="Actions Help")
-        self.action_region = ActionsRegion(parent=parent, 
+        self.action_region = ActionsRegion(parent=content_parent,
                                        on_reset=self.reset_to_defaults,
                                        on_convert=self.convert,
                                        g2b_path=self.g2b_path,
@@ -444,8 +549,8 @@ class TheorChem2BlenderTabSystem:
             },
             "forced_bonds": forced_bonds,
             "animation_frames": [],
-            "unit_cell_repeats": {"x": 1, "y": 1, "z": 1},
-            "miller_indices": {"h": 0, "k": 0, "l": 0},
+            "unit_cell_repeats": [],
+            "miller_indices": [],
             "polyhedra_centers": polyhedra_centers if polyhedra_centers else []
         }
 
@@ -462,29 +567,44 @@ class TheorChem2BlenderTabSystem:
             if repeats:
                 config["unit_cell_repeats"] = repeats
 
-        m_indices = self.populate_miller_indices(i_type, miller_indices)
-        if m_indices:
-            config["miller_indices"] = m_indices
+        if miller_indices:
+            m_indices = self.populate_miller_indices(i_type, miller_indices)
+            if m_indices:
+                config["miller_indices"] = m_indices
 
         # Write to JSON file
         with open(json_path, 'w') as f:
             json.dump(config, f, indent=4)
 
     def populate_unit_cell_repeats(self, i_type, unit_cell_repeats):
+        """
+        :param unit_cell_repeats: list of [x, y, z] rows, from
+                                   UnitCellRegion.get_unit_cell_repeats() -
+                                   one entry per unit cell growth the user added.
+        :return: list of {"x":.., "y":.., "z":..} dicts, one per row, or None
+                 if this input type doesn't support unit cell repeats at all.
+        """
         if i_type != ".vasp":
             print("Unit cell repeats currently only allows cell duplication for .vasp files")
             print("This input will be ignored in the rendering")
             return None
         else:
-            return unit_cell_repeats[0], unit_cell_repeats[1], unit_cell_repeats[2] 
-        
+            return [{"x": x, "y": y, "z": z} for x, y, z in unit_cell_repeats]
+
     def populate_miller_indices(self, i_type, miller_indices):
+        """
+        :param miller_indices: list of [h, k, l] rows, from
+                                UnitCellRegion.get_miller_indices() - one
+                                entry per Miller plane the user added.
+        :return: list of {"h":.., "k":.., "l":..} dicts, one per row, or None
+                 if this input type doesn't support Miller planes at all.
+        """
         if i_type != ".vasp":
             print("Unit cell repeats currently only allows cell duplication for .vasp files")
             print("This input will be ignored in the rendering")
             return None
         else:
-            return {"h": miller_indices[0], "k": miller_indices[1], "l": miller_indices[2]}
+            return [{"h": h, "k": k, "l": l} for h, k, l in miller_indices]
 
     
     def populate_animation_frames(self, i_type, input_paths):
