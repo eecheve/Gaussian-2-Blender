@@ -329,6 +329,91 @@ class TheorChem2BlenderTabSystem:
         self.input_region.reset_widget_bg_colors()
         self.ion_region.clear_radii_variables()
 
+    def set_input_widgets_state(self, state):
+        """
+        Disables or restores every widget in the regions that feed
+        conversion parameters, so their values can't be changed while a
+        conversion queue is already running.
+
+        Several of these widgets are already conditionally enabled/disabled
+        by their own region's logic (e.g. IonRegion's "add" button stays
+        disabled until "check for ionic radii" is checked). Restoring can't
+        just set everything back to tk.NORMAL, since that would incorrectly
+        turn those widgets back on - each widget's state right before it
+        got locked down is remembered instead, and replayed when restoring.
+
+        Calls:
+        - `_set_widget_tree_state` (recursively walks each region's frame).
+
+        :param state: tkinter widget state to apply - tk.NORMAL or tk.DISABLED.
+        """
+        regions = [
+            self.blender_path_region,
+            self.input_region,
+            self.highlight_region,
+            self.ion_region,
+            self.unit_cell_region,
+            self.output_region,
+        ]
+        if state == tk.DISABLED:
+            self._input_widgets_prior_state = {}
+        for region in regions:
+            self._set_widget_tree_state(region.frame, state)
+
+    def _set_widget_tree_state(self, widget, state):
+        """
+        Recursively applies a tkinter state to a widget and all of its
+        children. Plain container widgets (e.g. Frame) don't support the
+        "state" option, so TclErrors from those are simply ignored.
+
+        Locking down (state=tk.DISABLED) saves each widget's current state
+        into self._input_widgets_prior_state first. Restoring (state=
+        tk.NORMAL) reads that saved state back instead of forcing
+        tk.NORMAL, so a widget another part of the GUI had already
+        disabled for its own reasons stays disabled.
+
+        :param widget: root tkinter widget to start applying state from.
+        :param state: tkinter widget state to apply - tk.NORMAL or tk.DISABLED.
+        """
+        try:
+            if state == tk.DISABLED:
+                self._input_widgets_prior_state[widget] = widget.cget("state")
+                widget.configure(state=state)
+            else:
+                widget.configure(state=self._input_widgets_prior_state.get(widget, tk.NORMAL))
+        except tk.TclError:
+            pass
+        for child in widget.winfo_children():
+            self._set_widget_tree_state(child, state)
+
+    def set_tabs_state(self, state):
+        """
+        Disables or restores every notebook tab except "Convert!", so the
+        user can't switch to a different tab and change its inputs while a
+        conversion queue is already running.
+
+        The Unit Cells tab is a special case: it's already independently
+        gated by whether the current input type is .vasp (see
+        handle_input_type_change), so restoring it here can't just set it
+        to tk.NORMAL too - that would turn it back on for input types that
+        shouldn't have it. Restoring re-runs that same check instead.
+
+        :param state: tkinter tab state to apply - tk.NORMAL or tk.DISABLED.
+        """
+        tabs_to_toggle = [
+            self.input_tab,
+            self.customization_tab,
+            self.ion_tab,
+            self.output_tab,
+        ]
+        for tab in tabs_to_toggle:
+            self.notebook.tab(tab, state=state)
+
+        if state == tk.DISABLED:
+            self.notebook.tab(self.unit_cell_tab, state=state)
+        else:
+            self.handle_input_type_change(self.input_region.var_inputTypes.get())
+
     def convert(self):
         """
         Determines the operating system and executes the appropriate script for converting molecular data.
@@ -502,6 +587,8 @@ class TheorChem2BlenderTabSystem:
             miller_indices=miller_indices, polyhedra_centers=polyhedra_centers,
         )
         self.action_region.btn_convert.config(state=tk.DISABLED)
+        self.set_input_widgets_state(tk.DISABLED)
+        self.set_tabs_state(tk.DISABLED)
         self._run_next_conversion()
 
     def _run_next_conversion(self):
@@ -517,6 +604,8 @@ class TheorChem2BlenderTabSystem:
         """
         if not self._conversion_queue:
             self.action_region.btn_convert.config(state=tk.NORMAL)
+            self.set_input_widgets_state(tk.NORMAL)
+            self.set_tabs_state(tk.NORMAL)
             print("All conversions complete.")
             return
 
