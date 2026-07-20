@@ -161,6 +161,8 @@ imports:
  &#8226;   <a href="#gui.IonConventions">gui.IonConventions</a>
  &#8226;   <a href="#gui.IonRegion">gui.IonRegion</a>
  &#8226;   <a href="#gui.OutputRegion">gui.OutputRegion</a>
+ &#8226;   <a href="#gui.ProportionalContainer">gui.ProportionalContainer</a>
+ &#8226;   <a href="#gui.ScreenSizeManager">gui.ScreenSizeManager</a>
  &#8226;   <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
  &#8226;   <a href="#gui.Utility">gui.Utility</a>
  &#8226;   <a href="#heapq">heapq</a>
@@ -188,6 +190,7 @@ imports:
  &#8226;   <a href="#stat">stat</a>
  &#8226;   <a href="#subprocess">subprocess</a>
  &#8226;   <a href="#sys">sys</a>
+ &#8226;   <a href="#threading">threading</a>
  &#8226;   <a href="#tkinter">tkinter</a>
  &#8226;   <a href="#tkinter.filedialog">tkinter.filedialog</a>
  &#8226;   <a href="#tkinter.ttk">tkinter.ttk</a>
@@ -5229,7 +5232,11 @@ imported by:
  &#8226;   <a href="#gui.IonConventions">gui.IonConventions</a>
  &#8226;   <a href="#gui.IonRegion">gui.IonRegion</a>
  &#8226;   <a href="#gui.Ionic">gui.Ionic</a>
+ &#8226;   <a href="#gui.LabeledComboRow">gui.LabeledComboRow</a>
  &#8226;   <a href="#gui.OutputRegion">gui.OutputRegion</a>
+ &#8226;   <a href="#gui.ProportionalContainer">gui.ProportionalContainer</a>
+ &#8226;   <a href="#gui.RepeatableRowGroup">gui.RepeatableRowGroup</a>
+ &#8226;   <a href="#gui.ScreenSizeManager">gui.ScreenSizeManager</a>
  &#8226;   <a href="#gui.SelectedIon">gui.SelectedIon</a>
  &#8226;   <a href="#gui.TextRedirector">gui.TextRedirector</a>
  &#8226;   <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
@@ -5303,6 +5310,7 @@ imported by:
 imports:
     <a href="#gui">gui</a>
  &#8226;   <a href="#gui.TextRedirector">gui.TextRedirector</a>
+ &#8226;   <a href="#gui.Utility">gui.Utility</a>
  &#8226;   <a href="#os">os</a>
  &#8226;   <a href="#sys">sys</a>
  &#8226;   <a href="#tkinter">tkinter</a>
@@ -5352,7 +5360,9 @@ imported by:
  &#8226;   <a href="#gui.InputRegion">gui.InputRegion</a>
  &#8226;   <a href="#gui.IonConventions">gui.IonConventions</a>
  &#8226;   <a href="#gui.IonRegion">gui.IonRegion</a>
+ &#8226;   <a href="#gui.LabeledComboRow">gui.LabeledComboRow</a>
  &#8226;   <a href="#gui.OutputRegion">gui.OutputRegion</a>
+ &#8226;   <a href="#gui.RepeatableRowGroup">gui.RepeatableRowGroup</a>
  &#8226;   <a href="#gui.SelectedIon">gui.SelectedIon</a>
  &#8226;   <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
 
@@ -5492,6 +5502,25 @@ imported by:
 </div>
 
 <div class="node">
+  <a name="gui.LabeledComboRow"></a>
+  <a target="code" href="///C:/Users/User/G2B/Gaussian-2-Blender/gui/LabeledComboRow.py" type="text/plain"><tt>gui.LabeledComboRow</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#gui">gui</a>
+ &#8226;   <a href="#gui.CreateTooltip">gui.CreateTooltip</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+ &#8226;   <a href="#tkinter.ttk">tkinter.ttk</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
+
+  </div>
+
+</div>
+
+<div class="node">
   <a name="gui.OutputRegion"></a>
   <a target="code" href="///C:/Users/User/G2B/Gaussian-2-Blender/gui/OutputRegion.py" type="text/plain"><tt>gui.OutputRegion</tt></a>
 <span class="moduletype">SourceModule</span>  <div class="import">
@@ -5505,6 +5534,59 @@ imports:
   <div class="import">
 imported by:
     <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.ProportionalContainer"></a>
+  <a target="code" href="///C:/Users/User/G2B/Gaussian-2-Blender/gui/ProportionalContainer.py" type="text/plain"><tt>gui.ProportionalContainer</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#gui">gui</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.RepeatableRowGroup"></a>
+  <a target="code" href="///C:/Users/User/G2B/Gaussian-2-Blender/gui/RepeatableRowGroup.py" type="text/plain"><tt>gui.RepeatableRowGroup</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#gui">gui</a>
+ &#8226;   <a href="#gui.CreateTooltip">gui.CreateTooltip</a>
+ &#8226;   <a href="#gui.ScreenSizeManager">gui.ScreenSizeManager</a>
+ &#8226;   <a href="#tkinter">tkinter</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
+
+  </div>
+
+</div>
+
+<div class="node">
+  <a name="gui.ScreenSizeManager"></a>
+  <a target="code" href="///C:/Users/User/G2B/Gaussian-2-Blender/gui/ScreenSizeManager.py" type="text/plain"><tt>gui.ScreenSizeManager</tt></a>
+<span class="moduletype">SourceModule</span>  <div class="import">
+imports:
+    <a href="#gui">gui</a>
+
+  </div>
+  <div class="import">
+imported by:
+    <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
+ &#8226;   <a href="#gui.RepeatableRowGroup">gui.RepeatableRowGroup</a>
 
   </div>
 
@@ -5552,6 +5634,8 @@ imported by:
 imports:
     <a href="#gui">gui</a>
  &#8226;   <a href="#gui.CreateTooltip">gui.CreateTooltip</a>
+ &#8226;   <a href="#gui.LabeledComboRow">gui.LabeledComboRow</a>
+ &#8226;   <a href="#gui.RepeatableRowGroup">gui.RepeatableRowGroup</a>
  &#8226;   <a href="#tkinter">tkinter</a>
  &#8226;   <a href="#tkinter.ttk">tkinter.ttk</a>
 
@@ -5583,6 +5667,7 @@ imports:
 imported by:
     <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
  &#8226;   <a href="#gui.BlenderPath">gui.BlenderPath</a>
+ &#8226;   <a href="#gui.ConsoleRegion">gui.ConsoleRegion</a>
  &#8226;   <a href="#gui.Information">gui.Information</a>
  &#8226;   <a href="#gui.InputRegion">gui.InputRegion</a>
 
@@ -7900,7 +7985,8 @@ imports:
   </div>
   <div class="import">
 imported by:
-    <a href="#_threading_local">_threading_local</a>
+    <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
+ &#8226;   <a href="#_threading_local">_threading_local</a>
  &#8226;   <a href="#importlib.util">importlib.util</a>
  &#8226;   <a href="#logging">logging</a>
  &#8226;   <a href="#psutil">psutil</a>
@@ -7978,7 +8064,10 @@ imported by:
  &#8226;   <a href="#gui.InputRegion">gui.InputRegion</a>
  &#8226;   <a href="#gui.IonConventions">gui.IonConventions</a>
  &#8226;   <a href="#gui.IonRegion">gui.IonRegion</a>
+ &#8226;   <a href="#gui.LabeledComboRow">gui.LabeledComboRow</a>
  &#8226;   <a href="#gui.OutputRegion">gui.OutputRegion</a>
+ &#8226;   <a href="#gui.ProportionalContainer">gui.ProportionalContainer</a>
+ &#8226;   <a href="#gui.RepeatableRowGroup">gui.RepeatableRowGroup</a>
  &#8226;   <a href="#gui.SelectedIon">gui.SelectedIon</a>
  &#8226;   <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
  &#8226;   <a href="#gui.Utility">gui.Utility</a>
@@ -8115,6 +8204,7 @@ imported by:
     <a href="#TheorChem2Blender.py">TheorChem2Blender.py</a>
  &#8226;   <a href="#gui.ConsoleRegion">gui.ConsoleRegion</a>
  &#8226;   <a href="#gui.HighlighterRegion">gui.HighlighterRegion</a>
+ &#8226;   <a href="#gui.LabeledComboRow">gui.LabeledComboRow</a>
  &#8226;   <a href="#gui.UnitCellRegion">gui.UnitCellRegion</a>
  &#8226;   <a href="#tkinter">tkinter</a>
 

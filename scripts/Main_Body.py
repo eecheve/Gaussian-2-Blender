@@ -21,12 +21,12 @@ class Main_Body(object):
     and exporting molecular structures while managing parent-child relations and animations.
     """
     def __init__(self, i_file_type, i_folder_path, i_file_name, o_folder_path, o_file_name,
-                 represent_type, o_file_type, str_ionic_cell, str_ion_input_list, is_animation,
+                 represent_type, o_file_type, is_ionic, unit_cell, ion_input_list, is_animation,
                  atom_hl_list, bond_hl_list, forced_bonds_list, custom_bond_thresholds, animation_frames,
                  unit_cell_repeats, miller_indices, polyhedra_centers):
         """
         Initializes the Main_Body class with input and output parameters.
-        
+
         :param i_file_type: Type of input file (.xyz or .com).
         :param i_folder_path: Path to input folder.
         :param i_file_name: Name of the input file.
@@ -34,8 +34,10 @@ class Main_Body(object):
         :param o_file_name: Name of the output file.
         :param represent_type: Representation type for molecules.
         :param o_file_type: Output file format.
-        :param str_ionic_cell: String representation of ionic cell data.
-        :param str_ion_input_list: String representation of ion input list.
+        :param is_ionic: "1"/"0" - whether the input has ions with specified charge/coordination.
+        :param unit_cell: "1"/"0" - whether the input contains a unit cell.
+        :param ion_input_list: list of dicts, one per specified ion, each with
+                                "element"/"charge"/"coordination" keys.
         :param is_animation: Determines if animation should be applied.
         :param atom_hl_list: List of atoms to highlight.
         :param bond_hl_list: List of bonds to highlight.
@@ -56,8 +58,9 @@ class Main_Body(object):
         self.o_file_name = o_file_name
         self.represent_type = represent_type
         self.o_file_type = o_file_type
-        self.str_ionic_cell = str_ionic_cell
-        self.str_ion_input_list = str_ion_input_list
+        self.is_ionic = is_ionic
+        self.unit_cell = unit_cell
+        self.ion_input_list = ion_input_list
         self.is_animation = is_animation
         self.atom_hl_list = atom_hl_list
         self.bond_hl_list = bond_hl_list
@@ -70,10 +73,7 @@ class Main_Body(object):
         
         self.coords = []
         self.number_of_elements = 0
-        self.is_ionic=""
         self.unit_cell_points = []
-        self.unit_cell = []
-        self.ion_input_list = []
         self.raw_coords = []
         self.raw_connect = []
         self.raw_key_frames = []
@@ -252,22 +252,6 @@ class Main_Body(object):
         Overwriter = self.get_module("BondOverwriter")
         self.connect_with_symbols = Overwriter.overwrite_connectivity(self.forced_bonds_list, self.connect_with_symbols, self.coords)
 
-    
-    def Manage_Ionic_Information(self):
-        """
-        Manages ionic information for the molecule.
-
-        Calls:
-        - `rebuild_list` and `make_tuple_in_list` from `Refine_Data` module.
-        :return: None
-        """
-        Refine_Data = self.get_module("Refine_Data")
-        ionic_cell = Refine_Data.rebuild_list(self.str_ionic_cell)
-        ionic_cell = Refine_Data.make_tuple_in_list(ionic_cell)
-        self.is_ionic = ionic_cell[0][0]
-        self.unit_cell = ionic_cell[0][1]
-        self.ion_input_list = Refine_Data.rebuild_list(self.str_ion_input_list)
-        self.ion_input_list = Refine_Data.make_tuple_in_list(self.ion_input_list)
     
     def Prepare_Atoms_and_Bonds(self):
         """
@@ -721,8 +705,9 @@ if __name__ == "__main__":
                                    params_data["o_file_name"],
                                    params_data["represent_type"],
                                    params_data["o_file_type"],
-                                   params_data["str_ionic_cell"],
-                                   params_data["str_ion_input_list"],
+                                   params_data["is_ionic"],
+                                   params_data["unit_cell"],
+                                   params_data["ion_input_list"],
                                    params_data["is_animation"],
                                    params_data["atom_hl_list"],
                                    params_data["bond_hl_list"],
@@ -737,7 +722,6 @@ if __name__ == "__main__":
     # needs to run a single time no matter how many exports follow.
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
-    main_body_instance.Manage_Ionic_Information()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
     main_body_instance.base_connect_with_symbols = list(main_body_instance.connect_with_symbols)

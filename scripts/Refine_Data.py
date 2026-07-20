@@ -127,49 +127,6 @@ def AddElementSymbolsToConnecrivityList(connect, coords, number_of_elements):
         print("@Refine_Data: More than 1000 elements, cannot process")
         return l
 
-def rebuild_list(str_list):
-    """
-    Converts a string representation of a list into an actual list of strings.
-
-    :param str_list: (str) String representation of a list.
-    :return: (list) List of strings.
-    """
-    k = str_list.split("_")
-    str_in = ""
-    l = []
-    for i in range(len(k)):
-        str_in += k[i]
-        str_in += ","
-        if ')' in k[i]:
-            str_in = str_in[:-1]
-            l.append(str_in)
-            str_in = ""
-    return l
-
-def make_tuple(str_in):
-    """
-    Converts a string representation of a tuple into an actual tuple.
-
-    :param str_in: (str) String of the form "(a,b,c)".
-    :return: (tuple) Tuple of the form (a, b, c).
-    """
-    str_in = str_in.strip("()")
-    l = str_in.split(",")
-    return tuple(l)
-
-def make_tuple_in_list(a_list):
-    """
-    Converts a list of string representations of tuples into a list of actual tuples.
-
-    :param a_list: (list) List of string representations of tuples.
-    :return: (list) List of tuples.
-    """
-    l = []
-    for entry in a_list:
-        tup = make_tuple(entry)
-        l.append(tup)
-    return l
-
 def refine_key_frames(raw_key_frames):
     """
     Refines raw key frames by converting coordinates to vectors.

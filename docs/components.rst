@@ -75,7 +75,6 @@ Core Pipeline
 
        Obtain_Coords_Connect [fillcolor=lightblue];
        Overwrite_Bonds_if_Needed [fillcolor=lightblue];
-       Manage_Ionic_Information [fillcolor=lightblue];
        Prepare_Atoms_and_Bonds [fillcolor=lightblue];
        Prepare_Ions [fillcolor=lightblue];
        Get_Growth_Specs [fillcolor=lightblue];
@@ -113,7 +112,6 @@ Core Pipeline
 
        Main_Body -> Obtain_Coords_Connect;
        Main_Body -> Overwrite_Bonds_if_Needed;
-       Main_Body -> Manage_Ionic_Information;
        Main_Body -> Prepare_Atoms_and_Bonds;
        Main_Body -> Prepare_Ions;
        Main_Body -> Get_Growth_Specs;
@@ -131,8 +129,6 @@ Core Pipeline
        Read_vasp_File -> VaspReader;
 
        Overwrite_Bonds_if_Needed -> BondOverwriter;
-
-       Manage_Ionic_Information -> Refine_Data;
 
        Prepare_Atoms_and_Bonds -> Refine_Elements;
        Prepare_Atoms_and_Bonds -> Atom_Data;
@@ -163,7 +159,7 @@ Core Pipeline
    }
 
 Unit Cell & Crystallography
-----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Everything below runs only when the input is a ``.vasp`` file with the relevant Unit Cells tab options enabled - for any
 other input type these steps are no-ops. All of it happens inside the same ``Build_And_Export_Growth_Cell`` step shown in
 the core pipeline diagram, once per growth-cell size the user configured.
@@ -219,7 +215,8 @@ the core pipeline diagram, once per growth-cell size the user configured.
 
 GUI
 ----
-TheorChem2Blender.py's own logic: clicking ``Convert!`` queues one file at a time and lets a background thread launch each Blender
+TheorChem2Blender.py's own logic, rewritten to match the current queue-based conversion flow: clicking ``Convert!`` no
+longer blocks the GUI while Blender runs - it queues one file at a time and lets a background thread launch each Blender
 subprocess while the main thread keeps polling for completion.
 
 .. graphviz::
@@ -305,9 +302,10 @@ subprocess while the main thread keeps polling for completion.
 
 Console & Logging Relay
 -------------------------
-Redirecting every ``print()`` anywhere in the GUI process flows through it automatically, and it also tails whatever 
-the separate Blender subprocess writes. It exists so long-running conversions (large batches, growth-cell exports, animations) 
-show live progress instead of the GUI appearing frozen.
+This one doesn't fit the function-call shape of the other diagrams, since nothing calls it directly - every ``print()``
+anywhere in the GUI process flows through it automatically, and it also tails whatever the separate Blender subprocess
+writes. It exists so long-running conversions (large batches, growth-cell exports, animations) show live progress instead
+of the GUI appearing frozen.
 
 .. graphviz::
 

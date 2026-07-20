@@ -12,7 +12,6 @@ from tkinter import filedialog
 from tkinter import ttk
 
 #utility modules
-from gui.Utility import Utility
 from gui.Coordinates import Coordinates
 from gui.ScreenSizeManager import ScreenSizeManager
 from gui.ProportionalContainer import ProportionalContainer
@@ -394,7 +393,7 @@ class TheorChem2BlenderTabSystem:
             print("Conversion aborted: input validation failed. Check the console for details.")
             return
 
-        is_ionic, unit_cell, ion_list, str_ion_list = self.assign_ionic_params()
+        is_ionic, unit_cell, ion_list = self.assign_ionic_params()
 
         # (i_name, o_name) pairs to convert, one Blender run at a time - see
         # _run_next_conversion. Animation mode always converts just the
@@ -409,7 +408,7 @@ class TheorChem2BlenderTabSystem:
         self._start_conversion_queue(
             conversion_queue, exec_loc=exec_loc, b_path=b_path, i_type=i_type, i_path=i_path,
             model_type=model_type, o_path=o_path, o_type=o_type, is_ionic=is_ionic,
-            unit_cell=unit_cell, str_ion_list=str_ion_list, is_anim=is_anim,
+            unit_cell=unit_cell, ion_list=ion_list, is_anim=is_anim,
             hl_atoms=hl_atoms, hl_bonds=hl_bonds, forced_bonds=forced_bonds,
             custom_thresholds=custom_thresholds, unit_cell_repeats=unit_cell_repeats,
             miller_indices=miller_indices, polyhedra_centers=polyhedra_centers,
@@ -447,47 +446,36 @@ class TheorChem2BlenderTabSystem:
     
     def assign_ionic_params(self):
         """
-        Retrieves and formats ionic parameters for molecular conversion.
+        Retrieves the ionic parameters for molecular conversion, ready to be
+        written straight into the JSON config passed to Blender (see
+        input_to_json) - one dict per specified ion, the same list-of-dicts
+        shape used for unit_cell_repeats/miller_indices/custom_bond_thresholds.
 
         Calls:
         - `int_hasIons.get`, `lst_ions`, and `int_unitCell.get` from `IonRegion` module
         """
-        # 7/10/25 note: I wrote this function 4 years ago and I don't remember what it does.
-        # I cannot erase it or change is as it will break several things that I cannot be bothered to write again.
         is_ionic = self.ion_region.int_hasIons.get()
-        if not is_ionic:
-            is_ionic = "0"
-            str_ionList = "---"
         unit_cell = self.unit_cell_region.int_unitCell.get()
         if not unit_cell:
             unit_cell = "0"
-        ion_list = self.ion_region.lst_ions
-        str_ionList = ""
+
+        ion_list = []
         if is_ionic == 1:
             is_ionic = "1"
-            if ion_list:
-                for ion in ion_list:
-                    charge_coord = ion.var_chargeCoord.get().strip("()")
-                    lst_pair = charge_coord.split(',')
-                    str_charge = lst_pair[0]
-                    str_coord = lst_pair[1]
-                    str_ionList += "("
-                    str_ionList += ion.var_element.get()
-                    str_ionList += "_"
-                    str_ionList += str_charge
-                    str_ionList += "_"
-                    str_ionList += str_coord
-                    str_ionList += ")_"
-                str_ionList = str_ionList[:-1]
-                print(str_ionList)
-            else:
-                str_ionList = "---"
+            for ion in self.ion_region.lst_ions:
+                charge, coordination = ion.var_chargeCoord.get().strip("()").split(",")
+                ion_list.append({
+                    "element": ion.var_element.get(),
+                    "charge": charge,
+                    "coordination": coordination,
+                })
         else:
-            str_ionList = "---"
-        return is_ionic, unit_cell, ion_list, str_ionList
+            is_ionic = "0"
+
+        return is_ionic, unit_cell, ion_list
 
     def _start_conversion_queue(self, conversion_queue, exec_loc, b_path, i_type, i_path,
-                                 model_type, o_path, o_type, is_ionic, unit_cell, str_ion_list,
+                                 model_type, o_path, o_type, is_ionic, unit_cell, ion_list,
                                  is_anim, hl_atoms, hl_bonds, forced_bonds, custom_thresholds,
                                  unit_cell_repeats, miller_indices, polyhedra_centers):
         """
@@ -508,7 +496,7 @@ class TheorChem2BlenderTabSystem:
         self._conversion_args = dict(
             exec_loc=exec_loc, b_path=b_path, i_type=i_type, i_path=i_path,
             model_type=model_type, o_path=o_path, o_type=o_type, is_ionic=is_ionic,
-            unit_cell=unit_cell, str_ion_list=str_ion_list, is_anim=is_anim,
+            unit_cell=unit_cell, ion_list=ion_list, is_anim=is_anim,
             hl_atoms=hl_atoms, hl_bonds=hl_bonds, forced_bonds=forced_bonds,
             custom_thresholds=custom_thresholds, unit_cell_repeats=unit_cell_repeats,
             miller_indices=miller_indices, polyhedra_centers=polyhedra_centers,
@@ -540,7 +528,7 @@ class TheorChem2BlenderTabSystem:
         self.input_to_json(
             args["i_type"], args["i_path"], i_name, args["model_type"],
             args["o_path"], o_name, args["o_type"], args["is_ionic"],
-            args["unit_cell"], args["str_ion_list"], args["is_anim"],
+            args["unit_cell"], args["ion_list"], args["is_anim"],
             args["hl_atoms"], args["hl_bonds"], args["forced_bonds"],
             args["custom_thresholds"], args["unit_cell_repeats"],
             args["miller_indices"], args["polyhedra_centers"],
@@ -601,8 +589,8 @@ class TheorChem2BlenderTabSystem:
             self._run_next_conversion()
 
     def input_to_json(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type,
-                    is_ionic, unit_cell, str_ion_list, is_anim, 
-                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds, 
+                    is_ionic, unit_cell, ion_list, is_anim,
+                    hl_atoms, hl_bonds, forced_bonds, custom_thresholds,
                     unit_cell_repeats, miller_indices, polyhedra_centers):
         """
         Collects GUI input and writes it to a structured JSON file for Blender processing.
@@ -641,7 +629,7 @@ class TheorChem2BlenderTabSystem:
                 "unit_cell": unit_cell,
                 "is_anim": is_anim
             },
-            "ions": str_ion_list,
+            "ions": ion_list,
             "highlight": {
                 "atoms": hl_atoms,
                 "bonds": hl_bonds
@@ -729,68 +717,6 @@ class TheorChem2BlenderTabSystem:
             return [' '.join(map(str, frame)) for frame in combined]
         else:
             raise ValueError(f"Animations with {i_type} files are not supported at the moment.")
-    
-    def overwrite_animation_frames(self, is_anim, input_type):
-        """
-        If the input represents an animation, prepares animation frame data for conversion.
-
-        Calls:
-        - `append_lines_to_file` from `Utility` module.
-        """
-        if is_anim:
-            anim_frames = os.path.join(self.g2b_path, "scripts", "animation_frames.txt")
-            if not os.path.exists(anim_frames):
-                raise FileNotFoundError(f"Cannot find 'parameters.txt' at {anim_frames}")
-            if input_type == ".com":
-                if len(self.input_region.lst_InputPaths) > 1: #at least two input files to be read
-                    frames_list = self.coordinates.combine_animation_frames(self.input_region.lst_InputPaths)
-                frames_list_strings = [' '.join(map(str, frame)) for frame in frames_list] #converting touple list into string
-                Utility.append_lines_to_file(anim_frames, frames_list_strings)
-            elif input_type == ".xyz":
-                if len(self.input_region.lst_InputPaths) != 1:
-                    raise ValueError("Only one .xyz file should be provided for animation input.")
-                xyz_path = self.input_region.lst_InputPaths[0]
-                frames = self.extract_all_frames(xyz_path) 
-                combined = self.combine_xyz_animation_frames(frames)
-                frame_strings = [' '.join(map(str, frame)) for frame in combined]
-                Utility.append_lines_to_file(anim_frames, frame_strings)
-            else:
-                raise ValueError(f"Animations with {input_type} files are not supported at the moment")
-
-    def overwrite_parameters_script(self, i_type, i_path, i_name, model_type, o_path, o_name, o_type, 
-                              is_ionic, unit_cell, str_ion_list, is_anim, hl_atoms, hl_bonds, forced_bonds):
-        """
-        overwrites bat script to handle the export or animation of molecules
-
-        Calls:
-        - `clear_file_contents` and `append_lines_to_file` from `Utility` module.
-    
-        :param i_path: Input file path
-        :param i_name: Input file name
-        :param model_type: Type of model to export
-        :param o_path: Output directory path
-        :param o_name: Output file name
-        :param o_type: Output type
-        :param is_ionic: Whether the input is ionic
-        :param unit_cell: Whether the input contains a unit cell
-        :param str_ion_list: List of ions in string format
-        :param is_anim: boolean determining if input list is to be treated as animation
-        """
-        params_script = os.path.join(self.g2b_path, "scripts", "parameters.txt")
-
-        if not os.path.exists(params_script):
-            raise FileNotFoundError(f"Cannot find 'parameters.txt' at {params_script}")
-
-        Utility.clear_file_contents(params_script)
-        lines = [
-            i_type, i_path, i_name,
-            o_path, o_name, model_type, o_type,
-            str(is_ionic), str(unit_cell), str_ion_list,
-            is_anim,
-            hl_atoms, hl_bonds, forced_bonds
-        ]
-        Utility.append_lines_to_file(params_script, lines)
-    
     
     def handle_animation_toggle(self, is_animation):
         self.output_region.restrict_output_types_for_animation(is_animation)

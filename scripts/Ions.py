@@ -20,14 +20,15 @@ def CreateIonDataFromInput(ionInputList):
     """
     takes values in each entry of the ionInputList and makes a IonDataDict
 
-    :param ionInputList: <list>(string, string, string, string) list of ions to specify and their properties
+    :param ionInputList: <list>(dict) list of ions to specify and their properties -
+                          each entry a dict with "element"/"charge"/"coordination" keys.
     :return: dictionary<string, Ionic> dict of Ionic class wich contains info with no radius value
     """
     d = {}
     for ionInput in ionInputList:
-        symbol = ionInput[0]
-        charge = int(ionInput[1])
-        coordination = ionInput[2]
+        symbol = ionInput["element"]
+        charge = int(ionInput["charge"])
+        coordination = ionInput["coordination"]
         d[symbol] = Atom_Data.Ionic(charge, coordination, 0.0)
     return d
 
