@@ -642,8 +642,8 @@ class TheorChem2BlenderTabSystem:
 
     def _run_blender_subprocess(self, exec_loc, b_path):
         """
-        Runs on a background thread - launches Blender and redirects its
-        stdout/stderr straight into output.log. Blender is a separate OS
+        Runs on a background thread - launches Blender and redirects it
+               stdout/stderr straight into output.log. Blender is a separate OS
         process, so its print() calls are invisible to the sys.stdout
         redirect ConsoleRegion sets up; writing them to the same file that
         ConsoleRegion.poll_log_file() tails is what gets them into the

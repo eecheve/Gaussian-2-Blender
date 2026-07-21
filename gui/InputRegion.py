@@ -184,15 +184,58 @@ class InputRegion(object):
  
     def updateAnimationState(self):
         """
-        Updates the animation state based on the checkbox for animation files.
-        Handles both .com and .xyz file types appropriately.
-        """
-        is_checked = self.var_isAnimation.get()
+        Handles the "is animation" checkbox being toggled.
 
-        if not is_checked:
+        Unchecking always just turns animation mode off. Checking delegates
+        to validate_animation_files(), since whether the current selection
+        is actually valid for animation depends on the file(s) chosen - see
+        that method's docstring for why it's not folded in here directly.
+        """
+        if not self.var_isAnimation.get():
             print("The files will not be treated as animation.")
             if self.on_animation_toggle:
                 self.on_animation_toggle(False)
+            return
+
+        self.validate_animation_files()
+
+    def validate_animation_files(self):
+        """
+        Checks whether the currently selected file(s) are valid for
+        animation mode (at least two .com files, or a single .xyz
+        trajectory file), and notifies on_animation_toggle either way so
+        the input/output type dropdowns stay in sync.
+
+        This is deliberately its own method, separate from
+        updateAnimationState, because it needs to run from two different
+        moments and a plain file_type = self.lst_inputNames[0] read would
+        crash on an empty list the first time:
+            1. When the checkbox is ticked (updateAnimationState above).
+            2. When files are (re)selected while the checkbox is already
+               checked (called from updateInputNameList) - otherwise a user
+               who checks "is animation" before picking any files would see
+               the dropdowns never restrict themselves, and an invalid file
+               count/type chosen afterward would silently go unvalidated.
+
+        If no files have been selected yet, animation mode is provisionally
+        accepted so the dropdown restrictions apply right away; the actual
+        file-count/type check simply reruns once files exist.
+
+        If the selected file(s) turn out invalid, the input name(s) field is
+        cleared along with unchecking the box - otherwise the rejected
+        file(s) stay showing in the field even though they can't actually be
+        converted, which reads as if the selection were still accepted.
+
+        Safe to call unconditionally - it's a no-op if "is animation" isn't
+        currently checked.
+        """
+        if not self.var_isAnimation.get():
+            return
+
+        if not self.lst_inputNames:
+            print("Please select the input file(s) to animate.")
+            if self.on_animation_toggle:
+                self.on_animation_toggle(True)
             return
 
         file_type = os.path.splitext(self.lst_inputNames[0])[1].lower()
@@ -215,6 +258,8 @@ class InputRegion(object):
 
         if not valid:
             self.var_isAnimation.set(False)
+            print("Clearing the invalid file selection.")
+            self.updateInputNameList([])
 
         if self.on_animation_toggle:
             self.on_animation_toggle(valid)
@@ -313,6 +358,11 @@ class InputRegion(object):
             self.lst_InputPaths.append(entry)
         self.var_inputNames.set(s)
 
+        # If "is animation" was checked before any files were selected, the
+        # count/type check couldn't run yet (see validate_animation_files).
+        # Re-run it now that there's an actual file list to check.
+        self.validate_animation_files()
+
     def restrict_input_types_for_animation(self, is_animation):
         """
         Updates the list of selectable input file types based on whether animation is enabled.
@@ -328,7 +378,7 @@ class InputRegion(object):
         if is_animation:
             allowed = [".com", ".xyz"]
         else:
-            allowed = [".com", ".xyz", ".mol2", ".vasp"]
+            allowed = [".com", ".xyz", ".mol2"]
 
         menu = self.drp_inputTypes["menu"]
         menu.delete(0, "end")

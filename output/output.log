@@ -1,17 +1,62 @@
-Exception in Tkinter callback
-Traceback (most recent call last):
-  File "C:\Users\User\AppData\Local\Programs\Python\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
-    return self.func(*args)
-           ~~~~~~~~~^^^^^^^
-  File "c:\Users\User\G2B\Gaussian-2-Blender\gui\InputRegion.py", line 198, in updateAnimationState
-    file_type = os.path.splitext(self.lst_inputNames[0])[1].lower()
-                                 ~~~~~~~~~~~~~~~~~~~^^^
-IndexError: list index out of range
+Please select the input file(s) to animate.
+Error: There must be more than one .com file to implement animations.
+Clearing the invalid file selection.
+##### SETTING INPUT FILES TO CONVERT ####
+has correct file extension water_frame3.com
+Please select the input file(s) to animate.
+At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.
 ##### SETTING INPUT FILES TO CONVERT ####
 has correct file extension water_frame1.com
 has correct file extension water_frame2.com
 has correct file extension water_frame3.com
 has correct file extension water_frame4.com
 has correct file extension water_frame5.com
-The files will not be treated as animation.
-At least two .com files are present. Make sure they have the same number of elements in the same order for the animation to work properly.
+Detected Windows OS. Proceeding with conversion...
+Converting main molecule for animation
+Batch converting 1 of 1: water_frame1.com
+combining animation frames...
+Checking animation frames...
+All files have the same number and identity of elements
+animation frames combined
+information received
+moving on to blender path
+C:\Users\User\G2B\Gaussian-2-Blender
+executing Receive_Parameters script from path
+1: Reading .com file ...
+3: Checking present elements ...
+3.1: elements present are ['O', 'H']
+4: Creating and assigning materials ...
+4: Checking for present ion specifications ...
+4: There are no ions with charge, coordination, and spin specified
+clear_scene: removed 0 object(s)
+5: Instantiating geometries
+6: Instantiated 2 bond(s)
+6: Instantiated 3 element(s)
+7: highlighting atoms if info is present
+7.1: No atoms to highlight, skipping function.
+7: highlighting bonds if info is present
+7.2: No bonds to highlight, skipping function.
+8: animation function is called
+8.2: The animation data was refined into numerical vectors
+9: the number of frames is:  5
+9: present bonds are:  {'-': 1}
+9: the end frame is assigned to:  80
+10: Animations are being built
+10: build_animation() frame end should be: 80
+11: elements are being animated
+11: bonds are being animated
+11: Animated 2 bond(s) of type '-'
+12: Starting baking fbx animations...
+12.1: Total objects to bake: 5
+12.3: Baking complete!
+ParentBoundingBoxToEmpty: no bounding box objects found
+Exporting animation to: C:\Users\User\G2B\Gaussian-2-Blender\output\water_frame1.fbx
+
+FBX export starting... 'C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\water_frame1.fbx'
+export finished in 0.0374 sec.
+Export operator returned {'FINISHED'} for C:\Users\User\G2B\Gaussian-2-Blender\output\water_frame1.fbx
+Blender 4.4.0 (hash 05377985c527 built 2025-03-18 03:22:03)
+Read blend: "C:\Users\User\G2B\Gaussian-2-Blender\scripts\ReadMolecules00.blend"
+
+Blender quit
+All conversions complete.
