@@ -43,6 +43,18 @@ def compute_plane_anchor(h, k, l, origin, a1, a2, a3):
         raise ValueError("At least one Miller index must be non-zero.")
 
 
+def flip_axis_for_negative_index(axis_vector, miller_index):
+    """
+    Returns axis_vector unchanged for a positive (or zero) Miller index,
+    or its negation for a negative one.
+
+    :param axis_vector: (Vector) One of the lattice vectors (a1, a2, or a3).
+    :param miller_index: (int) That axis's Miller index (h, k, or l).
+    :return: (Vector) axis_vector, or its negation if miller_index is negative.
+    """
+    return axis_vector if miller_index >= 0 else -axis_vector
+
+
 def compute_unit_cell_corners(origin, a1, a2, a3):
     """
     Computes all 8 corners of the unit cell parallelepiped.
@@ -173,7 +185,15 @@ def InstantiateMillerPlane(bound_box_points, h, k, l, mat_dict):
     b1, b2, b3         = compute_reciprocal_vectors(a1, a2, a3)
     normal             = compute_miller_normal(h, k, l, b1, b2, b3)
     anchor             = compute_plane_anchor(h, k, l, origin, a1, a2, a3)
-    corners            = compute_unit_cell_corners(origin, a1, a2, a3)
+
+    # The clipping box uses axis vectors flipped per-axis to match each
+    # index's own sign, so negative indices clip against the neighboring
+    # cell in that direction instead of a box that can never contain them
+    # (see flip_axis_for_negative_index's docstring).
+    a1_clip = flip_axis_for_negative_index(a1, h)
+    a2_clip = flip_axis_for_negative_index(a2, k)
+    a3_clip = flip_axis_for_negative_index(a3, l)
+    corners = compute_unit_cell_corners(origin, a1_clip, a2_clip, a3_clip)
 
     intersection_points = intersect_plane_with_edges(corners, normal, anchor)
 

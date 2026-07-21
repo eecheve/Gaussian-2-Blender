@@ -316,38 +316,6 @@ class InputRegion(object):
         else:
             print(f"Not all selected files have the '{input_type}' extension. Please select files with the '{input_type}' extension.")
 
-                
-    
-    def isValidExtension(self, file_path):
-        """
-        Check if file has a valid extension.
-        """
-        valid_exts = {".com", ".xyz", ".mol2", ".vasp"}
-        _, file_ext = os.path.splitext(file_path)
-        return file_ext.lower() in valid_exts
-
-    
-    def isValidExtension2(self, file_path):
-        """
-        Checks if the file has a valid extension.
-
-        Parameters:
-            file_path (str): The file path to check.
-
-        Returns:
-            bool: True if the file has a valid extension, False otherwise.
-        """
-        _, file_ext = os.path.splitext(file_path)
-        if file_ext.lower() == ".com":
-            return True
-        elif file_ext.lower() == ".xyz":
-            return True
-        elif file_ext.lower() == ".mol2":
-            return True
-        elif file_ext.lower() == ".vasp":
-            return True
-        return False
-                
     def updateInputNameList(self, string_list):
         """
         Updates the list of input names and paths.
