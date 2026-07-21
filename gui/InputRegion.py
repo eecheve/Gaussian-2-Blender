@@ -2,9 +2,11 @@ import os
 import re
 
 import tkinter as tk
+from tkinter import ttk
 
 from gui.CreateTooltip import CreateTooltip
 from gui.Utility import Utility
+from gui import Styles
 
 class InputRegion(object):
     """Section of the app that receives the input for the file(s) to convert"""
@@ -70,8 +72,8 @@ class InputRegion(object):
             parent (tk.Widget): The parent widget to attach the frame to.
         """
         self.frame = tk.LabelFrame(master=parent, padx=5, text="Input",
-                                   fg="blue", bg="#e0e0e0",
-                                   relief=tk.GROOVE, borderwidth=2)
+                                   fg=Styles.TITLE_FG, bg=Styles.PANEL_BG,
+                                   relief=Styles.FRAME_RELIEF, borderwidth=Styles.FRAME_BORDERWIDTH)
 
     def add_widgets(self):
         """
@@ -81,12 +83,20 @@ class InputRegion(object):
         The tab's own content container (see TheorChem2Blender.py) already
         provides scrolling if this ever grows taller than the space available,
         so a second, nested scrollable area here was redundant.
+
+        The frame is split into three bold-headed, separator-divided groups
+        (matching the pattern from UnitCellRegion.py): Input Selection, then
+        Representation, then Animation Settings - each its own responsibility.
         """
+        self.lbl_inputSelection_header = tk.Label(master=self.frame, text="Input Selection",
+                                                  bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
+                                                  font=Styles.SECTION_HEADER_FONT)
+
         self.btn_setInputPath = tk.Button(text="set", master=self.frame)
-        self.lbl_inputLabel = tk.Label(text="Input name(s)", bg="#e0e0e0", fg='black', master=self.frame)
+        self.lbl_inputLabel = tk.Label(text="Input name(s)", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG, master=self.frame)
         CreateTooltip(self.lbl_inputLabel, "Name(s) of the file(s) to be converted")
 
-        self.lbl_fileType = tk.Label(text="Input type", bg="#e0e0e0", fg='black', master=self.frame)
+        self.lbl_fileType = tk.Label(text="Input type", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG, master=self.frame)
         CreateTooltip(self.lbl_fileType, "List of file extensions currently accepted by the program")
         self.lst_inputTypes = [".com", ".xyz", ".mol2", ".vasp"]
         self.drp_inputTypes = tk.OptionMenu(self.frame,
@@ -96,13 +106,19 @@ class InputRegion(object):
         CreateTooltip(self.drp_inputTypes, "Choose one of the input types from this list")
 
         self.lbl_inputNames = tk.Label(textvariable=self.var_inputNames, master=self.frame,
-                                       bg="#e0e0e0", fg='black')
+                                       bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
         CreateTooltip(self.lbl_inputNames, "List of input files with the correct extension")
 
         self.btn_setInputName = tk.Button(text="set", master=self.frame, command=self.setInputName)
         CreateTooltip(self.btn_setInputName, "Select one or more input files")
 
-        self.lbl_inputType = tk.Label(text="Model type", bg="#e0e0e0", fg='black', master=self.frame)
+        self.sep_selection_representation = ttk.Separator(master=self.frame, orient="horizontal")
+
+        self.lbl_representation_header = tk.Label(master=self.frame, text="Representation",
+                                                   bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
+                                                   font=Styles.SECTION_HEADER_FONT)
+
+        self.lbl_inputType = tk.Label(text="Model type", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG, master=self.frame)
         CreateTooltip(self.lbl_inputType, "Different representational models supported by Gaussian2Blender")
 
         self.lst_modelTypes = ["Ball-and-Stick", "Stick-only", "Van-der-Waals"]
@@ -111,7 +127,13 @@ class InputRegion(object):
                                             *self.lst_modelTypes, command=self.dropdown_callout)
         CreateTooltip(self.drp_modelTypes, "Choose one of the model representation options from this list")
 
-        self.chk_isAnimation = tk.Checkbutton(master=self.frame, text="is animation", bg="#e0e0e0", fg='black',
+        self.sep_representation_animation = ttk.Separator(master=self.frame, orient="horizontal")
+
+        self.lbl_animationSettings_header = tk.Label(master=self.frame, text="Animation Settings",
+                                                      bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
+                                                      font=Styles.SECTION_HEADER_FONT)
+
+        self.chk_isAnimation = tk.Checkbutton(master=self.frame, text="is animation", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                            variable=self.var_isAnimation, command=self.updateAnimationState)
         CreateTooltip(self.chk_isAnimation, "Check if the input files will serve as animation frames.")
 
@@ -128,17 +150,37 @@ class InputRegion(object):
         """
         Positions all the widgets inside the frame using grid layout.
 
-        Row/column numbers are unchanged from before - only the spacing is
-        new, matching the padx/pady rhythm used in UnitCellRegion.py.
+        The frame is laid out as three groups - Input Selection,
+        Representation, Animation Settings - each headed by a bold label and
+        divided from the next by a horizontal separator, matching the
+        pattern used in UnitCellRegion.py.
         """
-        self.lbl_fileType.grid(row=1, column=0, padx=(0, 4), pady=3, sticky="e")
-        self.drp_inputTypes.grid(row=1, column=1, padx=(0, 4), pady=3, sticky="w")
-        self.lbl_inputLabel.grid(row=2, column=0, padx=(0, 4), pady=3, sticky="e")
-        self.lbl_inputNames.grid(row=2, column=1, padx=(0, 4), pady=3, sticky="w")
-        self.btn_setInputName.grid(row=2, column=2, padx=(0, 4), pady=3)
-        self.lbl_inputType.grid(row=3, column=0, padx=(0, 4), pady=3, sticky="e")
-        self.drp_modelTypes.grid(row=3, column=1, padx=(0, 4), pady=3, sticky="w")
-        self.chk_isAnimation.grid(row=4, column=0, padx=(0, 4), pady=(6, 3), sticky="w")
+        row = 0
+        self.lbl_inputSelection_header.grid(row=row, column=0, columnspan=3, sticky="w", pady=(4, 0))
+        row += 1
+        self.lbl_fileType.grid(row=row, column=0, padx=(0, 4), pady=3, sticky="e")
+        self.drp_inputTypes.grid(row=row, column=1, padx=(0, 4), pady=3, sticky="w")
+        row += 1
+        self.lbl_inputLabel.grid(row=row, column=0, padx=(0, 4), pady=3, sticky="e")
+        self.lbl_inputNames.grid(row=row, column=1, padx=(0, 4), pady=3, sticky="w")
+        self.btn_setInputName.grid(row=row, column=2, padx=(0, 4), pady=3)
+        row += 1
+
+        self.sep_selection_representation.grid(row=row, column=0, columnspan=3, sticky="ew", pady=6)
+        row += 1
+
+        self.lbl_representation_header.grid(row=row, column=0, columnspan=3, sticky="w", pady=(4, 0))
+        row += 1
+        self.lbl_inputType.grid(row=row, column=0, padx=(0, 4), pady=3, sticky="e")
+        self.drp_modelTypes.grid(row=row, column=1, padx=(0, 4), pady=3, sticky="w")
+        row += 1
+
+        self.sep_representation_animation.grid(row=row, column=0, columnspan=3, sticky="ew", pady=6)
+        row += 1
+
+        self.lbl_animationSettings_header.grid(row=row, column=0, columnspan=3, sticky="w", pady=(4, 0))
+        row += 1
+        self.chk_isAnimation.grid(row=row, column=0, padx=(0, 4), pady=3, sticky="w")
  
     def updateAnimationState(self):
         """
@@ -286,7 +328,7 @@ class InputRegion(object):
         if is_animation:
             allowed = [".com", ".xyz"]
         else:
-            allowed = [".com", ".xyz", ".mol2"]
+            allowed = [".com", ".xyz", ".mol2", ".vasp"]
 
         menu = self.drp_inputTypes["menu"]
         menu.delete(0, "end")

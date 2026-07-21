@@ -2,6 +2,7 @@ import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
 from gui.SelectedIon import SelectedIon
+from gui import Styles
 
 class IonRegion(object):
     """Section of the app that receives information about possible ions present"""
@@ -38,13 +39,13 @@ class IonRegion(object):
         self.frame = tk.LabelFrame(master=parent,
                                    padx=5,
                                    text="Ionic radii details",
-                                   fg="blue",
-                                   bg="#e0e0e0",
-                                   relief=tk.GROOVE,
-                                   borderwidth=2)
+                                   fg=Styles.TITLE_FG,
+                                   bg=Styles.PANEL_BG,
+                                   relief=Styles.FRAME_RELIEF,
+                                   borderwidth=Styles.FRAME_BORDERWIDTH)
 
         self.chk_hasIons = tk.Checkbutton(master=self.frame, text="check for ionic radii",
-                                          fg='black', bg="#e0e0e0",
+                                          fg=Styles.TEXT_FG, bg=Styles.PANEL_BG,
                                           variable=self.int_hasIons, command=self.ionic_radii_activator)
         CreateTooltip(self.chk_hasIons, "Check if some elements radii are ionic radii instead of covalent radii")
 

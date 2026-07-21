@@ -1,34 +1,23 @@
 {
     "input": {
-        "type": ".vasp",
-        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/vasp_files",
-        "names": "NaCl_rocksalt.vasp"
+        "type": ".com",
+        "paths": "C:/Users/User/G2B/Gaussian-2-Blender/input_examples/com_files/minerals",
+        "names": "halite.com"
     },
     "output": {
         "path": "C:\\Users\\User\\G2B\\Gaussian-2-Blender\\output\\",
-        "name": "NaCl_rocksalt",
+        "name": "halite",
         "type": ".glb"
     },
     "model": {
         "type": "Ball-and-Stick"
     },
     "flags": {
-        "is_ionic": "1",
-        "unit_cell": 1,
+        "is_ionic": "0",
+        "unit_cell": "0",
         "is_anim": false
     },
-    "ions": [
-        {
-            "element": "Na",
-            "charge": "1",
-            "coordination": "VI"
-        },
-        {
-            "element": "Cl",
-            "charge": "-1",
-            "coordination": "VI"
-        }
-    ],
+    "ions": [],
     "highlight": {
         "atoms": "",
         "bonds": ""

@@ -68,14 +68,6 @@ Export Data Module
    :show-inheritance:
    :no-index:
 
-Import Data Module
-------------------------
-.. automodule:: Import_Data
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :no-index:
-
 Instantiate Molecules Module
 -----------------------------
 .. automodule:: Instantiate_Molecules
@@ -100,14 +92,6 @@ Primitives Module
    :show-inheritance:
    :no-index:
 
-Raw Parameters Module
-----------------------
-.. automodule:: Raw_Parameters
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :no-index:
-
 Receive Parameters Module
 --------------------------
 .. automodule:: Receive_Parameters
@@ -116,17 +100,17 @@ Receive Parameters Module
    :show-inheritance:
    :no-index:
 
-Refine Data Module
+Refine Elements Module
 --------------------------
-.. automodule:: Refine_Data
+.. automodule:: Refine_Elements
    :members:
    :undoc-members:
    :show-inheritance:
    :no-index:
 
-Refine Elements Module
+Com Reader Module
 --------------------------
-.. automodule:: Refine_Elements
+.. automodule:: ComReader
    :members:
    :undoc-members:
    :show-inheritance:

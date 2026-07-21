@@ -180,7 +180,10 @@ class TheorChem2BlenderTabSystem:
         self.initialize_blender_region(self.input_content_container.content_frame)
         self.place(self.input_info, row=0, column=0, sticky="nsew")
         self.place(self.blender_path_region, row=0, column=0, padx=10, pady=10, sticky="ew")
-        self.place(self.input_region, row=1, column=0, padx=2, pady=2, sticky="new")
+        self.input_tab_separator = ttk.Separator(master=self.input_content_container.content_frame,
+                                                 orient="horizontal")
+        self.input_tab_separator.grid(row=1, column=0, padx=10, sticky="ew")
+        self.place(self.input_region, row=2, column=0, padx=2, pady=2, sticky="new")
 
         # Tab 2: Customization
         self.customization_tab = ttk.Frame(self.notebook)
@@ -192,8 +195,11 @@ class TheorChem2BlenderTabSystem:
             content_parent=self.customization_content_container.content_frame
         )
         self.place(self.custom_info, row=0, column=0, sticky="nsew")
+        # bond_conventions sits to the right of highlight_region rather than
+        # below it - it's a short, static legend, so it reads better as a
+        # side panel than as a full-width block underneath.
         self.place(self.highlight_region, row=0, column=0, padx=2, pady=2, sticky="new")
-        self.place(self.bond_conventions, row=1, column=0, padx=2, pady=2, sticky="new")
+        self.place(self.bond_conventions, row=0, column=1, padx=2, pady=2, sticky="new")
 
         # Tab 3: Ions
         self.ion_tab = ttk.Frame(self.notebook)
@@ -204,8 +210,11 @@ class TheorChem2BlenderTabSystem:
             content_parent=self.ion_content_container.content_frame
         )
         self.place(self.ion_info, row=0, column=0, sticky="nsew")
+        # ion_conventions sits to the right of ion_region rather than below
+        # it, matching the same side-panel layout as the Customization tab's
+        # bond_conventions.
         self.place(self.ion_region, row=0, column=0, padx=2, pady=2, sticky="new")
-        self.place(self.ion_conventions, row=1, column=0, padx=2, pady=2, sticky="new")
+        self.place(self.ion_conventions, row=0, column=1, padx=2, pady=2, sticky="new")
 
         # Tab 4: Unit cell
         self.unit_cell_tab = ttk.Frame(self.notebook)

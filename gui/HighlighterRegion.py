@@ -4,6 +4,7 @@ import re
 import tkinter as tk
 from tkinter import ttk
 from gui.CreateTooltip import CreateTooltip
+from gui import Styles
 
 ELEMENTS = { #dictionary containing the atomic symbol of all 118 elements in the periodic table
     "H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar",
@@ -81,22 +82,22 @@ class HighlighterRegion(object):
             parent (tk.Widget): The parent widget to attach the frame to.
         """
         self.frame = tk.LabelFrame(master=parent, padx=5, text="Customize atoms and bonds", 
-                                   fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
+                                   fg=Styles.TITLE_FG, bg=Styles.PANEL_BG, relief=Styles.FRAME_RELIEF, borderwidth=Styles.FRAME_BORDERWIDTH)
 
     def add_widgets(self):
         """
         Adds widgets (checkboxes, labels, and entry fields) for atom and bond highlighting.
         """
         #-----------------------------------------------------------------------------
-        self.chk_forcedBonds = tk.Checkbutton(master=self.frame, text="force bonds", bg="#e0e0e0", fg='black',
+        self.chk_forcedBonds = tk.Checkbutton(master=self.frame, text="force bonds", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                                  variable=self.var_forceBonds, command=self.toggleBondForcer)
         CreateTooltip(self.chk_forcedBonds, "Check if you want to force a specific bond type between two atoms")
 
         self.lbl_forcedBondsList = tk.Label(text="Forced bonds list", master=self.frame, state=tk.DISABLED,
-                                             bg="#e0e0e0", fg='black')
+                                             bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
         CreateTooltip(self.lbl_forcedBondsList, "Bond orders: 0.5:'_', 1:'-', 1.5:'%', 2:'=', 3:'#'")
         
-        self.ent_forcedBondsList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
+        self.ent_forcedBondsList = tk.Entry(width=30, master=self.frame, bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                        textvariable=self.var_forcedBondList, state=tk.DISABLED)
         self.ent_forcedBondsList.bind("<FocusOut>", lambda event:
                                  self.on_validate_bond_entry(event, self.var_forcedBondList, self.ent_forcedBondsList))
@@ -106,15 +107,15 @@ class HighlighterRegion(object):
                                  self.on_enable_editing(event, self.ent_forcedBondsList, self.var_forceBonds))
         CreateTooltip(self.ent_forcedBondsList, "Separate each bond by a semicolon. E.g. C01-C02; C02=O03; C04#C05; etc")
         #-----------------------------------------------------------------------------
-        self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms", bg="#e0e0e0", fg='black',
+        self.chk_highlightAtoms = tk.Checkbutton(master=self.frame, text="highlight atoms", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                                  variable=self.var_highlightAtoms, command=self.toggleAtomHighlighter)
         CreateTooltip(self.chk_highlightAtoms, "Check if you want to highlight one or more atoms in your 3D structure")
 
         self.lbl_highlightedAtoms = tk.Label(text="Atom list", master=self.frame, state=tk.DISABLED,
-                                             bg="#e0e0e0", fg='black')
+                                             bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
         CreateTooltip(self.lbl_highlightedAtoms, "List of atoms to highlight in the resulting 3D model")
         
-        self.ent_hlAtomList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
+        self.ent_hlAtomList = tk.Entry(width=30, master=self.frame, bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                        textvariable=self.var_hlAtomList, state=tk.DISABLED)
         self.ent_hlAtomList.bind("<FocusOut>", self.on_validate_atom_list)
         self.ent_hlAtomList.bind("<Return>", self.on_validate_atom_list)
@@ -123,15 +124,15 @@ class HighlighterRegion(object):
         CreateTooltip(self.ent_hlAtomList, "Separate each atom by a comma. E.g. C01, H02, H03, etc")
         
         #-----------------------------------------------------------------------------
-        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight bonds", bg="#e0e0e0", fg='black',
+        self.chk_highlightBonds = tk.Checkbutton(master=self.frame, text="highlight bonds", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                                  variable=self.var_highlightBonds, command=self.toggleBondHighlighter)
         CreateTooltip(self.chk_highlightBonds, "Check if you want to highlight one or more bonds in your 3D structure")
 
         self.lbl_highlightedBonds = tk.Label(text="Bonds list", master=self.frame, state=tk.DISABLED,
-                                             bg="#e0e0e0", fg='black')
+                                             bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
         CreateTooltip(self.lbl_highlightedBonds, "List of bonds to highlight: '-' singe, '=' double, '#' triple, '%' aromatic")
         
-        self.ent_hlBondList = tk.Entry(width=30, master=self.frame, bg="#e0e0e0", fg='black',
+        self.ent_hlBondList = tk.Entry(width=30, master=self.frame, bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                        textvariable=self.var_hlBondList, state=tk.DISABLED)
         self.ent_hlBondList.bind("<FocusOut>", lambda event:
                                  self.on_validate_bond_entry(event, self.var_hlBondList, self.ent_hlBondList))
@@ -142,7 +143,7 @@ class HighlighterRegion(object):
         CreateTooltip(self.ent_hlBondList, "Separate each bond by a semicolon. E.g. C01-C02; C03=C04; C01#C09; O08%C06 etc")
 
         #-----------------------------------------------------------------------------
-        self.chk_customizeBondThreshold = tk.Checkbutton(master=self.frame, text="custom threshold", bg="#e0e0e0", fg='black',
+        self.chk_customizeBondThreshold = tk.Checkbutton(master=self.frame, text="custom threshold", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
                                                          variable=self.var_customThreshold, command=self.toggleCustomThreshold)
         CreateTooltip(self.chk_customizeBondThreshold, "Check if you want to customize a bond pair, If the distance is smaller than the threshold, then the atom pair will have the specified bond order")
 
@@ -153,7 +154,7 @@ class HighlighterRegion(object):
         self.btn_removeCustomThreshold = tk.Button(master=self.frame, text="remove",
                                        command=self.removeThreshold, state=tk.DISABLED)
         CreateTooltip(self.btn_removeCustomThreshold, "Click here to remove the last atom pair bond threshold")
-        self.threshold_container = tk.Frame(master=self.frame, bg="#e0e0e0")
+        self.threshold_container = tk.Frame(master=self.frame, bg=Styles.PANEL_BG)
 
     def position_widgets(self):
         """
@@ -242,7 +243,7 @@ class HighlighterRegion(object):
             return
 
         row_index = len(self.threshold_rows)
-        row_frame = tk.Frame(master=self.threshold_container, bg="#e0e0e0")
+        row_frame = tk.Frame(master=self.threshold_container, bg=Styles.PANEL_BG)
 
         # Variables
         var_a1 = tk.StringVar(value="C")
@@ -251,10 +252,10 @@ class HighlighterRegion(object):
         var_thr = tk.StringVar(value="")     # numeric entry as string
 
         # Labels
-        lbl_a1 = tk.Label(row_frame, text="Atom 1", bg="#e0e0e0", fg='black')
-        lbl_a2 = tk.Label(row_frame, text="Atom 2", bg="#e0e0e0", fg='black')
-        lbl_order = tk.Label(row_frame, text="Bond order", bg="#e0e0e0", fg='black')
-        lbl_thr = tk.Label(row_frame, text="Threshold (Å)", bg="#e0e0e0", fg='black')
+        lbl_a1 = tk.Label(row_frame, text="Atom 1", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
+        lbl_a2 = tk.Label(row_frame, text="Atom 2", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
+        lbl_order = tk.Label(row_frame, text="Bond order", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
+        lbl_thr = tk.Label(row_frame, text="Threshold (Å)", bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
 
         # Read-only dropdowns (Combobox)
         cb_a1 = ttk.Combobox(row_frame, textvariable=var_a1, values=self.elements_list, width=6, state="readonly")
@@ -263,7 +264,7 @@ class HighlighterRegion(object):
                                 width=3, state="readonly")
 
         # Threshold as entry (user types a float)
-        ent_thr = tk.Entry(row_frame, width=8, bg="#e0e0e0", fg='black', textvariable=var_thr)
+        ent_thr = tk.Entry(row_frame, width=8, bg=Styles.PANEL_BG, fg=Styles.TEXT_FG, textvariable=var_thr)
 
         # Tooltips
         CreateTooltip(cb_a1, "Select the first element symbol")

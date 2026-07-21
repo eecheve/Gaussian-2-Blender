@@ -65,15 +65,13 @@ Folder containing Blender API related scripts and modules
 - ``__init__.py``: Optional init file for the scripts package
 - ``Main_Body.py``: Main script that orchestrates the molecular data conversion process
 - ``AtomData.py``: Stores atomic and ionic data (e.g., radii, colors)
-- ``ImportData.py``: Extracts and filters molecular data from input files
-- ``RefineData.py``: Refines molecular coordinates and connectivity data
 - ``RefineElements.py``: Identifies unique elements, positions, and connectivity
 - ``Create_Materials.py``: Manages materials for molecular elements in Blender
 - ``Primitives.py``: Instantiates and manages 3D primitives for atoms and bonds
 - ``Export_Data.py``: Exports Blender scenes and animations
 - ``Ions.py``: Handles ionic data within molecular structures
 - ``Instantiate_Molecules.py``: Instantiates 3D geometries from Cartesian coordinates
-- ``Raw_Parameters.py``: Extracts and processes raw coordinates/connectivity
+- ``ComReader.py``, ``XyzReader.py``, ``Mol2Reader.py``, ``VaspReader.py``: Read coordinates and connectivity from each supported input format
 - ``Animate.py``: Manages animation of molecular structures
 - ``Clear_Transforms.py``: Applies transformations to bonds and elements
 - ``Receive_Parameters.py``: Extracts and processes parameter data into a dictionary

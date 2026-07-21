@@ -2,34 +2,35 @@ import os
 import tkinter as tk
 
 from gui.CreateTooltip import CreateTooltip
+from gui import Styles
 
 class OutputRegion(object):
     """Section of the app that selects the output path for the converted file(s)"""
     def __init__(self, parent, initial_dir):
         self.def_outputPath = os.path.join(initial_dir, "output", "")
         self.initial_dir = initial_dir
-        
-        self.frame = tk.LabelFrame(master=parent, 
-                                        padx=5, 
-                                        text="Output", 
-                                        fg="blue", 
-                                        bg="#e0e0e0",
-                                        relief=tk.GROOVE, 
-                                        width=325, 
-                                        height=102, 
-                                        borderwidth=2)
+
+        self.frame = tk.LabelFrame(master=parent,
+                                        padx=5,
+                                        text="Output",
+                                        fg=Styles.TITLE_FG,
+                                        bg=Styles.PANEL_BG,
+                                        relief=Styles.FRAME_RELIEF,
+                                        width=325,
+                                        height=102,
+                                        borderwidth=Styles.FRAME_BORDERWIDTH)
 
         self.lbl_outputPath = tk.Label(text="Output path",
                                       master=self.frame,
-                                      bg="#e0e0e0", fg='black')
+                                      bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
 
         self.ttp_outputLabel = CreateTooltip(self.lbl_outputPath,
                                       "Folder path where the output will be saved")
 
         self.var_outputPath = tk.StringVar()
         self.var_outputPath.set(self.def_outputPath)
-        self.ent_outputPath = tk.Entry(width=35, bg="#e0e0e0", fg='black',
-                                       master=self.frame, 
+        self.ent_outputPath = tk.Entry(width=35, bg=Styles.PANEL_BG, fg=Styles.TEXT_FG,
+                                       master=self.frame,
                                        textvariable=self.var_outputPath)
 
         self.ttp_outputPath = CreateTooltip(self.ent_outputPath,
@@ -43,9 +44,9 @@ class OutputRegion(object):
         self.ttp_setOutputPath = CreateTooltip(self.btn_setOutputPath,
                                          "Select the folder path where you want your output to be")
 
-        self.lbl_outputType = tk.Label(text="Output type", 
+        self.lbl_outputType = tk.Label(text="Output type",
                                        master=self.frame,
-                                       bg="#e0e0e0", fg='black')
+                                       bg=Styles.PANEL_BG, fg=Styles.TEXT_FG)
 
         self.ttp_outputTypeLabel = CreateTooltip(self.lbl_outputType,
                                            "Different rendering formats supported by Gaussian2Blender")
@@ -89,9 +90,9 @@ class OutputRegion(object):
             - Resets the selected output type if the current selection is no longer valid.
         """
         if is_animation:
-            allowed = [".fbx", ".glb", ".usdz"]
+            allowed = [".fbx", ".glb"]
         else:
-            allowed = [".fbx", ".obj", ".dae", ".glb", ".stl"]
+            allowed = [".fbx", ".obj", ".dae", ".glb", ".stl", ".usdz"]
 
         menu = self.drp_outputTypes["menu"]
         menu.delete(0, "end")

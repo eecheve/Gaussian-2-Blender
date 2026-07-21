@@ -80,7 +80,6 @@ Core Pipeline
        Get_Growth_Specs [fillcolor=lightblue];
        Build_And_Export_Growth_Cell [fillcolor=lightblue];
        Read_com_File [fillcolor=lightblue];
-       Refine_com_File [fillcolor=lightblue];
        Read_xyz_File [fillcolor=lightblue];
        Read_mol2_File [fillcolor=lightblue];
        Read_vasp_File [fillcolor=lightblue];
@@ -90,8 +89,7 @@ Core Pipeline
        Animate [fillcolor=lightblue];
        Manage_Export [fillcolor=lightblue];
 
-       Raw_Parameters [fillcolor=lightgreen];
-       Refine_Data [fillcolor=lightgreen];
+       ComReader [fillcolor=lightgreen];
        XyzReader [fillcolor=lightgreen];
        Mol2Reader [fillcolor=lightgreen];
        VaspReader [fillcolor=lightgreen];
@@ -121,9 +119,7 @@ Core Pipeline
        Obtain_Coords_Connect -> Read_xyz_File;
        Obtain_Coords_Connect -> Read_mol2_File;
        Obtain_Coords_Connect -> Read_vasp_File;
-       Read_com_File -> Refine_com_File;
-       Read_com_File -> Raw_Parameters;
-       Refine_com_File -> Refine_Data;
+       Read_com_File -> ComReader;
        Read_xyz_File -> XyzReader;
        Read_mol2_File -> Mol2Reader;
        Read_vasp_File -> VaspReader;

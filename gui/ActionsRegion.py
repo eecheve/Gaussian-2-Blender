@@ -1,5 +1,6 @@
 import tkinter as tk
 from gui.CreateTooltip import CreateTooltip
+from gui import Styles
 
 class ActionsRegion:
     def __init__(self, parent, on_reset, on_convert, current_os, g2b_path):
@@ -12,7 +13,8 @@ class ActionsRegion:
         """
         self.current_os = current_os
         self.g2b_path = g2b_path
-        self.frame = tk.LabelFrame(master=parent, text="Actions", fg="blue", bg="#e0e0e0", relief=tk.GROOVE, borderwidth=2)
+        self.frame = tk.LabelFrame(master=parent, text="Actions", fg=Styles.TITLE_FG, bg=Styles.PANEL_BG,
+                                   relief=Styles.FRAME_RELIEF, borderwidth=Styles.FRAME_BORDERWIDTH)
         self.on_reset = on_reset
         self.on_convert = on_convert
         self._create_widgets()
@@ -25,7 +27,7 @@ class ActionsRegion:
         self.btn_reset.grid(row=0, column=1)
 
         # Convert button
-        self.btn_convert = tk.Button(text="Convert!", width=20, bg="#b7ffc8",
+        self.btn_convert = tk.Button(text="Convert!", width=20, bg=Styles.CONVERT_BUTTON_BG,
                                      master=self.frame, command=self.on_convert)
         CreateTooltip(self.btn_convert, "Click here to convert the molecule(s) to the specified format")
         self.btn_convert.grid(row=0, column=2)

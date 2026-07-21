@@ -45,7 +45,7 @@ class Main_Body(object):
         :param animation_frames: string list of all the atoms and cartesian coordinates for every frame.
         """
         self._readers: Dict[str, Callable[[], None]] = {
-                    ".com":  lambda: (self.Read_com_File(), self.Refine_com_File()),
+                    ".com":  self.Read_com_File,
                     ".xyz":  self.Read_xyz_File,
                     ".mol2": self.Read_mol2_File,
                     ".vasp": self.Read_vasp_File
@@ -74,9 +74,6 @@ class Main_Body(object):
         self.coords = []
         self.number_of_elements = 0
         self.unit_cell_points = []
-        self.raw_coords = []
-        self.raw_connect = []
-        self.raw_key_frames = []
 
         # Snapshot of connect_with_symbols taken right after the input file
         # is parsed (see the __main__ block), before any growth-cell export
@@ -105,10 +102,10 @@ class Main_Body(object):
         :return: None
         """
         MODULES_TO_IMPORT = [
-            "Atom_Data", "Import_Data", "Refine_Data", "Refine_Elements", 
-            "Create_Materials", "Primitives", "Export_Data", "Ions", 
-            "Instantiate_Molecules", "Raw_Parameters", "Animate", "Clear_Transforms",
-            "XyzReader", "AtomHighlighter", "BondOverwriter", "VaspReader", "Mol2Reader",
+            "Atom_Data", "Refine_Elements",
+            "Create_Materials", "Primitives", "Export_Data", "Ions",
+            "Instantiate_Molecules", "Animate", "Clear_Transforms",
+            "XyzReader", "ComReader", "AtomHighlighter", "BondOverwriter", "VaspReader", "Mol2Reader",
             "BoundBoxBuilder", "UnitCellReplicator", "SceneCleaner"
         ]
 
@@ -148,10 +145,10 @@ class Main_Body(object):
         as well as the char specifying the atom type between connected pairs
 
         Calls:
-            - `Read_com_File` and `Refine_com_File` if the input file type is .com.
-            - `Read_xyz_File` if the input file type is .xyz.
+            - `Read_com_File`, `Read_xyz_File`, `Read_mol2_File`, or `Read_vasp_File`,
+              depending on `i_file_type`.
 
-        :param i_file_type: (str) Type of input file (.xyz or .com).
+        :param i_file_type: (str) Type of input file (.com, .xyz, .mol2, or .vasp).
         :return: None
         """
         handler = self._readers.get(i_file_type)
@@ -223,30 +220,16 @@ class Main_Body(object):
         Reads atomic data from a .com file.
 
         Calls:
-        - `Set_Raw_Parameters` from `Raw_Parameters` module.
+        - `extract_coords_from_com_file` and `obtain_all_bond_orders` from `ComReader` module.
         :return: None
         """
-        print("1: Reading .com file ...")  
-        Raw_Parameters = self.get_module("Raw_Parameters")   
-        raw_coords_connect = Raw_Parameters.Set_Raw_Parameters(self.i_folder_path, self.i_file_name)
-        self.raw_coords = raw_coords_connect[0]
-        self.raw_connect = raw_coords_connect[1]
-               
-    def Refine_com_File(self):
-        """
-        Refines extracted data from a .com file.
-
-        Calls:
-        - `RefineCoordList`, `RefineConnectivity`, and `AddElementSymbolsToConnecrivityList` from `Refine_Data` module.
-        :return: None
-        """
-        print("2: Refining extracted data ...")
-        Refine_Data = self.get_module("Refine_Data")
-        self.coords = Refine_Data.RefineCoordList(self.raw_coords)
+        print("1: Reading .com file ...")
+        ComReader = self.get_module("ComReader")
+        comReader = ComReader.ComReader()
+        file_path = os.path.join(self.i_folder_path, self.i_file_name)
+        self.coords = comReader.extract_coords_from_com_file(file_path)
         self.number_of_elements = len(self.coords)
-        print("2.1: number of elements in molecule is: ", self.number_of_elements)
-        connect = Refine_Data.RefineConnectivity(self.raw_connect)
-        self.connect_with_symbols = Refine_Data.AddElementSymbolsToConnecrivityList(connect, self.coords, self.number_of_elements)
+        self.connect_with_symbols = comReader.obtain_all_bond_orders(self.coords, file_path)
 
     def Overwrite_Bonds_if_Needed(self):
         Overwriter = self.get_module("BondOverwriter")
