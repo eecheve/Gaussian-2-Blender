@@ -71,17 +71,14 @@ class Instructions:
             ("About the output\n", "bold"),
             ("15. Select the output path for the 3D object to be rendered.\n", "normal"),
             ("16. Select the file type for the 3D object: '.fbx', '.obj', '.dae', '.glb', '.stl', or '.usdz'.\n", "normal"),
-            ("    16.1. If you chose 'is animation' in the input tab, you can only render as '.fbx', '.glb', or '.usdz'.\n", "italic"),
-            ("    16.2. ", "italic"),
-            ("known issue: ", "bold"),
-            ("at the moment if you export as glb, each bond and atom will have a separate animation instead of all animations being merged as one. If you want to avoid this, export as fbx.\n", "italic"),
-            ("    16.3. If you want to export as glb, you would have to use glTF Transform (a separate tool, not included in TheorChem2Blender) to merge the animations.\n", "italic")
+            ("    16.1. If you chose 'is animation' in the input tab, you can only render as '.fbx', '.glb', or '.usdz'.\n", "italic")
         ],
         "actions": [
             ("Actions you can do:\n", "bold"),
             ("17. Click on 'Reset' to reset everything to the default values.\n", "normal"),
             ("18. Click on 'Convert!' to convert your input into the 3D file according to what you selected.\n", "normal")
         ]
+        # Add more instruction sets here as needed
     }
 
     @classmethod

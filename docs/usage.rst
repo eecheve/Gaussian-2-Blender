@@ -8,7 +8,7 @@ Prerequisites
 - No programming knowledge is required to use this tool.
 
 .. note::
-    **TheorChem2Blender** *V.2025.2* was built for **Blender** *V.4.2*. If you encounter unexpected
+    **TheorChem2Blender** *V.2026.7* was built for **Blender** *V.4.2*. If you encounter unexpected
     running errors, please check your version of Blender and download the appropriate one.
 
 Setup

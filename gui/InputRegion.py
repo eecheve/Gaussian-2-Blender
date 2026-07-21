@@ -55,7 +55,7 @@ class InputRegion(object):
         
         self.var_inputPaths.set("")
         self.var_inputNames.set("")
-        self.var_modelTypes.set("")
+        self.var_modelTypes.set("Ball-and-Stick")
         self.var_inputPath.set("")
 
         self.var_isAnimation.set(False)
@@ -182,14 +182,23 @@ class InputRegion(object):
         row += 1
         self.chk_isAnimation.grid(row=row, column=0, padx=(0, 4), pady=3, sticky="w")
  
+    def set_animation_allowed(self, allowed):
+        """
+        :param allowed: (bool) Whether animation is allowed for the
+                         current input file type.
+        :return: None
+        """
+        self.chk_isAnimation['state'] = tk.NORMAL if allowed else tk.DISABLED
+
+        if not allowed and self.var_isAnimation.get():
+            self.var_isAnimation.set(False)
+            print("Input type does not support animation. Unchecking 'is animation'.")
+            if self.on_animation_toggle:
+                self.on_animation_toggle(False)
+
     def updateAnimationState(self):
         """
         Handles the "is animation" checkbox being toggled.
-
-        Unchecking always just turns animation mode off. Checking delegates
-        to validate_animation_files(), since whether the current selection
-        is actually valid for animation depends on the file(s) chosen - see
-        that method's docstring for why it's not folded in here directly.
         """
         if not self.var_isAnimation.get():
             print("The files will not be treated as animation.")

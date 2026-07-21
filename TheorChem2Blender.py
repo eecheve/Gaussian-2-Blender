@@ -642,8 +642,8 @@ class TheorChem2BlenderTabSystem:
 
     def _run_blender_subprocess(self, exec_loc, b_path):
         """
-        Runs on a background thread - launches Blender and redirects it
-               stdout/stderr straight into output.log. Blender is a separate OS
+        Runs on a background thread - launches Blender and redirects its
+        stdout/stderr straight into output.log. Blender is a separate OS
         process, so its print() calls are invisible to the sys.stdout
         redirect ConsoleRegion sets up; writing them to the same file that
         ConsoleRegion.poll_log_file() tails is what gets them into the
@@ -824,7 +824,11 @@ class TheorChem2BlenderTabSystem:
         state = "normal" if input_type == ".vasp" else "disabled"
         self.notebook.tab(self.unit_cell_tab, state=state)
         if state == "disabled" and self.notebook.select() == str(self.unit_cell_tab):
-            self.notebook.select(0) 
+            self.notebook.select(0)
+
+        # Unit cell mode (.vasp) and animation mode are mutually exclusive -
+        # see Main_Body.py's Get_Processing_Mode.
+        self.input_region.set_animation_allowed(input_type != ".vasp")
 
     def extract_all_frames(self, xyz_file_path):
         """

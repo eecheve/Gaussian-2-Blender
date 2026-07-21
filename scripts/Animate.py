@@ -10,7 +10,15 @@ import mathutils
 dir = os.path.dirname(bpy.data.filepath)
 if not dir in sys.path:
     sys.path.append(dir)
-    
+
+# glTF's "NLA Tracks" export mode groups every object's animation into one
+# glTF animation per unique NLA track NAME - it doesn't care that each
+# object has its own separate baked Action underneath. So giving every
+# object's forced NLA track this same shared name is what makes the GLB
+# export combine them into a single animation instead of one per object.
+# See force_nla_tracks_for_glb() and export_animation()'s ".glb" branch.
+GLB_NLA_TRACK_NAME = "MoleculeAnimation"
+
 def clear_all_animations():
     """
     Removes all keyframes for all objects in the scene
@@ -424,7 +432,13 @@ def force_nla_tracks_for_glb(objects):
     """
     Ensures that each object has its baked action pushed to an NLA track,
     which is required for GLB export to include animations.
-    
+
+    Every object's track is given the same name (GLB_NLA_TRACK_NAME) on
+    purpose: when export_animation() exports with animation_mode
+    'NLA_TRACKS', the glTF exporter merges all NLA tracks that share a name
+    into one glTF animation. Naming them per-object instead would export
+    one separate glTF animation per object, which is the bug this fixes.
+
     :param objects: List of objects to process
     """
     pushed_count = 0
@@ -437,13 +451,13 @@ def force_nla_tracks_for_glb(objects):
         if action:
             # Create a new NLA track and push the action into it
             track = obj.animation_data.nla_tracks.new()
-            track.name = f"{obj.name}_NLA"
+            track.name = GLB_NLA_TRACK_NAME
             #strip = track.strips.new(action.name, action.frame_range[0], action)
             track.strips.new(action.name, int(action.frame_range[0]), action)
             pushed_count += 1
         else:
             skipped_count += 1
-    print(f"Pushed {pushed_count} action(s) to NLA tracks ({skipped_count} object(s) had no action)")
+    print(f"Pushed {pushed_count} action(s) to NLA tracks, all named '{GLB_NLA_TRACK_NAME}' ({skipped_count} object(s) had no action)")
 
 
 def bake_for_glb(element_list, bond_list, end_frame):
@@ -534,15 +548,10 @@ def export_animation(filepath):
             export_format='GLB',
             use_selection=False,
             export_animations=True,
+            export_animation_mode='NLA_TRACKS',
             export_materials='EXPORT',
             export_apply=True,
             export_force_sampling=True
-        ),
-        
-        ".usdz": lambda: bpy.ops.wm.usd_export(
-            filepath=filepath,
-            selected_objects_only=False,
-            export_animation=True
         ),
     }
 
@@ -563,61 +572,7 @@ def export_animation(filepath):
     except Exception as e:
         print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
 
-
-# def export_animation(filepath):
-#     """
-#     Exports the current Blender scene as an animation to the specified file path.
-#     Supports .fbx and .glb formats.
-
-#     :param filepath: (str) Full path (including extension) where the animation will be saved.
-#     """
-#     print("Exporting animation to:", filepath)
-#     ext = os.path.splitext(filepath)[1].lower()
-
-#     try:
-#         if ext == ".fbx":
-#             bpy.ops.export_scene.fbx(
-#                 filepath=filepath,
-#                 check_existing=True,
-#                 use_selection=False,
-#                 global_scale=1.0,
-#                 apply_unit_scale=True,
-#                 bake_anim=True,
-#                 bake_anim_use_all_bones=False,
-#                 bake_anim_use_nla_strips=False,
-#                 bake_anim_use_all_actions=False,
-#                 bake_anim_force_startend_keying=True,
-#                 bake_anim_step=1.0,
-#                 bake_anim_simplify_factor=0.0,
-#                 use_mesh_modifiers=True,
-#                 embed_textures=True
-#             )
-
-#         elif ext == ".glb":
-#             bpy.ops.export_scene.gltf(
-#                 filepath=filepath,
-#                 export_format='GLB',
-#                 use_selection=False,
-#                 export_animations=True,
-#                 export_materials='EXPORT',
-#                 export_apply=True,
-#                 export_force_sampling=True
-#             )
-
-#         else:
-#             print(f"Unsupported animation export format: {ext}")
-#             return
-
-#         print(f"Animation successfully exported to {filepath}")
-
-#     except PermissionError as e:
-#         print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
-#     except Exception as e:
-#         print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
-
-
-
-    
+   
 # TO DEBUG
 #raw_anim_data = ExtractDataFromFile(dir+"\\animation_frames.txt")
 #number_of_frames = calculate_number_of_frames(dir+"\\animation_frames.txt")

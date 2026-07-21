@@ -73,6 +73,11 @@ class HighlighterRegion(object):
         self.lbl_highlightedBonds['state'] = tk.DISABLED
         self.ent_hlBondList['state'] = tk.DISABLED
         self.var_hlBondList.set("")
+        self.var_customThreshold.set(False)
+        while self.threshold_rows:
+            self.removeThreshold()
+        self.btn_removeCustomThreshold['state'] = tk.DISABLED
+        self.btn_addCustomThreshold['state'] = tk.DISABLED
 
     def setup_frame(self, parent):
         """

@@ -1,10 +1,7 @@
 class ComReader():
     """
     Reads atomic coordinates and connectivity straight out of a Gaussian
-    .com file. Unlike XyzReader/VaspReader, no BondOrderCalculator is
-    needed here - .com files carry their own explicit bond list and bond
-    orders, the same way .mol2 files do, so there's nothing to infer from
-    geometry.
+    .com file. Input needs the geom=connectivity input for it to work.
 
     A .com file is laid out as: route section, blank line, title line,
     blank line, charge/multiplicity line, the atom coordinate block, a

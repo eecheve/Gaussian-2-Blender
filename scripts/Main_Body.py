@@ -50,7 +50,19 @@ class Main_Body(object):
                     ".mol2": self.Read_mol2_File,
                     ".vasp": self.Read_vasp_File
                 }
-        
+
+        # Same pattern as self._readers above: a dict of bound methods, one
+        # per mutually-exclusive processing mode (see Get_Processing_Mode
+        # and Run_Conversion). Each one is a complete, self-contained entry
+        # point that runs its whole mode's pipeline start to finish - no
+        # arguments needed, since each owns whatever looping it requires
+        # internally (only "unit_cell" ever loops, for growth-cell batches).
+        self.pipeline_for_mode: Dict[str, Callable[[], None]] = {
+                    "unit_cell": self.Run_Unit_Cell_Mode,
+                    "animation": self.Run_Animation_Mode,
+                    "static":    self.Run_Static_Mode
+                }
+
         self.i_file_type = i_file_type
         self.i_folder_path = i_folder_path
         self.i_file_name = i_file_name
@@ -603,7 +615,7 @@ class Main_Body(object):
                                   export.
         :return: None
         """
-        if self.is_animation == "false":
+        if not self.is_animation:
             self.Export(file_name_suffix)
         else:
             Animate = self.get_module("Animate")
@@ -634,18 +646,121 @@ class Main_Body(object):
             specs.append((nx, ny, nz, file_name_suffix))
         return specs
 
+    def Get_Processing_Mode(self):
+        """
+        Determines which of three mutually-exclusive processing modes this
+        conversion runs under:
+
+        - "unit_cell": unit cell boundaries, growth-cell replication, Miller
+          planes, and polyhedra. Only ever applies to .vasp input.
+        - "animation": keyframed animation across multiple input frames.
+          Only ever applies to .com/.xyz input.
+        - "static": neither of the above - a plain, single-frame export.
+
+        The GUI enforces that "unit_cell" and "animation" can never both
+        apply: checking "is animation" restricts the input-type dropdown to
+        .com/.xyz (excluding .vasp), and the Unit Cells tab only unlocks for
+        .vasp input. If both are somehow true anyway - a hand-edited
+        t2b_config.json, or a future GUI bug - that invariant was violated,
+        so this fails loudly rather than silently picking one mode and
+        ignoring the other flag.
+
+        :raises ValueError: if is_animation is True and i_file_type is
+                             ".vasp" at the same time.
+        :return: (str) "unit_cell", "animation", or "static".
+        """
+        if self.is_animation and self.i_file_type == ".vasp":
+            raise ValueError(
+                "Invalid configuration: is_animation is True together with "
+                "a .vasp input file. Unit cell mode and animation mode are "
+                "mutually exclusive - check t2b_config.json."
+            )
+
+        if self.i_file_type == ".vasp":
+            return "unit_cell"
+        elif self.is_animation:
+            return "animation"
+        else:
+            return "static"
+
+    def Run_Conversion(self):
+        """
+        Single entry point for the whole build-and-export process, called
+        once from __main__ after the input file has been parsed (see Phase
+        1 there). Determines the processing mode and runs that mode's
+        pipeline start to finish via pipeline_for_mode - mirroring how
+        Export_Data.py's export_functions dispatches by file type.
+
+        :return: None
+        """
+        mode = self.Get_Processing_Mode()
+        self.pipeline_for_mode[mode]()
+
+    def Run_Unit_Cell_Mode(self):
+        """
+        Owns the whole unit-cell/.vasp pipeline, including the growth-cell
+        batch loop - "unit_cell" is the only mode that can produce more
+        than one export per run (multiple growth-cell sizes in a single
+        batch, one per entry in self.unit_cell_repeats). Snapshots
+        connect_with_symbols once before the loop starts, since each
+        export needs to start from the same freshly-parsed connectivity,
+        not whatever the previous export's replication/forbidden-bond-
+        deletion left behind.
+
+        :return: None
+        """
+        self.base_connect_with_symbols = list(self.connect_with_symbols)
+        for nx, ny, nz, file_name_suffix in self.Get_Growth_Specs():
+            self.Build_And_Export_Growth_Cell(nx, ny, nz, file_name_suffix)
+
+    def Run_Animation_Mode(self):
+        """
+        Owns the whole animation/.com-.xyz pipeline. Always produces
+        exactly one export - there's no growth-cell concept here, so
+        unlike Run_Unit_Cell_Mode there's no loop, no scene to clear
+        (nothing's been built yet this run), and no connect_with_symbols
+        snapshot to restore (nothing's mutated it yet).
+
+        :return: None
+        """
+        self.Build_Molecule()
+        self.Highlight_Atoms()
+        self.Highlight_Bonds()
+        self.Delete_Forbidden_Bonds()
+        self.Animate()
+        self.Manage_Export("")
+
+    def Run_Static_Mode(self):
+        """
+        Owns the whole static pipeline - a plain export that's neither
+        unit cell nor animation. Always produces exactly one export.
+        Forbidden/custom bond thresholds (a Customization-tab feature, not
+        a unit-cell-only one) still apply here.
+
+        :return: None
+        """
+        self.Build_Molecule()
+        self.Highlight_Atoms()
+        self.Highlight_Bonds()
+        self.Delete_Forbidden_Bonds()
+        self.Manage_Export("")
+
     def Build_And_Export_Growth_Cell(self, nx, ny, nz, file_name_suffix):
         """
         Builds one full supercell (or the bare unit cell, for 1x1x1) from a
-        clean scene and exports it. Called once per spec returned by
-        Get_Growth_Specs - so once total when no growth cells are
-        specified, or once per growth cell otherwise.
+        clean scene and exports it. Called only from Run_Unit_Cell_Mode,
+        once per spec returned by Get_Growth_Specs - so once total when no
+        growth cells are specified, or once per growth cell otherwise.
 
         The scene is cleared first because several downstream steps
         (UnitCellLinker, BoundBoxBuilder, UnitCellReplicator) tell primitive
         atoms/edges apart from replicated ones by Blender's auto-generated
         name suffixes - leftover objects from a previous export would
         corrupt that bookkeeping and leak into this export's selection.
+
+        Delete_Forbidden_Bonds runs after Link_Unit_Cells (so replicated
+        bonds are filtered too) and before Build_Polyhedra (so polyhedra
+        don't use bonds meant to be deleted).
 
         :param nx, ny, nz: (int) Repeat counts along each lattice direction.
         :param file_name_suffix: (str) Appended to the output filename so
@@ -663,7 +778,6 @@ class Main_Body(object):
         self.Build_Unit_Cell()
         self.Highlight_Atoms()
         self.Highlight_Bonds()
-        self.Animate()
 
         repeats = (nx, ny, nz)
         self.Replicate_Unit_Cell(repeats)
@@ -672,6 +786,7 @@ class Main_Body(object):
         self.Build_Polyhedra()
         self.Build_Miller_Planes(repeats)
         self.Parent_Bounding_Box()
+
         self.Manage_Export(file_name_suffix)
 
 if __name__ == "__main__":
@@ -700,17 +815,8 @@ if __name__ == "__main__":
                                    params_data["unit_cell_repeats"],
                                    params_data["miller_indices"],
                                    params_data["polyhedra_centers"])
-    # Phase 1: parse the input file and resolve ionic/ion data once. None of
-    # this depends on the growth-cell or Miller-plane settings, so it only
-    # needs to run a single time no matter how many exports follow.
     main_body_instance.Obtain_Coords_Connect(main_body_instance.i_file_type)
     main_body_instance.Overwrite_Bonds_if_Needed()
     main_body_instance.Prepare_Atoms_and_Bonds()
     main_body_instance.Prepare_Ions()
-    main_body_instance.base_connect_with_symbols = list(main_body_instance.connect_with_symbols)
-
-    # Phase 2: build and export once per growth-cell spec (or once, bare,
-    # if no growth cells were specified). Every Miller plane listed in
-    # miller_indices is rendered onto each supercell.
-    for nx, ny, nz, file_name_suffix in main_body_instance.Get_Growth_Specs():
-        main_body_instance.Build_And_Export_Growth_Cell(nx, ny, nz, file_name_suffix)
+    main_body_instance.Run_Conversion() #The rest of the pipeline depends on the program's mode. See function inside
