@@ -16,7 +16,8 @@ if not dir in sys.path:
 # object has its own separate baked Action underneath. So giving every
 # object's forced NLA track this same shared name is what makes the GLB
 # export combine them into a single animation instead of one per object.
-# See force_nla_tracks_for_glb() and export_animation()'s ".glb" branch.
+# See force_nla_tracks_for_glb() and Export_Data.ExportAnimationAs's ".glb"
+# branch (the actual glTF export call lives there now, not in this module).
 GLB_NLA_TRACK_NAME = "MoleculeAnimation"
 
 def clear_all_animations():
@@ -434,7 +435,7 @@ def force_nla_tracks_for_glb(objects):
     which is required for GLB export to include animations.
 
     Every object's track is given the same name (GLB_NLA_TRACK_NAME) on
-    purpose: when export_animation() exports with animation_mode
+    purpose: when Export_Data.ExportAnimationAs exports with animation_mode
     'NLA_TRACKS', the glTF exporter merges all NLA tracks that share a name
     into one glTF animation. Naming them per-object instead would export
     one separate glTF animation per object, which is the bug this fixes.
@@ -477,18 +478,26 @@ def bake_for_glb(element_list, bond_list, end_frame):
 def bake_all_animations(element_list, bond_list, end_frame=40, mode=".fbx"):
     """
     Bakes all the animations in the scene.
-    
+
     :param element_list: (List[bpy.data.object]) The list of elements present in the scene
     :param bond_list: (List[bpy.data.object]) The list of bonds present in the scene
     :param end_frame: (int) Optional. Determines the length of the animation
+    :param mode: (str) Output file type - determines which baking strategy, if
+                 any, is needed before export. '.usdz' needs none:
+                 Export_Data.ExportAnimationAs's USD exporter reads the
+                 keyframed animation_data inserted by build_animations()
+                 directly, frame by frame, and doesn't depend on NLA tracks or
+                 per-object baked actions the way .fbx/.glb do.
     """
     if mode==".fbx":
         bake_for_fbx(element_list, bond_list, end_frame)
     elif mode==".glb":
         bake_for_glb(element_list, bond_list, end_frame)
         force_nla_tracks_for_glb(element_list + bond_list)
+    elif mode==".usdz":
+        print("12: .usdz export reads keyframes directly - no baking needed, skipping.")
     else:
-        raise ValueError(f"Unsupported mode '{mode}'. Only '.fbx' and '.glb' are allowed.")
+        raise ValueError(f"Unsupported mode '{mode}'. Only '.fbx', '.glb', and '.usdz' are allowed.")
                     
 def animate(anim_frames, mode=".fbx", step_size=20):
     """
@@ -513,70 +522,15 @@ def animate(anim_frames, mode=".fbx", step_size=20):
     build_animations(anim_data, bond_list, bond_types, step_size, number_of_frames, end_frame)
     bake_all_animations(element_list, bond_list, end_frame, mode=mode)
 
+# Exporting the finished animation to a file is Export_Data's job, not this
+# module's - see Export_Data.ExportAnimationAs, which used to be
+# export_animation() here. animate() above only builds and bakes the
+# animation; Main_Body.Manage_Export calls Export_Data.ExportAnimationAs
+# separately, after this module's work is done.
 
-def export_animation(filepath):
-    """
-    Exports the current Blender scene as an animation to the specified file path.
-    Supports .fbx, .glb, .usd and .usdz formats.
-
-    :param filepath: (str) Full path (including extension) where the animation will be saved.
-    """
-    print("Exporting animation to:", filepath)
-    ext = os.path.splitext(filepath)[1].lower()
-
-    # Use a dispatch table so adding formats is a one-liner.
-    exporters = {
-        ".fbx": lambda: bpy.ops.export_scene.fbx(
-            filepath=filepath,
-            check_existing=True,
-            use_selection=False,
-            global_scale=1.0,
-            apply_unit_scale=True,
-            bake_anim=True,
-            bake_anim_use_all_bones=False,
-            bake_anim_use_nla_strips=False,
-            bake_anim_use_all_actions=False,
-            bake_anim_force_startend_keying=True,
-            bake_anim_step=1.0,
-            bake_anim_simplify_factor=0.0,
-            use_mesh_modifiers=True,
-            embed_textures=True
-        ),
-
-        ".glb": lambda: bpy.ops.export_scene.gltf(
-            filepath=filepath,
-            export_format='GLB',
-            use_selection=False,
-            export_animations=True,
-            export_animation_mode='NLA_TRACKS',
-            export_materials='EXPORT',
-            export_apply=True,
-            export_force_sampling=True
-        ),
-    }
-
-    try:
-        export_fn = exporters.get(ext)
-        if export_fn is None:
-            print(f"Unsupported animation export format: {ext}")
-            return
-
-        result = export_fn()  # returns {'FINISHED'} | {'CANCELLED'}
-        if {'FINISHED'} in (result if isinstance(result, set) else {result}):
-            print(f"Animation successfully exported to {filepath}")
-        else:
-            print(f"Export operator returned {result} for {filepath}")
-
-    except PermissionError as e:
-        print(f"Permission error: Unable to export animation to {filepath}. {str(e)}")
-    except Exception as e:
-        print(f"An error occurred while exporting animation to {filepath}: {str(e)}")
-
-   
 # TO DEBUG
 #raw_anim_data = ExtractDataFromFile(dir+"\\animation_frames.txt")
 #number_of_frames = calculate_number_of_frames(dir+"\\animation_frames.txt")
-#export_path = ("C:\\Documents\\Gaussian-2-Blender\\output\\water.fbx")
 #anim_data = refine_anim_data(raw_anim_data)
 #element_list = separate_elements_from_bonds()[0]
 #bond_list = separate_elements_from_bonds()[1]
@@ -585,6 +539,5 @@ def export_animation(filepath):
 
 #build_animations(anim_data, bond_list, bond_types, 20, number_of_frames, end_frame)
 #bake_all_animations(element_list, bond_list, end_frame)
-#export_animation(export_path)
 
 #clear_all_animations()

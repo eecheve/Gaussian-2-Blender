@@ -150,7 +150,6 @@ Core Pipeline
 
        Animate -> Animate_Module;
 
-       Manage_Export -> Animate_Module;
        Manage_Export -> Export_Data;
    }
 

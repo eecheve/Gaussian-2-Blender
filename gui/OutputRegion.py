@@ -90,7 +90,7 @@ class OutputRegion(object):
             - Resets the selected output type if the current selection is no longer valid.
         """
         if is_animation:
-            allowed = [".fbx", ".glb"]
+            allowed = [".fbx", ".glb", ".usdz"]
         else:
             allowed = [".fbx", ".obj", ".dae", ".glb", ".stl", ".usdz"]
 

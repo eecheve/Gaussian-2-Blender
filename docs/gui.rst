@@ -145,6 +145,13 @@ Selected Ion Module
    :undoc-members:
    :show-inheritance:
 
+Styles Module
+-------------
+.. automodule:: Styles
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Text Redirector Module
 ------------------------
 .. automodule:: TextRedirector

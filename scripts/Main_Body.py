@@ -530,24 +530,6 @@ class Main_Body(object):
         print("6.2: Applying element transforms")
         Clear_Transforms.Apply_Element_Transforms(self.names_and_pos)
                 
-    def Export(self, file_name_suffix=""):
-        """
-        Exports the results to the specified file format.
-
-        Calls:
-        - `ExportSceneAs` from `Export_Data` module.
-
-        :param file_name_suffix: (str) Appended to o_file_name before the
-                                  extension, e.g. "_2x2x2" for a growth-cell
-                                  export. Empty string leaves the name
-                                  unchanged, matching the pre-growth-export
-                                  behavior.
-        :return: None
-        """
-        print("9: Exporting the results ...")
-        Export_Data = self.get_module("Export_Data")
-        Export_Data.ExportSceneAs(self.o_folder_path, self.o_file_name + file_name_suffix, self.o_file_type)
-               
     def Highlight_Atoms(self):
         """
         Highlights specified atoms in the molecule.
@@ -605,22 +587,33 @@ class Main_Body(object):
     
     def Manage_Export(self, file_name_suffix=""):
         """
-        Manages the export process based on whether animation is enabled.
+        Exports the results to the specified file format, dispatching to the
+        static or animation exporter depending on whether animation is
+        enabled. Both branches now go through Export_Data - ExportSceneAs for
+        a single-frame export, ExportAnimationAs for a baked/keyframed
+        animation - and both are called the same way, passing folder_path/
+        file_name/file_type and letting Export_Data own all path-joining.
+        (Previously the animation branch reached into the Animate module
+        instead and had to pre-join the full path itself before calling it -
+        Export_Data is now the only module responsible for writing files to
+        disk, matching Animate.py's own responsibility of only building and
+        baking the animation, not exporting it.)
 
         Calls:
-        - `Export` or `export_animation` from `Animate` module.
+        - `ExportSceneAs` or `ExportAnimationAs` from `Export_Data` module.
 
         :param file_name_suffix: (str) Appended to o_file_name before the
                                   extension, e.g. "_2x2x2" for a growth-cell
                                   export.
         :return: None
         """
+        Export_Data = self.get_module("Export_Data")
+        o_name = self.o_file_name + file_name_suffix
         if not self.is_animation:
-            self.Export(file_name_suffix)
+            print("9: Exporting the results ...")
+            Export_Data.ExportSceneAs(self.o_folder_path, o_name, self.o_file_type)
         else:
-            Animate = self.get_module("Animate")
-            export_path = os.path.join(self.o_folder_path, self.o_file_name + file_name_suffix + self.o_file_type)
-            Animate.export_animation(export_path)
+            Export_Data.ExportAnimationAs(self.o_folder_path, o_name, self.o_file_type)
 
     def Get_Growth_Specs(self):
         """
